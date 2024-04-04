@@ -33,7 +33,7 @@ public class InitializationLoader {
 	@Value("${db.init.data:true}")
     private boolean initDefaultData;
 
-	
+
 	@Inject
 	private MerchantConfigurationService merchantConfigurationService;
 	
@@ -61,7 +61,7 @@ public class InitializationLoader {
 	@Inject
 	protected MerchantStoreService merchantService;
 
-	
+
 	@PostConstruct
 	public void init() {
 		
@@ -73,7 +73,7 @@ public class InitializationLoader {
 			}
 			
 			if (initializationDatabase.isEmpty()) {
-				
+
 
 				//All default data to be created
 				

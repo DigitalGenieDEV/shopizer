@@ -16,7 +16,7 @@ import com.salesmanager.core.modules.integration.IntegrationException;
 public interface PaymentModule {
 	
 	public void validateModuleConfiguration(IntegrationConfiguration integrationConfiguration, MerchantStore store) throws IntegrationException;
-	
+
 
 	/**
 	 * Returns token-value related to the initialization of the transaction This
@@ -38,7 +38,7 @@ public interface PaymentModule {
 			MerchantStore store, Customer customer, List<ShoppingCartItem> items, BigDecimal amount, Payment payment, IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException;
 
-	
+
 	public Transaction capture(
 			MerchantStore store, Customer customer, Order order, Transaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException;

@@ -80,6 +80,8 @@ public interface ProductFacade {
    */
   List<ReadableProduct> relatedItems(MerchantStore store, Product product, Language language)
       throws Exception;
-  
+
+
+
  
 }

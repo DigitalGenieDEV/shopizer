@@ -5,7 +5,7 @@ import java.util.List;
 import com.salesmanager.core.business.exception.ServiceException;
 
 public class IntegrationException extends ServiceException {
-	
+
 
 	/**
 	 * 

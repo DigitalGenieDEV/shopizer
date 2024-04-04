@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionList implements Serializable {
-	
+
 
 	private static final long serialVersionUID = -3122326940968441727L;
 	private int totalCount;

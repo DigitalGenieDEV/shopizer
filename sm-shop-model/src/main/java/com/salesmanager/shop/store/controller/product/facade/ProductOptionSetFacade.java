@@ -17,8 +17,8 @@ public interface ProductOptionSetFacade {
 	void create(PersistableProductOptionSet optionSet, MerchantStore store, Language language);
 	void update(Long id, PersistableProductOptionSet optionSet, MerchantStore store, Language language);
 	void delete(Long id, MerchantStore store);
-	
-	
-	
+
+
+	List<ReadableProductOptionSet> listByCategoryId(Language language, Long categoryId);
 
 }

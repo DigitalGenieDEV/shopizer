@@ -60,7 +60,7 @@ public class ProductImageCropUtils {
 			} catch (Exception e) {
 				LOGGER.error("Image Utils error in constructor", e);
 			}
-		
+
 
 
 		
@@ -90,7 +90,7 @@ public class ProductImageCropUtils {
 			setCropeable(false);
 		}
 
-		
+
 		
 	}
 
@@ -128,7 +128,7 @@ public class ProductImageCropUtils {
 		if(w==h) {
 			setCropeable(false);
 		}
-		
+
 
 		cropAreaWidth = w;
 		
@@ -173,10 +173,10 @@ public class ProductImageCropUtils {
 	}
 	
 	public BufferedImage getCroppedImage() throws IOException {
-		
+
 
 			//out if croppedArea == 0 or file is null
-		
+
 
 
 		
@@ -184,7 +184,7 @@ public class ProductImageCropUtils {
 			
 			//Then intersect it with the dimensions of your image:
 
-			Rectangle clip = goal.intersection(new Rectangle(originalFile.getWidth(), originalFile.getHeight())); 
+			Rectangle clip = goal.intersection(new Rectangle(originalFile.getWidth(), originalFile.getHeight()));
 			
 			//Now, clip corresponds to the portion of bi that will fit within your goal. In this case 100 x50.
 
@@ -193,11 +193,11 @@ public class ProductImageCropUtils {
 
 		return originalFile.getSubimage(clip.x, clip.y, clip.width, clip.height);
 
-		
+
 		
 		
 	}
-	
+
 
 
 	

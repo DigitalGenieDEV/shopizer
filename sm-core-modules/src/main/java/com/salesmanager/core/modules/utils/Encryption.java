@@ -7,7 +7,7 @@ package com.salesmanager.core.modules.utils;
  *
  */
 public interface Encryption {
-	
+
 
 	/**
 	 * Encrypts a string value

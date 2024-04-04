@@ -54,7 +54,7 @@ public class AjaxResponse implements JSONAware {
 	public void setErrorString(String t) {
 		this.setStatusMessage(t);
 	}
-	
+
 
 	public void addValidationMessage(String fieldName, String message) {
 		this.validationMessages.put(fieldName, message);
@@ -171,10 +171,10 @@ public class AjaxResponse implements JSONAware {
 		
 		returnString.append("}}");
 
-		
+
 		return returnString.toString();
 
-		
+
 	}
 	public Map<String,String> getDataMap() {
 		return dataMap;

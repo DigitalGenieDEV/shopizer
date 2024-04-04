@@ -74,7 +74,7 @@ public class AjaxPageableResponse extends AjaxResponse {
 		}
 		returnString.append("}}");
 
-		
+
 		return returnString.toString();
 		
 		

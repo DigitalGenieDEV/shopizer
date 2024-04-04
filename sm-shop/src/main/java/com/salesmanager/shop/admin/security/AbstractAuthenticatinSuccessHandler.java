@@ -54,11 +54,11 @@ public abstract class AbstractAuthenticatinSuccessHandler extends SavedRequestAw
 			  
 			  redirectAfterSuccess(request,response);
 
-		  
+
 		  } catch (Exception e) {
 			  LOGGER.error("User authenticationSuccess",e);
 		  }
-		  
+
 
 	   }
 

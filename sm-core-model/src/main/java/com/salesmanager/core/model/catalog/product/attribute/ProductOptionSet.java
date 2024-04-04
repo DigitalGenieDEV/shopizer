@@ -5,22 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -76,8 +65,32 @@ public class ProductOptionSet extends SalesManagerEntity<Long, ProductOptionSet>
 	
 	@Column(name="PRODUCT_OPTION_SET_DISP")
 	private boolean optionDisplayOnly = false;
-	
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="CATEGORY_ID", nullable=false)
+	private Category category;
+
+	@Column(name="OPTION_SET_FOR_SALE_TYPE")
+	private OptionSetForSaleType optionSetForSaleType;
+
+
+	public OptionSetForSaleType getOptionSetForSaleType() {
+		return optionSetForSaleType;
+	}
+
+	public void setOptionSetForSaleType(OptionSetForSaleType optionSetForSaleType) {
+		this.optionSetForSaleType = optionSetForSaleType;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+
 	public ProductOption getOption() {
 		return option;
 	}

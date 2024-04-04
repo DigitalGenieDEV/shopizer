@@ -41,7 +41,7 @@ public class ResetUserPasswordApi {
 	
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResetUserPasswordApi.class);
-	
+
 
 
 	@Inject

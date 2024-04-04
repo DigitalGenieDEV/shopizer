@@ -23,6 +23,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import com.salesmanager.core.model.catalog.category.Category;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.salesmanager.core.model.generic.SalesManagerEntity;
@@ -31,7 +32,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 
 @Entity
 @Table(name="PRODUCT_OPTION_VALUE", 
-indexes = { @Index(name="PRD_OPTION_VAL_CODE_IDX", columnList = "PRODUCT_OPTION_VAL_CODE")}, 
+indexes = { @Index(name="PRD_OPTION_VAL_CODE_IDX", columnList = "PRODUCT_OPTION_VAL_CODE")},
 uniqueConstraints=
 	@UniqueConstraint(columnNames = {"MERCHANT_ID", "PRODUCT_OPTION_VAL_CODE"}))
 public class ProductOptionValue extends SalesManagerEntity<Long, ProductOptionValue> {
@@ -98,6 +99,8 @@ public class ProductOptionValue extends SalesManagerEntity<Long, ProductOptionVa
 	public void setProductOptionValueSortOrder(Integer productOptionValueSortOrder) {
 		this.productOptionValueSortOrder = productOptionValueSortOrder;
 	}
+
+
 
 	public String getProductOptionValueImage() {
 		return productOptionValueImage;

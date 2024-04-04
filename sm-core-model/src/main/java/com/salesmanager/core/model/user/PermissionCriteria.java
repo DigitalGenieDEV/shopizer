@@ -10,7 +10,7 @@ public class PermissionCriteria extends Criteria {
 	
 	private String permissionName;
 
-	
+
 	private Boolean available = null;
 	
 	private Set<Integer> groupIds;

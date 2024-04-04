@@ -26,7 +26,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 @Table(name = "PERMISSION")
 public class Permission extends SalesManagerEntity<Integer, Permission> implements Auditable {
 
-	
+
 
 	private static final long serialVersionUID = 813468140197420748L;
 

@@ -34,10 +34,10 @@ public class CustomShippingQuotesRegion implements JSONAware {
 	public String getCustomRegionName() {
 		return customRegionName;
 	}
-	
+
 
 	public String toJSONString() {
-		
+
 
 		StringBuilder returnString = new StringBuilder();
 		returnString.append("{");

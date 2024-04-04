@@ -79,6 +79,108 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 	@Column(name = "PRODUCT_IDENTIFIER_ID", nullable = true)
 	private Long productIdentifierId;
 
+	/**
+	 * Ladder prices are stored using json, and the data structure is list . PriceRange.class
+	 */
+	@Column(name = "PRODUCT_PRICE_RANGE", nullable = true)
+	private String priceRangeList;
+
+
+	/**
+	 * Ladder prices are stored using json, and the data structure is list . PriceRange.class
+	 */
+	@Column(name = "PRODUCT_SUPPLY_PRICE_RANGE", nullable = true)
+	private String priceSupplyRangeList;
+
+	/**
+	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
+	 *
+	 * 0-No sku. Quote based on product quantity.
+	 * 1-Quotation based on SKU specifications
+	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
+	 */
+	@Column(name = "QUOTE_TYPE", nullable = true)
+	private Integer quoteType;
+
+	/**
+	 * 分销价，一件代发价格
+	 * 一件代发价，此时需要判断商品是否开通一件代发，否在在不为null的情况下为大市场批发价=price
+	 * Distribution price, dropshipping price
+	 */
+	@Column(name = "CONSIGN_PRICE", nullable = true)
+	private String consignPrice;
+
+
+	/**
+	 * 供货价
+	 */
+	@Column(name = "SUPPLY_PRICE", nullable = true)
+	private String supplyPrice;
+
+
+	/**
+	 * 分销供货价，一件代发价格
+	 * 一件代发价，此时需要判断商品是否开通一件代发，否在在不为null的情况下为大市场批发价=price
+	 * Distribution price, dropshipping price
+	 */
+	@Column(name = "CONSIGN_SUPPLY_PRICE", nullable = true)
+	private String consignSupplyPrice;
+
+	public String getPriceSupplyRangeList() {
+		return priceSupplyRangeList;
+	}
+
+	public void setPriceSupplyRangeList(String priceSupplyRangeList) {
+		this.priceSupplyRangeList = priceSupplyRangeList;
+	}
+
+	public String getConsignSupplyPrice() {
+		return consignSupplyPrice;
+	}
+
+	public void setConsignSupplyPrice(String consignSupplyPrice) {
+		this.consignSupplyPrice = consignSupplyPrice;
+	}
+
+	public String getSupplyPrice() {
+		return supplyPrice;
+	}
+
+	public void setSupplyPrice(String supplyPrice) {
+		this.supplyPrice = supplyPrice;
+	}
+
+	public Long getProductIdentifierId() {
+		return productIdentifierId;
+	}
+
+	public void setProductIdentifierId(Long productIdentifierId) {
+		this.productIdentifierId = productIdentifierId;
+	}
+
+	public String getPriceRangeList() {
+		return priceRangeList;
+	}
+
+	public void setPriceRangeList(String priceRangeList) {
+		this.priceRangeList = priceRangeList;
+	}
+
+	public Integer getQuoteType() {
+		return quoteType;
+	}
+
+	public void setQuoteType(Integer quoteType) {
+		this.quoteType = quoteType;
+	}
+
+	public String getConsignPrice() {
+		return consignPrice;
+	}
+
+	public void setConsignPrice(String consignPrice) {
+		this.consignPrice = consignPrice;
+	}
 	public ProductPrice() {
 	}
 

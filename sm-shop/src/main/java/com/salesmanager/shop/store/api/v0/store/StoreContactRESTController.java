@@ -51,13 +51,13 @@ public class StoreContactRESTController {
 	
 	@Inject
 	private EmailTemplatesUtils emailTemplatesUtils;
-	
 
-	
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(StoreContactRESTController.class);
-	
 
-	
+
+
 	@RequestMapping( value="/public/{store}", method=RequestMethod.GET)
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@ResponseBody
@@ -89,10 +89,10 @@ public class StoreContactRESTController {
 			
 			Map<String,Language> langs = languageService.getLanguagesMap();
 
-			
+
 			return null;
 
-		
+
 		} catch (Exception e) {
 			LOGGER.error("Error while saving category",e);
 			try {
@@ -135,7 +135,7 @@ public class StoreContactRESTController {
 			
 			Map<String,Language> langs = languageService.getLanguagesMap();
 
-			
+
 			if(!StringUtils.isBlank(request.getParameter(Constants.LANG))) {
 				String lang = request.getParameter(Constants.LANG);
 				if(lang!=null) {
@@ -152,14 +152,14 @@ public class StoreContactRESTController {
 			
 			/** end default routine **/
 
-			
+
 	        emailTemplatesUtils.sendContactEmail(contact, merchantStore, l, request.getContextPath());
 			
 			ajaxResponse.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
 			
 			return ajaxResponse;
 
-		
+
 		} catch (Exception e) {
 			LOGGER.error("Error while saving category",e);
 			try {

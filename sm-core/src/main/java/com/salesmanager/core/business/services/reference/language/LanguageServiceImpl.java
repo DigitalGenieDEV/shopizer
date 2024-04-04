@@ -47,7 +47,8 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<Integer, 
 	@Override
 	@Cacheable("languageByCode")
 	public Language getByCode(String code) throws ServiceException {
-		return languageRepository.findByCode(code);
+		Language byCode = languageRepository.findByCode(code);
+		return byCode;
 	}
 	
 	@Override

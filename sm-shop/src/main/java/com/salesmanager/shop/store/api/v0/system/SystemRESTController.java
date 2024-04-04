@@ -25,9 +25,9 @@ import com.salesmanager.core.business.utils.ajax.AjaxResponse;
 @Controller
 @RequestMapping("/services")
 public class SystemRESTController {
-	
 
-	
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SystemRESTController.class);
 	
 	@Inject

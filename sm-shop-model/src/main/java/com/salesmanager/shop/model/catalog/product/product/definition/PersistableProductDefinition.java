@@ -21,7 +21,56 @@ public class PersistableProductDefinition extends ProductDefinition {
 	private String type;
 	private String manufacturer;
 	private BigDecimal price;
+
+
+	/**
+	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
+	 *
+	 * 0-No sku. Quote based on product quantity.
+	 * 1-Quotation based on SKU specifications
+	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
+	 */
+	private Integer quoteType;
+
+	private List<PriceRange> priceSupplyRangeList;
+
+
+	/**
+	 * supplyPrice
+	 */
+	private BigDecimal supplyPrice;
+
+
+	private Integer minOrderQuantity;
+
+	private Integer batchNumber;
+
 	private int quantity;
+
+	public List<PriceRange> getPriceSupplyRangeList() {
+		return priceSupplyRangeList;
+	}
+
+	public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
+		this.priceSupplyRangeList = priceSupplyRangeList;
+	}
+
+	public Integer getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(Integer minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	public Integer getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(Integer batchNumber) {
+		this.batchNumber = batchNumber;
+	}
+
 	public List<ProductDescription> getDescriptions() {
 		return descriptions;
 	}

@@ -55,7 +55,7 @@ public class TaxClass extends SalesManagerEntity<Long, TaxClass> {
 	@NotEmpty
 	@Column(name = "TAX_CLASS_TITLE" , nullable=false , length=32 )
 	private String title;
-	
+
 
 
 	@OneToMany(mappedBy = "taxClass", targetEntity = Product.class)
@@ -66,7 +66,7 @@ public class TaxClass extends SalesManagerEntity<Long, TaxClass> {
 	@JoinColumn(name="MERCHANT_ID", nullable=true)
 	private MerchantStore merchantStore;
 
-	
+
 	@OneToMany(mappedBy = "taxClass")
 	private List<TaxRate> taxRates = new ArrayList<TaxRate>();
 	

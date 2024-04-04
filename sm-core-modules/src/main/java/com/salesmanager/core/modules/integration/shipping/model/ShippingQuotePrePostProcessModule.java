@@ -23,7 +23,7 @@ public interface ShippingQuotePrePostProcessModule {
 	
 	
 	public String getModuleCode();
-	
+
 
 	public void prePostProcessShippingQuotes(
 			ShippingQuote quote, 

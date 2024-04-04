@@ -43,7 +43,7 @@ public class UserServicesImpl implements WebUserServices{
 
 	@Inject
 	private UserService userService;
-	
+
 
 	@Inject
 	private MerchantStoreService merchantStoreService;
@@ -51,9 +51,9 @@ public class UserServicesImpl implements WebUserServices{
 	@Inject
 	@Named("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
-	
 
-	
+
+
 	@Inject
 	protected PermissionService  permissionService;
 	
@@ -132,7 +132,7 @@ public class UserServicesImpl implements WebUserServices{
 			  }
 		  }
 
-		  user.setMerchantStore(store);		  
+		  user.setMerchantStore(store);
 		  userService.create(user);
 		
 		

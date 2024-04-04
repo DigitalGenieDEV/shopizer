@@ -19,4 +19,6 @@ public interface ProductOptionSetService extends SalesManagerEntityService<Long,
 	List<ProductOptionSet> getByProductType (Long productTypeId, MerchantStore store, Language lang);
 
 
+	List<ProductOptionSet> getByCategoryId(Long categoryId, Language lang);
+
 }

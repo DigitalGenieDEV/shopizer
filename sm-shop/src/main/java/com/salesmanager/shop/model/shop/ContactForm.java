@@ -14,7 +14,7 @@ public class ContactForm {
 	@NotEmpty
 	private String comment;
 
-	
+
 	public String getName() {
 		return name;
 	}

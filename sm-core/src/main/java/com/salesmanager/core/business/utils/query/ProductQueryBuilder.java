@@ -13,7 +13,7 @@ public class ProductQueryBuilder {
 		qs.append("join fetch p.merchantStore pm ");
 		qs.append("left join fetch pa.prices pap ");
 		qs.append("left join fetch pap.descriptions papd ");
-		
+
 
 		//images
 		qs.append("left join fetch p.images images ");

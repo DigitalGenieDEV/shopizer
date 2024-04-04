@@ -23,7 +23,28 @@ public class ProductPriceEntity extends ProductPrice implements Serializable {
 	private boolean defaultPrice = true;
 	private BigDecimal price;
 	private BigDecimal discountedPrice;
-	
+
+	private BigDecimal supplyPrice;
+
+	private BigDecimal consignSupplyPrice;
+
+
+	public BigDecimal getSupplyPrice() {
+		return supplyPrice;
+	}
+
+	public void setSupplyPrice(BigDecimal supplyPrice) {
+		this.supplyPrice = supplyPrice;
+	}
+
+	public BigDecimal getConsignSupplyPrice() {
+		return consignSupplyPrice;
+	}
+
+	public void setConsignSupplyPrice(BigDecimal consignSupplyPrice) {
+		this.consignSupplyPrice = consignSupplyPrice;
+	}
+
 	public boolean isDiscounted() {
 		return discounted;
 	}

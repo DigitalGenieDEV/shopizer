@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CoreConfiguration {
-	
+
 
 	public Properties properties = new Properties();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoreConfiguration.class);

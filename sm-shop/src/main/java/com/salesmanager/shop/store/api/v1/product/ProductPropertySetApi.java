@@ -142,6 +142,21 @@ public class ProductPropertySetApi {
 		
 		
 	}
+
+	/**
+	 * Get property set by category
+	 * @return
+	 */
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = { "/private/product/property/category/set" }, method = RequestMethod.GET)
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public @ResponseBody List<ReadableProductOptionSet> listByCategoryId(
+			@ApiIgnore Language language,
+			@RequestParam(value = "CATEGORY_ID", required = false) Long categoryId) {
+
+		return productOptionSetFacade.listByCategoryId(language, categoryId);
+	}
 	
 
 }

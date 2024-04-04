@@ -28,7 +28,7 @@ public class CacheUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CacheUtils.class);
 
 	private final static String KEY_DELIMITER = "_";
-	
+
 
 
 	public void putInCache(Object object, String keyName) throws Exception {
@@ -36,7 +36,7 @@ public class CacheUtils {
 		cache.put(keyName, object);
 		
 	}
-	
+
 
 	public Object getFromCache(String keyName) throws Exception {
 
@@ -95,7 +95,7 @@ public class CacheUtils {
 					int delimiterPosition = sKey.indexOf(KEY_DELIMITER);
 					
 					if(delimiterPosition>0 && Character.isDigit(sKey.charAt(0))) {
-					
+
 
 						cache.evict(key);
 					
@@ -106,7 +106,7 @@ public class CacheUtils {
 				}  
 		  }
 	}
-	
+
 
 
 }

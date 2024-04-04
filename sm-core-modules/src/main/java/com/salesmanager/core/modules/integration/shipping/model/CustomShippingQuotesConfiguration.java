@@ -19,7 +19,7 @@ public class CustomShippingQuotesConfiguration extends IntegrationConfiguration 
 	
 	private static final long serialVersionUID = 1L;
 
-	
+
 	@SuppressWarnings("unchecked")
 	public String toJSONString() {
 		//JSONObject data = new JSONObject();
@@ -33,7 +33,7 @@ public class CustomShippingQuotesConfiguration extends IntegrationConfiguration 
 		returnString.append("\"moduleCode\"").append(":\"").append(this.getModuleCode()).append("\"");
 		returnString.append(",");
 		returnString.append("\"active\"").append(":").append(this.isActive());
-		
+
 
 
 		if(regions!=null && regions.size()>0) {
@@ -59,7 +59,7 @@ public class CustomShippingQuotesConfiguration extends IntegrationConfiguration 
 		return returnString.toString();
 		
 		
-		
+
 
 	}
 

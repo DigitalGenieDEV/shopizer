@@ -23,6 +23,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
 
@@ -30,7 +31,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 @Entity
 @Table(name="PRODUCT_OPTION", 
 	 
-	indexes = { @Index(name="PRD_OPTION_CODE_IDX", columnList = "PRODUCT_OPTION_CODE")}, 
+	indexes = { @Index(name="PRD_OPTION_CODE_IDX", columnList = "PRODUCT_OPTION_CODE")},
 	uniqueConstraints=@UniqueConstraint(columnNames = {"MERCHANT_ID", "PRODUCT_OPTION_CODE"}))
 
 public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
@@ -58,7 +59,7 @@ public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
 	private MerchantStore merchantStore;
-	
+
 	@Column(name="PRODUCT_OPTION_READ")
 	private boolean readOnly;
 	
@@ -69,7 +70,7 @@ public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
 	
 	public ProductOption() {
 	}
-	
+
 	public Integer getProductOptionSortOrder() {
 		return productOptionSortOrder;
 	}

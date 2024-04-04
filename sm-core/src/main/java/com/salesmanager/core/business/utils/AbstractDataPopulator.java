@@ -17,7 +17,7 @@ import com.salesmanager.core.model.reference.language.Language;
 public abstract class AbstractDataPopulator<Source,Target> implements DataPopulator<Source, Target>
 {
 
- 
+
    
     private Locale locale;
 
@@ -27,7 +27,7 @@ public abstract class AbstractDataPopulator<Source,Target> implements DataPopula
 	public Locale getLocale() {
 		return locale;
 	}
-	
+
 
 
 	@Override
@@ -36,6 +36,6 @@ public abstract class AbstractDataPopulator<Source,Target> implements DataPopula
 	}
 	protected abstract Target createTarget();
 
-   
+
 
 }

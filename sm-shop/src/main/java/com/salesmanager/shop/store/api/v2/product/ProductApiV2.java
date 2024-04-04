@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
+import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +133,20 @@ public class ProductApiV2 {
 
 	}
 
+	/**
+	 * ------------ V2
+	 *
+	 * --- product feature
+	 */
+
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = { "/private/feature/product/{id}" })
+	public void createProductFeature(@PathVariable Long id,
+						 @Valid @RequestBody PersistableProductFeature persistableProductFeature) {
+
+	}
+
+
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = { "/private/product/{id}" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
@@ -142,6 +158,7 @@ public class ProductApiV2 {
 		productDefinitionFacade.update(id, product, merchantStore, language);
 
 	}
+
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/product/{id}" })

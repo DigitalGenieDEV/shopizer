@@ -14,7 +14,7 @@ public class UserAuthenticationSuccessHandler extends AbstractAuthenticatinSucce
 	
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-	    
+
 	    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
 	        this.redirectStrategy = redirectStrategy;
 	    }

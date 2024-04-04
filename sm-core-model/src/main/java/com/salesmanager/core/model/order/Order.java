@@ -127,7 +127,7 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	@Deprecated
 	private CreditCard creditCard = null;
 
-	
+
 	@ManyToOne(targetEntity = Currency.class)
 	@JoinColumn(name = "CURRENCY_ID")
 	private Currency currency;
@@ -135,7 +135,7 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	@Type(type="locale")  
 	@Column (name ="LOCALE")
 	private Locale locale; 
-	
+
 
 	@JsonIgnore
 	@ManyToOne(targetEntity = MerchantStore.class)

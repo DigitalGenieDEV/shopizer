@@ -331,6 +331,6 @@ public class User extends SalesManagerEntity<Long, User> implements Auditable {
 	public void setTokenPasswordExpiration(Date tokenPasswordExpiration) {
 		this.tokenPasswordExpiration = tokenPasswordExpiration;
 	}*/
-	
+
 
 }

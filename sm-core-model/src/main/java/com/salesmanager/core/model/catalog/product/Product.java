@@ -27,6 +27,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
 import org.hibernate.annotations.Cascade;
 
 import com.salesmanager.core.model.catalog.category.Category;
@@ -70,7 +71,15 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
 	private Set<ProductDescription> descriptions = new HashSet<ProductDescription>();
-	
+
+
+	/**
+	 * product tag
+	 */
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	private Set<ProductFeature> productFeatures = new HashSet<ProductFeature>();
+
+
 	/**
 	 * Inventory
 	 */
@@ -205,7 +214,22 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@Column(name="RENTAL_STATUS", nullable = true)
 	private RentalStatus rentalStatus;
-	
+
+
+	@Column(name="MIN_ORDER_QUANTITY", nullable = true)
+	private Integer minOrderQuantity;
+
+	@Column(name="BATCH_NUMBER", nullable = true)
+	private Integer batchNumber;
+
+	@Column(name="GENERAL_MIXED_BATCH", nullable = true)
+	private Boolean generalMixedBatch;
+
+	@Column(name="MIX_AMOUNT", nullable = true)
+	private Integer mixAmount;
+
+	@Column(name="MIX_NUMBER", nullable = true)
+	private Integer mixNumber;
 
 	@Column(name="RENTAL_DURATION", nullable = true)
 	private Integer rentalDuration;
@@ -267,6 +291,33 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	}
 
 
+	public boolean isProductIsFree() {
+		return productIsFree;
+	}
+
+	public Boolean getGeneralMixedBatch() {
+		return generalMixedBatch;
+	}
+
+	public void setGeneralMixedBatch(Boolean generalMixedBatch) {
+		this.generalMixedBatch = generalMixedBatch;
+	}
+
+	public Integer getMixAmount() {
+		return mixAmount;
+	}
+
+	public void setMixAmount(Integer mixAmount) {
+		this.mixAmount = mixAmount;
+	}
+
+	public Integer getMixNumber() {
+		return mixNumber;
+	}
+
+	public void setMixNumber(Integer mixNumber) {
+		this.mixNumber = mixNumber;
+	}
 
 	public BigDecimal getProductLength() {
 		return productLength;
@@ -552,5 +603,29 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 
 
+
+	public Integer getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(Integer minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	public Integer getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(Integer batchNumber) {
+		this.batchNumber = batchNumber;
+	}
+
+	public Set<ProductFeature> getProductFeatures() {
+		return productFeatures;
+	}
+
+	public void setProductFeatures(Set<ProductFeature> productFeatures) {
+		this.productFeatures = productFeatures;
+	}
 
 }

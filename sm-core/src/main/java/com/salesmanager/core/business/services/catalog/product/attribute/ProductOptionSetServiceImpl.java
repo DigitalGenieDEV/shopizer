@@ -53,5 +53,10 @@ public class ProductOptionSetServiceImpl extends
 	}
 
 
+	@Override
+	public List<ProductOptionSet> getByCategoryId(Long categoryId, Language lang) {
+		return productOptionSetRepository.findByCategoryId(categoryId, lang.getId());
+	}
+
 
 }
