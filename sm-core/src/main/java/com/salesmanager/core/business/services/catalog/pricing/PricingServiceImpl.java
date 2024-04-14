@@ -114,10 +114,8 @@ public class PricingServiceImpl implements PricingService {
 
 	@Override
 	public FinalPrice calculateProductPrice(ProductVariant variant) throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		return priceUtil.getFinalPrice(variant);
 	}
-
 
 	
 }

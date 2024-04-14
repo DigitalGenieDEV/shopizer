@@ -70,15 +70,15 @@ public class ProductOptionSet extends SalesManagerEntity<Long, ProductOptionSet>
 	@JoinColumn(name="CATEGORY_ID", nullable=false)
 	private Category category;
 
-	@Column(name="OPTION_SET_FOR_SALE_TYPE")
-	private OptionSetForSaleType optionSetForSaleType;
+	@Column(name="OPTION_SET_FOR_SALE_TYPE", length=20)
+	private String optionSetForSaleType;
 
 
-	public OptionSetForSaleType getOptionSetForSaleType() {
+	public String getOptionSetForSaleType() {
 		return optionSetForSaleType;
 	}
 
-	public void setOptionSetForSaleType(OptionSetForSaleType optionSetForSaleType) {
+	public void setOptionSetForSaleType(String optionSetForSaleType) {
 		this.optionSetForSaleType = optionSetForSaleType;
 	}
 

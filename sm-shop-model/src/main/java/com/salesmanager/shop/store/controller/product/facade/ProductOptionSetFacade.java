@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.product.facade;
 
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.attribute.optionset.PersistableProductOptionSet;
@@ -19,6 +20,13 @@ public interface ProductOptionSetFacade {
 	void delete(Long id, MerchantStore store);
 
 
-	List<ReadableProductOptionSet> listByCategoryId(Language language, Long categoryId);
+	/**
+	 * Get property set by category
+	 * @param language
+	 * @param categoryId
+	 * @param optionSetForSaleType
+	 * @return
+	 */
+	List<ReadableProductOptionSet> listByCategoryId(Language language, Long categoryId, OptionSetForSaleType optionSetForSaleType);
 
 }

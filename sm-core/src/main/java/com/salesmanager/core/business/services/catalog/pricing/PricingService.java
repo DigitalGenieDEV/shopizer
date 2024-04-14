@@ -31,12 +31,8 @@ public interface PricingService {
 	 */
 	FinalPrice calculateProductPrice(Product product) throws ServiceException;
 	
-	/**
-	 * Calculates variant price specific to variant inventory or parent inventory
-	 * @param variant
-	 * @return
-	 * @throws ServiceException
-	 */
+
+
 	FinalPrice calculateProductPrice(ProductVariant variant) throws ServiceException;
 	
 	/**

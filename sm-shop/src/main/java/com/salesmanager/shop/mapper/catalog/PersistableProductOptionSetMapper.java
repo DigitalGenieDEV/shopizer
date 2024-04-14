@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.business.services.catalog.category.CategoryService;
+import com.salesmanager.core.model.catalog.category.Category;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,10 @@ public class PersistableProductOptionSetMapper implements Mapper<PersistableProd
 
 	@Autowired
 	private ProductOptionService productOptionService;
+
+
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Autowired
 	private ProductOptionValueService productOptionValueService;
@@ -60,7 +66,11 @@ public class PersistableProductOptionSetMapper implements Mapper<PersistableProd
 		
 		ProductOption option = productOptionService.getById(store, source.getOption());
 		destination.setOption(option);
-		
+
+
+		Category category =  categoryService.getById(source.getCategoryId());
+		destination.setCategory(category);
+		destination.setOptionSetForSaleType(source.getOptionSetForSaleType() == null? null : source.getOptionSetForSaleType().name());
 		if(!CollectionUtils.isEmpty(source.getOptionValues())) {
 			List<ProductOptionValue> values = source.getOptionValues().stream().map(id -> value(id, store)).collect(Collectors.toList());
 			destination.setValues(values);

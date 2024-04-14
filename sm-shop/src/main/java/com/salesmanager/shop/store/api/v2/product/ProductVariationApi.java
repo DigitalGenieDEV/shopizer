@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,6 @@ public class ProductVariationApi {
   @Inject private CategoryFacade categoryFacade;
   
   @Inject private ProductVariationFacade productVariationFacade;
-	
 
 
   @Inject
@@ -133,10 +133,10 @@ public class ProductVariationApi {
     if (CollectionUtils.isEmpty(ids)) {
       return null;
     }
-    
+
     List<ReadableProductVariantValue> variants = options.getOptions();
     List<ProductAttribute> attributes = new ArrayList<ProductAttribute>();
-    
+
     Set<ProductAttribute> productAttributes = product.getAttributes();
     for(ProductAttribute attribute : productAttributes) {
       Long option = attribute.getProductOption().getId();
@@ -147,7 +147,7 @@ public class ProductVariationApi {
           attributes.add(attribute);
         }
       }
-      
+
     }
 
     FinalPrice price = pricingService.calculateProductPrice(product, attributes);

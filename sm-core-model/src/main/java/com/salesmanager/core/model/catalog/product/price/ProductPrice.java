@@ -92,15 +92,6 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 	@Column(name = "PRODUCT_SUPPLY_PRICE_RANGE", nullable = true)
 	private String priceSupplyRangeList;
 
-	/**
-	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
-	 *
-	 * 0-No sku. Quote based on product quantity.
-	 * 1-Quotation based on SKU specifications
-	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
-	 */
-	@Column(name = "QUOTE_TYPE", nullable = true)
-	private Integer quoteType;
 
 	/**
 	 * 分销价，一件代发价格
@@ -164,14 +155,6 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 
 	public void setPriceRangeList(String priceRangeList) {
 		this.priceRangeList = priceRangeList;
-	}
-
-	public Integer getQuoteType() {
-		return quoteType;
-	}
-
-	public void setQuoteType(Integer quoteType) {
-		this.quoteType = quoteType;
 	}
 
 	public String getConsignPrice() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -153,9 +154,9 @@ public class ProductPropertySetApi {
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public @ResponseBody List<ReadableProductOptionSet> listByCategoryId(
 			@ApiIgnore Language language,
-			@RequestParam(value = "CATEGORY_ID", required = false) Long categoryId) {
-
-		return productOptionSetFacade.listByCategoryId(language, categoryId);
+			@RequestParam(value = "categoryId", required = false) Long categoryId,
+			@RequestParam(value = "optionSetForSaleType", required = false) OptionSetForSaleType optionSetForSaleType) {
+		return productOptionSetFacade.listByCategoryId(language, categoryId, optionSetForSaleType);
 	}
 	
 

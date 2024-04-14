@@ -17,7 +17,8 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+
 	private List<ProductDescription> descriptions = new ArrayList<ProductDescription>();
 	private List<PersistableProductAttribute> attributes = new ArrayList<PersistableProductAttribute>();//persist attribute and save reference
 	private List<PersistableImage> images;//persist images and save reference

@@ -2,8 +2,12 @@ package com.salesmanager.shop.model.catalog.product.product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.salesmanager.shop.model.catalog.product.Product;
+import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
+
+import javax.persistence.Column;
 
 /**
  * A product entity is used by services API to populate or retrieve a Product
@@ -26,6 +30,23 @@ public class ProductEntity extends Product implements Serializable {
 	private boolean productVirtual = false;
 	private int quantityOrderMaximum = -1;// default unlimited
 	private int quantityOrderMinimum = 1;// default 1
+
+	private Integer batchNumber;
+
+	private Integer minOrderQuantity;
+
+	private List<PriceRange> priceSupplyRangeList;
+
+
+	/**
+	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
+	 *
+	 * 0-No sku. Quote based on product quantity.
+	 * 1-Quotation based on SKU specifications
+	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
+	 */
+	private Integer quoteType;
+
 	private boolean productIsFree;
 
 	private ProductSpecification productSpecifications;
@@ -33,6 +54,13 @@ public class ProductEntity extends Product implements Serializable {
 	private int ratingCount;
 	private int sortOrder;
 	private String refSku;
+
+	private Integer mixAmount;
+
+	private Integer mixNumber;
+
+	private Boolean generalMixedBatch;
+
 
 
 	/**
@@ -44,11 +72,75 @@ public class ProductEntity extends Product implements Serializable {
 	private int rentalDuration;
 	private int rentalPeriod;
 
+	public Boolean getGeneralMixedBatch() {
+		return generalMixedBatch;
+	}
+
+	public void setGeneralMixedBatch(Boolean generalMixedBatch) {
+		this.generalMixedBatch = generalMixedBatch;
+	}
+
+	public Integer getMixAmount() {
+		return mixAmount;
+	}
+
+	public void setMixAmount(Integer mixAmount) {
+		this.mixAmount = mixAmount;
+	}
+
+	public Integer getMixNumber() {
+		return mixNumber;
+	}
+
+	public void setMixNumber(Integer mixNumber) {
+		this.mixNumber = mixNumber;
+	}
+
 	/**
 	 * End RENTAL fields
-	 * 
+	 *
 	 * @return
 	 */
+
+
+
+	public Integer getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(Integer minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	public void setQuoteType(Integer quoteType) {
+		this.quoteType = quoteType;
+	}
+
+	public Integer getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(Integer batchNumber) {
+		this.batchNumber = batchNumber;
+	}
+
+	public List<PriceRange> getPriceSupplyRangeList() {
+		return priceSupplyRangeList;
+	}
+
+	public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
+		this.priceSupplyRangeList = priceSupplyRangeList;
+	}
+
+	public int getQuoteType() {
+		return quoteType;
+	}
+
+	public void setQuoteType(int quoteType) {
+		this.quoteType = quoteType;
+	}
+
+
 
 	public BigDecimal getPrice() {
 		return price;

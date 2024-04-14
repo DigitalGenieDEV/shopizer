@@ -7,9 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@EnableScheduling
 @ComponentScan({"com.salesmanager.core.business"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties(ApplicationSearchConfiguration.class)

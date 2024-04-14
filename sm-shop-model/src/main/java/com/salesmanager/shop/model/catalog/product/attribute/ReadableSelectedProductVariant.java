@@ -16,7 +16,18 @@ public class ReadableSelectedProductVariant implements Serializable {
    */
   private static final long serialVersionUID = 1L;
   private List<ReadableProductVariantValue> options = new ArrayList<ReadableProductVariantValue>();
-  
+
+
+  private List<String> variantCodes;
+
+  public List<String> getVariantCodes() {
+    return variantCodes;
+  }
+
+  public void setVariantCodes(List<String> variantCodes) {
+    this.variantCodes = variantCodes;
+  }
+
   public List<ReadableProductVariantValue> getOptions() {
     return options;
   }

@@ -108,8 +108,19 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			} else {
 				destination.setId(source.getId());
 			}
-			
-			
+			/**
+			 *
+			 */
+			destination.setBatchNumber(source.getBatchNumber());
+			destination.setQuoteType(source.getQuoteType());
+			destination.setMinOrderQuantity(source.getMinOrderQuantity());
+
+			if (source.getGeneralMixedBatch()!=null && source.getGeneralMixedBatch()){
+				destination.setMixNumber(source.getMixNumber());
+				destination.setMixAmount(source.getMixAmount());
+				destination.setGeneralMixedBatch(source.getGeneralMixedBatch());
+			}
+
 			/**
 			 * SPEIFICATIONS
 			 */

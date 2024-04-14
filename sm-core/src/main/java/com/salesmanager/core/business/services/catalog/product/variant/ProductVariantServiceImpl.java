@@ -37,6 +37,12 @@ public class ProductVariantServiceImpl extends SalesManagerEntityServiceImpl<Lon
 	}
 
 	@Override
+	public ProductVariant queryBySkuCodeAndProductId(String sku, Long productId){
+		return productVariantRepository.queryBySkuAndProduct(sku, productId);
+	}
+
+
+	@Override
 	public Optional<ProductVariant> getById(Long id, Long productId, MerchantStore store) {
 		return productVariantRepository.findById(id, productId, store.getId());
 	}
@@ -60,7 +66,7 @@ public class ProductVariantServiceImpl extends SalesManagerEntityServiceImpl<Lon
 	@Override
 	public boolean exist(String sku, Long productId) {
 
-		ProductVariant instance = productVariantRepository.existsBySkuAndProduct(sku, productId);
+		ProductVariant instance = productVariantRepository.queryBySkuAndProduct(sku, productId);
 		return instance != null? true:false;
 
 	}
@@ -83,10 +89,12 @@ public class ProductVariantServiceImpl extends SalesManagerEntityServiceImpl<Lon
 		variant = productVariantRepository.save(variant);
 		return variant;
 	}
-	
+
 	@Override
 	public void delete(ProductVariant instance) throws ServiceException{
 		super.delete(instance);
 	}
+
+
 
 }

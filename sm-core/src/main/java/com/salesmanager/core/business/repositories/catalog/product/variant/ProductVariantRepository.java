@@ -120,9 +120,10 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 	
 	
 	@Query("select p from ProductVariant p join fetch p.product pr where p.sku = ?1 and pr.id = ?2")
-	ProductVariant existsBySkuAndProduct(String sku, Long productId);
-	
+	ProductVariant queryBySkuAndProduct(String sku, Long productId);
 
-	
+
+
+
 
 }

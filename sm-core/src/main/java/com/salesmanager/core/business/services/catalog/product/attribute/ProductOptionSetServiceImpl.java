@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -54,8 +55,8 @@ public class ProductOptionSetServiceImpl extends
 
 
 	@Override
-	public List<ProductOptionSet> getByCategoryId(Long categoryId, Language lang) {
-		return productOptionSetRepository.findByCategoryId(categoryId, lang.getId());
+	public List<ProductOptionSet> getByCategoryId(Long categoryId, Language lang, OptionSetForSaleType optionSetForSaleType) {
+		return productOptionSetRepository.findByCategoryId(categoryId, lang.getId(), optionSetForSaleType.name());
 	}
 
 

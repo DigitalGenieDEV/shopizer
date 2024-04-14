@@ -215,9 +215,9 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name="RENTAL_STATUS", nullable = true)
 	private RentalStatus rentalStatus;
 
-
 	@Column(name="MIN_ORDER_QUANTITY", nullable = true)
 	private Integer minOrderQuantity;
+
 
 	@Column(name="BATCH_NUMBER", nullable = true)
 	private Integer batchNumber;
@@ -231,13 +231,44 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name="MIX_NUMBER", nullable = true)
 	private Integer mixNumber;
 
+	/**
+	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
+	 *
+	 * 0-No sku. Quote based on product quantity.
+	 * 1-Quotation based on SKU specifications
+	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
+	 */
+	@Column(name = "QUOTE_TYPE", nullable = true)
+	private Integer quoteType;
+
+
+
 	@Column(name="RENTAL_DURATION", nullable = true)
 	private Integer rentalDuration;
 	
 	@Column(name="RENTAL_PERIOD", nullable = true)
 	private Integer rentalPeriod;
 
-	
+	@Column(name="OUT_PRODUCT_ID")
+	private Long outProductId;
+
+
+	public Integer getQuoteType() {
+		return quoteType;
+	}
+
+	public void setQuoteType(Integer quoteType) {
+		this.quoteType = quoteType;
+	}
+
+	public Long getOutProductId() {
+		return outProductId;
+	}
+
+	public void setOutProductId(Long outProductId) {
+		this.outProductId = outProductId;
+	}
+
 	public Integer getRentalPeriod() {
 		return rentalPeriod;
 	}

@@ -2,6 +2,7 @@ package com.salesmanager.core.business.repositories.catalog.product.attribute;
 
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,8 +30,8 @@ public interface ProductOptionSetRepository extends JpaRepository<ProductOptionS
 			+ "left join fetch p.option po "
 			+ "left join fetch po.descriptions pod "
 			+ "left join fetch p.values pv "
-			+ "left join fetch pv.descriptions pvd where pt.id= ?1  and pod.language.id = ?2")
-	List<ProductOptionSet> findByCategoryId(Long categoryId, Integer language);
+			+ "left join fetch pv.descriptions pvd where pt.id= ?1  and pod.language.id = ?2 and p.optionSetForSaleType = ?3" )
+	List<ProductOptionSet> findByCategoryId(Long categoryId, Integer language, String optionSetForSaleType);
 
 	@Query("select p from ProductOptionSet p join fetch p.store pm left join fetch p.option po left join fetch po.descriptions pod left join fetch p.values pv left join fetch pv.descriptions pvd where pm.id = ?1 and p.code = ?2")
 	ProductOptionSet findByCode(Integer storeId, String code);

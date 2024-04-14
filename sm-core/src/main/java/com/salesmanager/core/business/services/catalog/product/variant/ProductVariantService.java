@@ -31,7 +31,7 @@ public interface ProductVariantService extends SalesManagerEntityService<Long, P
 	boolean exist(String sku, Long productId);
 	
 	ProductVariant saveProductVariant(ProductVariant variant) throws ServiceException;
-	
 
 
+	ProductVariant queryBySkuCodeAndProductId(String sku, Long productId);
 }

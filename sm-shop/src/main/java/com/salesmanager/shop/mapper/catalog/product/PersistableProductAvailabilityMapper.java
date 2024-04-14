@@ -2,7 +2,9 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import java.util.Date;
 import java.util.Optional;
+import com.alibaba.fastjson.JSON;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import com.salesmanager.core.business.constants.Constants;
@@ -42,6 +44,13 @@ public class PersistableProductAvailabilityMapper implements Mapper<PersistableP
 				price.setProductAvailability(destination);
 				price.setDefaultPrice(source.getPrice().isDefaultPrice());
 				price.setProductPriceAmount(source.getPrice().getPrice());
+
+				price.setPriceRangeList(CollectionUtils.isEmpty(source.getPrice().getPriceRangeList())? null :
+						JSON.toJSONString(source.getPrice().getPriceRangeList()));
+				price.setConsignPrice(source.getPrice().getConsignSupplyPrice() == null? null :
+						source.getPrice().getConsignSupplyPrice().toString());
+
+
 				price.setCode(source.getPrice().getCode());
 				price.setProductPriceSpecialAmount(source.getPrice().getDiscountedPrice());
 				if (source.getPrice().getDiscountStartDate() != null) {

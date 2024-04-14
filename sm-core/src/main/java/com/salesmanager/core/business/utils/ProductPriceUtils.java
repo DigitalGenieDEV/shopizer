@@ -93,6 +93,10 @@ public class ProductPriceUtils {
 
 		FinalPrice finalPrice = calculateFinalPrice(product);
 
+		if (product.getQuoteType() != null && (product.getQuoteType() == 0 || product.getQuoteType()== 2)){
+
+		}
+
 		// attributes
 		BigDecimal attributePrice = null;
 		if (attributes != null && attributes.size() > 0) {
@@ -175,6 +179,7 @@ public class ProductPriceUtils {
 		return finalPrice;
 
 	}
+
 
 	// Pricer
 	public FinalPrice getFinalPrice(ProductVariant variant) throws ServiceException {

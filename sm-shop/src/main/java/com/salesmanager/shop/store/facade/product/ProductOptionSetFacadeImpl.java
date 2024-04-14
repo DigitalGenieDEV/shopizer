@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.facade.product;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.store.controller.category.facade.CategoryFacade;
 import org.apache.commons.lang3.Validate;
@@ -170,9 +171,10 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 	}
 
 	@Override
-	public List<ReadableProductOptionSet> listByCategoryId(Language language, Long categoryId) {
+	public List<ReadableProductOptionSet> listByCategoryId(Language language, Long categoryId, OptionSetForSaleType optionSetForSaleType) {
 		Validate.notNull(language, "Language cannot be null");
 		Validate.notNull(categoryId, "Category id cannot be null");
+		Validate.notNull(optionSetForSaleType, "optionSetForSaleType cannot be null");
 
 		// find product type by id
 		ReadableCategory readable = categoryFacade.getById(null, categoryId, language);
@@ -181,7 +183,7 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 			throw new ResourceNotFoundException("Can't fing category [" + categoryId + "]");
 		}
 
-		List<ProductOptionSet> optionSets = productOptionSetService.getByCategoryId(categoryId, language);
+		List<ProductOptionSet> optionSets = productOptionSetService.getByCategoryId(categoryId, language, optionSetForSaleType);
 		return optionSets.stream().map(opt -> this.convert(opt, null, language)).collect(Collectors.toList());
 
 	}

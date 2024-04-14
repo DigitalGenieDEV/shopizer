@@ -2,7 +2,9 @@ package com.salesmanager.shop.model.catalog.product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
+import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import org.apache.commons.lang3.StringUtils;
 /**
  * A product entity is used by services API
@@ -28,6 +30,19 @@ public class ProductPriceEntity extends ProductPrice implements Serializable {
 
 	private BigDecimal consignSupplyPrice;
 
+	/**
+	 * 阶梯价
+	 */
+	private List<PriceRange> priceRangeList;
+
+
+	public List<PriceRange> getPriceRangeList() {
+		return priceRangeList;
+	}
+
+	public void setPriceRangeList(List<PriceRange> priceRangeList) {
+		this.priceRangeList = priceRangeList;
+	}
 
 	public BigDecimal getSupplyPrice() {
 		return supplyPrice;

@@ -2,14 +2,32 @@ package com.salesmanager.shop.store.api.v2.product;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
+import com.salesmanager.core.model.catalog.product.price.FinalPrice;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantPrice;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantValue;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableSelectedProductVariant;
 import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
+import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +99,15 @@ public class ProductApiV2 {
 	
 	@Autowired
 	private CategoryFacade categoryFacade;
+
+	@Autowired
+	private PricingService pricingService;
+
+	@Autowired
+	private ProductVariantService productVariantService;
+
+	@Autowired
+	private ProductService productService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -368,5 +395,90 @@ public class ProductApiV2 {
 
 
 		return product;
+	}
+
+
+
+	/**
+	 * Calculates the price based on selected variant code
+	 * @param id
+	 * @param readableProductVariantPrices
+	 * @param merchantStore
+	 * @param language
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/product/{id}/calculate/price", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(
+			httpMethod = "POST",
+			value = "Get product price variants based on selected product",
+			notes = "",
+			produces = "application/json",
+			response = ReadableProductPrice.class)
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+	})
+	public ReadableProductPrice calculateVariantPrice(
+			@PathVariable final Long id,
+			@RequestBody List<ReadableProductVariantPrice> readableProductVariantPrices,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language,
+			HttpServletResponse response)
+			throws Exception {
+
+		Product product = productService.getById(id);
+
+		if (product == null) {
+			response.sendError(404, "Product not fount for id " + id);
+			return null;
+		}
+
+		if (CollectionUtils.isEmpty(readableProductVariantPrices)) {
+			return null;
+		}
+
+		ReadableProductPrice readableProductPrice = new ReadableProductPrice();
+
+		FinalPrice totalPrice = new FinalPrice();
+		BigDecimal totalOriginalPrice = BigDecimal.ZERO;
+		BigDecimal totalDiscountedPrice = BigDecimal.ZERO;
+		BigDecimal totalFinalPrice = BigDecimal.ZERO;
+
+		for (ReadableProductVariantPrice variant : readableProductVariantPrices) {
+			ProductVariant productVariant = productVariantService.queryBySkuCodeAndProductId(variant.getVariantCode(), id);
+			try {
+				FinalPrice price = pricingService.calculateProductPrice(productVariant);
+
+				if (price != null) {
+					BigDecimal variantQuantity = BigDecimal.valueOf(variant.getQuantity());
+					if (price.getOriginalPrice() != null) {
+						totalOriginalPrice = totalOriginalPrice.add(price.getOriginalPrice().multiply(variantQuantity));
+					}
+					if (price.getDiscountedPrice() != null) {
+						totalDiscountedPrice = totalDiscountedPrice.add(price.getDiscountedPrice().multiply(variantQuantity));
+					}
+					if (price.getFinalPrice() != null) {
+						totalFinalPrice = totalFinalPrice.add(price.getFinalPrice().multiply(variantQuantity));
+					}
+				}
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		totalPrice.setOriginalPrice(totalOriginalPrice);
+		totalPrice.setDiscountedPrice(totalDiscountedPrice);
+		totalPrice.setFinalPrice(totalFinalPrice);
+
+		ReadableFinalPricePopulator populator = new ReadableFinalPricePopulator();
+		populator.setPricingService(pricingService);
+		populator.populate(totalPrice, readableProductPrice, merchantStore, language);
+
+		return readableProductPrice;
 	}
 }
