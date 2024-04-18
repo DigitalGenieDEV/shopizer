@@ -162,6 +162,9 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<Long, Cont
 		} else if(contentFile.getFileContentType().name().equals(FileContentType.API_FILE.name())) {
 			contentFile.setFileContentType(FileContentType.STATIC_FILE);
 			addFile(merchantStoreCode, contentFile);
+		} else if(contentFile.getFileContentType().name().equals(FileContentType.VIDEO.name())) {
+			contentFile.setFileContentType(FileContentType.VIDEO);
+			addFile(merchantStoreCode, contentFile);
 		} else {
 			addImage(merchantStoreCode, contentFile);
 		}

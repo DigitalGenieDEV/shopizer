@@ -27,6 +27,17 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	private List<PersistableProductVariant> variants = new ArrayList<PersistableProductVariant>();
 	private String type;
 
+	private Long outProductId;
+
+
+	public Long getOutProductId() {
+		return outProductId;
+	}
+
+	public void setOutProductId(Long outProductId) {
+		this.outProductId = outProductId;
+	}
+
 	public List<ProductDescription> getDescriptions() {
 		return descriptions;
 	}

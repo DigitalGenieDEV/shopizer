@@ -513,6 +513,9 @@ public class ContentFacadeImpl implements ContentFacade {
 									// only
 			fileType = FileContentType.API_IMAGE;
 		}
+		if (type.equals("video")) {
+			fileType = FileContentType.VIDEO;
+		}
 		return fileType;
 	}
 

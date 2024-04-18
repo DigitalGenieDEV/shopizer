@@ -114,7 +114,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			destination.setBatchNumber(source.getBatchNumber());
 			destination.setQuoteType(source.getQuoteType());
 			destination.setMinOrderQuantity(source.getMinOrderQuantity());
-
+			destination.setOutProductId(source.getOutProductId());
 			if (source.getGeneralMixedBatch()!=null && source.getGeneralMixedBatch()){
 				destination.setMixNumber(source.getMixNumber());
 				destination.setMixAmount(source.getMixAmount());

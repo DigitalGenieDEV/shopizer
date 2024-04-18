@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,12 +266,12 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		Set<ProductImage> originalProductImages = new HashSet<ProductImage>(product.getImages());
 
 		/** save product first **/
-
 		if (product.getId() != null && product.getId() > 0) {
 			super.update(product);
 		} else {
 			super.create(product);
 		}
+
 
 		/**
 		 * Image creation needs extra service to save the file in the CMS
