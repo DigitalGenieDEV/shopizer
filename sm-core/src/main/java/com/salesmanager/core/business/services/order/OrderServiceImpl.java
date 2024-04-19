@@ -116,81 +116,81 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     @Override
     public Order processOrder(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, MerchantStore store) throws ServiceException {
 
-    	return process(order, customer, items, summary, payment, null, store);
+        return process(order, customer, items, summary, payment, null, store);
     }
 
     @Override
     public Order processOrder(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, Transaction transaction, MerchantStore store) throws ServiceException {
-    	return process(order, customer, items, summary, payment, transaction, store);
+        return process(order, customer, items, summary, payment, transaction, store);
     }
 
-	private Order process(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, Transaction transaction, MerchantStore store) throws ServiceException {
+    private Order process(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, Transaction transaction, MerchantStore store) throws ServiceException {
 
 
-    	Validate.notNull(order, "Order cannot be null");
-    	Validate.notNull(customer, "Customer cannot be null (even if anonymous order)");
-    	Validate.notEmpty(items, "ShoppingCart items cannot be null");
-    	Validate.notNull(payment, "Payment cannot be null");
-    	Validate.notNull(store, "MerchantStore cannot be null");
-    	Validate.notNull(summary, "Order total Summary cannot be null");
+        Validate.notNull(order, "Order cannot be null");
+        Validate.notNull(customer, "Customer cannot be null (even if anonymous order)");
+        Validate.notEmpty(items, "ShoppingCart items cannot be null");
+        Validate.notNull(payment, "Payment cannot be null");
+        Validate.notNull(store, "MerchantStore cannot be null");
+        Validate.notNull(summary, "Order total Summary cannot be null");
 
-    	UserContext context = UserContext.getCurrentInstance();
-    	if(context != null) {
-    		String ipAddress = context.getIpAddress();
-    		if(!StringUtils.isBlank(ipAddress)) {
-    			order.setIpAddress(ipAddress);
-    		}
-    	}
+        UserContext context = UserContext.getCurrentInstance();
+        if(context != null) {
+            String ipAddress = context.getIpAddress();
+            if(!StringUtils.isBlank(ipAddress)) {
+                order.setIpAddress(ipAddress);
+            }
+        }
 
 
-    	//first process payment
-    	Transaction processTransaction = paymentService.processPayment(customer, store, payment, items, order);
+        //first process payment
+        Transaction processTransaction = paymentService.processPayment(customer, store, payment, items, order);
 
-    	if(order.getOrderHistory()==null || order.getOrderHistory().size()==0 || order.getStatus()==null) {
-    		OrderStatus status = order.getStatus();
-    		if(status==null) {
-    			status = OrderStatus.ORDERED;
-    			order.setStatus(status);
-    		}
-    		Set<OrderStatusHistory> statusHistorySet = new HashSet<OrderStatusHistory>();
-    		OrderStatusHistory statusHistory = new OrderStatusHistory();
-    		statusHistory.setStatus(status);
-    		statusHistory.setDateAdded(new Date());
-    		statusHistory.setOrder(order);
-    		statusHistorySet.add(statusHistory);
-    		order.setOrderHistory(statusHistorySet);
+        if(order.getOrderHistory()==null || order.getOrderHistory().size()==0 || order.getStatus()==null) {
+            OrderStatus status = order.getStatus();
+            if(status==null) {
+                status = OrderStatus.ORDERED;
+                order.setStatus(status);
+            }
+            Set<OrderStatusHistory> statusHistorySet = new HashSet<OrderStatusHistory>();
+            OrderStatusHistory statusHistory = new OrderStatusHistory();
+            statusHistory.setStatus(status);
+            statusHistory.setDateAdded(new Date());
+            statusHistory.setOrder(order);
+            statusHistorySet.add(statusHistory);
+            order.setOrderHistory(statusHistorySet);
 
-    	}
+        }
 
         if(customer.getId()==null || customer.getId()==0) {
-          customerService.create(customer);
+            customerService.create(customer);
         }
 
         order.setCustomerId(customer.getId());
         this.create(order);
 
-    	if(transaction!=null) {
-    		transaction.setOrder(order);
-    		if(transaction.getId()==null || transaction.getId()==0) {
-    			transactionService.create(transaction);
-    		} else {
-    			transactionService.update(transaction);
-    		}
-    	}
+        if(transaction!=null) {
+            transaction.setOrder(order);
+            if(transaction.getId()==null || transaction.getId()==0) {
+                transactionService.create(transaction);
+            } else {
+                transactionService.update(transaction);
+            }
+        }
 
-    	if(processTransaction!=null) {
-    		processTransaction.setOrder(order);
-    		if(processTransaction.getId()==null || processTransaction.getId()==0) {
-    			transactionService.create(processTransaction);
-    		} else {
-    			transactionService.update(processTransaction);
-    		}
-    	}
+        if(processTransaction!=null) {
+            processTransaction.setOrder(order);
+            if(processTransaction.getId()==null || processTransaction.getId()==0) {
+                transactionService.create(processTransaction);
+            } else {
+                transactionService.update(processTransaction);
+            }
+        }
 
         /**
          * decrement inventory
          */
-    	LOGGER.debug( "Update inventory" );
+        LOGGER.debug( "Update inventory" );
         Set<OrderProduct> products = order.getOrderProducts();
         for(OrderProduct orderProduct : products) {
             orderProduct.getProductQuantity();
@@ -201,7 +201,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                 int qty = availability.getProductQuantity();
                 if(qty < orderProduct.getProductQuantity()) {
                     //throw new ServiceException(ServiceException.EXCEPTION_INVENTORY_MISMATCH);
-                	LOGGER.error("APP-BACKEND [" + ServiceException.EXCEPTION_INVENTORY_MISMATCH + "]");
+                    LOGGER.error("APP-BACKEND [" + ServiceException.EXCEPTION_INVENTORY_MISMATCH + "]");
                 }
                 qty = qty - orderProduct.getProductQuantity();
                 availability.setProductQuantity(qty);
@@ -211,10 +211,10 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
 
 
-    	return order;
+        return order;
     }
 
-    private OrderTotalSummary caculateOrder(OrderSummary summary, Customer customer, final MerchantStore store, final Language language) throws Exception {
+    public OrderTotalSummary caculateOrder(OrderSummary summary, Customer customer, final MerchantStore store, final Language language) throws Exception {
 
         OrderTotalSummary totalSummary = new OrderTotalSummary();
         List<OrderTotal> orderTotals = new ArrayList<OrderTotal>();
@@ -275,24 +275,24 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         //only in order page, otherwise invokes too many processing
         if(
-        		OrderSummaryType.ORDERTOTAL.name().equals(summary.getOrderSummaryType().name()) ||
-        		OrderSummaryType.SHOPPINGCART.name().equals(summary.getOrderSummaryType().name())
+                OrderSummaryType.ORDERTOTAL.name().equals(summary.getOrderSummaryType().name()) ||
+                        OrderSummaryType.SHOPPINGCART.name().equals(summary.getOrderSummaryType().name())
 
-        		) {
+        ) {
 
-	        //Post processing order total variation modules for sub total calculation - drools, custom modules
-	        //may affect the sub total
-	        OrderTotalVariation orderTotalVariation = orderTotalService.findOrderTotalVariation(summary, customer, store, language);
+            //Post processing order total variation modules for sub total calculation - drools, custom modules
+            //may affect the sub total
+            OrderTotalVariation orderTotalVariation = orderTotalService.findOrderTotalVariation(summary, customer, store, language);
 
-	        int currentCount = 10;
+            int currentCount = 10;
 
-	        if(CollectionUtils.isNotEmpty(orderTotalVariation.getVariations())) {
-	        	for(OrderTotal variation : orderTotalVariation.getVariations()) {
-	        		variation.setSortOrder(currentCount++);
-	        		orderTotals.add(variation);
-	        		subTotal = subTotal.subtract(variation.getValue());
-	        	}
-	        }
+            if(CollectionUtils.isNotEmpty(orderTotalVariation.getVariations())) {
+                for(OrderTotal variation : orderTotalVariation.getVariations()) {
+                    variation.setSortOrder(currentCount++);
+                    orderTotals.add(variation);
+                    subTotal = subTotal.subtract(variation.getValue());
+                }
+            }
 
         }
 
@@ -315,14 +315,14 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         if(summary.getShippingSummary()!=null) {
 
 
-	            OrderTotal shippingSubTotal = new OrderTotal();
-	            shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
-	            shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
-	            shippingSubTotal.setOrderTotalCode("order.total.shipping");
-	            shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
-	            shippingSubTotal.setSortOrder(100);
+            OrderTotal shippingSubTotal = new OrderTotal();
+            shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+            shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+            shippingSubTotal.setOrderTotalCode("order.total.shipping");
+            shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+            shippingSubTotal.setSortOrder(100);
 
-	            orderTotals.add(shippingSubTotal);
+            orderTotals.add(shippingSubTotal);
 
             if(!summary.getShippingSummary().isFreeShipping()) {
                 shippingSubTotal.setValue(summary.getShippingSummary().getShipping());
@@ -353,8 +353,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         //tax
         List<TaxItem> taxes = taxService.calculateTax(summary, customer, store, language);
         if(taxes!=null && taxes.size()>0) {
-        	BigDecimal totalTaxes = new BigDecimal(0);
-        	totalTaxes.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal totalTaxes = new BigDecimal(0);
+            totalTaxes.setScale(2, RoundingMode.HALF_UP);
             int taxCount = 200;
             for(TaxItem tax : taxes) {
 
@@ -430,35 +430,35 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     private OrderTotalSummary caculateShoppingCart( ShoppingCart shoppingCart, final Customer customer, final MerchantStore store, final Language language) throws Exception {
 
 
-    	OrderSummary orderSummary = new OrderSummary();
-    	orderSummary.setOrderSummaryType(OrderSummaryType.SHOPPINGCART);
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setOrderSummaryType(OrderSummaryType.SHOPPINGCART);
 
-    	if(!StringUtils.isBlank(shoppingCart.getPromoCode())) {
-    		Date promoDateAdded = shoppingCart.getPromoAdded();//promo valid 1 day
-    		if(promoDateAdded == null) {
-    			promoDateAdded = new Date();
-    		}
-    		Instant instant = promoDateAdded.toInstant();
-    		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-    		LocalDate date = zdt.toLocalDate();
-    		//date added < date + 1 day
-    		LocalDate tomorrow = LocalDate.now().plusDays(1);
-    		if(date.isBefore(tomorrow)) {
-    			orderSummary.setPromoCode(shoppingCart.getPromoCode());
-    		} else {
-    			//clear promo
-    			shoppingCart.setPromoCode(null);
-    			shoppingCartService.saveOrUpdate(shoppingCart);
-    		}
-    	}
+        if(!StringUtils.isBlank(shoppingCart.getPromoCode())) {
+            Date promoDateAdded = shoppingCart.getPromoAdded();//promo valid 1 day
+            if(promoDateAdded == null) {
+                promoDateAdded = new Date();
+            }
+            Instant instant = promoDateAdded.toInstant();
+            ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+            LocalDate date = zdt.toLocalDate();
+            //date added < date + 1 day
+            LocalDate tomorrow = LocalDate.now().plusDays(1);
+            if(date.isBefore(tomorrow)) {
+                orderSummary.setPromoCode(shoppingCart.getPromoCode());
+            } else {
+                //clear promo
+                shoppingCart.setPromoCode(null);
+                shoppingCartService.saveOrUpdate(shoppingCart);
+            }
+        }
 
-    	List<ShoppingCartItem> itemList = new ArrayList<ShoppingCartItem>(shoppingCart.getLineItems());
-    	//filter out unavailable
-    	itemList = itemList.stream().filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
-    	orderSummary.setProducts(itemList);
+        List<ShoppingCartItem> itemList = new ArrayList<ShoppingCartItem>(shoppingCart.getLineItems());
+        //filter out unavailable
+        itemList = itemList.stream().filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
+        orderSummary.setProducts(itemList);
 
 
-    	return caculateOrder(orderSummary, customer, store, language);
+        return caculateOrder(orderSummary, customer, store, language);
 
     }
 
@@ -477,8 +477,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
      */
     @Override
     public OrderTotalSummary calculateShoppingCartTotal(
-                                                        final ShoppingCart shoppingCart, final Customer customer, final MerchantStore store,
-                                                        final Language language) throws ServiceException {
+            final ShoppingCart shoppingCart, final Customer customer, final MerchantStore store,
+            final Language language) throws ServiceException {
         Validate.notNull(shoppingCart,"Order summary cannot be null");
         Validate.notNull(customer,"Customery cannot be null");
         Validate.notNull(store,"MerchantStore cannot be null.");
@@ -507,8 +507,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
      */
     @Override
     public OrderTotalSummary calculateShoppingCartTotal(
-                                                        final ShoppingCart shoppingCart, final MerchantStore store, final Language language)
-                                                                        throws ServiceException {
+            final ShoppingCart shoppingCart, final MerchantStore store, final Language language)
+            throws ServiceException {
         Validate.notNull(shoppingCart,"Order summary cannot be null");
         Validate.notNull(store,"MerchantStore cannot be null");
 
@@ -546,8 +546,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
     @Override
     public Order getOrder(final Long orderId, MerchantStore store ) {
-    	Validate.notNull(orderId, "Order id cannot be null");
-    	Validate.notNull(store, "Store cannot be null");
+        Validate.notNull(orderId, "Order id cannot be null");
+        Validate.notNull(store, "Store cannot be null");
         return orderRepository.findOne(orderId, store.getId());
     }
 
@@ -578,102 +578,102 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         }
     }
 
-	@Override
-	public boolean hasDownloadFiles(Order order) throws ServiceException {
+    @Override
+    public boolean hasDownloadFiles(Order order) throws ServiceException {
 
-		Validate.notNull(order,"Order cannot be null");
-		Validate.notNull(order.getOrderProducts(),"Order products cannot be null");
-		Validate.notEmpty(order.getOrderProducts(),"Order products cannot be empty");
+        Validate.notNull(order,"Order cannot be null");
+        Validate.notNull(order.getOrderProducts(),"Order products cannot be null");
+        Validate.notEmpty(order.getOrderProducts(),"Order products cannot be empty");
 
-		boolean hasDownloads = false;
-		for(OrderProduct orderProduct : order.getOrderProducts()) {
+        boolean hasDownloads = false;
+        for(OrderProduct orderProduct : order.getOrderProducts()) {
 
-			if(CollectionUtils.isNotEmpty(orderProduct.getDownloads())) {
-				hasDownloads = true;
-				break;
-			}
-		}
+            if(CollectionUtils.isNotEmpty(orderProduct.getDownloads())) {
+                hasDownloads = true;
+                break;
+            }
+        }
 
-		return hasDownloads;
-	}
+        return hasDownloads;
+    }
 
-	@Override
-	public List<Order> getCapturableOrders(MerchantStore store, Date startDate, Date endDate) throws ServiceException {
+    @Override
+    public List<Order> getCapturableOrders(MerchantStore store, Date startDate, Date endDate) throws ServiceException {
 
-		List<Transaction> transactions = transactionService.listTransactions(startDate, endDate);
+        List<Transaction> transactions = transactionService.listTransactions(startDate, endDate);
 
-		List<Order> returnOrders = null;
+        List<Order> returnOrders = null;
 
-		if(!CollectionUtils.isEmpty(transactions)) {
+        if(!CollectionUtils.isEmpty(transactions)) {
 
-			returnOrders = new ArrayList<Order>();
+            returnOrders = new ArrayList<Order>();
 
-			//order id
-			Map<Long,Order> preAuthOrders = new HashMap<Long,Order> ();
-			//order id
-			Map<Long,List<Transaction>> processingTransactions = new HashMap<Long,List<Transaction>> ();
+            //order id
+            Map<Long,Order> preAuthOrders = new HashMap<Long,Order> ();
+            //order id
+            Map<Long,List<Transaction>> processingTransactions = new HashMap<Long,List<Transaction>> ();
 
-			for(Transaction trx : transactions) {
-				Order order = trx.getOrder();
-				if(TransactionType.AUTHORIZE.name().equals(trx.getTransactionType().name())) {
-					preAuthOrders.put(order.getId(), order);
-				}
+            for(Transaction trx : transactions) {
+                Order order = trx.getOrder();
+                if(TransactionType.AUTHORIZE.name().equals(trx.getTransactionType().name())) {
+                    preAuthOrders.put(order.getId(), order);
+                }
 
-				//put transaction
-				List<Transaction> listTransactions = null;
-				if(processingTransactions.containsKey(order.getId())) {
-					listTransactions = processingTransactions.get(order.getId());
-				} else {
-					listTransactions = new ArrayList<Transaction>();
-					processingTransactions.put(order.getId(), listTransactions);
-				}
-				listTransactions.add(trx);
-			}
+                //put transaction
+                List<Transaction> listTransactions = null;
+                if(processingTransactions.containsKey(order.getId())) {
+                    listTransactions = processingTransactions.get(order.getId());
+                } else {
+                    listTransactions = new ArrayList<Transaction>();
+                    processingTransactions.put(order.getId(), listTransactions);
+                }
+                listTransactions.add(trx);
+            }
 
-			//should have when captured
-			/**
-			 * Order id  Transaction type
-			 * 1          AUTHORIZE
-			 * 1          CAPTURE
-			 */
+            //should have when captured
+            /**
+             * Order id  Transaction type
+             * 1          AUTHORIZE
+             * 1          CAPTURE
+             */
 
-			//should have when not captured
-			/**
-			 * Order id  Transaction type
-			 * 2          AUTHORIZE
-			 */
+            //should have when not captured
+            /**
+             * Order id  Transaction type
+             * 2          AUTHORIZE
+             */
 
-			for(Long orderId : processingTransactions.keySet()) {
+            for(Long orderId : processingTransactions.keySet()) {
 
-				List<Transaction> trx = processingTransactions.get(orderId);
-				if(CollectionUtils.isNotEmpty(trx)) {
+                List<Transaction> trx = processingTransactions.get(orderId);
+                if(CollectionUtils.isNotEmpty(trx)) {
 
-					boolean capturable = true;
-					for(Transaction t : trx) {
+                    boolean capturable = true;
+                    for(Transaction t : trx) {
 
-						if(TransactionType.CAPTURE.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						} else if(TransactionType.AUTHORIZECAPTURE.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						} else if(TransactionType.REFUND.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						}
+                        if(TransactionType.CAPTURE.name().equals(t.getTransactionType().name())) {
+                            capturable = false;
+                        } else if(TransactionType.AUTHORIZECAPTURE.name().equals(t.getTransactionType().name())) {
+                            capturable = false;
+                        } else if(TransactionType.REFUND.name().equals(t.getTransactionType().name())) {
+                            capturable = false;
+                        }
 
-					}
+                    }
 
-					if(capturable) {
-						Order o = preAuthOrders.get(orderId);
-						returnOrders.add(o);
-					}
+                    if(capturable) {
+                        Order o = preAuthOrders.get(orderId);
+                        returnOrders.add(o);
+                    }
 
-				}
+                }
 
 
-			}
-		}
+            }
+        }
 
-		return returnOrders;
-	}
+        return returnOrders;
+    }
 
 
 
