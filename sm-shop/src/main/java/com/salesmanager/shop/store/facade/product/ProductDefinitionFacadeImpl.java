@@ -102,4 +102,9 @@ public class ProductDefinitionFacadeImpl implements ProductDefinitionFacade {
 
 	}
 
+	@Override
+	public Long getProductByOutId(MerchantStore store, Long outId) {
+		return null;
+	}
+
 }

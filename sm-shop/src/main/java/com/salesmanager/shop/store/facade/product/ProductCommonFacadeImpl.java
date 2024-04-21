@@ -47,6 +47,7 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -82,6 +83,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	private ImageFilePath imageUtils;
 
 	@Override
+	@Transactional
 	public Long saveProduct(MerchantStore store, PersistableProduct product, Language language) {
 
 		String manufacturer = Manufacturer.DEFAULT_MANUFACTURER;

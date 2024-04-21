@@ -344,6 +344,11 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public Product findByOutId(Long outId, MerchantStore merchant) {
+		return null;
+	}
+
+	@Override
 	public Page<Product> listByStore(MerchantStore store, Language language, ProductCriteria criteria, int page,
 			int count) {
 

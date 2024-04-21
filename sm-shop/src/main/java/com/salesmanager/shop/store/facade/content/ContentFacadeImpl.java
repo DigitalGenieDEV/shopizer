@@ -94,6 +94,26 @@ public class ContentFacadeImpl implements ContentFacade {
 		}
 	}
 
+	@Override
+	public ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType) throws Exception {
+		try {
+			List<String> imageNames = Optional
+					.ofNullable(contentService.getContentFilesNames(store.getCode(), fileContentType))
+					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path  "));
+
+			// images from CMS
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store))
+					.collect(Collectors.toList());
+
+			ContentFolder contentFolder = new ContentFolder();
+			contentFolder.getContent().addAll(contentImages);
+			return contentFolder;
+
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException("Error while getting folder " + e.getMessage(), e);
+		}
+	}
+
 	private ContentImage convertToContentImage(String name, MerchantStore store) {
 		String path = absolutePath(store, null);
 		ContentImage contentImage = new ContentImage();
@@ -506,6 +526,35 @@ public class ContentFacadeImpl implements ContentFacade {
 			throw new ServiceRuntimeException(e);
 		}
 	}
+
+
+	@Override
+	public void addContentFile(ContentFile file, String merchantStoreCode, FileContentType fileType) {
+		try {
+			byte[] payload = file.getFile();
+			String fileName = file.getName();
+
+			try (InputStream targetStream = new ByteArrayInputStream(payload)) {
+
+				if (fileType == null){
+					String type = file.getContentType().split(FILE_CONTENT_DELIMETER)[0];
+					fileType = getFileContentType(type);
+				}
+
+				InputContentFile cmsContent = new InputContentFile();
+				cmsContent.setFileName(fileName);
+				cmsContent.setMimeType(file.getContentType());
+				cmsContent.setFile(targetStream);
+				cmsContent.setFileContentType(fileType);
+
+				contentService.addContentFile(merchantStoreCode, cmsContent);
+			}
+		} catch (ServiceException | IOException e) {
+			throw new ServiceRuntimeException(e);
+		}
+	}
+
+
 
 	private FileContentType getFileContentType(String type) {
 		FileContentType fileType = FileContentType.STATIC_FILE;

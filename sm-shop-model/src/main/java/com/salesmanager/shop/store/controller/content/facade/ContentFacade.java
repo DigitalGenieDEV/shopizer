@@ -30,7 +30,10 @@ public interface ContentFacade {
 	
 	
 	ContentFolder getContentFolder(String folder, MerchantStore store) throws Exception;
-	
+
+
+	ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType) throws Exception;
+
 	/**
 	 * File pth
 	 * @param store
@@ -119,7 +122,10 @@ public interface ContentFacade {
 	ReadableEntityList<ReadableContentBox> getContentBoxes(ContentType type, MerchantStore store, Language language, int start, int count);
 
 	void addContentFile(ContentFile file, String merchantStoreCode);
-	
+
+
+	void addContentFile(ContentFile file, String merchantStoreCode, FileContentType fileContentType);
+
 	/**
 	 * Add multiple files
 	 * @param file

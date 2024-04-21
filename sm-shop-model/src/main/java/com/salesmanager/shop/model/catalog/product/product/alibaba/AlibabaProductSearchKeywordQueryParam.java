@@ -1,0 +1,117 @@
+package com.salesmanager.shop.model.catalog.product.product.alibaba;
+
+public class AlibabaProductSearchKeywordQueryParam {
+
+    private String keyword;
+
+    /**
+     * @return
+     */
+    public String getKeyword() {
+        return keyword;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    private Integer beginPage;
+
+    /**
+     * @return
+     */
+    public Integer getBeginPage() {
+        return beginPage;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setBeginPage(Integer beginPage) {
+        this.beginPage = beginPage;
+    }
+
+    private Integer pageSize;
+
+    /**
+     * @return
+     */
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+
+
+
+    private String sort;
+
+    /**
+     * @return
+     */
+    public String getSort() {
+        return sort;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+
+    private Long categoryId;
+
+    /**
+     * @return
+     */
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    private String country;
+
+    /**
+     * @return
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * 设置     *
+     * 参数示例：<pre></pre>
+     * 此参数必填
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+}

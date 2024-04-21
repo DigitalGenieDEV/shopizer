@@ -1,18 +1,17 @@
-package com.salesmanager.core.business.services.alibaba.product;
+package com.salesmanager.core.business.services.alibaba.product.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.alibaba.ApiExecutorSingleton;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.alibaba.rawsdk.ApiExecutor;
+import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.constants.ApiFor1688Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class AlibabaProductServiceImpl implements AlibabaProductService{
+public class AlibabaProductServiceImpl implements AlibabaProductService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlibabaProductServiceImpl.class);
 

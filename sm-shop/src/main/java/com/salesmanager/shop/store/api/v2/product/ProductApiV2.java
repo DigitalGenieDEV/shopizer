@@ -26,7 +26,10 @@ import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVari
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantValue;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableSelectedProductVariant;
 import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
+import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchKeywordQueryParam;
+import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProductPageInfo;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
+import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -108,6 +111,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private AlibabaProductFacade alibabaProductFacade;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -481,4 +487,33 @@ public class ProductApiV2 {
 
 		return readableProductPrice;
 	}
+
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@PatchMapping(value = "/private/product/searchProductByKeywords", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "search product by keywords",
+			notes = "search product by keywords", produces = "application/json",
+			response = ReadableProductPageInfo.class)
+	public ReadableProductPageInfo searchProductByKeywords(
+			@Valid @RequestBody
+			AlibabaProductSearchKeywordQueryParam queryParam) {
+
+		return alibabaProductFacade.searchProductByKeywords(queryParam);
+	}
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@PatchMapping(value = "/private/product/import", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "import product", notes = "import product", produces = "application/json", response = Void.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	public void importAlibabaProduct(
+			@RequestParam List<Long> productIds,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language) throws ServiceException {
+		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore);
+	}
+
+
 }

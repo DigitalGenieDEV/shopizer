@@ -267,13 +267,10 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 					for(ProductVariant variant : destination.getVariants()) {
 						defaultAvailability = this.defaultAvailability(variant.getAvailabilities().stream().collect(Collectors.toList()));
 						if(defaultAvailability != null) {
-							break;
+							defaultAvailability.setProduct(destination);
+							destination.getAvailabilities().add(defaultAvailability);
 						}
 					}
-					
-					defaultAvailability.setProduct(destination);
-					destination.getAvailabilities().add(defaultAvailability);
-					
 				}
 			}
 			

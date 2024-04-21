@@ -97,5 +97,9 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	Product findOne(Long id, MerchantStore merchant);
 
 
+
+	Product findByOutId(Long outId, MerchantStore merchant);
+
+
 }
 
