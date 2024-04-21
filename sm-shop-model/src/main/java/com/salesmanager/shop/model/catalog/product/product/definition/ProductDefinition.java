@@ -23,8 +23,17 @@ public class ProductDefinition extends Entity {
 	private String sku; //to match v1 api
 	private ProductSpecification productSpecifications;
 	private int sortOrder;
-	
-	
+
+	private Long outProductId;
+
+	public Long getOutProductId() {
+		return outProductId;
+	}
+
+	public void setOutProductId(Long outProductId) {
+		this.outProductId = outProductId;
+	}
+
 	public boolean isVisible() {
 		return visible;
 	}

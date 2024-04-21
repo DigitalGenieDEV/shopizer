@@ -20,6 +20,19 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
         this.offerId = offerId;
     }
 
+    /**
+     * 30天销量
+     */
+    private Integer monthSold;
+
+    public Integer getMonthSold() {
+        return monthSold;
+    }
+
+    public void setMonthSold(Integer monthSold) {
+        this.monthSold = monthSold;
+    }
+
     private Long categoryId;
 
     /**

@@ -1,11 +1,8 @@
-package com.salesmanager.core.business.alibaba.fenxiao.crossborder.param;
+package com.salesmanager.shop.model.catalog.product.product.alibaba;
 
-public class ProductSearchKeywordQueryModelPriceInfoV {
+public class ReadableAlibabaProductSearchQueryPriceInfo {
 
 
-    /**
-     * 营销价
-     */
     private String promotionPrice;
 
     public String getPromotionPrice() {
@@ -27,7 +24,7 @@ public class ProductSearchKeywordQueryModelPriceInfoV {
 
     /**
      * 设置批发价     *
-     * 参数示例：<pre>10</pre>     
+     * 参数示例：<pre>10</pre>
      * 此参数必填
      */
     public void setPrice(String price) {
@@ -45,7 +42,7 @@ public class ProductSearchKeywordQueryModelPriceInfoV {
 
     /**
      * 设置精选货源价     *
-     * 参数示例：<pre>10</pre>     
+     * 参数示例：<pre>10</pre>
      * 此参数必填
      */
     public void setJxhyPrice(String jxhyPrice) {
@@ -63,7 +60,7 @@ public class ProductSearchKeywordQueryModelPriceInfoV {
 
     /**
      * 设置批发精选货源价     *
-     * 参数示例：<pre>10</pre>     
+     * 参数示例：<pre>10</pre>
      * 此参数必填
      */
     public void setPfJxhyPrice(String pfJxhyPrice) {
@@ -81,7 +78,7 @@ public class ProductSearchKeywordQueryModelPriceInfoV {
 
     /**
      * 设置一件代发价     *
-     * 参数示例：<pre>10</pre>     
+     * 参数示例：<pre>10</pre>
      * 此参数必填
      */
     public void setConsignPrice(String consignPrice) {

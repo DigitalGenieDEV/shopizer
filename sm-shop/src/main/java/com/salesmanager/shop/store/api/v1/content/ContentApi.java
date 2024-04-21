@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.content.FileContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -400,6 +401,45 @@ public class ContentApi {
 		//String decodedPath = decodeContentPath(path);
 		ContentFolder folder = contentFacade.getContentFolder(path, merchantStore);
 		return folder;
+	}
+
+
+	@GetMapping(value = "/content/files", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public ContentFolder getFileUrls(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
+								@RequestParam(value = "fileContentType", required = true) String fileContentType,
+								HttpServletResponse response) throws Exception {
+		ContentFolder folder = contentFacade.getContentFolder(merchantStore, FileContentType.valueOf(fileContentType));
+		return folder;
+	}
+
+
+	/**
+	 * Need type, name and entity
+	 *
+	 * @param file
+	 */
+	@PostMapping(value = "/private/content/type/file/")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public void upload(@RequestParam("file") MultipartFile file, @ApiIgnore MerchantStore merchantStore,
+					   @ApiIgnore Language language,
+					   @RequestParam(value = "fileContentType", required = true) String fileContentType) {
+
+		ContentFile f = new ContentFile();
+		f.setContentType(file.getContentType());
+		f.setName(file.getOriginalFilename());
+		try {
+			f.setFile(file.getBytes());
+		} catch (IOException e) {
+			throw new ServiceRuntimeException("Error while getting file bytes");
+		}
+
+		contentFacade.addContentFile(f, merchantStore.getCode(), FileContentType.valueOf(fileContentType));
+
 	}
 
 

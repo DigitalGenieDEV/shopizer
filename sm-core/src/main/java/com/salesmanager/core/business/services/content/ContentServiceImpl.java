@@ -165,10 +165,15 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<Long, Cont
 		} else if(contentFile.getFileContentType().name().equals(FileContentType.VIDEO.name())) {
 			contentFile.setFileContentType(FileContentType.VIDEO);
 			addFile(merchantStoreCode, contentFile);
-		} else {
+		}else if(contentFile.getFileContentType().name().equals(FileContentType.CERTIFICATION_INFORMATION.name())) {
+			contentFile.setFileContentType(FileContentType.CERTIFICATION_INFORMATION);
+			addFile(merchantStoreCode, contentFile);
+		}else if(contentFile.getFileContentType().name().equals(FileContentType.PATENT_INFORMATION.name())){
+			contentFile.setFileContentType(FileContentType.PATENT_INFORMATION);
+			addFile(merchantStoreCode, contentFile);
+		}else {
 			addImage(merchantStoreCode, contentFile);
 		}
-
 	}
 
 	@Override

@@ -43,4 +43,7 @@ public interface ProductDefinitionFacade {
 	 */
 	ReadableProductDefinition getProductBySku(MerchantStore store, String uniqueCode, Language language);
 
+
+	Long getProductByOutId(MerchantStore store, Long outId);
+
 }
