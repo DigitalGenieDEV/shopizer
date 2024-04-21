@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Service("customerShoppingCartService")
 public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long, CustomerShoppingCart> implements CustomerShoppingCartService{
@@ -51,7 +52,25 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
     @Override
     public CustomerShoppingCart getCustomerShoppingCart(Customer customer) throws ServiceException {
-        return this.customerShoppingCartRepository.findByCustomer(customer.getId());
+        CustomerShoppingCart cartModel = this.customerShoppingCartRepository.findByCustomer(customer.getId());
+
+        if (cartModel == null) {
+            cartModel = new CustomerShoppingCart();
+            cartModel.setCustomerId(customer.getId());
+            cartModel.setCustomerShoppingCartCode(uniqueShoppingCartCode());
+
+            this.customerShoppingCartRepository.save(cartModel);
+        } else {
+            getPopulatedCustomerShoppingCart(cartModel);
+        }
+
+//        cartModel = this.customerShoppingCartRepository.findByCode(cartModel.getCustomerShoppingCartCode());
+
+        return cartModel;
+    }
+
+    private String uniqueShoppingCartCode() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     @Override
@@ -98,7 +117,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
     }
 
     @Transactional(noRollbackFor = { org.springframework.dao.EmptyResultDataAccessException.class })
-    private CustomerShoppingCart getPopulatedCustomerShoppingCart(final CustomerShoppingCart customerShoppingCart) throws Exception {
+    private CustomerShoppingCart getPopulatedCustomerShoppingCart(final CustomerShoppingCart customerShoppingCart) throws ServiceException {
         try {
             boolean cartIsObsolete = false;
             if (customerShoppingCart != null) {
@@ -136,7 +155,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         return customerShoppingCart;
     }
 
-    @Transactional
+//    @Transactional
     private void getPopulatedItem(final CustomerShoppingCartItem item) throws Exception {
         Product product = productService.getBySku(item.getSku(), item.getMerchantStore(), item.getMerchantStore().getDefaultLanguage());
         if (product == null) {
@@ -145,7 +164,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         }
 
         item.setProduct(product);
-        item.setSku(product.getSku());
+//        item.setSku(product.getSku());
 
         if (product.isProductVirtual()) {
             item.setProductVirtual(true);

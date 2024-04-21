@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,8 +32,9 @@ public class MyScheduledTask {
     protected MerchantStoreService merchantService;
 
 
-//    @Scheduled(cron = "0 0 /5* * * *") // 每隔五秒执行一次
+//    @Scheduled(cron = "0 0 0/5 * * *") // 每隔五秒执行一次
 //    @Scheduled(fixedDelay = 500000000) // 每隔五秒执行一次
+//    @PostConstruct
     void execute1688ProductImportTask() throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam productSearchKeywordQueryParamOfferQueryParam = new ProductSearchKeywordQueryParamOfferQueryParam();
         productSearchKeywordQueryParamOfferQueryParam.setPageSize(10);

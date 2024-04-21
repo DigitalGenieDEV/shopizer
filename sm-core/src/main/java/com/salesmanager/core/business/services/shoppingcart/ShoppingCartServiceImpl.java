@@ -123,6 +123,11 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 
 	}
 
+	@Override
+	public void saveOrUpdateFlush(ShoppingCart shoppingCart) throws ServiceException {
+		this.saveAndFlush(shoppingCart);
+	}
+
 	/**
 	 * Get a {@link ShoppingCart} for a given id and MerchantStore. Will update the
 	 * shopping cart prices and items based on the actual inventory. This method
@@ -139,12 +144,13 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 			}
 			getPopulatedShoppingCart(shoppingCart, store);
 
-			if (shoppingCart.isObsolete()) {
-				delete(shoppingCart);
-				return null;
-			} else {
-				return shoppingCart;
-			}
+			return shoppingCart;
+//			if (shoppingCart.isObsolete()) {
+//				delete(shoppingCart);
+//				return null;
+//			} else {
+//				return shoppingCart;
+//			}
 
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -190,12 +196,13 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 			}
 			getPopulatedShoppingCart(shoppingCart, store);
 
-			if (shoppingCart.isObsolete()) {
-				delete(shoppingCart);
-				return null;
-			} else {
-				return shoppingCart;
-			}
+			return  shoppingCart;
+//			if (shoppingCart.isObsolete()) {
+//				delete(shoppingCart);
+//				return null;
+//			} else {
+//				return shoppingCart;
+//			}
 
 		} catch (javax.persistence.NoResultException nre) {
 			return null;

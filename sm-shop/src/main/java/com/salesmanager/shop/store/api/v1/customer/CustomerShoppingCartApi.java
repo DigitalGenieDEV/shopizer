@@ -3,16 +3,23 @@ package com.salesmanager.shop.store.api.v1.customer;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
+import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
+import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 import com.salesmanager.shop.model.order.v1.ReadableOrderConfirmation;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
+import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerShoppingCartFacade;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -28,6 +35,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Locale;
@@ -54,6 +62,9 @@ public class CustomerShoppingCartApi {
     @Inject
     private CustomerFacade customerFacade;
 
+    @Inject
+    private CustomerOrderFacade customerOrderFacade;
+
     @Autowired
     private com.salesmanager.shop.store.controller.customer.facade.v1.CustomerFacade customerFacadev1;
 
@@ -61,28 +72,38 @@ public class CustomerShoppingCartApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerShoppingCartApi.class);
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/customer_cart")
+    @PostMapping(value = "/auth/customer_cart")
     @ApiOperation(httpMethod = "POST", value = "Add product to shopping customer cart when no cart exists, this will create a new customer cart id", notes = "No customer ID in scope. Add to cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":1}", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+    @ResponseBody
     public ReadableCustomerShoppingCart addToCart(
-            PersistableCustomerShoppingCartItem customerShoppingCartItem,
-            Language language
-    ) {
-        return customerShoppingCartFacade.addToCart(customerShoppingCartItem, language);
+            @RequestBody PersistableCustomerShoppingCartItem customerShoppingCartItem,
+            MerchantStore merchantStore,
+            Language language,
+            HttpServletRequest request
+    ) throws Exception {
+        Principal userPrincipal = request.getUserPrincipal();
+        Customer customer = customerService.getByNick(userPrincipal.getName());
+        ReadableCustomerShoppingCart cart = customerShoppingCartFacade.addToCart(customer, customerShoppingCartItem, language);
+        return cart;
     }
 
-    @PutMapping(value = "/customer_cart/{code}")
+    @PutMapping(value = "/auth/customer_cart/{code}")
     @ApiOperation(httpMethod = "PUT", value = "Add to an existing customer shopping cart or modify an item quantity", notes = "No customer ID in scope. Modify cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":0} for instance will remove item 1234 from cart", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
     public ResponseEntity<ReadableCustomerShoppingCart> modifyCart(
-            String code,
-            PersistableCustomerShoppingCartItem customerShoppingCartItem,
-            Language language
+            @PathVariable("code") String code,
+            @RequestBody PersistableCustomerShoppingCartItem customerShoppingCartItem,
+            MerchantStore merchantStore,
+            Language language,
+            HttpServletRequest request
     ) {
         try {
-            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCart(code, customerShoppingCartItem, language);
+            Principal userPrincipal = request.getUserPrincipal();
+            Customer customer = customerService.getByNick(userPrincipal.getName());
+            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCart(customer, code, customerShoppingCartItem, language);
 
             if (cart == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -100,17 +121,21 @@ public class CustomerShoppingCartApi {
         }
     }
 
-    @PostMapping(value = "/customer_cart/{code}/promo/{promo}")
+    @PostMapping(value = "/auth/customer_cart/{code}/promo/{promo}")
     @ApiOperation(httpMethod = "POST", value = "Add promo / coupon to an existing customer cart", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
     public ResponseEntity<ReadableCustomerShoppingCart> modifyCart(
             @PathVariable String code,
             @PathVariable String promo,
-            @ApiIgnore Language language
+            @ApiIgnore Language language,
+            HttpServletRequest request
     ) {
         try {
-            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCart(code, promo, language);
+            Principal principal = request.getUserPrincipal();
+            Customer customer = customerService.getByNick(principal.getName());
+
+            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCart(customer, code, promo, language);
 
             if (cart == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -128,17 +153,20 @@ public class CustomerShoppingCartApi {
         }
     }
 
-    @PostMapping(value = "/customer_cart/{code}/multi", consumes = { "application/json" }, produces = { "application/json" })
+    @PostMapping(value = "/auth/customer_cart/{code}/multi", consumes = { "application/json" }, produces = { "application/json" })
     @ApiOperation(httpMethod = "POST", value = "Add to an existing customer shopping cart or modify an item quantity", notes = "No customer ID in scope. Modify cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":0} for instance will remove item 1234 from cart", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
     public ResponseEntity<ReadableCustomerShoppingCart> modifyCart(
             @PathVariable String code,
             @Valid @RequestBody PersistableCustomerShoppingCartItem[] customerShoppingCartItems,
-            @ApiIgnore Language language
+            @ApiIgnore Language language,
+            HttpServletRequest request
             ) {
         try {
-            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCartMulti(code, Arrays.asList(customerShoppingCartItems), language);
+            Principal principal = request.getUserPrincipal();
+            Customer customer = customerService.getByNick(principal.getName());
+            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.modifyCartMulti(customer, code, Arrays.asList(customerShoppingCartItems), language);
 
             return new ResponseEntity<>(cart, HttpStatus.CREATED);
 
@@ -157,6 +185,7 @@ public class CustomerShoppingCartApi {
     @ApiOperation(httpMethod = "GET", value = "Get a customer shopping cart by code", notes = "", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+    @ResponseBody
     public ReadableCustomerShoppingCart getByCode(
             @PathVariable String code,
             @ApiIgnore Language language,
@@ -218,7 +247,7 @@ public class CustomerShoppingCartApi {
 //        return readableCart;
     }
 
-    @DeleteMapping(value = "/customer_cart/{code}/{store}/product/{sku}", produces = { APPLICATION_JSON_VALUE })
+    @DeleteMapping(value = "/auth/customer_cart/{code}/product/{sku}", produces = { APPLICATION_JSON_VALUE })
     @ApiOperation(httpMethod = "DELETE", value = "Remove a product from a specific cart", notes = "If body set to true returns remaining cart in body, empty cart gives empty body. If body set to false no body ", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en"),
@@ -226,11 +255,13 @@ public class CustomerShoppingCartApi {
     public ResponseEntity<ReadableCustomerShoppingCart> deleteCartItem(
             @PathVariable("code") String cartCode,
             @PathVariable("sku")  String sku,
-            @PathVariable("store")  Integer store,
             @ApiIgnore Language language,
-            @RequestParam(defaultValue = "false") boolean body
+            @RequestParam(defaultValue = "false") boolean body,
+            HttpServletRequest request
     ) throws Exception {
-        ReadableCustomerShoppingCart updatedCart = customerShoppingCartFacade.removeCustomerShoppingCartItem(cartCode, sku, store,
+        Principal principal  = request.getUserPrincipal();
+        Customer customer = customerService.getByNick(principal.getName());
+        ReadableCustomerShoppingCart updatedCart = customerShoppingCartFacade.removeCustomerShoppingCartItem(cartCode, sku,
                 language, body);
         if (body) {
             return new ResponseEntity<>(updatedCart, HttpStatus.OK);
@@ -243,9 +274,9 @@ public class CustomerShoppingCartApi {
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
-    public ReadableOrderConfirmation checkout(
+    public ReadableCustomerOrderConfirmation checkout(
             @PathVariable final String code, //shopping cart
-            @Valid @RequestBody PersistableCustomerOrder order, // order
+            @Valid @RequestBody PersistableCustomerOrder persistableCustomerOrder, // order
             @ApiIgnore Language language,
             HttpServletRequest request,
             HttpServletResponse response, Locale locale
@@ -267,8 +298,22 @@ public class CustomerShoppingCartApi {
                 throw new ResourceNotFoundException("Cart code " + code + " does not exist");
             }
 
+            persistableCustomerOrder.setCustomerShoppingCartId(cart.getId());
+            persistableCustomerOrder.setCustomerId(customer.getId());
+            persistableCustomerOrder.setCurrency("CAD");
 
-            return null;
+            PersistablePayment persistablePayment = new PersistablePayment();
+            persistablePayment.setPaymentModule("moneyorder");
+            persistablePayment.setTransactionType(TransactionType.AUTHORIZECAPTURE.name());
+            persistablePayment.setPaymentType(PaymentType.MONEYORDER.name());
+            persistableCustomerOrder.setPayment(persistablePayment);
+
+
+            CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
+            Long customerOrderId = modelCustomerOrder.getId();
+            modelCustomerOrder.setId(customerOrderId);
+
+            return customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
         } catch (Exception e) {
             LOGGER.error("Error while processing checkout", e);
             try {

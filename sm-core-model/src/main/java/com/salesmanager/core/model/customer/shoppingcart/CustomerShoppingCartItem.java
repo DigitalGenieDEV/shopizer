@@ -23,7 +23,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(targetEntity = ShoppingCart.class)
+    @ManyToOne(targetEntity = CustomerShoppingCart.class)
     @JoinColumn(name = "CUS_SHP_CART_ID", nullable = false)
     private CustomerShoppingCart customerShoppingCart;
 
@@ -80,6 +80,9 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
         this.setSku(product.getSku());
         this.quantity = 1;
         this.productVirtual = product.isProductVirtual();
+    }
+
+    public CustomerShoppingCartItem() {
     }
 
     @Override

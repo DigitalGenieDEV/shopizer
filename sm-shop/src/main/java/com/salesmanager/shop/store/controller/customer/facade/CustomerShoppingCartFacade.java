@@ -26,17 +26,17 @@ public interface CustomerShoppingCartFacade {
 
     void saveOrUpdateCustomerShoppingCart(CustomerShoppingCart cart) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCart(String cartCode, PersistableCustomerShoppingCartItem item, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCart(Customer customer, String cartCode, PersistableCustomerShoppingCartItem item, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCart(String cartCode, String promo, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCart(Customer customer, String cartCode, String promo, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCartMulti(String cartCode, List<PersistableCustomerShoppingCartItem> items, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCartMulti(Customer customer, String cartCode, List<PersistableCustomerShoppingCartItem> items, Language language) throws Exception;
 
     ReadableCustomerShoppingCart addToCart(Customer customer, PersistableCustomerShoppingCartItem item, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart addToCart(PersistableCustomerShoppingCartItem item, Language language);
+//    ReadableCustomerShoppingCart addToCart(PersistableCustomerShoppingCartItem item, Language language);
 
-    ReadableCustomerShoppingCart removeCustomerShoppingCartItem(String cartCode, String sku, Integer merchantId, Language language, boolean returnCart) throws Exception;;
+    ReadableCustomerShoppingCart removeCustomerShoppingCartItem(String cartCode, String sku, Language language, boolean returnCart) throws Exception;;
 
     ReadableCustomerShoppingCart getById(Long id, Language language) throws Exception;
 

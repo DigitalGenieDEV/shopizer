@@ -105,7 +105,7 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 		Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
 		Validate.notNull(store, "MerchantStore cannot be null");
 		OrderTotalSummary orderTotalSummary = orderService.calculateShoppingCartTotal(cartModel, store, language);
-		updateCartModel(cartModel);
+//		updateCartModel(cartModel);
 		return orderTotalSummary;
 
 	}

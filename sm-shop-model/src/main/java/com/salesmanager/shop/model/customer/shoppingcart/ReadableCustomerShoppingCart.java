@@ -1,5 +1,7 @@
 package com.salesmanager.shop.model.customer.shoppingcart;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariant;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 

@@ -38,14 +38,14 @@ public class CustomerOrderTotalSummary implements Serializable  {
     }
 
     public void addSubTotal(BigDecimal subTotal) {
-        this.subTotal.add(subTotal);
+        this.subTotal = this.subTotal.add(subTotal);
     }
 
     public void addTotal(BigDecimal total) {
-        this.total.add(total);
+        this.total = this.total.add(total);
     }
 
     public void addTaxTotal(BigDecimal taxTotal) {
-        this.taxTotal.add(taxTotal);
+        this.taxTotal = this.taxTotal.add(taxTotal);
     }
 }

@@ -144,7 +144,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
 
         //first process payment
-        Transaction processTransaction = paymentService.processPayment(customer, store, payment, items, order);
+//        Transaction processTransaction = paymentService.processPayment(customer, store, payment, items, order);
 
         if(order.getOrderHistory()==null || order.getOrderHistory().size()==0 || order.getStatus()==null) {
             OrderStatus status = order.getStatus();
@@ -168,24 +168,24 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         order.setCustomerId(customer.getId());
         this.create(order);
-
-        if(transaction!=null) {
-            transaction.setOrder(order);
-            if(transaction.getId()==null || transaction.getId()==0) {
-                transactionService.create(transaction);
-            } else {
-                transactionService.update(transaction);
-            }
-        }
-
-        if(processTransaction!=null) {
-            processTransaction.setOrder(order);
-            if(processTransaction.getId()==null || processTransaction.getId()==0) {
-                transactionService.create(processTransaction);
-            } else {
-                transactionService.update(processTransaction);
-            }
-        }
+//
+//        if(transaction!=null) {
+//            transaction.setOrder(order);
+//            if(transaction.getId()==null || transaction.getId()==0) {
+//                transactionService.create(transaction);
+//            } else {
+//                transactionService.update(transaction);
+//            }
+//        }
+//
+//        if(processTransaction!=null) {
+//            processTransaction.setOrder(order);
+//            if(processTransaction.getId()==null || processTransaction.getId()==0) {
+//                transactionService.create(processTransaction);
+//            } else {
+//                transactionService.update(processTransaction);
+//            }
+//        }
 
         /**
          * decrement inventory
@@ -193,8 +193,9 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         LOGGER.debug( "Update inventory" );
         Set<OrderProduct> products = order.getOrderProducts();
         for(OrderProduct orderProduct : products) {
-            orderProduct.getProductQuantity();
-            Product p = productService.getById(orderProduct.getId());
+//            orderProduct.getProductQuantity();
+//            Product p = productService.getById(orderProduct.getId());
+            Product p = productService.getBySku(orderProduct.getSku(), store);
             if(p == null)
                 throw new ServiceException(ServiceException.EXCEPTION_INVENTORY_MISMATCH);
             for(ProductAvailability availability : p.getAvailabilities()) {
@@ -448,7 +449,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             } else {
                 //clear promo
                 shoppingCart.setPromoCode(null);
-                shoppingCartService.saveOrUpdate(shoppingCart);
+                // TODO 商户购物车仅做计算 不更新数据库
+//                shoppingCartService.saveOrUpdate(shoppingCart);
             }
         }
 

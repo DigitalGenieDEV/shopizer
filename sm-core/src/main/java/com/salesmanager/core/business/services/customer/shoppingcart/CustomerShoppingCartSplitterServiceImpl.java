@@ -1,9 +1,8 @@
 package com.salesmanager.core.business.services.customer.shoppingcart;
 
-import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.model.customer.Customer;
-import com.salesmanager.core.model.customer.order.CustomerOrderTotalSummary;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -14,7 +13,6 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,63 +25,43 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service("customerShoppingCartCalculationService")
-public class CustomerShoppingCartCalculationServiceImpl implements CustomerShoppingCartCalculationService{
+@Service("customerShoppingCartSplitterService")
+public class CustomerShoppingCartSplitterServiceImpl implements CustomerShoppingCartSplitterService{
 
-    protected final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    @Inject
-    private CustomerShoppingCartService customerShoppingCartService;
+    protected final Logger LOG = LoggerFactory.getLogger(CustomerShoppingCartSplitterServiceImpl.class);
 
     @Inject
     private OrderService orderService;
 
-    // 用户购物车总金额计算
-    @Override
-    public CustomerOrderTotalSummary calculate(CustomerShoppingCart cartModel, Customer customer, Language language) throws Exception {
-        Validate.notNull(cartModel, "cart cannot be null");
-        Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
-//        Validate.notNull(customer, "Customer cannot be null");
+    @Inject
+    private CustomerService customerService;
 
-        List<MerchantStore> stores = cartModel.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+    @Override
+    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart) {
+        List<MerchantStore> stores = customerShoppingCart.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+        Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
+        uniqStores.addAll(stores);
+
+        Customer customer = customerService.getById(customerShoppingCart.getCustomerId());
+
+        // 商户购物车
+        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
+        return shoppingCarts;
+    }
+
+    @Override
+    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart, Customer customer) {
+        List<MerchantStore> stores = customerShoppingCart.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
         Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
         uniqStores.addAll(stores);
 
         // 商户购物车
-        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getShoppingCart(cartModel, s, customer)).collect(Collectors.toList());
-        // 商户购物车总金额列表
-        List<OrderTotalSummary> orderSummaries = new ArrayList<>();
-        for (ShoppingCart s: shoppingCarts) {
-            orderSummaries.add(calculateShoppingCartTotal(s, customer, s.getMerchantStore(), language));
-        }
-
-        // 汇总商户购物车总金额
-        CustomerOrderTotalSummary customerOrderTotalSummary = new CustomerOrderTotalSummary();
-
-        for (OrderTotalSummary orderTotalSummary: orderSummaries) {
-            customerOrderTotalSummary.addTotal(orderTotalSummary.getTotal());
-            customerOrderTotalSummary.addSubTotal(orderTotalSummary.getSubTotal());
-            customerOrderTotalSummary.addTaxTotal(orderTotalSummary.getTaxTotal());
-        }
-//        BigDecimal subTotal = orderSummaries.stream().reduce()
-        return customerOrderTotalSummary;
+        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
+        return shoppingCarts;
     }
 
-    // 单个商户购物车金额计算
-    private OrderTotalSummary calculateShoppingCartTotal(ShoppingCart cartModel, Customer customer, MerchantStore store, Language language) throws Exception {
-        Validate.notNull(cartModel, "cart cannot be null");
-        Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
-        Validate.notNull(store, "MerchantStore cannot be null");
-        Validate.notNull(customer, "Customer cannot be null");
-        try {
-            return calculateShoppingCart(cartModel, customer, store, language);
-        } catch (Exception e) {
-            LOG.error( "Error while calculating shopping cart total" +e );
-            throw new ServiceException(e);
-        }
-    }
-
-    private ShoppingCart getShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer) {
+    @Override
+    public ShoppingCart getShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer) {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setMerchantStore(store);
         shoppingCart.setCustomerId(customer.getId());
@@ -100,7 +78,8 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
         return shoppingCart;
     }
 
-    private ShoppingCartItem getShoppingCartItem(ShoppingCart shoppingCart, CustomerShoppingCartItem customerShoppingCartItem) {
+    @Override
+    public ShoppingCartItem getShoppingCartItem(ShoppingCart shoppingCart, CustomerShoppingCartItem customerShoppingCartItem) {
         ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
         shoppingCartItem.setShoppingCart(shoppingCart);
         shoppingCartItem.setProductId(customerShoppingCartItem.getProductId());
@@ -119,7 +98,8 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
         return shoppingCartItem;
     }
 
-    private OrderTotalSummary calculateShoppingCart( ShoppingCart shoppingCart, final Customer customer, final MerchantStore store, final Language language) throws Exception {
+    @Override
+    public OrderTotalSummary calculateShoppingCart(ShoppingCart shoppingCart, Customer customer, MerchantStore store, Language language) throws Exception {
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setOrderSummaryType(OrderSummaryType.SHOPPINGCART);
 
@@ -144,16 +124,10 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
 
         List<ShoppingCartItem> itemList = new ArrayList<ShoppingCartItem>(shoppingCart.getLineItems());
         //filter out unavailable
-        // TODO product null
-//        itemList = itemList.stream().filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
+        itemList = itemList.stream().filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
         orderSummary.setProducts(itemList);
 
 
         return orderService.caculateOrder(orderSummary, customer, store, language);
-    }
-
-    @Override
-    public CustomerOrderTotalSummary calculate(CustomerShoppingCart cartModel, Language language) throws Exception {
-        return calculate(cartModel, null, language);
     }
 }

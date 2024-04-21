@@ -12,6 +12,6 @@ public interface CustomerShoppingCartRepository extends JpaRepository<CustomerSh
     @Query("select c from CustomerShoppingCart c left join fetch c.lineItems cl where c.customerShoppingCartCode = ?1")
     CustomerShoppingCart findByCode(String code);
 
-    @Query("select c from ShoppingCart c left join fetch c.lineItems cl  where c.customerId = ?1")
+    @Query("select c from CustomerShoppingCart c left join fetch c.lineItems cl  where c.customerId = ?1")
     CustomerShoppingCart findByCustomer(Long customerId);
 }
