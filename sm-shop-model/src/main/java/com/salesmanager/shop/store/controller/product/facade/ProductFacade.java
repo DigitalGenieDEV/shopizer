@@ -24,6 +24,8 @@ public interface ProductFacade {
    */
   Product getProduct(Long id, MerchantStore store);
 
+
+  ReadableProduct getProductById(Long id, MerchantStore store, Language language);
   /**
    * Reads a product by code
    *

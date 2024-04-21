@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -268,6 +269,24 @@ public class ProductFacadeImpl implements ProductFacade {
 		return productService.findOne(id, store);
 	}
 
+	@Override
+	public ReadableProduct getProductById(Long id, MerchantStore store, Language language) {
+		Product	product = productService.getById(id);
+
+		ReadableProduct readableProduct = new ReadableProduct();
+
+		ReadableProductPopulator populator = new ReadableProductPopulator();
+
+		populator.setPricingService(pricingService);
+		populator.setimageUtils(imageUtils);
+		try {
+			populator.populate(product, readableProduct, product.getMerchantStore(), language);
+		} catch (ConversionException e) {
+			throw new ConversionRuntimeException("Product with code [" + id + "] cannot be converted", e);
+		}
+
+		return readableProduct;
+	}
 
 
 }

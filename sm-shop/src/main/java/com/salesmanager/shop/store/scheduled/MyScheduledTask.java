@@ -31,8 +31,7 @@ public class MyScheduledTask {
     protected MerchantStoreService merchantService;
 
 
-//    @Scheduled(cron = "0 0 /5* * * *") // 每隔五秒执行一次
-//    @Scheduled(fixedDelay = 500000000) // 每隔五秒执行一次
+//    @Scheduled(cron = "0/5 * * * * *") // 每隔五秒执行一次
     void execute1688ProductImportTask() throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam productSearchKeywordQueryParamOfferQueryParam = new ProductSearchKeywordQueryParamOfferQueryParam();
         productSearchKeywordQueryParamOfferQueryParam.setPageSize(10);
@@ -54,7 +53,7 @@ public class MyScheduledTask {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
                 try {
-                    alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore);
+                    alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore, null);
                 } catch (Exception e) {
                     System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                             +offerId);

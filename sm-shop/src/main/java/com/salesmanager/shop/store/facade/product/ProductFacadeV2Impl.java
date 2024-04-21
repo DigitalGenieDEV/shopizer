@@ -87,6 +87,23 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	}
 
 	@Override
+	public ReadableProduct getProductById(Long id, MerchantStore store, Language language){
+		Product	product = productService.findOne(id, store);
+		if (product == null) {
+			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+		}
+
+		if (product.getMerchantStore().getId() != store.getId()) {
+			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+		}
+
+
+		ReadableProduct readableProduct = readableProductMapper.convert(product, store, language);
+
+		return readableProduct;
+	}
+
+	@Override
 	public ReadableProduct getProductByCode(MerchantStore store, String sku, Language language) {
 
 		

@@ -27,4 +27,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	)
 	List<Object> findBySku(String sku, Integer consultId);
 
+
+	@Query(value="SELECT " +
+			"p " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.outProductId = ?1")
+	Product findByOutId(Long outId);
 }

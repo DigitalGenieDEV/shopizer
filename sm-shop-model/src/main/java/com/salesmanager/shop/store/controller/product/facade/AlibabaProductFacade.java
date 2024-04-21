@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AlibabaProductFacade {
 
-    void importProduct(List<Long> productIds, String language, MerchantStore merchantStore) throws ServiceException;
+    void importProduct(List<Long> productIds, String language, MerchantStore merchantStore, List<Long> categoryIds) throws ServiceException;
 
 
     ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam);
