@@ -6,6 +6,12 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.services.search.SearchProductService;
+import com.salesmanager.core.model.catalog.product.search.ProductSearchRequest;
+import com.salesmanager.core.model.catalog.product.search.ProductSearchResult;
+import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
+import com.salesmanager.shop.model.catalog.product.ReadableProductList;
+import com.salesmanager.shop.model.search.ReadableSearchProduct;
 import org.jsoup.helper.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +60,9 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	@Inject
 	private PricingService pricingService;
+
+	@Inject
+	private SearchProductService searchProductService;
 
 	@Inject
 	@Qualifier("img")
@@ -200,6 +209,30 @@ public class SearchFacadeImpl implements SearchFacade {
 		return valueList;
 		
 
+	}
+
+	@Override
+	public List<ReadableProduct> searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException {
+		ProductSearchRequest searchProductRequest = new ProductSearchRequest();
+		searchProductRequest.setLang(searchProductRequestV2.getLang());
+		searchProductRequest.setSize(searchProductRequestV2.getSize());
+		searchProductRequest.setQ(searchProductRequestV2.getQ());
+		searchProductRequest.setPageIdx(searchProductRequestV2.getPageIdx());
+		searchProductRequest.setAttrFilt(searchProductRequestV2.getAttrFilt());
+		List<Product> products = searchProductService.search(searchProductRequest);
+
+		ReadableProductPopulator populator = new ReadableProductPopulator();
+		populator.setPricingService(pricingService);
+		populator.setimageUtils(imageUtils);
+
+		ReadableProductList productList = new ReadableProductList();
+		for(Product product : products) {
+			//create new proxy product
+			ReadableProduct readProduct = populator.populate(product, new ReadableProduct(), product.getMerchantStore(), language);
+			productList.getProducts().add(readProduct);
+		}
+
+		return productList.getProducts();
 	}
 
 
