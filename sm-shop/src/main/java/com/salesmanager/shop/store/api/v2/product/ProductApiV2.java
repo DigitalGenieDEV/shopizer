@@ -404,6 +404,22 @@ public class ProductApiV2 {
 	}
 
 
+	@RequestMapping(value = "/product/id/{productId}", method = RequestMethod.GET)
+	@ApiOperation(httpMethod = "GET", value = "Get a product by productId", notes = "For Shop purpose. Specifying ?merchant is required otherwise it falls back to DEFAULT")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
+	@ResponseBody
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public ReadableProduct getByProductId(@PathVariable Long productId,
+							   @RequestParam(value = "lang", required = false) String lang,
+							   @ApiIgnore MerchantStore merchantStore,
+							   @ApiIgnore Language language) {
+		ReadableProduct product = productFacadeV2.getProductById(productId, merchantStore, language);
+		return product;
+	}
+
+
 
 	/**
 	 * Calculates the price based on selected variant code
@@ -510,9 +526,10 @@ public class ProductApiV2 {
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	public void importAlibabaProduct(
 			@RequestParam List<Long> productIds,
+			@RequestParam List<Long> categoryIds,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws ServiceException {
-		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore);
+		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, categoryIds);
 	}
 
 

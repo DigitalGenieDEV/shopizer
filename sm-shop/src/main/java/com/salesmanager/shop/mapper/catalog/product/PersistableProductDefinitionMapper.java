@@ -80,7 +80,7 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 			destination.setDateAvailable(new Date());
 
 			destination.setRefSku(source.getIdentifier());
-			
+			destination.setOutProductId(source.getOutProductId());
 			
 			if(source.getId() != null && source.getId().longValue()==0) {
 				destination.setId(null);

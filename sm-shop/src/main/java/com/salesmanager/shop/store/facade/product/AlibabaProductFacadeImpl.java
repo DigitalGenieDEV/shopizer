@@ -1,11 +1,14 @@
 package com.salesmanager.shop.store.facade.product;
 
+
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.alibaba.category.AlibabaCategoryService;
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionValueService;
 import com.salesmanager.core.business.services.catalog.product.manufacturer.ManufacturerService;
@@ -14,6 +17,7 @@ import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.category.Category;
+import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.*;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
@@ -96,8 +100,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     @Autowired
     private ProductRepository productRepository;
 
+
+    @Autowired
+    private ProductService productService;
+
     @Override
-    public void importProduct(List<Long> productIds, String language, MerchantStore merchantStore) throws ServiceException {
+    public void importProduct(List<Long> productIds, String language,
+                              MerchantStore merchantStore, List<Long> categoryIds) throws ServiceException {
         if (CollectionUtils.isEmpty(productIds)){
             throw new ServiceException(ServiceException.EXCEPTION_VALIDATION,
                     "Invalid date format","validaion.param.error");
@@ -108,7 +117,9 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             productSearchQueryProductDetailParamOfferDetailParam.setCountry(language);
             ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModel = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParam);
             try {
-                saveProduct(productSearchQueryProductDetailModelProductDetailModel, language, merchantStore);
+
+                saveProduct(productSearchQueryProductDetailModelProductDetailModel,
+                        language, merchantStore, categoryIds);
             } catch (Exception e) {
                 System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                         +productSearchQueryProductDetailModelProductDetailModel.getOfferId());
@@ -142,43 +153,41 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
     @Transactional
-    public void saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel, String language, MerchantStore store) throws Exception {
-
+    public void saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
+                            String language, MerchantStore store, List<Long> categoryIds) throws Exception {
+        //预创建
+        PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
         Language ko = languageService.getByCode(language);
 
-        Long categoryId =   productDetailModel.getCategoryId();
+        //初始化类目
+        List<com.salesmanager.shop.model.catalog.category.Category> categoryList =  new ArrayList<>();
 
-        CategoryTranslationGetByIdCategory category1688 =  alCategoryService.getCategoryById(categoryId, language);
+        if (!CollectionUtils.isEmpty(categoryIds)){
+            categoryIds.stream().map(categoryId->{
+                Category category = null;
+                try {
+                    category = categoryService.getById(store, categoryId);
+                } catch (ServiceException e) {
+                    throw new RuntimeException(e);
+                }
+                com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(category, com.salesmanager.shop.model.catalog.category.Category.class);
+                convertCategory.setDescription(ObjectConvert.convert(category.getDescription(), CategoryDescription.class));
+                return convertCategory;
+            }).collect(Collectors.toList());
+        }else{
+            Long categoryId =   productDetailModel.getCategoryId();
+            CategoryTranslationGetByIdCategory category1688 =  alCategoryService.getCategoryById(categoryId, language);
 
-        Category category =  categoryService.getByCode(store, category1688.getChineseName());
-        List<com.salesmanager.shop.model.catalog.category.Category> list = new ArrayList<>();
+            Category category =  categoryService.getByCode(store, category1688.getChineseName());
 
-        com.salesmanager.shop.model.catalog.category.Category category1 =  new com.salesmanager.shop.model.catalog.category.Category();
-        category1.setCode(category1688.getChineseName());
-        com.salesmanager.shop.model.catalog.category.CategoryDescription categoryDescription = new com.salesmanager.shop.model.catalog.category.CategoryDescription();
-        categoryDescription.setName(category1688.getTranslatedName());
-        categoryDescription.setLanguage(language);
-        Set<CategoryDescription> descriptions =
-                new HashSet<CategoryDescription>();
-        descriptions.add(categoryDescription);
-        category1.setDescription(categoryDescription);
-        list.add(category1);
+            if (category == null){
+                createCategory(category1688, ko, store);
+            }
 
-        if (category == null){
-            category = new Category();
-            category.setMerchantStore(store);
-            category.setCode(category1688.getChineseName());
-
-            com.salesmanager.core.model.catalog.category.CategoryDescription shoesDescription = new com.salesmanager.core.model.catalog.category.CategoryDescription();
-            shoesDescription.setName(category1688.getTranslatedName());
-            shoesDescription.setCategory(category);
-            shoesDescription.setLanguage(ko);
-            Set<com.salesmanager.core.model.catalog.category.CategoryDescription> categoryDescriptions = new HashSet<com.salesmanager.core.model.catalog.category.CategoryDescription>();
-            categoryDescriptions.add(shoesDescription);
-            category.setDescriptions(categoryDescriptions);
-            categoryService.create(category);
         }
+
+        productDefinition.setCategories(categoryList);
 
         ProductSearchQueryProductDetailModelProductAttribute[] productAttribute = productDetailModel.getProductAttribute();
         Manufacturer manufacturers = null;
@@ -203,33 +212,25 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             }
         }
 
-        //预创建
-        PersistableProductDefinition productDefinition = new PersistableProductDefinition();
+
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
-//        productDefinition.setPrice(new BigDecimal("200"));
         productDefinition.setManufacturer(manufacturers.getCode());
-//        productDefinition.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
-        List<Object> products = productRepository.findBySku(productDetailModel.getSubjectTrans(), store.getId());
+        productDefinition.setOutProductId(productDetailModel.getOfferId());
+        Product productByOutId = productService.findByOutId(productDetailModel.getOfferId());
 
         Long productId = null;
-        if (CollectionUtils.isEmpty(products)){
+        if (productByOutId == null){
             createAttribute(ko, store, productDetailModel.getProductAttribute(),  productDefinition);
             productId = productDefinitionFacade.saveProductDefinition(store, productDefinition, ko);
         }else {
-            BigInteger bigInteger = (BigInteger) products.get(0);
-            productId = bigInteger.longValue();
+            productId = productByOutId.getId();
 //            productDefinitionFacade.update(productId, productDefinition, store, ko);
         }
-        PersistableProduct product = new PersistableProduct();
-        product.setId(productId);
 
-        product.setAvailable(true);
-
-
-        //类目
-        product.setCategories(list);
-
+        PersistableProduct persistableProduct =  new PersistableProduct();
+        persistableProduct.setId(productId);
+        persistableProduct.setAvailable(true);
 
         ProductSearchQueryProductDetailModelProductImage productImage = productDetailModel.getProductImage();
         String[] images = productImage.getImages();
@@ -241,25 +242,31 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableImage.setImageType(1);
             persistableImages.add(persistableImage);
         }
-        product.setImages(persistableImages);
+
+        persistableProduct.setImages(persistableImages);
 
         com.salesmanager.shop.model.catalog.product.ProductDescription description = new ProductDescription();
         description.setLanguage("ko");
         description.setName(productDetailModel.getSubject());
         description.setTitle(productDetailModel.getSubjectTrans());
         description.setDescription(productDetailModel.getDescription());
-        product.getDescriptions().add(description);
 
-        product.setOutProductId(productDetailModel.getOfferId());
+        persistableProduct.getDescriptions().add(description);
+
+        persistableProduct.setOutProductId(productDetailModel.getOfferId());
         if (productDetailModel.getSellerMixSetting()!=null && productDetailModel.getSellerMixSetting().getGeneralHunpi()){
-            product.setMixNumber(productDetailModel.getSellerMixSetting().getMixNumber());
-            product.setMixAmount(productDetailModel.getSellerMixSetting().getMixAmount());
+            persistableProduct.setMixNumber(productDetailModel.getSellerMixSetting().getMixNumber());
+            persistableProduct.setMixAmount(productDetailModel.getSellerMixSetting().getMixAmount());
         }
-        product.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
-        createProductVariant(ko, store, productDetailModel, product);
+        persistableProduct.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
+        createProductVariant(ko, store, productDetailModel, persistableProduct);
 
-        productCommonFacade.saveProduct(store, product, ko);
+        String jsonString = JSON.toJSONString(persistableProduct);
 
+        System.out.println(jsonString);
+        productCommonFacade.saveProduct(store, persistableProduct, ko);
+
+        Thread.sleep(1000);
     }
 
 
@@ -454,6 +461,28 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         product.setVariants(variants);
 
+    }
+
+
+    /**
+     * 暂时先塞一个韩国语言，后续再说
+     * @param category1688
+     * @param language
+     * @return
+     */
+    void createCategory(CategoryTranslationGetByIdCategory category1688, Language language, MerchantStore merchantStore) throws ServiceException {
+        Category category = new Category();
+        category.setMerchantStore(merchantStore);
+        category.setCode(category1688.getChineseName());
+
+        com.salesmanager.core.model.catalog.category.CategoryDescription shoesDescription = new com.salesmanager.core.model.catalog.category.CategoryDescription();
+        shoesDescription.setName(category1688.getTranslatedName());
+        shoesDescription.setCategory(category);
+        shoesDescription.setLanguage(language);
+        Set<com.salesmanager.core.model.catalog.category.CategoryDescription> categoryDescriptions = new HashSet<com.salesmanager.core.model.catalog.category.CategoryDescription>();
+        categoryDescriptions.add(shoesDescription);
+        category.setDescriptions(categoryDescriptions);
+        categoryService.create(category);
     }
 
 
