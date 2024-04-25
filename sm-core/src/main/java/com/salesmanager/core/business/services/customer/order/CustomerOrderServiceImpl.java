@@ -5,6 +5,7 @@ import com.salesmanager.core.business.repositories.customer.order.CustomerOrderR
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
+import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.business.services.payments.PaymentService;
 import com.salesmanager.core.business.services.payments.TransactionService;
 import com.salesmanager.core.business.services.payments.combine.CombinePaymentService;
@@ -54,6 +55,9 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
     @Inject
     private TransactionService transactionService;
 
+    @Inject
+    private OrderService orderService;
+
     private final CustomerOrderRepository customerOrderRepository;
 
     @Inject
@@ -89,12 +93,13 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
 
     @Override
     public CustomerOrder getCustomerOrder(Long id) {
-        return null;
+        Validate.notNull(id, "CustomerOrder id cannot be null");
+        return customerOrderRepository.findOne(id);
     }
 
     @Override
     public CustomerOrderList getCustomerOrders(CustomerOrderCriteria criteria) {
-        return null;
+        return customerOrderRepository.listCustomerOrders(criteria);
     }
 
     @Override
@@ -163,6 +168,8 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
 
             transactionService.create(transaction);
         }
+
+
 
         return customerOrder;
     }

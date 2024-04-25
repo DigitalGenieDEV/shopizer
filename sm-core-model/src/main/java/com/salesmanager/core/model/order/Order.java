@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
@@ -158,7 +159,8 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private Set<OrderAttribute> orderAttributes = new LinkedHashSet<OrderAttribute>();
-	
+
+
 	public Order() {
 	}
 	
@@ -352,7 +354,6 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
 	}
-
 
 	public PaymentType getPaymentType() {
 		return paymentType;

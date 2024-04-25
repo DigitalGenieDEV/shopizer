@@ -168,7 +168,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         order.setCustomerId(customer.getId());
         this.create(order);
-//
+
 //        if(transaction!=null) {
 //            transaction.setOrder(order);
 //            if(transaction.getId()==null || transaction.getId()==0) {
@@ -177,7 +177,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 //                transactionService.update(transaction);
 //            }
 //        }
-//
+
 //        if(processTransaction!=null) {
 //            processTransaction.setOrder(order);
 //            if(processTransaction.getId()==null || processTransaction.getId()==0) {

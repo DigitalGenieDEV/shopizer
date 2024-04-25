@@ -217,7 +217,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         if (item != null) {
             // TODO attributes
 
-            customerShoppingCartItemRepository.findOne(id);
+//            customerShoppingCartItemRepository.findOne(id);
 
             customerShoppingCartItemRepository.deleteById(id);
         }

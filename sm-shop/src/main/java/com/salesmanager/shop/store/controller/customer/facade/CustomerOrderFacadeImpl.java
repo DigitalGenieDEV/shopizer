@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.controller.customer.facade;
 
+import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
@@ -8,7 +9,9 @@ import com.salesmanager.core.business.services.reference.language.LanguageServic
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
+import com.salesmanager.core.model.customer.order.CustomerOrderList;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -25,7 +28,9 @@ import com.salesmanager.shop.mapper.order.ReadableOrderProductMapper;
 import com.salesmanager.shop.mapper.order.ReadableOrderTotalMapper;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
+import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
+import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 import com.salesmanager.shop.model.order.total.ReadableTotal;
@@ -33,9 +38,13 @@ import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 import com.salesmanager.shop.model.order.v1.PersistableOrder;
 import com.salesmanager.shop.model.shoppingcart.PersistableShoppingCartItem;
 import com.salesmanager.shop.populator.customer.PersistableCustomerOrderApiPopulator;
+import com.salesmanager.shop.populator.customer.ReadableCustomerOrderPopulator;
+import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
+import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.LabelUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +99,13 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
     @Autowired
     private PersistableCustomerOrderApiPopulator persistableCustomerOrderApiPopulator;
+
+    @Autowired
+    private ReadableCustomerOrderPopulator readableCustomerOrderPopulator;
+
+    @Inject
+    private CustomerFacade customerFacade;
+
 
     @Override
     public CustomerOrder processCustomerOrder(PersistableCustomerOrder customerOrder, Customer customer, Language language, Locale locale) throws ServiceException {
@@ -169,10 +185,20 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
             modelCustomerOrder = customerOrderService.processCustomerOrder(modelCustomerOrder, customer, lineItems, paymentModule);
 
+
             try {
                 customerShoppingCartService.saveOrUpdate(cart);
             } catch (Exception e) {
                 LOGGER.error("Cannot save cart " + cart.getId(), e);
+            }
+
+            // 移除购物车项
+            Set<CustomerShoppingCartItem> existsItems = cart.getLineItems();
+            List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
+            for (CustomerShoppingCartItem item: existsItems) {
+                if (skus.contains(item.getSku())) {
+                    customerShoppingCartService.deleteCustomerShoppingCartItem(item.getId());
+                }
             }
 
             return  modelCustomerOrder;
@@ -227,6 +253,66 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         orderConfirmation.setId(customerOrder.getId());
         return orderConfirmation;
+    }
+
+    @Override
+    public ReadableCustomerOrderList getReadableCustomerOrderList(Customer customer, int start, int maxCount, Language language) throws Exception {
+        CustomerOrderCriteria criteria = new CustomerOrderCriteria();
+        criteria.setStartIndex(start);
+        criteria.setMaxCount(maxCount);
+        criteria.setCustomerId(customer.getId());
+
+        return getReadableCustomerOrderList(criteria, language);
+    }
+
+    private ReadableCustomerOrderList getReadableCustomerOrderList(CustomerOrderCriteria criteria, Language language) throws ConversionException {
+        CustomerOrderList customerOrderList = customerOrderService.getCustomerOrders(criteria);
+
+        List<CustomerOrder> customerOrders = customerOrderList.getCustomerOrders();
+        ReadableCustomerOrderList returnList = new ReadableCustomerOrderList();
+
+        if (CollectionUtils.isEmpty(customerOrders)) {
+            returnList.setRecordsTotal(0);
+            return returnList;
+        }
+
+        List<ReadableCustomerOrder> readableCustomerOrders = new ArrayList<>();
+        for (CustomerOrder customerOrder : customerOrders) {
+            ReadableCustomerOrder readableCustomerOrder = new ReadableCustomerOrder();
+            readableCustomerOrderPopulator.populate(customerOrder, readableCustomerOrder, null, language);
+            readableCustomerOrders.add(readableCustomerOrder);
+        }
+
+        returnList.setCustomerOrders(readableCustomerOrders);
+        returnList.setRecordsTotal(customerOrderList.getTotalCount());
+        return returnList;
+    }
+
+    @Override
+    public ReadableCustomerOrder getReadableCustomerOrder(Long customerOrderId, MerchantStore store, Language language) {
+        CustomerOrder modelOrder = customerOrderService.getCustomerOrder(customerOrderId);
+        if (modelOrder == null) {
+            throw new ResourceNotFoundException("CustomerOrder not found with id " + customerOrderId);
+        }
+
+        ReadableCustomerOrder readableCustomerOrder = new ReadableCustomerOrder();
+        Long customerId = modelOrder.getCustomerId();
+        if (customerId != null) {
+            ReadableCustomer readableCustomer = customerFacade.getCustomerById(customerId, store, language);
+            if (readableCustomer == null) {
+                LOGGER.warn("Customer id " + customerId + " not found in order " + customerOrderId);
+            } else {
+                readableCustomerOrder.setCustomer(readableCustomer);
+            }
+        }
+
+        try {
+            readableCustomerOrderPopulator.populate(modelOrder, readableCustomerOrder, store, language);
+        } catch (Exception e) {
+            throw new ServiceRuntimeException("Error while getting customer order [" + customerOrderId + "]");
+        }
+
+        return readableCustomerOrder;
     }
 
     private ReadableOrderTotal convertOrderTotal(OrderTotal total, MerchantStore store, Language language) {

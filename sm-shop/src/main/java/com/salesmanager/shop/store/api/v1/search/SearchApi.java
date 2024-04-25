@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.search.ReadableSearchProduct;
@@ -41,25 +42,25 @@ public class SearchApi {
   @Inject private SearchFacade searchFacade;
 
 
-  /**
-   * Search products from underlying elastic search
-   */
+//  /**
+//   * Search products from underlying elastic search
+//   */
+//  @PostMapping("/search")
+//  @ApiImplicitParams({
+//    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+//  })
+//
+//  //TODO use total, count and page
+//  public @ResponseBody List<SearchItem> search(
+//      @RequestBody SearchProductRequest searchRequest,
+//      @ApiIgnore MerchantStore merchantStore,
+//      @ApiIgnore Language language) {
+//
+//    return searchFacade.search(merchantStore, language, searchRequest);
+//  }
+
   @PostMapping("/search")
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
-  })
-  
-  //TODO use total, count and page
-  public @ResponseBody List<SearchItem> search(
-      @RequestBody SearchProductRequest searchRequest,
-      @ApiIgnore MerchantStore merchantStore,
-      @ApiIgnore Language language) {
-
-    return searchFacade.search(merchantStore, language, searchRequest);
-  }
-
-  @PostMapping("/search_v2")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
           @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
@@ -70,15 +71,26 @@ public class SearchApi {
     return  searchFacade.searchV2(searchProductRequestV2, language);
   }
 
+//  @PostMapping("/search/autocomplete")
+//  @ApiImplicitParams({
+//    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+//  })
+//  public @ResponseBody ValueList autocomplete(
+//      @RequestBody SearchProductRequest searchRequest,
+//      @ApiIgnore MerchantStore merchantStore,
+//      @ApiIgnore Language language) {
+//    return searchFacade.autocompleteRequest(searchRequest.getQuery(), merchantStore, language);
+//  }
+
   @PostMapping("/search/autocomplete")
   @ApiImplicitParams({
-    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+          @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+          @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
   })
   public @ResponseBody ValueList autocomplete(
-      @RequestBody SearchProductRequest searchRequest,
-      @ApiIgnore MerchantStore merchantStore,
-      @ApiIgnore Language language) {
-    return searchFacade.autocompleteRequest(searchRequest.getQuery(), merchantStore, language);
+          @RequestBody SearchProductAutocompleteRequestV2 searchRequest,
+          @ApiIgnore Language language) {
+    return searchFacade.autoCompleteRequestV2(searchRequest, language);
   }
 }

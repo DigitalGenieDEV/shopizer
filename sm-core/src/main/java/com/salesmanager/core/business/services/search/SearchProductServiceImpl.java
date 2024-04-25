@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteRequest;
+import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteResult;
 import com.salesmanager.core.model.catalog.product.search.ProductSearchRequest;
 import com.salesmanager.core.model.catalog.product.search.ProductSearchResult;
 import com.salesmanager.core.utils.CommonUtil;
@@ -38,6 +40,9 @@ public class SearchProductServiceImpl implements SearchProductService{
         ProductSearchResult productSearchResult = getProductSearchResult(request);
 
         List<ProductSearchResult.ProductResult> productResults = productSearchResult.getProductList();
+//        ProductSearchResult.ProductResult productResult = new ProductSearchResult.ProductResult();
+//        productResult.setProductId("350");
+//        productResults.add(productResult);
 
         List<Product> products = new ArrayList<>();
         for (ProductSearchResult.ProductResult p : productResults) {
@@ -51,6 +56,11 @@ public class SearchProductServiceImpl implements SearchProductService{
         }
 
         return products;
+    }
+
+    @Override
+    public ProductAutocompleteResult autocomplete(ProductAutocompleteRequest request) {
+        return getAutocompleteResult(request);
     }
 
     private ProductSearchResult getProductSearchResult(ProductSearchRequest request) {
@@ -98,6 +108,39 @@ public class SearchProductServiceImpl implements SearchProductService{
         //去掉结尾的换行符
         in.close();
         return contentBuffer.toString();
+    }
+
+    private ProductAutocompleteResult getAutocompleteResult(ProductAutocompleteRequest request) {
+        String endpoint = "https://yjticrq1y0.execute-api.ap-northeast-2.amazonaws.com/test_search_autocomplete";
+//        String endpoint = "https://3melad8jk2.execute-api.ap-northeast-2.amazonaws.com/test_sr_search_api?q=bottle&size=20";
+        final HttpClient httpClient = new HttpClient();
+        final GetMethod method = new GetMethod(endpoint);
+
+        if(request != null){
+            method.setQueryString(request.getParams().toArray(new NameValuePair[0]));
+        }
+
+        String response = "";
+        try{
+            int status = httpClient.executeMethod(method);
+            if(status >= 300 || status < 200){
+                throw new RuntimeException("invoke api failed, urlPath:" + endpoint
+                        + " status:" + status + " response:" + method.getResponseBodyAsString());
+            }
+
+            response = getResponse(method);
+
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return objectMapper.readValue(response, ProductAutocompleteResult.class);
+        } catch (HttpException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }finally{
+            method.releaseConnection();
+        }
+
+        return null;
     }
 
 }

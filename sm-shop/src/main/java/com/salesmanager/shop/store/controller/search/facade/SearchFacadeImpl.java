@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.controller.search.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -7,8 +8,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.services.search.SearchProductService;
+import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteRequest;
+import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteResult;
 import com.salesmanager.core.model.catalog.product.search.ProductSearchRequest;
 import com.salesmanager.core.model.catalog.product.search.ProductSearchResult;
+import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.catalog.product.ReadableProductList;
 import com.salesmanager.shop.model.search.ReadableSearchProduct;
@@ -233,6 +237,19 @@ public class SearchFacadeImpl implements SearchFacade {
 		}
 
 		return productList.getProducts();
+	}
+
+	@Override
+	public ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language) {
+		ProductAutocompleteRequest request = new ProductAutocompleteRequest();
+		request.setQ(searchProductAutocompleteRequestV2.getQ());
+		request.setLang(searchProductAutocompleteRequestV2.getLang());
+
+		ProductAutocompleteResult result = searchProductService.autocomplete(request);
+
+		ValueList valueList = new ValueList();
+		valueList.setValues(new ArrayList<>(result.getSuggest().keySet()));
+		return valueList;
 	}
 
 

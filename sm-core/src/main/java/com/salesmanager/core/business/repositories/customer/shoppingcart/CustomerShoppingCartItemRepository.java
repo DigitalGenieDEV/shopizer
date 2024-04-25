@@ -11,6 +11,6 @@ public interface CustomerShoppingCartItemRepository extends JpaRepository<Custom
     CustomerShoppingCartItem findOne(Long id);
 
     @Modifying
-    @Query("delete from ShoppingCartItem i where i.id = ?1")
+    @Query("delete from CustomerShoppingCartItem i where i.id = ?1")
     void deleteById(Long id);
 }

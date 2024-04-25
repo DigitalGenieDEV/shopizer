@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
 
+import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -64,13 +65,25 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
     }
 
     @Test
-    public void searchv2() {
+    public void searchV2() {
         SearchProductRequestV2 searchRequest = new SearchProductRequestV2();
         searchRequest.setQ("bottle");
         searchRequest.setSize(20);
         final HttpEntity<SearchProductRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 
-        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search_v2?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        assertNotNull(searchResponse);
+        assertThat(searchResponse.getStatusCode(), is(CREATED));
+    }
+
+    @Test
+    public void searchAutocompleteV2() {
+        SearchProductAutocompleteRequestV2 searchRequest = new SearchProductAutocompleteRequestV2();
+        searchRequest.setQ("bottle");
+        searchRequest.setLang("en");
+        final HttpEntity<SearchProductAutocompleteRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
+
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search/autocomplete?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
         assertNotNull(searchResponse);
         assertThat(searchResponse.getStatusCode(), is(CREATED));
     }
