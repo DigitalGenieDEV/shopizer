@@ -344,6 +344,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+
 	public Product findByOutId(Long outId) {
 		return productRepository.findByOutId(outId);
 	}

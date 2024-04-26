@@ -45,7 +45,7 @@ public class ProductEntity extends Product implements Serializable {
 	 * 1-Quotation based on SKU specifications
 	 *  2- If there is a SKU, the quotation is based on the quantity of the product.
 	 */
-	private Integer quoteType;
+	private Integer quoteType = 2;
 
 	private boolean productIsFree;
 

@@ -1,9 +1,12 @@
 package com.salesmanager.test.shop.integration.search;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
 
+import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
+import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.salesmanager.core.business.constants.Constants;
@@ -24,7 +28,8 @@ import com.salesmanager.test.shop.common.ServicesTestSupport;
 
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-@Ignore
+@ActiveProfiles(value = "local")
+//@Ignore
 public class SearchApiIntegrationTest extends ServicesTestSupport {
 
     @Autowired
@@ -57,6 +62,30 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
         final ResponseEntity<SearchProductList> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE, searchEntity, SearchProductList.class);
         assertThat(searchResponse.getStatusCode(), is(CREATED));
 
+    }
+
+    @Test
+    public void searchV2() {
+        SearchProductRequestV2 searchRequest = new SearchProductRequestV2();
+        searchRequest.setQ("bottle");
+        searchRequest.setSize(20);
+        final HttpEntity<SearchProductRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
+
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        assertNotNull(searchResponse);
+        assertThat(searchResponse.getStatusCode(), is(CREATED));
+    }
+
+    @Test
+    public void searchAutocompleteV2() {
+        SearchProductAutocompleteRequestV2 searchRequest = new SearchProductAutocompleteRequestV2();
+        searchRequest.setQ("bottle");
+        searchRequest.setLang("en");
+        final HttpEntity<SearchProductAutocompleteRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
+
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search/autocomplete?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        assertNotNull(searchResponse);
+        assertThat(searchResponse.getStatusCode(), is(CREATED));
     }
 
 

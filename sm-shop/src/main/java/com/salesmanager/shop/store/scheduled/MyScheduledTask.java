@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +30,7 @@ public class MyScheduledTask {
     private AlibabaProductService alibabaProductService;
     @Inject
     protected MerchantStoreService merchantService;
+
 
 
 //    @Scheduled(cron = "0/5 * * * * *") // 每隔五秒执行一次
@@ -53,6 +55,7 @@ public class MyScheduledTask {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
                 try {
+
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore, null);
                 } catch (Exception e) {
                     System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："

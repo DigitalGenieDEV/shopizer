@@ -1006,7 +1006,9 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 			}
 		}
 		// at the moment we expect that some change have been done
-		saveShoppingCart(cartModel);
+//		saveShoppingCart(cartModel);
+
+		shoppingCartService.saveOrUpdateFlush(cartModel);
 
 		// refresh cart
 		cartModel = shoppingCartService.getById(cartModel.getId(), store);
@@ -1073,8 +1075,9 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 		return modifyCartMulti(cartModel, items, store, language);
 	}
 
+	// TODO
 	private void saveShoppingCart(ShoppingCart shoppingCart) throws Exception {
-		shoppingCartService.save(shoppingCart);
+		shoppingCartService.saveOrUpdate(shoppingCart);
 	}
 
 	private String uniqueShoppingCartCode() {
