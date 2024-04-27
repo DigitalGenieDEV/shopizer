@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.facade.product;
 
+
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
@@ -99,6 +100,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     @Autowired
     private ProductRepository productRepository;
 
+
     @Autowired
     private ProductService productService;
 
@@ -115,6 +117,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             productSearchQueryProductDetailParamOfferDetailParam.setCountry(language);
             ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModel = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParam);
             try {
+
                 saveProduct(productSearchQueryProductDetailModelProductDetailModel,
                         language, merchantStore, categoryIds);
             } catch (Exception e) {
@@ -206,6 +209,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             }
         }
 
+
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
         productDefinition.setManufacturer(manufacturers.getCode());
@@ -235,6 +239,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableImage.setImageType(1);
             persistableImages.add(persistableImage);
         }
+
         persistableProduct.setImages(persistableImages);
 
         com.salesmanager.shop.model.catalog.product.ProductDescription description = new ProductDescription();
@@ -242,6 +247,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         description.setName(productDetailModel.getSubject());
         description.setTitle(productDetailModel.getSubjectTrans());
         description.setDescription(productDetailModel.getDescription());
+
         persistableProduct.getDescriptions().add(description);
 
         persistableProduct.setOutProductId(productDetailModel.getOfferId());
@@ -450,6 +456,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         product.setVariants(variants);
 
     }
+
 
     /**
      *

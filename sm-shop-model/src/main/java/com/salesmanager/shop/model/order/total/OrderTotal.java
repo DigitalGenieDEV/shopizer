@@ -3,6 +3,8 @@ package com.salesmanager.shop.model.order.total;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.salesmanager.shop.model.customer.shoppingcart.MoneySerializer;
 import com.salesmanager.shop.model.entity.Entity;
 
 
@@ -17,6 +19,7 @@ public class OrderTotal extends Entity implements Serializable {
 	private String code;
 	private int order;
 	private String module;
+	@JsonSerialize(using=MoneySerializer.class)
 	private BigDecimal value;
 	
 	

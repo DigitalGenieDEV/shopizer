@@ -15,9 +15,9 @@ public class OrderTotalSummary implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private BigDecimal subTotal;//one time price for items
-	private BigDecimal total;//final price
-	private BigDecimal taxTotal;//total of taxes
+	private BigDecimal subTotal = new BigDecimal(0);//one time price for items
+	private BigDecimal total = new BigDecimal(0);//final price
+	private BigDecimal taxTotal = new BigDecimal(0);//total of taxes
 	
 	private List<OrderTotal> totals;//all other fees (tax, shipping ....)
 
