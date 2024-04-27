@@ -12,9 +12,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -30,9 +30,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setChineseName(String chineseName) {
         this.chineseName = chineseName;
@@ -48,9 +48,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setTranslatedName(String translatedName) {
         this.translatedName = translatedName;
@@ -66,9 +66,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -84,9 +84,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setLeaf(String leaf) {
         this.leaf = leaf;
@@ -102,9 +102,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setLevel(String level) {
         this.level = level;
@@ -120,9 +120,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setParentCateId(String parentCateId) {
         this.parentCateId = parentCateId;
@@ -138,9 +138,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setFromCache(Boolean fromCache) {
         this.fromCache = fromCache;
@@ -156,9 +156,9 @@ public class CategoryTranslationGetByIdCategory {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setChildren(CategoryTranslationGetByIdChildCategory[] children) {
         this.children = children;

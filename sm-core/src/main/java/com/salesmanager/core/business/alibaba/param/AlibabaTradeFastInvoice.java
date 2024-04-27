@@ -13,10 +13,10 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置发票类型
+     *     发票类型
     0：普通发票，1:增值税发票     *
      * 参数示例：<pre>0</pre>     
-     * 此参数必填
+     *
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
@@ -32,9 +32,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置省份文本     *
+     *     省份文本     *
      * 参数示例：<pre>浙江省</pre>     
-     * 此参数必填
+     *
      */
     public void setProvinceText(String provinceText) {
         this.provinceText = provinceText;
@@ -50,9 +50,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置城市文本     *
+     *     城市文本     *
      * 参数示例：<pre>杭州市</pre>     
-     * 此参数必填
+     *
      */
     public void setCityText(String cityText) {
         this.cityText = cityText;
@@ -68,9 +68,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置地区文本     *
+     *     地区文本     *
      * 参数示例：<pre>滨江区</pre>     
-     * 此参数必填
+     *
      */
     public void setAreaText(String areaText) {
         this.areaText = areaText;
@@ -86,9 +86,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置镇文本     *
+     *     镇文本     *
      * 参数示例：<pre>长河镇</pre>     
-     * 此参数必填
+     *
      */
     public void setTownText(String townText) {
         this.townText = townText;
@@ -104,9 +104,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置邮编     *
+     *     邮编     *
      * 参数示例：<pre>333333</pre>     
-     * 此参数必填
+     *
      */
     public void setPostCode(String postCode) {
         this.postCode = postCode;
@@ -122,9 +122,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置街道     *
+     *     街道     *
      * 参数示例：<pre>网商路699号</pre>     
-     * 此参数必填
+     *
      */
     public void setAddress(String address) {
         this.address = address;
@@ -140,9 +140,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置收票人姓名     *
+     *     收票人姓名     *
      * 参数示例：<pre>张三</pre>     
-     * 此参数必填
+     *
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
@@ -158,9 +158,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置电话     *
+     *     电话     *
      * 参数示例：<pre>0517-88990077</pre>     
-     * 此参数必填
+     *
      */
     public void setPhone(String phone) {
         this.phone = phone;
@@ -176,9 +176,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置手机     *
+     *     手机     *
      * 参数示例：<pre>15251667788</pre>     
-     * 此参数必填
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -194,9 +194,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置购货公司名（发票抬头）     *
+     *     购货公司名（发票抬头）     *
      * 参数示例：<pre>测试公司</pre>     
-     * 此参数必填
+     *
      */
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
@@ -212,9 +212,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置纳税识别码     *
+     *     纳税识别码     *
      * 参数示例：<pre>12345</pre>     
-     * 此参数必填
+     *
      */
     public void setTaxpayerIdentifier(String taxpayerIdentifier) {
         this.taxpayerIdentifier = taxpayerIdentifier;
@@ -230,9 +230,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置开户行及帐号     *
+     *     开户行及帐号     *
      * 参数示例：<pre>网商银行</pre>     
-     * 此参数必填
+     *
      */
     public void setBankAndAccount(String bankAndAccount) {
         this.bankAndAccount = bankAndAccount;
@@ -248,9 +248,9 @@ public class AlibabaTradeFastInvoice {
     }
 
     /**
-     * 设置增值税本地发票号     *
+     *     增值税本地发票号     *
      * 参数示例：<pre>123123123</pre>     
-     * 此参数必填
+     *
      */
     public void setLocalInvoiceId(String localInvoiceId) {
         this.localInvoiceId = localInvoiceId;

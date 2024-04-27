@@ -21,9 +21,9 @@ public class AlibabaFenxiaoRelationaddParam extends AbstractAPIRequest<AlibabaFe
     }
 
     /**
-     * 设置商品id     *
+     *     商品id     *
      * 参数示例：<pre>98129931</pre>     
-     * 此参数必填
+     *    
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;

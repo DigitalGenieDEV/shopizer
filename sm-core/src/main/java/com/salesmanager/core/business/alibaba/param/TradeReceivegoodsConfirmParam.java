@@ -21,9 +21,9 @@ public class TradeReceivegoodsConfirmParam extends AbstractAPIRequest<TradeRecei
     }
 
     /**
-     * 设置订单ID     *
+     *     订单ID     *
      * 参数示例：<pre>56623232655125698</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -39,9 +39,9 @@ public class TradeReceivegoodsConfirmParam extends AbstractAPIRequest<TradeRecei
     }
 
     /**
-     * 设置子订单ID     *
+     *     子订单ID     *
      * 参数示例：<pre>562356635566365512</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderEntryIds(long[] orderEntryIds) {
         this.orderEntryIds = orderEntryIds;

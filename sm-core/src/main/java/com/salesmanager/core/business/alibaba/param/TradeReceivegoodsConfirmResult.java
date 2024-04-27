@@ -12,9 +12,9 @@ public class TradeReceivegoodsConfirmResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOceanOpenplatformBizTradeResultTradeConfirmReceiptResult result) {
         this.result = result;

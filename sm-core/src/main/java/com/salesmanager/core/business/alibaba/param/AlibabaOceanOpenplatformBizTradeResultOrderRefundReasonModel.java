@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonModel {
     }
 
     /**
-     * 设置原因id     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     原因id     *
+     *    
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonModel {
     }
 
     /**
-     * 设置原因     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     原因     *
+     *    
+     *
      */
     public void setName(String name) {
         this.name = name;
@@ -48,9 +48,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonModel {
     }
 
     /**
-     * 设置凭证是否必须上传     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     凭证是否必须上传     *
+     *    
+     *
      */
     public void setNeedVoucher(Boolean needVoucher) {
         this.needVoucher = needVoucher;
@@ -66,9 +66,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonModel {
     }
 
     /**
-     * 设置是否支持退运费     *
+     *     是否支持退运费     *
      * 参数示例：<pre>“true" 表示不支持退运费</pre>     
-     * 此参数必填
+     *
      */
     public void setNoRefundCarriage(Boolean noRefundCarriage) {
         this.noRefundCarriage = noRefundCarriage;
@@ -84,9 +84,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonModel {
     }
 
     /**
-     * 设置提示     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     提示     *
+     *    
+     *
      */
     public void setTip(String tip) {
         this.tip = tip;

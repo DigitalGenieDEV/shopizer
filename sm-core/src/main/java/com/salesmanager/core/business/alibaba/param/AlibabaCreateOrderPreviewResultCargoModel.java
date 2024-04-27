@@ -12,9 +12,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置产品总金额     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     产品总金额     *
+     *        
+     *    
      */
     public void setAmount(Double amount) {
         this.amount = amount;
@@ -30,9 +30,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置返回信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     返回信息     *
+     *        
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -48,9 +48,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置最终单价     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     最终单价     *
+     *        
+     *    
      */
     public void setFinalUnitPrice(Double finalUnitPrice) {
         this.finalUnitPrice = finalUnitPrice;
@@ -66,9 +66,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置规格ID，offer内唯一     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     规格ID，offer内唯一     *
+     *        
+     *    
      */
     public void setSpecId(String specId) {
         this.specId = specId;
@@ -84,9 +84,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置规格ID，全局唯一     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     规格ID，全局唯一     *
+     *        
+     *    
      */
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
@@ -102,9 +102,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置返回码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     返回码     *
+     *        
+     *    
      */
     public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
@@ -120,9 +120,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置商品ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品ID     *
+     *        
+     *    
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -138,9 +138,9 @@ public class AlibabaCreateOrderPreviewResultCargoModel {
     }
 
     /**
-     * 设置商品优惠列表     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品优惠列表     *
+     *        
+     *    
      */
     public void setCargoPromotionList(AlibabaTradePromotionModel[] cargoPromotionList) {
         this.cargoPromotionList = cargoPromotionList;

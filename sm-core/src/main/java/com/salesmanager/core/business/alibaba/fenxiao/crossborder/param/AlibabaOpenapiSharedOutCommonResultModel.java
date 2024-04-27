@@ -12,9 +12,9 @@ public class AlibabaOpenapiSharedOutCommonResultModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class AlibabaOpenapiSharedOutCommonResultModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCode(String code) {
         this.code = code;
@@ -48,9 +48,9 @@ public class AlibabaOpenapiSharedOutCommonResultModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setMessage(String message) {
         this.message = message;

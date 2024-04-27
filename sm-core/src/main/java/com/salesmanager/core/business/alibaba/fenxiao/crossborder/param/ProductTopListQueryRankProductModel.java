@@ -12,9 +12,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品ID     *
+     *     商品ID     *
      * 参数示例：<pre>699490252651</pre>     
-     * 此参数必填
+     *
      */
     public void setItemId(Long itemId) {
         this.itemId = itemId;
@@ -30,9 +30,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品中文标题     *
+     *     商品中文标题     *
      * 参数示例：<pre>2023厚底女士凉鞋软底拖鞋夏季现货踩屎感注塑鞋出口家居防滑凉鞋</pre>     
-     * 此参数必填
+     *
      */
     public void setTitle(String title) {
         this.title = title;
@@ -48,9 +48,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品译文标题     *
+     *     商品译文标题     *
      * 参数示例：<pre>2023 thick-soled ladies sandals soft-soled slippers summer spot poop injection shoes export home non-slip sandals</pre>     
-     * 此参数必填
+     *
      */
     public void setTranslateTitle(String translateTitle) {
         this.translateTitle = translateTitle;
@@ -66,9 +66,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品图片     *
+     *     商品图片     *
      * 参数示例：<pre>http://img.china.alibaba.com/img/ibank/O1CN01p4SIPo1D6Wx4c0xs8_!!2201053890167-0-cib.search.jpg</pre>     
-     * 此参数必填
+     *
      */
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
@@ -84,9 +84,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品排行     *
+     *     商品排行     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setSort(Integer sort) {
         this.sort = sort;
@@ -102,9 +102,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置商品包含的服务，24小时发货sendGoods24H，48小时发货sendGoods48H     *
+     *     商品包含的服务，24小时发货sendGoods24H，48小时发货sendGoods48H     *
      * 参数示例：<pre>["sendGoods48H"]</pre>     
-     * 此参数必填
+     *
      */
     public void setServiceList(String[] serviceList) {
         this.serviceList = serviceList;
@@ -120,9 +120,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置最近30天买家数     *
+     *     最近30天买家数     *
      * 参数示例：<pre>1334</pre>     
-     * 此参数必填
+     *
      */
     public void setBuyerNum(Integer buyerNum) {
         this.buyerNum = buyerNum;
@@ -138,9 +138,9 @@ public class ProductTopListQueryRankProductModel {
     }
 
     /**
-     * 设置最近30天商品售卖件数     *
+     *     最近30天商品售卖件数     *
      * 参数示例：<pre>433454</pre>     
-     * 此参数必填
+     *
      */
     public void setSoldOut(Integer soldOut) {
         this.soldOut = soldOut;

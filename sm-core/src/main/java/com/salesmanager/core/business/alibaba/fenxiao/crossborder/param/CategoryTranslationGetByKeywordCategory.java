@@ -12,9 +12,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置类目ID     *
+     *     类目ID     *
      * 参数示例：<pre>1031910</pre>     
-     * 此参数必填
+     *
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -30,9 +30,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置类目中文名称     *
+     *     类目中文名称     *
      * 参数示例：<pre>连衣裙</pre>     
-     * 此参数必填
+     *
      */
     public void setChineseName(String chineseName) {
         this.chineseName = chineseName;
@@ -48,9 +48,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置类目翻译名称     *
+     *     类目翻译名称     *
      * 参数示例：<pre>ワンピース</pre>     
-     * 此参数必填
+     *
      */
     public void setTranslatedName(String translatedName) {
         this.translatedName = translatedName;
@@ -66,9 +66,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置语种     *
+     *     语种     *
      * 参数示例：<pre>ja</pre>     
-     * 此参数必填
+     *
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -84,9 +84,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置是否叶子类目     *
+     *     是否叶子类目     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setLeaf(Boolean leaf) {
         this.leaf = leaf;
@@ -102,9 +102,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置类目层级     *
+     *     类目层级     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *
      */
     public void setLevel(String level) {
         this.level = level;
@@ -120,9 +120,9 @@ public class CategoryTranslationGetByKeywordCategory {
     }
 
     /**
-     * 设置上层类目ID     *
+     *     上层类目ID     *
      * 参数示例：<pre>10166</pre>     
-     * 此参数必填
+     *
      */
     public void setParentCateId(Long parentCateId) {
         this.parentCateId = parentCateId;

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * @author hongbang.hb
  *
  */
 public class SyncAPIClient {

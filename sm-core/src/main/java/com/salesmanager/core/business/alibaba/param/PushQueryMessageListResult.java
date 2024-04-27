@@ -12,9 +12,9 @@ public class PushQueryMessageListResult {
     }
 
     /**
-     * 设置分页数据     *
+     *     分页数据     *
           
-     * 此参数必填
+     *
      */
     public void setPushMessagePage(PushMessagePage pushMessagePage) {
         this.pushMessagePage = pushMessagePage;

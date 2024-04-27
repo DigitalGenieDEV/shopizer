@@ -12,9 +12,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置是否采源宝订单     *
+     *     是否采源宝订单     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setOdsCyd(Boolean odsCyd) {
         this.odsCyd = odsCyd;
@@ -30,9 +30,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置账期交易订单的到账时间     *
+     *     账期交易订单的到账时间     *
      * 参数示例：<pre>yyyy-MM-dd HH:mm:ss</pre>     
-     * 此参数必填
+     *
      */
     public void setAccountPeriodTime(String accountPeriodTime) {
         this.accountPeriodTime = accountPeriodTime;
@@ -48,9 +48,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置为true，表示下单时选择了诚e赊交易方式。注意不等同于“诚e赊支付”，支付时有可能是支付宝付款，具体支付方式查询tradeTerms.payWay     *
+     *     为true，表示下单时选择了诚e赊交易方式。注意不等同于“诚e赊支付”，支付时有可能是支付宝付款，具体支付方式查询tradeTerms.payWay     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setCreditOrder(Boolean creditOrder) {
         this.creditOrder = creditOrder;
@@ -66,9 +66,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置诚e赊支付详情，只有使用诚e赊付款时返回     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     诚e赊支付详情，只有使用诚e赊付款时返回     *
+     *        
+     *
      */
     public void setCreditOrderDetail(AlibabaCreditOrderForDetail creditOrderDetail) {
         this.creditOrderDetail = creditOrderDetail;
@@ -84,9 +84,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置预订单信息     *
+     *     预订单信息     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *
      */
     public void setPreOrderInfo(AlibabaOrderPreOrderForRead preOrderInfo) {
         this.preOrderInfo = preOrderInfo;
@@ -102,9 +102,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置零售通订单信息     *
+     *     零售通订单信息     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *
      */
     public void setLstOrderInfo(AlibabaLstTradeInfo lstOrderInfo) {
         this.lstOrderInfo = lstOrderInfo;
@@ -120,9 +120,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置ERP的用户ID     *
+     *     ERP的用户ID     *
      * 参数示例：<pre>U001012121</pre>     
-     * 此参数必填
+     *
      */
     public void setErpBuyerUserId(String erpBuyerUserId) {
         this.erpBuyerUserId = erpBuyerUserId;
@@ -138,9 +138,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置ERP的订单编号     *
+     *     ERP的订单编号     *
      * 参数示例：<pre>O123331</pre>     
-     * 此参数必填
+     *
      */
     public void setErpOrderId(String erpOrderId) {
         this.erpOrderId = erpOrderId;
@@ -156,9 +156,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置ERP组织ID     *
+     *     ERP组织ID     *
      * 参数示例：<pre>OG4331113</pre>     
-     * 此参数必填
+     *
      */
     public void setErpBuyerOrgId(String erpBuyerOrgId) {
         this.erpBuyerOrgId = erpBuyerOrgId;
@@ -174,9 +174,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置是否加工定制订单     *
+     *     是否加工定制订单     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setIsCz(Boolean isCz) {
         this.isCz = isCz;
@@ -192,9 +192,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置是否定制订单     *
+     *     是否定制订单     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setIsDz(Boolean isDz) {
         this.isDz = isDz;
@@ -210,9 +210,9 @@ public class AlibabaOrderBizInfo {
     }
 
     /**
-     * 设置是否定制订单     *
+     *     是否定制订单     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setDz(Boolean dz) {
         this.dz = dz;

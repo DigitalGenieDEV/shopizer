@@ -16,7 +16,6 @@ import java.io.Reader;
 import java.text.ParseException;
 
 /**
- * @author hongbang.hb
  *
  */
 public abstract class AbstractJsonDeserializer implements DeSerializer {

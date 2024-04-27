@@ -4,7 +4,6 @@
 package com.salesmanager.core.business.alibaba.rawsdk.client.serialize;
 
 /**
- * @author hongbang.hb
  *
  */
 public interface DeSerializerListener {

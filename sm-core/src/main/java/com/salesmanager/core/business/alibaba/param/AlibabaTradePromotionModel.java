@@ -12,9 +12,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置优惠券ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     优惠券ID     *
+     *        
+     *
      */
     public void setPromotionId(String promotionId) {
         this.promotionId = promotionId;
@@ -30,9 +30,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置是否默认选中     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否默认选中     *
+     *        
+     *
      */
     public void setSelected(Boolean selected) {
         this.selected = selected;
@@ -48,9 +48,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置优惠券名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     优惠券名称     *
+     *        
+     *
      */
     public void setText(String text) {
         this.text = text;
@@ -66,9 +66,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置优惠券描述     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     优惠券描述     *
+     *        
+     *
      */
     public void setDesc(String desc) {
         this.desc = desc;
@@ -84,9 +84,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置是否免邮     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否免邮     *
+     *        
+     *
      */
     public void setFreePostage(Boolean freePostage) {
         this.freePostage = freePostage;
@@ -102,9 +102,9 @@ public class AlibabaTradePromotionModel {
     }
 
     /**
-     * 设置减去金额，单位为分     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     减去金额，单位为分     *
+     *        
+     *
      */
     public void setDiscountFee(Long discountFee) {
         this.discountFee = discountFee;

@@ -21,9 +21,9 @@ public class AlibabaTradePayWayQueryParam extends AbstractAPIRequest<AlibabaTrad
     }
 
     /**
-     * 设置订单号     *
+     *     订单号     *
      * 参数示例：<pre>123123</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;

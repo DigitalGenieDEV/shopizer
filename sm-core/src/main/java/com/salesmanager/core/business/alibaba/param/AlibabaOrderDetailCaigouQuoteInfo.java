@@ -14,9 +14,9 @@ public class AlibabaOrderDetailCaigouQuoteInfo {
     }
 
     /**
-     * 设置供应单项的名称     *
+     *     供应单项的名称     *
      * 参数示例：<pre>物料01</pre>     
-     * 此参数必填
+     *    
      */
     public void setProductQuoteName(String productQuoteName) {
         this.productQuoteName = productQuoteName;
@@ -32,9 +32,9 @@ public class AlibabaOrderDetailCaigouQuoteInfo {
     }
 
     /**
-     * 设置价格，单位：元     *
+     *     价格，单位：元     *
      * 参数示例：<pre>100</pre>     
-     * 此参数必填
+     *    
      */
     public void setPrice(BigDecimal price) {
         this.price = price;
@@ -50,9 +50,9 @@ public class AlibabaOrderDetailCaigouQuoteInfo {
     }
 
     /**
-     * 设置购买数量     *
+     *     购买数量     *
      * 参数示例：<pre>10</pre>     
-     * 此参数必填
+     *    
      */
     public void setCount(Double count) {
         this.count = count;

@@ -12,9 +12,9 @@ public class AlibabaTradeGetBuyerOrderListResult {
     }
 
     /**
-     * 设置查询返回列表     *
+     *     查询返回列表     *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOpenplatformTradeModelTradeInfo[] result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaTradeGetBuyerOrderListResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeGetBuyerOrderListResult {
     }
 
     /**
-     * 设置错误信息     *
+     *     错误信息     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -66,9 +66,9 @@ public class AlibabaTradeGetBuyerOrderListResult {
     }
 
     /**
-     * 设置总记录数     *
+     *     总记录数     *
           
-     * 此参数必填
+     *    
      */
     public void setTotalRecord(Long totalRecord) {
         this.totalRecord = totalRecord;

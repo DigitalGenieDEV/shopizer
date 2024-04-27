@@ -21,9 +21,9 @@ public class OrderRelationWriteParam extends AbstractAPIRequest<OrderRelationWri
     }
 
     /**
-     * 设置订单关系参数     *
+     *     订单关系参数     *
      * 参数示例：<pre>如下</pre>     
-     * 此参数必填
+     *
      */
     public void setOrderRelationParam(AlibabaCbuOrderParamOrderRelationParam orderRelationParam) {
         this.orderRelationParam = orderRelationParam;

@@ -12,9 +12,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetResult {
     }
 
     /**
-     * 设置返回结果     *
+     *     返回结果     *
           
-     * 此参数必填
+     *
      */
     public void setResult(AlibabaLogisticsFreightTemplate[] result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetResult {
     }
 
     /**
-     * 设置错误描述     *
+     *     错误描述     *
           
-     * 此参数必填
+     *
      */
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;

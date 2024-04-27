@@ -12,9 +12,9 @@ public class AlibabaTradeSkuItemDesc {
     }
 
     /**
-     * 设置属性名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     属性名     *
+     *        
+     *
      */
     public void setName(String name) {
         this.name = name;
@@ -30,9 +30,9 @@ public class AlibabaTradeSkuItemDesc {
     }
 
     /**
-     * 设置属性值     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     属性值     *
+     *        
+     *
      */
     public void setValue(String value) {
         this.value = value;

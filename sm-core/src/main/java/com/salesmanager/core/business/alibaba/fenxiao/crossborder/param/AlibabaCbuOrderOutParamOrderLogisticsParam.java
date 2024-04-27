@@ -14,9 +14,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -32,9 +32,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setLogisticsId(String logisticsId) {
         this.logisticsId = logisticsId;
@@ -50,9 +50,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setLogisticsStatus(String logisticsStatus) {
         this.logisticsStatus = logisticsStatus;
@@ -68,9 +68,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
@@ -86,9 +86,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSignTime(Date signTime) {
         this.signTime = signTime;
@@ -104,9 +104,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAppKey(Long appKey) {
         this.appKey = appKey;
@@ -122,9 +122,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAgentUserId(Long agentUserId) {
         this.agentUserId = agentUserId;
@@ -140,9 +140,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProvince(String province) {
         this.province = province;
@@ -158,9 +158,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCity(String city) {
         this.city = city;
@@ -176,9 +176,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setArea(String area) {
         this.area = area;
@@ -194,9 +194,9 @@ public class AlibabaCbuOrderOutParamOrderLogisticsParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAddress(String address) {
         this.address = address;

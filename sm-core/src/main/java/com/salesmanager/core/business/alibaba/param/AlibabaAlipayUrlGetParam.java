@@ -15,16 +15,12 @@ public class AlibabaAlipayUrlGetParam extends AbstractAPIRequest<AlibabaAlipayUr
     private long[] orderIdList;
 
     /**
-     * @return 订单Id列表,最多批量30个订单，订单过多会导致超时，建议一次10个订单
      */
     public long[] getOrderIdList() {
         return orderIdList;
     }
 
     /**
-     * 设置订单Id列表,最多批量30个订单，订单过多会导致超时，建议一次10个订单     *
-     * 参数示例：<pre>[74321349391498520]</pre>     
-     * 此参数必填
      */
     public void setOrderIdList(long[] orderIdList) {
         this.orderIdList = orderIdList;

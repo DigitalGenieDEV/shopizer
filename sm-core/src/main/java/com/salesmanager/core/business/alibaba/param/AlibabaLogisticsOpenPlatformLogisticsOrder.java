@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流信息ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流信息ID     *
+     *        
+     *
      */
     public void setLogisticsId(String logisticsId) {
         this.logisticsId = logisticsId;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流单号，运单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流单号，运单号     *
+     *        
+     *
      */
     public void setLogisticsBillNo(String logisticsBillNo) {
         this.logisticsBillNo = logisticsBillNo;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置订单号列表，无子订单的等于主订单编号，否则为对应子订单列表     *
+     *     订单号列表，无子订单的等于主订单编号，否则为对应子订单列表     *
      * 参数示例：<pre>129232515787615400,129232515788615400,129232515789615400,129232515790615400</pre>     
-     * 此参数必填
+     *
      */
     public void setOrderEntryIds(String orderEntryIds) {
         this.orderEntryIds = orderEntryIds;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流状态。WAITACCEPT:未受理;CANCEL:已撤销;ACCEPT:已受理;TRANSPORT:运输中;NOGET:揽件失败;SIGN:已签收;UNSIGN:签收异常     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流状态。WAITACCEPT:未受理;CANCEL:已撤销;ACCEPT:已受理;TRANSPORT:运输中;NOGET:揽件失败;SIGN:已签收;UNSIGN:签收异常     *
+     *        
+     *
      */
     public void setStatus(String status) {
         this.status = status;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流公司ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司ID     *
+     *        
+     *
      */
     public void setLogisticsCompanyId(String logisticsCompanyId) {
         this.logisticsCompanyId = logisticsCompanyId;
@@ -102,9 +102,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流公司编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司编码     *
+     *        
+     *
      */
     public void setLogisticsCompanyName(String logisticsCompanyName) {
         this.logisticsCompanyName = logisticsCompanyName;
@@ -120,9 +120,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置备注     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     备注     *
+     *        
+     *
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
@@ -138,9 +138,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setServiceFeature(String serviceFeature) {
         this.serviceFeature = serviceFeature;
@@ -156,9 +156,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setGmtSystemSend(String gmtSystemSend) {
         this.gmtSystemSend = gmtSystemSend;
@@ -174,9 +174,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置商品信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品信息     *
+     *        
+     *
      */
     public void setSendGoods(AlibabaLogisticsOpenPlatformLogisticsSendGood[] sendGoods) {
         this.sendGoods = sendGoods;
@@ -192,9 +192,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置收件人信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收件人信息     *
+     *        
+     *
      */
     public void setReceiver(AlibabaLogisticsOpenPlatformLogisticsReceiver receiver) {
         this.receiver = receiver;
@@ -210,9 +210,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置发件人信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发件人信息     *
+     *        
+     *
      */
     public void setSender(AlibabaLogisticsOpenPlatformLogisticsSender sender) {
         this.sender = sender;
@@ -228,9 +228,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsOrder {
     }
 
     /**
-     * 设置物流订单跟商品关系模型     *
+     *     物流订单跟商品关系模型     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *
      */
     public void setLogisticsOrderGoods(ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogisticsOrderSendGood[] logisticsOrderGoods) {
         this.logisticsOrderGoods = logisticsOrderGoods;

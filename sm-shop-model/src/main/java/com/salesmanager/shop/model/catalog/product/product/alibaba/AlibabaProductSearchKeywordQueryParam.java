@@ -12,9 +12,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
@@ -30,9 +30,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setBeginPage(Integer beginPage) {
         this.beginPage = beginPage;
@@ -48,9 +48,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -69,9 +69,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setSort(String sort) {
         this.sort = sort;
@@ -88,9 +88,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -106,9 +106,9 @@ public class AlibabaProductSearchKeywordQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>
-     * 此参数必填
+     *          *
+     *   
+     *    
      */
     public void setCountry(String country) {
         this.country = country;

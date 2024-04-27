@@ -12,9 +12,9 @@ public class AlibabaTradeGetLogisticsInfosBuyerViewResult {
     }
 
     /**
-     * 设置返回结果     *
+     *     返回结果     *
           
-     * 此参数必填
+     *
      */
     public void setResult(AlibabaLogisticsOpenPlatformLogisticsOrder[] result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaTradeGetLogisticsInfosBuyerViewResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeGetLogisticsInfosBuyerViewResult {
     }
 
     /**
-     * 设置错误信息     *
+     *     错误信息     *
           
-     * 此参数必填
+     *
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -66,9 +66,9 @@ public class AlibabaTradeGetLogisticsInfosBuyerViewResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *
      */
     public void setSuccess(Boolean success) {
         this.success = success;

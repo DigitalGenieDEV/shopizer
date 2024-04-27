@@ -26,11 +26,8 @@ import java.util.TimeZone;
  *
  */
 public final class DateUtil {
-	// 这个格式一般用来处理从Ocean返回的日期格式。原因是从Ocean端返回的日期格式，通常是"yyyyMMddHHmmssSSSZ"
 	public static final String DEFAULT_DATE_FORMAT_STR = "yyyyMMddHHmmssSSSZ";
 
-	// 有时，后端应用程序会使用fastJson,
-	// 但fastJson不支持"yyyyMMddHHmmssSSSZ"这种日期格式，所以在这里增加了"yyyy-MM-dd HH:mm:ss.SSS".而这种格式却没有时区
 	public static final String SIMPLE_DATE_FORMAT_STR = "yyyy-MM-dd HH:mm:ss.SSS";
 
 	private static SimpleDateFormat DEFAULT_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT_STR);

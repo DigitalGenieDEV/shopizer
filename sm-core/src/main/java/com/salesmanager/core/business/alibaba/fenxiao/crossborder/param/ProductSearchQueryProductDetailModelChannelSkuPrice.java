@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelChannelSkuPrice {
     }
 
     /**
-     * 设置sku id     *
+     *     sku id     *
      * 参数示例：<pre>435234325</pre>     
-     * 此参数必填
+     *    
      */
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelChannelSkuPrice {
     }
 
     /**
-     * 设置渠道价格     *
+     *     渠道价格     *
      * 参数示例：<pre>23.41</pre>     
-     * 此参数必填
+     *    
      */
     public void setCurrentPrice(String currentPrice) {
         this.currentPrice = currentPrice;

@@ -21,9 +21,9 @@ public class TradeCrossOrderSyncParam extends AbstractAPIRequest<TradeCrossOrder
     }
 
     /**
-     * 设置订单详情     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单详情     *
+     *        
+     *
      */
     public void setOrderParam(ComAlibabaCbuOrderParamOrderParamV orderParam) {
         this.orderParam = orderParam;

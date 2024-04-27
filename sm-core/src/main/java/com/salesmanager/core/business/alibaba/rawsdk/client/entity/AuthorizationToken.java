@@ -13,9 +13,8 @@ import java.util.Date;
 
 
 /**
- * 授权返回结果
+ *
  * 
- * @author fray.yangb Aug 21, 2012 2:47:07 PM
  */
 public class AuthorizationToken implements Serializable {
 
@@ -61,8 +60,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取access_token
-     * 
+     *
      * @return the accessToken
      */
     public String getAccess_token() {
@@ -70,8 +68,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取access_token过期时间
-     * 
+     *
      * @return the accessTokenTimeout
      */
     public long getExpires_in() {
@@ -79,8 +76,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取refresh_token
-     * 
+     *
      * @return the refreshToken
      */
     public String getRefresh_token() {
@@ -88,8 +84,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取refresh_token过期时间
-     * 
+     *
      * @return the refreshTokenTimeout
      */
     public Date getRefresh_token_timeout() {
@@ -105,8 +100,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取resource_owner
-     * 
+     *
      * @return the resourceOwnerId
      */
     public String getResource_owner() {
@@ -114,8 +108,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取uid
-     * 
+     *
      * @return the uid
      */
     public String getUid() {
@@ -123,8 +116,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取aliId
-     * 
+     *
      * @return the aliId
      */
     public long getAliId() {
@@ -163,8 +155,7 @@ public class AuthorizationToken implements Serializable {
     }
 
     /**
-     * 获取access_token过期时间,Date格式
-     * 
+     *
      * @return the accessTokenTimeout
      */
     public Date getExpires_time() {

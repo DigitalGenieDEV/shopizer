@@ -21,9 +21,9 @@ public class AlibabaTradePayProtocolPayPreparePayParam extends AbstractAPIReques
     }
 
     /**
-     * 设置发起免密支付     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发起免密支付     *
+     *        
+     *    
      */
     public void setTradeWithholdPreparePayParam(AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam tradeWithholdPreparePayParam) {
         this.tradeWithholdPreparePayParam = tradeWithholdPreparePayParam;

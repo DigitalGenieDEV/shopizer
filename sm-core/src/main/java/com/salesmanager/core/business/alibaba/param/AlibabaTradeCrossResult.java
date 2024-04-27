@@ -12,9 +12,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置订单总金额（单位分），一次创建多个订单时，该字段为空     *
+     *     订单总金额（单位分），一次创建多个订单时，该字段为空     *
      * 参数示例：<pre>100</pre>     
-     * 此参数必填
+     *    
      */
     public void setTotalSuccessAmount(Long totalSuccessAmount) {
         this.totalSuccessAmount = totalSuccessAmount;
@@ -30,9 +30,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置订单ID，一次创建多个订单时，该字段为空     *
+     *     订单ID，一次创建多个订单时，该字段为空     *
      * 参数示例：<pre>111111111</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -48,9 +48,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -66,9 +66,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置错误码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     错误码     *
+     *        
+     *    
      */
     public void setCode(String code) {
         this.code = code;
@@ -84,9 +84,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置错误信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     错误信息     *
+     *        
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -102,9 +102,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置账期信息，非账期支付订单返回空     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     账期信息，非账期支付订单返回空     *
+     *        
+     *    
      */
     public void setAccountPeriod(AlibabaTradeCrossPeriod accountPeriod) {
         this.accountPeriod = accountPeriod;
@@ -120,9 +120,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置失败商品信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     失败商品信息     *
+     *        
+     *    
      */
     public void setFailedOfferList(AlibabaTradeFastOffer[] failedOfferList) {
         this.failedOfferList = failedOfferList;
@@ -138,9 +138,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置运费，单位：分，一次创建多个订单时，该字段为空     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运费，单位：分，一次创建多个订单时，该字段为空     *
+     *        
+     *    
      */
     public void setPostFee(Long postFee) {
         this.postFee = postFee;
@@ -156,9 +156,9 @@ public class AlibabaTradeCrossResult {
     }
 
     /**
-     * 设置一次创建多个订单     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     一次创建多个订单     *
+     *        
+     *    
      */
     public void setOrderList(AlibabaTradeResultBizSimpleOrder[] orderList) {
         this.orderList = orderList;

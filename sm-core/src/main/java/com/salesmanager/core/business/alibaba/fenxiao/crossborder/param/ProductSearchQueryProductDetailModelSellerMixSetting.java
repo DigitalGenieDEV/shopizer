@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelSellerMixSetting {
     }
 
     /**
-     * 设置是否普通混批     *
+     *     是否普通混批     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setIsGeneralHunpi(Boolean isGeneralHunpi) {
         this.isGeneralHunpi = isGeneralHunpi;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelSellerMixSetting {
     }
 
     /**
-     * 设置混批金额     *
+     *     混批金额     *
      * 参数示例：<pre>100</pre>     
-     * 此参数必填
+     *
      */
     public void setMixAmount(Integer mixAmount) {
         this.mixAmount = mixAmount;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelSellerMixSetting {
     }
 
     /**
-     * 设置混批数量     *
+     *     混批数量     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *
      */
     public void setMixNumber(Integer mixNumber) {
         this.mixNumber = mixNumber;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelSellerMixSetting {
     }
 
     /**
-     * 设置是否普通混批     *
+     *     是否普通混批     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setGeneralHunpi(Boolean generalHunpi) {
         this.generalHunpi = generalHunpi;

@@ -12,9 +12,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置总数量     *
+     *     总数量     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setTotalRecords(Integer totalRecords) {
         this.totalRecords = totalRecords;
@@ -30,9 +30,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置总页数     *
+     *     总页数     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setTotalPage(Integer totalPage) {
         this.totalPage = totalPage;
@@ -48,9 +48,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -66,9 +66,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
@@ -84,9 +84,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置数据     *
+     *     数据     *
      * 参数示例：<pre>数据</pre>     
-     * 此参数必填
+     *
      */
     public void setData(ProductSearchImageQueryModelProductInfoModelV[] data) {
         this.data = data;
@@ -102,9 +102,9 @@ public class ProductSearchImageQueryModelPageInfoV {
     }
 
     /**
-     * 设置主体信息     *
+     *     主体信息     *
      * 参数示例：<pre>{"currentRegion":"265,597,326,764","yoloCropRegion":"265,597,326,764;443,783,154,595"}</pre>     
-     * 此参数必填
+     *
      */
     public void setPicRegionInfo(ComAlibabaCbuOfferModelPicRegionInfo picRegionInfo) {
         this.picRegionInfo = picRegionInfo;

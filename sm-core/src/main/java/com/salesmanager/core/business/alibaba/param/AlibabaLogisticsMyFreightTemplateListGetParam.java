@@ -21,9 +21,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetParam extends AbstractAPIRe
     }
 
     /**
-     * 设置模版id，用于单条查询的场景     *
+     *     模版id，用于单条查询的场景     *
      * 参数示例：<pre>xxx</pre>     
-     * 此参数必填
+     *
      */
     public void setTemplateId(Long templateId) {
         this.templateId = templateId;
@@ -39,9 +39,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetParam extends AbstractAPIRe
     }
 
     /**
-     * 设置是否查询子模板     *
+     *     是否查询子模板     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setQuerySubTemplate(Boolean querySubTemplate) {
         this.querySubTemplate = querySubTemplate;
@@ -57,9 +57,9 @@ public class AlibabaLogisticsMyFreightTemplateListGetParam extends AbstractAPIRe
     }
 
     /**
-     * 设置是否查询子模板费率     *
+     *     是否查询子模板费率     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setQueryRate(Boolean queryRate) {
         this.queryRate = queryRate;

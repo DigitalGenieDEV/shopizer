@@ -12,9 +12,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置物流订单号     *
+     *     物流订单号     *
      * 参数示例：<pre>189435013090051</pre>     
-     * 此参数必填
+     *    
      */
     public void setLogisticsOrderId(Long logisticsOrderId) {
         this.logisticsOrderId = logisticsOrderId;
@@ -30,9 +30,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置物流编号     *
+     *     物流编号     *
      * 参数示例：<pre>LP00616288919385</pre>     
-     * 此参数必填
+     *    
      */
     public void setLogisticsId(String logisticsId) {
         this.logisticsId = logisticsId;
@@ -48,9 +48,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置交易主订单号     *
+     *     交易主订单号     *
      * 参数示例：<pre>3657499272179232333</pre>     
-     * 此参数必填
+     *    
      */
     public void setTradeOrderId(Long tradeOrderId) {
         this.tradeOrderId = tradeOrderId;
@@ -66,9 +66,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置交易子订单号     *
+     *     交易子订单号     *
      * 参数示例：<pre>3657499272179232333</pre>     
-     * 此参数必填
+     *    
      */
     public void setTradeOrderItemId(Long tradeOrderItemId) {
         this.tradeOrderItemId = tradeOrderItemId;
@@ -84,9 +84,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置sku描述     *
+     *     sku描述     *
      * 参数示例：<pre>颜色: 黑色; 尺码: M;</pre>     
-     * 此参数必填
+     *    
      */
     public void setDescription(String description) {
         this.description = description;
@@ -102,9 +102,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置数量     *
+     *     数量     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setQuantity(Double quantity) {
         this.quantity = quantity;
@@ -120,9 +120,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置单位     *
+     *     单位     *
      * 参数示例：<pre>件</pre>     
-     * 此参数必填
+     *    
      */
     public void setUnit(String unit) {
         this.unit = unit;
@@ -138,9 +138,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置商品名称     *
+     *     商品名称     *
      * 参数示例：<pre>短袖t恤女2023夏季新款韩版宽松字母圆领上衣半袖体恤打底衫女潮</pre>     
-     * 此参数必填
+     *    
      */
     public void setName(String name) {
         this.name = name;
@@ -156,9 +156,9 @@ public class ComAlibabaOceanOpenplatformBizLogisticsCommonModelOpenPlatformLogis
     }
 
     /**
-     * 设置商品名称     *
+     *     商品名称     *
      * 参数示例：<pre>品名</pre>     
-     * 此参数必填
+     *    
      */
     public void setProductName(String productName) {
         this.productName = productName;

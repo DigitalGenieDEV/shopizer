@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSendGood {
     }
 
     /**
-     * 设置商品名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品名     *
+     *        
+     *
      */
     public void setGoodName(String goodName) {
         this.goodName = goodName;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSendGood {
     }
 
     /**
-     * 设置商品数量     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品数量     *
+     *        
+     *
      */
     public void setQuantity(String quantity) {
         this.quantity = quantity;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSendGood {
     }
 
     /**
-     * 设置商品单位     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品单位     *
+     *        
+     *
      */
     public void setUnit(String unit) {
         this.unit = unit;

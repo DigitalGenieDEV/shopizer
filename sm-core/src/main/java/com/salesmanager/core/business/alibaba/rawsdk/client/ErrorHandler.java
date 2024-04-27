@@ -11,8 +11,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client;
 import com.salesmanager.core.business.alibaba.rawsdk.client.exception.OceanException;
 
 /**
- * 类ErrorHandler.java的实现描述：业务异常处理
- * @author fray.yangb Aug 15, 2012 4:00:33 PM
  */
 public interface ErrorHandler {
     void handle(OceanException targetException);

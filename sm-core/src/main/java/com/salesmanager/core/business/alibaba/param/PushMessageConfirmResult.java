@@ -12,9 +12,9 @@ public class PushMessageConfirmResult {
     }
 
     /**
-     * 设置操作是否成功     *
+     *     操作是否成功     *
           
-     * 此参数必填
+     *    
      */
     public void setIsSuccess(Boolean isSuccess) {
         this.isSuccess = isSuccess;

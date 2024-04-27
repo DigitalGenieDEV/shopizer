@@ -12,9 +12,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO {
     }
 
     /**
-     * 设置操作类型     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作类型     *
+     *        
+     *
      */
     public void setOperateType(String operateType) {
         this.operateType = operateType;
@@ -30,9 +30,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO {
     }
 
     /**
-     * 设置子模板     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     子模板     *
+     *        
+     *
      */
     public void setSubTemplateDTO(AlibabaOpenplatformLogisticsDeliverySubTemplateDTO subTemplateDTO) {
         this.subTemplateDTO = subTemplateDTO;
@@ -48,9 +48,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO {
     }
 
     /**
-     * 设置费率     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     费率     *
+     *        
+     *
      */
     public void setRateList(AlibabaOpenplatformLogisticsDeliveryRateDetailDTO[] rateList) {
         this.rateList = rateList;

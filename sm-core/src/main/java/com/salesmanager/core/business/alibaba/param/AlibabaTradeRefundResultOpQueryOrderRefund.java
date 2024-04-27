@@ -12,9 +12,9 @@ public class AlibabaTradeRefundResultOpQueryOrderRefund {
     }
 
     /**
-     * 设置返回值     *
+     *     返回值     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setOpOrderRefundModelDetail(AlibabaTradeRefundOpOrderRefundModel opOrderRefundModelDetail) {
         this.opOrderRefundModelDetail = opOrderRefundModelDetail;

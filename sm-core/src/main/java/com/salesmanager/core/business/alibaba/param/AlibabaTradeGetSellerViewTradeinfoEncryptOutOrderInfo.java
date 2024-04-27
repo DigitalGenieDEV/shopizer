@@ -12,9 +12,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置外部订单号     *
+     *     外部订单号     *
      * 参数示例：<pre>25662254541</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutPlatformOrderNo(String outPlatformOrderNo) {
         this.outPlatformOrderNo = outPlatformOrderNo;
@@ -30,9 +30,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游平台,淘宝-thyny，天猫-tm，淘特-taote，阿里巴巴C2M-c2m，京东-jingdong，拼多多-pinduoduo，微信-weixin，跨境-kuajing，快手-kuaishou，有赞-youzan，抖音-douyin，寺库-siku，美团团好货-meituan，小红书-xiaohongshu，当当-dangdang，苏宁-suning，大V店-davdian，行云-xingyun，蜜芽-miya，菠萝派商城-boluo，其他-other     *
+     *     下游平台,淘宝-thyny，天猫-tm，淘特-taote，阿里巴巴C2M-c2m，京东-jingdong，拼多多-pinduoduo，微信-weixin，跨境-kuajing，快手-kuaishou，有赞-youzan，抖音-douyin，寺库-siku，美团团好货-meituan，小红书-xiaohongshu，当当-dangdang，苏宁-suning，大V店-davdian，行云-xingyun，蜜芽-miya，菠萝派商城-boluo，其他-other     *
      * 参数示例：<pre>tm</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutPlatformCode(String outPlatformCode) {
         this.outPlatformCode = outPlatformCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置获取下游订单信息的下游平台的appkey     *
+     *     获取下游订单信息的下游平台的appkey     *
      * 参数示例：<pre>65345</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutPlatformAppkey(String outPlatformAppkey) {
         this.outPlatformAppkey = outPlatformAppkey;
@@ -66,9 +66,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置淘宝oaid     *
+     *     淘宝oaid     *
      * 参数示例：<pre>xxx-xxxx-xxx</pre>     
-     * 此参数必填
+     *    
      */
     public void setOaid(String oaid) {
         this.oaid = oaid;
@@ -84,9 +84,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游加密收货人姓名     *
+     *     下游加密收货人姓名     *
      * 参数示例：<pre>***</pre>     
-     * 此参数必填
+     *    
      */
     public void setEncryptReceiverName(String encryptReceiverName) {
         this.encryptReceiverName = encryptReceiverName;
@@ -102,9 +102,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游加密收货人电话     *
+     *     下游加密收货人电话     *
      * 参数示例：<pre>***</pre>     
-     * 此参数必填
+     *    
      */
     public void setEncryptReceiverMobile(String encryptReceiverMobile) {
         this.encryptReceiverMobile = encryptReceiverMobile;
@@ -120,9 +120,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游加密收货人地址     *
+     *     下游加密收货人地址     *
      * 参数示例：<pre>***</pre>     
-     * 此参数必填
+     *    
      */
     public void setEncryptReceiverAddress(String encryptReceiverAddress) {
         this.encryptReceiverAddress = encryptReceiverAddress;
@@ -138,9 +138,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置其他扩展信息     *
+     *     其他扩展信息     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutPatformExtraInfo(String outPatformExtraInfo) {
         this.outPatformExtraInfo = outPatformExtraInfo;
@@ -156,9 +156,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游平台shopId     *
+     *     下游平台shopId     *
      * 参数示例：<pre>21343123</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutShopId(String outShopId) {
         this.outShopId = outShopId;
@@ -174,9 +174,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置外部原始地址信息	     *
+     *     外部原始地址信息	     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutOriginAddress(ComAlibabaOceanOpenplatformBizTradeParamOutAddress outOriginAddress) {
         this.outOriginAddress = outOriginAddress;
@@ -192,9 +192,9 @@ public class AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo {
     }
 
     /**
-     * 设置下游平台店铺名称     *
+     *     下游平台店铺名称     *
      * 参数示例：<pre>三生智能</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutShopName(String outShopName) {
         this.outShopName = outShopName;

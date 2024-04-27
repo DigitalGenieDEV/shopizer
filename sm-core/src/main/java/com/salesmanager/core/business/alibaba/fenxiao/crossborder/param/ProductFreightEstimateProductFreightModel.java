@@ -12,9 +12,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -30,9 +30,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFreight(String freight) {
         this.freight = freight;
@@ -48,9 +48,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setTemplateId(Long templateId) {
         this.templateId = templateId;
@@ -66,9 +66,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSingleProductWeight(Double singleProductWeight) {
         this.singleProductWeight = singleProductWeight;
@@ -84,9 +84,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSingleProductWidth(Double singleProductWidth) {
         this.singleProductWidth = singleProductWidth;
@@ -102,9 +102,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSingleProductHeight(Double singleProductHeight) {
         this.singleProductHeight = singleProductHeight;
@@ -120,9 +120,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSingleProductLength(Double singleProductLength) {
         this.singleProductLength = singleProductLength;
@@ -138,9 +138,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setTemplateType(Integer templateType) {
         this.templateType = templateType;
@@ -156,9 +156,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
@@ -174,9 +174,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSubTemplateType(Integer subTemplateType) {
         this.subTemplateType = subTemplateType;
@@ -192,9 +192,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSubTemplateName(String subTemplateName) {
         this.subTemplateName = subTemplateName;
@@ -210,9 +210,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFirstFee(String firstFee) {
         this.firstFee = firstFee;
@@ -228,9 +228,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFirstUnit(String firstUnit) {
         this.firstUnit = firstUnit;
@@ -246,9 +246,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setNextFee(String nextFee) {
         this.nextFee = nextFee;
@@ -264,9 +264,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setNextUnit(String nextUnit) {
         this.nextUnit = nextUnit;
@@ -282,9 +282,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setDiscount(String discount) {
         this.discount = discount;
@@ -300,9 +300,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setChargeType(String chargeType) {
         this.chargeType = chargeType;
@@ -318,9 +318,9 @@ public class ProductFreightEstimateProductFreightModel {
     }
 
     /**
-     * 设置是否包邮，true-包邮 false-不包邮，不包邮freight读取     *
+     *     是否包邮，true-包邮 false-不包邮，不包邮freight读取     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setFreePostage(Boolean freePostage) {
         this.freePostage = freePostage;

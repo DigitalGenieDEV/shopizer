@@ -12,9 +12,9 @@ public class AccountUserRegisterResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *
      */
     public void setResult(AccountUserRegisterResultResultModel result) {
         this.result = result;

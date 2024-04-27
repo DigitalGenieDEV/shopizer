@@ -14,9 +14,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置id     *
+     *     id     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setId(Long id) {
         this.id = id;
@@ -32,9 +32,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置创建时间     *
+     *     创建时间     *
      * 参数示例：<pre>20170806114526000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -50,9 +50,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置修改时间     *
+     *     修改时间     *
      * 参数示例：<pre>20170806114526000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -68,9 +68,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置买家id     *
+     *     买家id     *
      * 参数示例：<pre>123456</pre>     
-     * 此参数必填
+     *    
      */
     public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
@@ -86,9 +86,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置主订单id     *
+     *     主订单id     *
      * 参数示例：<pre>12312312312312</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -104,9 +104,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置业务数据类型,默认1：报关单     *
+     *     业务数据类型,默认1：报关单     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setType(Integer type) {
         this.type = type;
@@ -122,9 +122,9 @@ public class AlibabaTradeCustoms {
     }
 
     /**
-     * 设置报关信息列表     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     报关信息列表     *
+     *        
+     *    
      */
     public void setAttributes(AlibabaTradeCustomsAttributesInfo[] attributes) {
         this.attributes = attributes;

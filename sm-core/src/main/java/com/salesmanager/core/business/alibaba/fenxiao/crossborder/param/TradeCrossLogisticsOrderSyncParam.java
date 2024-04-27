@@ -21,9 +21,9 @@ public class TradeCrossLogisticsOrderSyncParam extends AbstractAPIRequest<TradeC
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOrderLogisticsParam(AlibabaCbuOrderOutParamOrderLogisticsParam orderLogisticsParam) {
         this.orderLogisticsParam = orderLogisticsParam;

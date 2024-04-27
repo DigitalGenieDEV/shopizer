@@ -20,12 +20,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.ErrorHandler;
 import com.salesmanager.core.business.alibaba.rawsdk.util.DateUtil;
 
 /**
- * 请求级访问策略
- * <p>
- * 定义是否使用签名、是否使用https、是否加入授权信息、超时设置、http方法设置等请求级别信息
- * <p>
- * 参考<code>ClientPolicy</code>
- * <p>
  *
  * @author jade
  * @author xiaoning.qxn
@@ -38,7 +32,7 @@ public class RequestPolicy implements Cloneable {
 	private Protocol responseProtocol = Protocol.json2;
 	private boolean responseCompress = true;
 	private int requestCompressThreshold = -1; // 默认不开启
-	//请求头header里的content-encoding,设置是否压缩，填gzip，deflate，或不填（不填表示不压缩，该字段只在mapi里生效
+	//请求头header里的content-encoding,    是否压缩，填gzip，deflate，或不填（不填表示不压缩，该字段只在mapi里生效
 	private String requestContentEncoding;
 
 	private int timeout = 5000; // 5秒
@@ -56,7 +50,6 @@ public class RequestPolicy implements Cloneable {
 	public static RequestPolicy authPolicy = null;
 
 	/**
-	 * 全局的授权请求的request policy，用户可能需要设置超时时间，其他不用变
 	 *
 	 * @return
 	 */
@@ -92,7 +85,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置是否使用时间戳
 	 *
 	 * @param requestSendTimestamp
 	 * @return a reference to this object
@@ -111,7 +103,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置是否使用https访问
 	 *
 	 * @param useHttps
 	 * @return a reference to this object
@@ -122,7 +113,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置访问协议,默认为推荐的param2
 	 *
 	 * @param protocol
 	 * @return a reference to this object
@@ -144,7 +134,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * response是否压缩
 	 *
 	 * @param responseCompress
 	 * @return a reference to this object
@@ -159,8 +148,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置请求压缩的阀值，超过这个阀值就进行压缩,默认值为-1不开启,建议1K，即1024
-	 *
 	 * @param requestCompressThreshold
 	 * @return
 	 */
@@ -182,7 +169,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置超时时间,默认5s
 	 *
 	 * @param timeout
 	 * @return a reference to this object
@@ -193,7 +179,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置http方法，默认为自动（ATOU），当request中有参数时，使用post，否则get
 	 *
 	 * @param httpMethod
 	 * @return a reference to this object
@@ -212,7 +197,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置request编码，默认为UTF-8
 	 *
 	 * @param queryStringCharset
 	 * @return a reference to this object
@@ -227,7 +211,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置cotent编码，默认为UTF-8
 	 *
 	 * @param contentCharset
 	 * @return a reference to this object
@@ -238,7 +221,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置response协议，默认为推荐的json
 	 *
 	 * @param responseProtocol
 	 * @return a reference to this object
@@ -256,17 +238,14 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 请求HTTP方法策略
 	 *
 	 * @author jade
 	 */
 	public static enum HttpMethodPolicy {
 		/**
-		 * 总是使用post
 		 */
 		POST,
 		/**
-		 * 总是使用get
 		 */
 		GET;
 	}
@@ -276,7 +255,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置error handler
 	 *
 	 * @param errorHandler
 	 * @return a reference to this object
@@ -291,7 +269,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 是否使用签名，取决于api要求
 	 *
 	 * @param useSignture
 	 * @return a reference to this object
@@ -306,7 +283,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 是否加入授权信息，取决于api要求
 	 *
 	 * @param needAuthorization
 	 * @return a reference to this object
@@ -321,7 +297,6 @@ public class RequestPolicy implements Cloneable {
 	}
 
 	/**
-	 * 是否在访问私有api，默认为false. 即访问url以http://host:port/api/...方式
 	 *
 	 * @param accessPrivateApi
 	 */

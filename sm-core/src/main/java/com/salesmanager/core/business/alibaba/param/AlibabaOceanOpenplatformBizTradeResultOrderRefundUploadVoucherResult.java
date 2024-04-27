@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundUploadVoucherResul
     }
 
     /**
-     * 设置图片域名     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     图片域名     *
+     *    
+     *
      */
     public void setImageDomain(String imageDomain) {
         this.imageDomain = imageDomain;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundUploadVoucherResul
     }
 
     /**
-     * 设置图片相对路径     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     图片相对路径     *
+     *    
+     *
      */
     public void setImageRelativeUrl(String imageRelativeUrl) {
         this.imageRelativeUrl = imageRelativeUrl;

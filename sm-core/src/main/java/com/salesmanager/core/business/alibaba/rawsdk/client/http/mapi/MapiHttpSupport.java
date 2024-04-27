@@ -24,9 +24,6 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 类MapiHttpSupport.java的实现描述：mapi工具类
- *
- * @author yuan.gy on 2020/10/20 3:23 下午
  */
 public class MapiHttpSupport {
 
@@ -99,7 +96,6 @@ public class MapiHttpSupport {
 
 
     /**
-     * mapi的url里，queryString暂时只支持时间戳和accessToken
      *
      * @param timestamp
      * @param context
@@ -122,7 +118,6 @@ public class MapiHttpSupport {
     }
 
     /**
-     * mapi的头部，只接受固定值
      *
      * @param context
      * @param clientPolicy

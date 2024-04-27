@@ -13,7 +13,6 @@ import java.util.Map;
 /**
  * DefaultAuthorizationTokenStore
  * 
- * @author fray.yangb Aug 21, 2012 3:25:30 PM
  */
 public class DefaultAuthorizationTokenStore implements AuthorizationTokenStore {
     private Map<Object, Object> cache = new HashMap<Object, Object>();

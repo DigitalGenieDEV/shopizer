@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author hongbang.hb
  *
  */
 public class SerializerProvider {

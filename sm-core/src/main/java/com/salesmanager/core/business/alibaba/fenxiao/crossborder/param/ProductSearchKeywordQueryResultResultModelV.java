@@ -12,9 +12,9 @@ public class ProductSearchKeywordQueryResultResultModelV {
     }
 
     /**
-     * 设置正否正常     *
+     *     正否正常     *
      * 参数示例：<pre>正否正常</pre>     
-     * 此参数必填
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class ProductSearchKeywordQueryResultResultModelV {
     }
 
     /**
-     * 设置状态码     *
+     *     状态码     *
      * 参数示例：<pre>状态码</pre>     
-     * 此参数必填
+     *    
      */
     public void setCode(String code) {
         this.code = code;
@@ -48,9 +48,9 @@ public class ProductSearchKeywordQueryResultResultModelV {
     }
 
     /**
-     * 设置提示     *
+     *     提示     *
      * 参数示例：<pre>提示</pre>     
-     * 此参数必填
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -66,9 +66,9 @@ public class ProductSearchKeywordQueryResultResultModelV {
     }
 
     /**
-     * 设置内容     *
+     *     内容     *
      * 参数示例：<pre>内容</pre>     
-     * 此参数必填
+     *    
      */
     public void setResult(ProductSearchKeywordQueryModelPageInfoV result) {
         this.result = result;

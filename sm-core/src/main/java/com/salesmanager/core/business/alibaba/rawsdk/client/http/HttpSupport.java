@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * @author hongbang.hb
  *
  */
 public final class HttpSupport {

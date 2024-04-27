@@ -4,8 +4,6 @@
 package com.salesmanager.core.business.alibaba.rawsdk.client.entity;
 
 /**
- * @author hongbang.hb
- *
  */
 public class ResponseWrapper<T> {
 	private String invokeStartTime;

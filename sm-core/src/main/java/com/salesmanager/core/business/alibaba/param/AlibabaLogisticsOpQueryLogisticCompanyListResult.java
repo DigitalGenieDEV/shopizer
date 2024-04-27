@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpQueryLogisticCompanyListResult {
     }
 
     /**
-     * 设置物流公司列表     *
+     *     物流公司列表     *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaLogisticsOpLogisticsCompanyModel[] result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpQueryLogisticCompanyListResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpQueryLogisticCompanyListResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpQueryLogisticCompanyListResult {
     }
 
     /**
-     * 设置错误码描述     *
+     *     错误码描述     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpQueryLogisticCompanyListResult {
     }
 
     /**
-     * 设置扩展错误码描述     *
+     *     扩展错误码描述     *
           
-     * 此参数必填
+     *    
      */
     public void setExtErrorMessage(String extErrorMessage) {
         this.extErrorMessage = extErrorMessage;

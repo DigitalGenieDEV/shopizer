@@ -21,9 +21,9 @@ public class AlibabaCrossBorderPayUrlGetParam extends AbstractAPIRequest<Alibaba
     }
 
     /**
-     * 设置订单Id列表,最多批量30个订单，订单过多会导致超时，建议一次10个订单     *
+     *     订单Id列表,最多批量30个订单，订单过多会导致超时，建议一次10个订单     *
      * 参数示例：<pre>[111111,22222333]</pre>     
-     * 此参数必填
+     *
      */
     public void setOrderIdList(long[] orderIdList) {
         this.orderIdList = orderIdList;

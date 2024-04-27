@@ -21,9 +21,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundParam extends AbstractAPIReques
     }
 
     /**
-     * 设置退款单业务主键 TQ+ID     *
+     *     退款单业务主键 TQ+ID     *
      * 参数示例：<pre>TQ11173622***991577</pre>     
-     * 此参数必填
+     *
      */
     public void setRefundId(String refundId) {
         this.refundId = refundId;
@@ -39,9 +39,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundParam extends AbstractAPIReques
     }
 
     /**
-     * 设置需要退款单的超时信息     *
+     *     需要退款单的超时信息     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setNeedTimeOutInfo(Boolean needTimeOutInfo) {
         this.needTimeOutInfo = needTimeOutInfo;
@@ -57,9 +57,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundParam extends AbstractAPIReques
     }
 
     /**
-     * 设置需要退款单伴随的所有退款操作信息     *
+     *     需要退款单伴随的所有退款操作信息     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setNeedOrderRefundOperation(Boolean needOrderRefundOperation) {
         this.needOrderRefundOperation = needOrderRefundOperation;

@@ -8,7 +8,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.serialize.DeSerializ
 import com.salesmanager.core.business.alibaba.rawsdk.client.serialize.SerializerListener;
 
 /**
- * @author hongbang.hb
  *
  */
 public interface SDKListener {

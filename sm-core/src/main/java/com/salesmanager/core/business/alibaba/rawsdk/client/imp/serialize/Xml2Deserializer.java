@@ -36,7 +36,6 @@ import java.util.Map;
 
 /**
  * 
- * @author hongbang.hb
  *
  */
 public class Xml2Deserializer implements DeSerializer {

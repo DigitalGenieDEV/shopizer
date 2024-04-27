@@ -22,7 +22,7 @@ public class HttpUtils {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
-        // 设置请求头，根据需要自行添加
+        //     请求头，根据需要自行添加
         connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
         int responseCode = connection.getResponseCode();

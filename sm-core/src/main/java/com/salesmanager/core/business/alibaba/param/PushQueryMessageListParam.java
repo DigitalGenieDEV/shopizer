@@ -22,9 +22,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置消息创建时间查找开始范围     *
+     *     消息创建时间查找开始范围     *
      * 参数示例：<pre>20130417000000000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateStartTime(Date createStartTime) {
         this.createStartTime = createStartTime;
@@ -40,9 +40,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置消息创建时间查找结束范围     *
+     *     消息创建时间查找结束范围     *
      * 参数示例：<pre>20130417000000000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateEndTime(Date createEndTime) {
         this.createEndTime = createEndTime;
@@ -58,9 +58,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置当前数据页，默认为1     *
+     *     当前数据页，默认为1     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setPage(Integer page) {
         this.page = page;
@@ -76,9 +76,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置每次分页取的数据量，范围20-200，默认20     *
+     *     每次分页取的数据量，范围20-200，默认20     *
      * 参数示例：<pre>20</pre>     
-     * 此参数必填
+     *    
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -94,9 +94,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置消息类型     *
+     *     消息类型     *
      * 参数示例：<pre>ORDER_BUYER_MAKER</pre>     
-     * 此参数必填
+     *    
      */
     public void setType(String type) {
         this.type = type;
@@ -112,9 +112,9 @@ public class PushQueryMessageListParam extends AbstractAPIRequest<PushQueryMessa
     }
 
     /**
-     * 设置用户Id     *
+     *     用户Id     *
      * 参数示例：<pre>b2b-4137495171f2513</pre>     
-     * 此参数必填
+     *    
      */
     public void setUserInfo(String userInfo) {
         this.userInfo = userInfo;

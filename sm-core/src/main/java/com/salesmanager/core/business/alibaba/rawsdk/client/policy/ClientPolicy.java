@@ -18,14 +18,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client.policy;
 import java.net.Proxy;
 
 /**
- * 客户端级访问策略
- * <p>
- * 定义域名、端口、appKey、秘钥等客户端级信息
- * <p>
- * 参考<code>RequestPolicy</code>
- * <p>
- * 
- * @author jade
  */
 public class ClientPolicy implements Cloneable {
 
@@ -47,9 +39,7 @@ public class ClientPolicy implements Cloneable {
 	private Proxy proxy;
 
 	/**
-	 * 生成默认的ClientPolicy实例，包括默认的http(80)，https(443)端口,默认的域名gw.open.1688.com，
-	 * 以及默认的api版本为1
-	 * 
+	 *
 	 * @return
 	 */
 	public static ClientPolicy getDefaultChinaAlibabaPolicy() {
@@ -57,7 +47,6 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 拷贝生成新的对象
 	 */
 	public ClientPolicy clone() {
 		ClientPolicy newObj = newPolicy();
@@ -78,10 +67,8 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 指定开放平台服务地址来生成ClientPolicy
-	 * 
+	 *
 	 * @param serverHost
-	 *            开放平台服务ip地址或者域名
 	 */
 	public ClientPolicy(String serverHost) {
 		if (serverHost == null || serverHost.length() < 1) {
@@ -91,8 +78,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 获取http端口
-	 * 
+	 *
 	 * @return
 	 */
 	public int getHttpPort() {
@@ -100,8 +86,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 获取https端口
-	 * 
+	 *
 	 * @return
 	 */
 	public int getHttpsPort() {
@@ -109,8 +94,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 获取开放平台服务ip地址或者域名
-	 * 
+	 *
 	 * @return
 	 */
 	public String getServerHost() {
@@ -118,8 +102,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置http端口
-	 * 
+	 *
 	 * @param httpPort
 	 *            端口
 	 * @return a reference to this object
@@ -130,8 +113,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置https端口
-	 * 
+	 *
 	 * @param httpsPort
 	 *            端口
 	 * @return a reference to this object
@@ -147,8 +129,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置app key
-	 * 
+	 *
 	 * @param appKey
 	 * @return a reference to this object
 	 */
@@ -162,8 +143,7 @@ public class ClientPolicy implements Cloneable {
 	}
 
 	/**
-	 * 设置秘钥
-	 * 
+	 *
 	 * @param signingKey
 	 * @return a reference to this object
 	 */

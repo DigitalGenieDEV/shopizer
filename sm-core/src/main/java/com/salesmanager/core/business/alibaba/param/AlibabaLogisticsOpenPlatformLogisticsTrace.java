@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsTrace {
     }
 
     /**
-     * 设置物流编号，如BX110096003841234     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流编号，如BX110096003841234     *
+     *        
+     *
      */
     public void setLogisticsId(String logisticsId) {
         this.logisticsId = logisticsId;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsTrace {
     }
 
     /**
-     * 设置订单编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单编号     *
+     *        
+     *
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsTrace {
     }
 
     /**
-     * 设置物流单编号，如480330616596     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流单编号，如480330616596     *
+     *        
+     *
      */
     public void setLogisticsBillNo(String logisticsBillNo) {
         this.logisticsBillNo = logisticsBillNo;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsTrace {
     }
 
     /**
-     * 设置物流跟踪步骤     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流跟踪步骤     *
+     *        
+     *
      */
     public void setLogisticsSteps(AlibabaLogisticsOpenPlatformLogisticsStep[] logisticsSteps) {
         this.logisticsSteps = logisticsSteps;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsTrace {
     }
 
     /**
-     * 设置物流周转节点     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流周转节点     *
+     *        
+     *
      */
     public void setTraceNodeList(AlibabaLogisticsOpenPlatformTraceNode[] traceNodeList) {
         this.traceNodeList = traceNodeList;

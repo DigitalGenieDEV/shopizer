@@ -16,7 +16,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.util.ExceptionParser
 import java.util.Map;
 
 /**
- * @author hongbang.hb
  *
  */
 public class JsonDeserializer extends AbstractJsonDeserializer {

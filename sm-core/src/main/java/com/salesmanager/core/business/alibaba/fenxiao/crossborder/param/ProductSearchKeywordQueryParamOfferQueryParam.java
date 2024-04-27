@@ -12,9 +12,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
@@ -30,9 +30,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setBeginPage(Integer beginPage) {
         this.beginPage = beginPage;
@@ -48,9 +48,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -66,9 +66,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFilter(String filter) {
         this.filter = filter;
@@ -84,9 +84,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSort(String sort) {
         this.sort = sort;
@@ -102,9 +102,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -120,9 +120,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPriceStart(String priceStart) {
         this.priceStart = priceStart;
@@ -138,9 +138,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPriceEnd(String priceEnd) {
         this.priceEnd = priceEnd;
@@ -156,9 +156,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -174,9 +174,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -192,9 +192,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置国别     *
+     *     国别     *
      * 参数示例：<pre>JP-OPP;KR-OPP</pre>     
-     * 此参数必填
+     *
      */
     public void setRegionOpp(String regionOpp) {
         this.regionOpp = regionOpp;
@@ -210,9 +210,9 @@ public class ProductSearchKeywordQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置寻源通工作台货盘id     *
+     *     寻源通工作台货盘id     *
      * 参数示例：<pre>174316138</pre>     
-     * 此参数必填
+     *
      */
     public void setProductCollectionId(String productCollectionId) {
         this.productCollectionId = productCollectionId;

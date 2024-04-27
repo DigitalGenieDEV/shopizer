@@ -4,7 +4,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client.imp.serialize;
 import com.salesmanager.core.business.alibaba.rawsdk.client.policy.Protocol;
 
 /**
- * @author hongbang.hb
  *
  */
 public class HttpRequestSerializer extends AbstractParamRequestSerializer {

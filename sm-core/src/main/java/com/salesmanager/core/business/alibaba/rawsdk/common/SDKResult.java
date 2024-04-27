@@ -4,7 +4,6 @@
 package com.salesmanager.core.business.alibaba.rawsdk.common;
 
 /**
- * @author hongbang.hb
  *
  */
 public class SDKResult<T> {

@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置卖家交易勋章     *
+     *     卖家交易勋章     *
      * 参数示例：<pre>5</pre>     
-     * 此参数必填
+     *
      */
     public void setTradeMedalLevel(String tradeMedalLevel) {
         this.tradeMedalLevel = tradeMedalLevel;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置综合服务分     *
+     *     综合服务分     *
      * 参数示例：<pre>3.5</pre>     
-     * 此参数必填
+     *
      */
     public void setCompositeServiceScore(String compositeServiceScore) {
         this.compositeServiceScore = compositeServiceScore;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置物流体验分     *
+     *     物流体验分     *
      * 参数示例：<pre>4.5</pre>     
-     * 此参数必填
+     *
      */
     public void setLogisticsExperienceScore(String logisticsExperienceScore) {
         this.logisticsExperienceScore = logisticsExperienceScore;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置纠纷解决分     *
+     *     纠纷解决分     *
      * 参数示例：<pre>3.0</pre>     
-     * 此参数必填
+     *
      */
     public void setDisputeComplaintScore(String disputeComplaintScore) {
         this.disputeComplaintScore = disputeComplaintScore;
@@ -84,9 +84,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置商品体验分     *
+     *     商品体验分     *
      * 参数示例：<pre>4.0</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferExperienceScore(String offerExperienceScore) {
         this.offerExperienceScore = offerExperienceScore;
@@ -102,9 +102,9 @@ public class ProductSearchQueryProductDetailModelSellerDataInfo {
     }
 
     /**
-     * 设置咨询体验分     *
+     *     咨询体验分     *
      * 参数示例：<pre>5.0</pre>     
-     * 此参数必填
+     *
      */
     public void setConsultingExperienceScore(String consultingExperienceScore) {
         this.consultingExperienceScore = consultingExperienceScore;

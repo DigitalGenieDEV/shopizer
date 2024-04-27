@@ -12,9 +12,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setImageId(String imageId) {
         this.imageId = imageId;
@@ -30,9 +30,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setBeginPage(Integer beginPage) {
         this.beginPage = beginPage;
@@ -48,9 +48,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -66,9 +66,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setRegion(String region) {
         this.region = region;
@@ -84,9 +84,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFilter(String filter) {
         this.filter = filter;
@@ -102,9 +102,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSort(String sort) {
         this.sort = sort;
@@ -120,9 +120,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -138,9 +138,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPriceStart(String priceStart) {
         this.priceStart = priceStart;
@@ -156,9 +156,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPriceEnd(String priceEnd) {
         this.priceEnd = priceEnd;
@@ -174,9 +174,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -192,9 +192,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setImageAddress(String imageAddress) {
         this.imageAddress = imageAddress;
@@ -210,9 +210,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -228,9 +228,9 @@ public class ProductSearchImageQueryParamOfferQueryParam {
     }
 
     /**
-     * 设置在结果中搜索     *
+     *     在结果中搜索     *
      * 参数示例：<pre>在结果中搜索</pre>     
-     * 此参数必填
+     *
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;

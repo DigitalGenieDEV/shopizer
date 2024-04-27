@@ -12,9 +12,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置省     *
+     *     省     *
      * 参数示例：<pre>{"name":"四川省","code":"51000"}</pre>     
-     * 此参数必填
+     *    
      */
     public void setProvince(ComAlibabaOceanOpenplatformBizTradeParamPlace province) {
         this.province = province;
@@ -30,9 +30,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置市     *
+     *     市     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setCity(ComAlibabaOceanOpenplatformBizTradeParamPlace city) {
         this.city = city;
@@ -48,9 +48,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置区     *
+     *     区     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setArea(ComAlibabaOceanOpenplatformBizTradeParamPlace area) {
         this.area = area;
@@ -66,9 +66,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置镇/街道     *
+     *     镇/街道     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setTown(ComAlibabaOceanOpenplatformBizTradeParamPlace town) {
         this.town = town;
@@ -84,9 +84,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置详细地址     *
+     *     详细地址     *
      * 参数示例：<pre>网商路699号</pre>     
-     * 此参数必填
+     *    
      */
     public void setAddress(String address) {
         this.address = address;
@@ -102,9 +102,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamOutAddress {
     }
 
     /**
-     * 设置邮编     *
+     *     邮编     *
      * 参数示例：<pre>511304</pre>     
-     * 此参数必填
+     *    
      */
     public void setPostCode(String postCode) {
         this.postCode = postCode;

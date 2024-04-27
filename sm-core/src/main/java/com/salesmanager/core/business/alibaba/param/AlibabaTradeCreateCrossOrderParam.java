@@ -21,9 +21,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置general（创建大市场订单），fenxiao（创建分销订单）,saleproxy流程将校验分销关系,paired(火拼下单),boutiquefenxiao(精选货源分销价下单，采购量1个使用包邮)， boutiquepifa(精选货源批发价下单，采购量大于2使用).     *
+     *     general（创建大市场订单），fenxiao（创建分销订单）,saleproxy流程将校验分销关系,paired(火拼下单),boutiquefenxiao(精选货源分销价下单，采购量1个使用包邮)， boutiquepifa(精选货源批发价下单，采购量大于2使用).     *
      * 参数示例：<pre>general</pre>     
-     * 此参数必填
+     *
      */
     public void setFlow(String flow) {
         this.flow = flow;
@@ -39,9 +39,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置买家留言     *
+     *     买家留言     *
      * 参数示例：<pre>留言</pre>     
-     * 此参数必填
+     *
      */
     public void setMessage(String message) {
         this.message = message;
@@ -57,9 +57,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置开放平台业务码,默认为cross。cross(跨境业务),cross_daigou（跨境代购业务）     *
+     *     开放平台业务码,默认为cross。cross(跨境业务),cross_daigou（跨境代购业务）     *
      * 参数示例：<pre>cross</pre>     
-     * 此参数必填
+     *
      */
     public void setIsvBizType(String isvBizType) {
         this.isvBizType = isvBizType;
@@ -75,9 +75,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置收货地址信息     *
+     *     收货地址信息     *
      * 参数示例：<pre>{"address":"网商路699号","phone": "0517-88990077","mobile": "15251667788","fullName": "张三","postCode": "000000","areaText": "滨江区","townText": "","cityText": "杭州市","provinceText": "浙江省"}</pre>     
-     * 此参数必填
+     *
      */
     public void setAddressParam(AlibabaTradeFastAddress addressParam) {
         this.addressParam = addressParam;
@@ -93,9 +93,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置商品信息     *
+     *     商品信息     *
      * 参数示例：<pre>[{"specId": "b266e0726506185beaf205cbae88530d","quantity": 5,"offerId": 554456348334},{"specId": "2ba3d63866a71fbae83909d9b4814f01","quantity": 6,"offerId": 554456348334}]</pre>     
-     * 此参数必填
+     *
      */
     public void setCargoParamList(AlibabaTradeFastCargo[] cargoParamList) {
         this.cargoParamList = cargoParamList;
@@ -111,9 +111,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置发票信息     *
+     *     发票信息     *
      * 参数示例：<pre>{"invoiceType":0,"cityText": "杭州市","provinceText": "浙江省","address": "网商路699号","phone": "0517-88990077","mobile": "15251667788","fullName": "张五","postCode": "000000","areaText": "滨江区","companyName": "测试公司","taxpayerIdentifier": "123455"}</pre>     
-     * 此参数必填
+     *
      */
     public void setInvoiceParam(AlibabaTradeFastInvoice invoiceParam) {
         this.invoiceParam = invoiceParam;
@@ -129,9 +129,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置由于不同的商品支持的交易方式不同，没有一种交易方式是全局通用的，所以当前下单可使用的交易方式必须通过下单预览接口的tradeModeNameList获取。交易方式类型说明：assureTrade（交易4.0通用担保交易），alipay（大市场通用的支付宝担保交易（目前在做切流，后续会下掉）），period（普通账期交易）, assure（大买家企业采购询报价下单时需要使用的担保交易流程）, creditBuy（诚E赊），bank（银行转账），631staged（631分阶段付款），37staged（37分阶段）；此字段不传则系统默认会选取一个可用的交易方式下单，如果开通了诚E赊默认是creditBuy（诚E赊），未开通诚E赊默认使用的方式是支付宝担宝交易。	     *
+     *     由于不同的商品支持的交易方式不同，没有一种交易方式是全局通用的，所以当前下单可使用的交易方式必须通过下单预览接口的tradeModeNameList获取。交易方式类型说明：assureTrade（交易4.0通用担保交易），alipay（大市场通用的支付宝担保交易（目前在做切流，后续会下掉）），period（普通账期交易）, assure（大买家企业采购询报价下单时需要使用的担保交易流程）, creditBuy（诚E赊），bank（银行转账），631staged（631分阶段付款），37staged（37分阶段）；此字段不传则系统默认会选取一个可用的交易方式下单，如果开通了诚E赊默认是creditBuy（诚E赊），未开通诚E赊默认使用的方式是支付宝担宝交易。	     *
      * 参数示例：<pre>assureTrade</pre>     
-     * 此参数必填
+     *
      */
     public void setTradeType(String tradeType) {
         this.tradeType = tradeType;
@@ -147,9 +147,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置店铺优惠ID，通过“创建订单前预览数据接口”获得。为空默认使用默认优惠     *
+     *     店铺优惠ID，通过“创建订单前预览数据接口”获得。为空默认使用默认优惠     *
      * 参数示例：<pre>itemCoupon-5600812521_31032085284-398517001570</pre>     
-     * 此参数必填
+     *
      */
     public void setShopPromotionId(String shopPromotionId) {
         this.shopPromotionId = shopPromotionId;
@@ -165,9 +165,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置是否匿名下单     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     是否匿名下单     *
+     *    
+     *
      */
     public void setAnonymousBuyer(Boolean anonymousBuyer) {
         this.anonymousBuyer = anonymousBuyer;
@@ -183,9 +183,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置回流订单下游平台 淘宝-thyny，天猫-tm，淘特-taote，阿里巴巴C2M-c2m，京东-jingdong，拼多多-pinduoduo，微信-weixin，跨境-kuajing，快手-kuaishou，有赞-youzan，抖音-douyin，寺库-siku，美团团好货-meituan，小红书-xiaohongshu，当当-dangdang，苏宁-suning，大V店-davdian，行云-xingyun，蜜芽-miya，菠萝派商城-boluo，快团团-kuaituantuan，其他-other     *
+     *     回流订单下游平台 淘宝-thyny，天猫-tm，淘特-taote，阿里巴巴C2M-c2m，京东-jingdong，拼多多-pinduoduo，微信-weixin，跨境-kuajing，快手-kuaishou，有赞-youzan，抖音-douyin，寺库-siku，美团团好货-meituan，小红书-xiaohongshu，当当-dangdang，苏宁-suning，大V店-davdian，行云-xingyun，蜜芽-miya，菠萝派商城-boluo，快团团-kuaituantuan，其他-other     *
      * 参数示例：<pre>douyin</pre>     
-     * 此参数必填
+     *
      */
     public void setFenxiaoChannel(String fenxiaoChannel) {
         this.fenxiaoChannel = fenxiaoChannel;
@@ -201,9 +201,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置库存模式，JIT（jit模式）或 NORMAL（仓发模式）,目前只提供给AE使用     *
+     *     库存模式，JIT（jit模式）或 NORMAL（仓发模式）,目前只提供给AE使用     *
      * 参数示例：<pre>JIT</pre>     
-     * 此参数必填
+     *
      */
     public void setInventoryMode(String inventoryMode) {
         this.inventoryMode = inventoryMode;
@@ -219,9 +219,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置外部订单号     *
+     *     外部订单号     *
      * 参数示例：<pre>988129883123</pre>     
-     * 此参数必填
+     *
      */
     public void setOutOrderId(String outOrderId) {
         this.outOrderId = outOrderId;
@@ -237,9 +237,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置上门揽收,目前AE供货可用，其他场景暂不开通.y或n,默认为n     *
+     *     上门揽收,目前AE供货可用，其他场景暂不开通.y或n,默认为n     *
      * 参数示例：<pre>n</pre>     
-     * 此参数必填
+     *
      */
     public void setPickupService(String pickupService) {
         this.pickupService = pickupService;
@@ -255,9 +255,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置上门揽仓库code     *
+     *     上门揽仓库code     *
      * 参数示例：<pre>any</pre>     
-     * 此参数必填
+     *
      */
     public void setWarehouseCode(String warehouseCode) {
         this.warehouseCode = warehouseCode;
@@ -273,9 +273,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置预选的支付渠道，用作财务订单分流。订单信息查询接口返回：result.exAttributes.preSelectPayChannel ，该值是创建订单接口时传入的预选的支付渠道标记。     *
+     *     预选的支付渠道，用作财务订单分流。订单信息查询接口返回：result.exAttributes.preSelectPayChannel ，该值是创建订单接口时传入的预选的支付渠道标记。     *
      * 参数示例：<pre>alipay</pre>     
-     * 此参数必填
+     *
      */
     public void setPreSelectPayChannel(String preSelectPayChannel) {
         this.preSelectPayChannel = preSelectPayChannel;
@@ -291,9 +291,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置是否小额采购，目前AE供货可用，取值y/n，默认为n     *
+     *     是否小额采购，目前AE供货可用，取值y/n，默认为n     *
      * 参数示例：<pre>y</pre>     
-     * 此参数必填
+     *
      */
     public void setSmallProcurement(String smallProcurement) {
         this.smallProcurement = smallProcurement;
@@ -309,9 +309,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置不使用红包：true不使用，false使用。默认使用红包     *
+     *     不使用红包：true不使用，false使用。默认使用红包     *
      * 参数示例：<pre>false</pre>     
-     * 此参数必填
+     *
      */
     public void setNoUseRedEnvelope(Boolean noUseRedEnvelope) {
         this.noUseRedEnvelope = noUseRedEnvelope;
@@ -327,9 +327,9 @@ public class AlibabaTradeCreateCrossOrderParam extends AbstractAPIRequest<Alibab
     }
 
     /**
-     * 设置是否转运订单，取值y/n，默认为n     *
+     *     是否转运订单，取值y/n，默认为n     *
      * 参数示例：<pre>y</pre>     
-     * 此参数必填
+     *
      */
     public void setDropshipping(String dropshipping) {
         this.dropshipping = dropshipping;

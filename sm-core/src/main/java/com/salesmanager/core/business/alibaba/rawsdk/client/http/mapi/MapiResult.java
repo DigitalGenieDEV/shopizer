@@ -7,9 +7,6 @@
 package com.salesmanager.core.business.alibaba.rawsdk.client.http.mapi;
 
 /**
- * 类MapiResult.java的实现描述：mapi result model
- *
- * @author yuan.gy on 2020/10/21 2:44 下午
  */
 public class MapiResult<T> {
 

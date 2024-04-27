@@ -24,7 +24,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.policy.RequestPolicy
 /**
  * Comment of InvokeContext
  *
- * @author jade
  */
 
 public class InvokeContext {

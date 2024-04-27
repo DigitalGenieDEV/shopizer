@@ -12,9 +12,9 @@ public class ProductImageUploadResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(ProductImageUploadResultResultModel result) {
         this.result = result;

@@ -12,9 +12,9 @@ public class ComAlibabaCbuOfferModelPriceInfo {
     }
 
     /**
-     * 设置批发价     *
+     *     批发价     *
      * 参数示例：<pre>10</pre>     
-     * 此参数必填
+     *    
      */
     public void setPrice(String price) {
         this.price = price;
@@ -30,9 +30,9 @@ public class ComAlibabaCbuOfferModelPriceInfo {
     }
 
     /**
-     * 设置代发价     *
+     *     代发价     *
      * 参数示例：<pre>10</pre>     
-     * 此参数必填
+     *    
      */
     public void setConsignPrice(String consignPrice) {
         this.consignPrice = consignPrice;

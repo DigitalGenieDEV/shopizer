@@ -23,9 +23,9 @@ public class PushMessageConfirmParam extends AbstractAPIRequest<PushMessageConfi
     }
 
     /**
-     * 设置待确认的消息id列表     *
+     *     待确认的消息id列表     *
      * 参数示例：<pre>[123,456]</pre>     
-     * 此参数必填
+     *    
      */
     public void setMsgIdList(List msgIdList) {
         this.msgIdList = msgIdList;

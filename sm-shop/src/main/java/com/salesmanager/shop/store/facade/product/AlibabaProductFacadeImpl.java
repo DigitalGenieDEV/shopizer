@@ -134,7 +134,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         Optional<ProductSearchKeywordQueryModelProductInfoModelV[]> queryPriceInfoList =  Optional.ofNullable(productSearchKeywordQueryModelPageInfoV.getData());
 
-        // 如果数组不为空，则遍历数组并处理数据
         queryPriceInfoList.ifPresent(arr -> {
             List<AlibabaProductSearchQueryModelProduct> resultList = Arrays.stream(arr)
                     .map(item -> {
@@ -152,12 +151,10 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     @Transactional
     public void saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
                             String language, MerchantStore store, List<Long> categoryIds) throws Exception {
-        //预创建
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
         Language ko = languageService.getByCode(language);
 
-        //初始化类目
         List<com.salesmanager.shop.model.catalog.category.Category> categoryList =  new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(categoryIds)){
@@ -349,13 +346,11 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         for (int i=0; i<productSkuInfos.length; i++){
             ProductSearchQueryProductDetailModelSkuInfo productSkuInfo = productSkuInfos[i];
 
-            //开始构建 PersistableProductVariant
             PersistableProductVariant persistableProductVariant = new PersistableProductVariant();
             PersistableProductInventory productInventory = new PersistableProductInventory();
 
             PersistableProductPrice price = new PersistableProductPrice();
 
-            //阶梯供货价
             if (productDetailModel.getProductSaleInfo().getQuoteType() != null && productDetailModel.getProductSaleInfo().getQuoteType() == 2){
                 ProductSearchQueryProductDetailModelPriceRangeV[] priceRangeList = productDetailModel.getProductSaleInfo().getPriceRangeList();
                 List<PriceRange> ranges = new ArrayList<>();
@@ -405,7 +400,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
                     productOption = productOptionService.getByCode(store, attributeName);
 
-                    //创建 PersistableProductVariant
 
                 }
                 productVariant.setOption(productOption.getId());
@@ -458,7 +452,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
     /**
-     * 暂时先塞一个韩国语言，后续再说
+     *
      * @param category1688
      * @param language
      * @return

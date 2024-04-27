@@ -12,9 +12,9 @@ public class AlibabaCreditPayUrlGetResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *    
      */
     public void setSuccess(String success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class AlibabaCreditPayUrlGetResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaCreditPayUrlGetResult {
     }
 
     /**
-     * 设置错误描述     *
+     *     错误描述     *
           
-     * 此参数必填
+     *    
      */
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
@@ -66,9 +66,9 @@ public class AlibabaCreditPayUrlGetResult {
     }
 
     /**
-     * 设置收银台支付链接     *
+     *     收银台支付链接     *
           
-     * 此参数必填
+     *    
      */
     public void setPayUrl(String payUrl) {
         this.payUrl = payUrl;
@@ -84,9 +84,9 @@ public class AlibabaCreditPayUrlGetResult {
     }
 
     /**
-     * 设置由于额度及风控原因不能批量支付的订单列表     *
+     *     由于额度及风控原因不能批量支付的订单列表     *
           
-     * 此参数必填
+     *    
      */
     public void setCantPayOrderList(long[] cantPayOrderList) {
         this.cantPayOrderList = cantPayOrderList;

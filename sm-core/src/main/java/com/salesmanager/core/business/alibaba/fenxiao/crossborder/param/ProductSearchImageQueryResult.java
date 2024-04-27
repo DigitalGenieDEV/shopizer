@@ -12,9 +12,9 @@ public class ProductSearchImageQueryResult {
     }
 
     /**
-     * 设置返回值     *
+     *     返回值     *
           
-     * 此参数必填
+     *
      */
     public void setResult(ProductSearchImageQueryResultResultModelV result) {
         this.result = result;

@@ -7,7 +7,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client.imp.serialize;
 import com.salesmanager.core.business.alibaba.rawsdk.client.policy.Protocol;
 
 /**
- * @author hongbang.hb
  *
  */
 public class Param2Deserializer extends Json2Deserializer {

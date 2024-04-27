@@ -12,9 +12,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置保障条款     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     保障条款     *
+     *        
+     *    
      */
     public void setGuaranteesTerms(AlibabaOpenplatformTradeModelGuaranteeTermsInfo guaranteesTerms) {
         this.guaranteesTerms = guaranteesTerms;
@@ -30,9 +30,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置国际物流     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国际物流     *
+     *        
+     *    
      */
     public void setInternationalLogistics(AlibabaOpenplatformTradeModelInternationalLogisticsInfo internationalLogistics) {
         this.internationalLogistics = internationalLogistics;
@@ -48,9 +48,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置国内物流     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国内物流     *
+     *        
+     *    
      */
     public void setNativeLogistics(AlibabaOpenplatformTradeModelNativeLogisticsInfo nativeLogistics) {
         this.nativeLogistics = nativeLogistics;
@@ -66,9 +66,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置商品条目信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品条目信息     *
+     *        
+     *    
      */
     public void setProductItems(AlibabaOpenplatformTradeModelProductItemInfo[] productItems) {
         this.productItems = productItems;
@@ -84,9 +84,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置交易条款     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     交易条款     *
+     *        
+     *    
      */
     public void setTradeTerms(AlibabaOpenplatformTradeModelTradeTermsInfo[] tradeTerms) {
         this.tradeTerms = tradeTerms;
@@ -102,9 +102,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置订单扩展属性     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单扩展属性     *
+     *        
+     *    
      */
     public void setExtAttributes(AlibabaOpenplatformTradeKeyValuePair[] extAttributes) {
         this.extAttributes = extAttributes;
@@ -120,9 +120,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置订单评价信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单评价信息     *
+     *        
+     *    
      */
     public void setOrderRateInfo(AlibabaTradeOrderRateInfo orderRateInfo) {
         this.orderRateInfo = orderRateInfo;
@@ -138,9 +138,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置发票信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发票信息     *
+     *        
+     *    
      */
     public void setOrderInvoiceInfo(AlibabaInvoiceOrderInvoiceModel orderInvoiceInfo) {
         this.orderInvoiceInfo = orderInvoiceInfo;
@@ -156,9 +156,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置跨境报关信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     跨境报关信息     *
+     *        
+     *    
      */
     public void setCustoms(AlibabaTradeCustoms customs) {
         this.customs = customs;
@@ -174,9 +174,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置跨境地址扩展信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     跨境地址扩展信息     *
+     *        
+     *    
      */
     public void setOverseasExtraAddress(AlibabaTradeOverseasExtraAddress overseasExtraAddress) {
         this.overseasExtraAddress = overseasExtraAddress;
@@ -192,9 +192,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置订单基础信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单基础信息     *
+     *        
+     *    
      */
     public void setBaseInfo(AlibabaOpenplatformTradeModelOrderBaseInfo baseInfo) {
         this.baseInfo = baseInfo;
@@ -210,9 +210,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置订单业务信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单业务信息     *
+     *        
+     *    
      */
     public void setOrderBizInfo(AlibabaOrderBizInfo orderBizInfo) {
         this.orderBizInfo = orderBizInfo;
@@ -228,9 +228,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置采购单详情列表，为大企业采购订单独有域。     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     采购单详情列表，为大企业采购订单独有域。     *
+     *        
+     *    
      */
     public void setQuoteList(AlibabaOrderDetailCaigouQuoteInfo[] quoteList) {
         this.quoteList = quoteList;
@@ -246,9 +246,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置是否下游脱敏信息创建的订单     *
+     *     是否下游脱敏信息创建的订单     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *    
      */
     public void setFromEncryptOrder(Boolean fromEncryptOrder) {
         this.fromEncryptOrder = fromEncryptOrder;
@@ -264,9 +264,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置下游外部订单相关信息-一般用于脱敏信息打单取号     *
+     *     下游外部订单相关信息-一般用于脱敏信息打单取号     *
      * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *    
      */
     public void setEncryptOutOrderInfo(AlibabaTradeGetSellerViewTradeinfoEncryptOutOrderInfo encryptOutOrderInfo) {
         this.encryptOutOrderInfo = encryptOutOrderInfo;
@@ -282,9 +282,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置分销下游平台-只有分销订单有值     *
+     *     分销下游平台-只有分销订单有值     *
      * 参数示例：<pre>weixin</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutChannel(String outChannel) {
         this.outChannel = outChannel;
@@ -300,9 +300,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置订单发货超期风险标，PTMO:潜在超时；TMOT:已超期     *
+     *     订单发货超期风险标，PTMO:潜在超时；TMOT:已超期     *
      * 参数示例：<pre>TMOT</pre>     
-     * 此参数必填
+     *    
      */
     public void setSendGoodsOverdueRisk(String sendGoodsOverdueRisk) {
         this.sendGoodsOverdueRisk = sendGoodsOverdueRisk;
@@ -318,9 +318,9 @@ public class AlibabaOpenplatformTradeModelTradeInfo {
     }
 
     /**
-     * 设置为true时，表示官方直送保障服务订单，为空或者false时，非官方直送保障服务订单     *
+     *     为true时，表示官方直送保障服务订单，为空或者false时，非官方直送保障服务订单     *
      * 参数示例：<pre>null</pre>     
-     * 此参数必填
+     *    
      */
     public void setOfficialLogisticOrder(Boolean officialLogisticOrder) {
         this.officialLogisticOrder = officialLogisticOrder;

@@ -11,7 +11,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.serialize.Serializer
 import com.salesmanager.core.business.alibaba.rawsdk.client.imp.serialize.*;
 
 /**
- * @author hongbang.hb
  *
  */
 public class AlibabaClientFactory {

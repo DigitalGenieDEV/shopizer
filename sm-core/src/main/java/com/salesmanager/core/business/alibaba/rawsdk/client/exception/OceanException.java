@@ -3,7 +3,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client.exception;
 /**
  * Ocean Exception
  * 
- * @author xiaoning.qxn
  */
 public class OceanException extends Exception {
 

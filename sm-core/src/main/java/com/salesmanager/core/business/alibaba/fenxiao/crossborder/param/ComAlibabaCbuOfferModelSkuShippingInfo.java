@@ -12,9 +12,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置规格id     *
+     *     规格id     *
      * 参数示例：<pre>2b36920d5139fd431a2030090d1e2599</pre>     
-     * 此参数必填
+     *    
      */
     public void setSpecId(String specId) {
         this.specId = specId;
@@ -30,9 +30,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置skuId     *
+     *     skuId     *
      * 参数示例：<pre>5104790281451</pre>     
-     * 此参数必填
+     *    
      */
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
@@ -48,9 +48,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置宽,单位cm     *
+     *     宽,单位cm     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setWidth(Double width) {
         this.width = width;
@@ -66,9 +66,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置长,单位cm     *
+     *     长,单位cm     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *    
      */
     public void setLength(Double length) {
         this.length = length;
@@ -84,9 +84,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置高,单位cm     *
+     *     高,单位cm     *
      * 参数示例：<pre>3</pre>     
-     * 此参数必填
+     *    
      */
     public void setHeight(Double height) {
         this.height = height;
@@ -102,9 +102,9 @@ public class ComAlibabaCbuOfferModelSkuShippingInfo {
     }
 
     /**
-     * 设置重,单位kg     *
+     *     重,单位kg     *
      * 参数示例：<pre>4</pre>     
-     * 此参数必填
+     *    
      */
     public void setWeight(Long weight) {
         this.weight = weight;

@@ -12,9 +12,9 @@ public class ProductFreightEstimateResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *
      */
     public void setResult(ProductFreightEstimateResultModel result) {
         this.result = result;

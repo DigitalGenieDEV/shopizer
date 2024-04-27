@@ -12,9 +12,9 @@ public class PoolProductPullResultModel {
     }
 
     /**
-     * 设置调用结果     *
+     *     调用结果     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setSuccess(String success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class PoolProductPullResultModel {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
      * 参数示例：<pre>S0000</pre>     
-     * 此参数必填
+     *
      */
     public void setCode(String code) {
         this.code = code;
@@ -48,9 +48,9 @@ public class PoolProductPullResultModel {
     }
 
     /**
-     * 设置错误描述     *
+     *     错误描述     *
      * 参数示例：<pre>成功</pre>     
-     * 此参数必填
+     *
      */
     public void setMessage(String message) {
         this.message = message;
@@ -66,9 +66,9 @@ public class PoolProductPullResultModel {
     }
 
     /**
-     * 设置结果     *
+     *     结果     *
      * 参数示例：<pre>如下</pre>     
-     * 此参数必填
+     *
      */
     public void setResult(PoolProductPullProductPoolModel[] result) {
         this.result = result;

@@ -12,9 +12,9 @@ public class AlibabaFenxiaoRelationaddResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOceanOpenplatformCommonAddrelationResultModel result) {
         this.result = result;

@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultOrderRefundCreateResult {
     }
 
     /**
-     * 设置创建成功，退款id     *
+     *     创建成功，退款id     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setRefundId(String refundId) {
         this.refundId = refundId;

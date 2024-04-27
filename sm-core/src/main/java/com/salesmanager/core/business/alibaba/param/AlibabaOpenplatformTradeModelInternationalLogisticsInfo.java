@@ -15,9 +15,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置详细地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     详细地址     *
+     *        
+     *
      */
     public void setAddress(String address) {
         this.address = address;
@@ -33,9 +33,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置完全发货时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     完全发货时间     *
+     *        
+     *
      */
     public void setAllDeliveredTime(Date allDeliveredTime) {
         this.allDeliveredTime = allDeliveredTime;
@@ -51,9 +51,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置备用地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     备用地址     *
+     *        
+     *
      */
     public void setAlternateAddress(String alternateAddress) {
         this.alternateAddress = alternateAddress;
@@ -69,9 +69,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置承运商     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     承运商     *
+     *        
+     *
      */
     public void setCarrier(String carrier) {
         this.carrier = carrier;
@@ -87,9 +87,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置城市     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     城市     *
+     *        
+     *
      */
     public void setCity(String city) {
         this.city = city;
@@ -105,9 +105,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置城市编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     城市编号     *
+     *        
+     *
      */
     public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
@@ -123,9 +123,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置联系人姓名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人姓名     *
+     *        
+     *
      */
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
@@ -141,9 +141,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置国家     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家     *
+     *        
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -159,9 +159,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置国家编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家编号     *
+     *        
+     *
      */
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
@@ -177,9 +177,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置传真     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     传真     *
+     *        
+     *
      */
     public void setFax(String fax) {
         this.fax = fax;
@@ -195,9 +195,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置传真地区区号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     传真地区区号     *
+     *        
+     *
      */
     public void setFaxArea(String faxArea) {
         this.faxArea = faxArea;
@@ -213,9 +213,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置传真国家编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     传真国家编号     *
+     *        
+     *
      */
     public void setFaxCountry(String faxCountry) {
         this.faxCountry = faxCountry;
@@ -231,9 +231,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置物流保险费     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流保险费     *
+     *        
+     *
      */
     public void setInsuranceFee(BigDecimal insuranceFee) {
         this.insuranceFee = insuranceFee;
@@ -249,9 +249,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置委托单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     委托单号     *
+     *        
+     *
      */
     public void setLogisticsCode(String logisticsCode) {
         this.logisticsCode = logisticsCode;
@@ -267,9 +267,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置物流费用     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流费用     *
+     *        
+     *
      */
     public void setLogisticsFee(BigDecimal logisticsFee) {
         this.logisticsFee = logisticsFee;
@@ -285,9 +285,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     手机     *
+     *        
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -303,9 +303,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置移动电话地区区号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     移动电话地区区号     *
+     *        
+     *
      */
     public void setMobileArea(String mobileArea) {
         this.mobileArea = mobileArea;
@@ -321,9 +321,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置移动电话国家编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     移动电话国家编号     *
+     *        
+     *
      */
     public void setMobileCountry(String mobileCountry) {
         this.mobileCountry = mobileCountry;
@@ -339,9 +339,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置港口     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     港口     *
+     *        
+     *
      */
     public void setPort(String port) {
         this.port = port;
@@ -357,9 +357,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置港口编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     港口编号     *
+     *        
+     *
      */
     public void setPortCode(String portCode) {
         this.portCode = portCode;
@@ -375,9 +375,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置省份     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省份     *
+     *        
+     *
      */
     public void setProvince(String province) {
         this.province = province;
@@ -393,9 +393,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置省份编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省份编号     *
+     *        
+     *
      */
     public void setProvinceCode(String provinceCode) {
         this.provinceCode = provinceCode;
@@ -411,9 +411,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置绝对时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     绝对时间     *
+     *        
+     *
      */
     public void setShipmentAbsoluteDate(Date shipmentAbsoluteDate) {
         this.shipmentAbsoluteDate = shipmentAbsoluteDate;
@@ -429,9 +429,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置买家时区     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     买家时区     *
+     *        
+     *
      */
     public void setShipmentAbsoluteZone(String shipmentAbsoluteZone) {
         this.shipmentAbsoluteZone = shipmentAbsoluteZone;
@@ -447,9 +447,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置倒计时类型。absolute(绝对),relative(相对)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     倒计时类型。absolute(绝对),relative(相对)     *
+     *        
+     *
      */
     public void setShipmentDateType(String shipmentDateType) {
         this.shipmentDateType = shipmentDateType;
@@ -465,9 +465,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置发货方式。AIR(空运),SEA(海运),EXPRESS(快递),LAND(陆运),UNKNOWN(未知)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货方式。AIR(空运),SEA(海运),EXPRESS(快递),LAND(陆运),UNKNOWN(未知)     *
+     *        
+     *
      */
     public void setShipmentMethod(String shipmentMethod) {
         this.shipmentMethod = shipmentMethod;
@@ -483,9 +483,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置相对时间长度     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     相对时间长度     *
+     *        
+     *
      */
     public void setShipmentRelativeDuration(String shipmentRelativeDuration) {
         this.shipmentRelativeDuration = shipmentRelativeDuration;
@@ -501,9 +501,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置相对时间单位。day(天),hour(时),second(秒)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     相对时间单位。day(天),hour(时),second(秒)     *
+     *        
+     *
      */
     public void setShipmentRelativeField(String shipmentRelativeField) {
         this.shipmentRelativeField = shipmentRelativeField;
@@ -519,9 +519,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置相对时间的开始点。pre_amount(预付款到帐),final_amount(尾款到帐)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     相对时间的开始点。pre_amount(预付款到帐),final_amount(尾款到帐)     *
+     *        
+     *
      */
     public void setShipmentRelativeStart(String shipmentRelativeStart) {
         this.shipmentRelativeStart = shipmentRelativeStart;
@@ -537,9 +537,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     电话     *
+     *        
+     *
      */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
@@ -555,9 +555,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置电话地区区号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     电话地区区号     *
+     *        
+     *
      */
     public void setTelephoneArea(String telephoneArea) {
         this.telephoneArea = telephoneArea;
@@ -573,9 +573,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置电话国家编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     电话国家编号     *
+     *        
+     *
      */
     public void setTelephoneCountryv(String telephoneCountryv) {
         this.telephoneCountryv = telephoneCountryv;
@@ -591,9 +591,9 @@ public class AlibabaOpenplatformTradeModelInternationalLogisticsInfo {
     }
 
     /**
-     * 设置贸易条款说明     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     贸易条款说明     *
+     *        
+     *
      */
     public void setTradeTerm(String tradeTerm) {
         this.tradeTerm = tradeTerm;

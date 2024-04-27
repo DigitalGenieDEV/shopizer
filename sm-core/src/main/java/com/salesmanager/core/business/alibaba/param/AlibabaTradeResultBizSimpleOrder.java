@@ -12,9 +12,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置运费     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运费     *
+     *        
+     *    
      */
     public void setPostFee(Long postFee) {
         this.postFee = postFee;
@@ -30,9 +30,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置订单实付款金额，单位为分     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单实付款金额，单位为分     *
+     *        
+     *    
      */
     public void setOrderAmmount(Long orderAmmount) {
         this.orderAmmount = orderAmmount;
@@ -48,9 +48,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置支付渠道     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     支付渠道     *
+     *        
+     *    
      */
     public void setPayChannel(String payChannel) {
         this.payChannel = payChannel;
@@ -66,9 +66,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置折扣     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     折扣     *
+     *        
+     *    
      */
     public void setDiscount(Long discount) {
         this.discount = discount;
@@ -84,9 +84,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置描述信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     描述信息     *
+     *        
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -102,9 +102,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置优惠id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     优惠id     *
+     *        
+     *    
      */
     public void setPromotionId(String promotionId) {
         this.promotionId = promotionId;
@@ -120,9 +120,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置外部提交过来的中金额，不包括运费     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     外部提交过来的中金额，不包括运费     *
+     *        
+     *    
      */
     public void setSumPaymentNoCarriageFromClient(Long sumPaymentNoCarriageFromClient) {
         this.sumPaymentNoCarriageFromClient = sumPaymentNoCarriageFromClient;
@@ -138,9 +138,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置返回码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     返回码     *
+     *        
+     *    
      */
     public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
@@ -156,9 +156,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置创建订单的子账号UserId     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建订单的子账号UserId     *
+     *        
+     *    
      */
     public void setSubUserId(Long subUserId) {
         this.subUserId = subUserId;
@@ -174,9 +174,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置订单是否能合并支付     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单是否能合并支付     *
+     *        
+     *    
      */
     public void setMergePay(Boolean mergePay) {
         this.mergePay = mergePay;
@@ -192,9 +192,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置是否成功     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否成功     *
+     *        
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -210,9 +210,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置订单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单号     *
+     *        
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -228,9 +228,9 @@ public class AlibabaTradeResultBizSimpleOrder {
     }
 
     /**
-     * 设置是否选择了免运费的优惠     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否选择了免运费的优惠     *
+     *        
+     *    
      */
     public void setChooseFreeFreight(Boolean chooseFreeFreight) {
         this.chooseFreeFreight = chooseFreeFreight;

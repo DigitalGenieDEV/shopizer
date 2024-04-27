@@ -12,9 +12,9 @@ public class PoolProductPullResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(PoolProductPullResultModel result) {
         this.result = result;

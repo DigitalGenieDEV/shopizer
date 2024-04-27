@@ -11,7 +11,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * @author hongbang.hb
  *
  */
 public abstract class AbstractAPIRequest<TResponse> {

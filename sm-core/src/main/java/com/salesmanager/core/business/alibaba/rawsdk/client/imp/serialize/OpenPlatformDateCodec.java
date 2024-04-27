@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * @author xingming.zhaoxm
- * @date 2018/10/26
  */
 public class OpenPlatformDateCodec extends DateCodec {
 

@@ -14,9 +14,9 @@ public class AlibabaOrderRateDetail {
     }
 
     /**
-     * 设置评价星级     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     评价星级     *
+     *        
+     *
      */
     public void setStarLevel(Integer starLevel) {
         this.starLevel = starLevel;
@@ -32,9 +32,9 @@ public class AlibabaOrderRateDetail {
     }
 
     /**
-     * 设置评价详情     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     评价详情     *
+     *        
+     *
      */
     public void setContent(String content) {
         this.content = content;
@@ -50,9 +50,9 @@ public class AlibabaOrderRateDetail {
     }
 
     /**
-     * 设置收到评价的用户昵称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收到评价的用户昵称     *
+     *        
+     *
      */
     public void setReceiverNick(String receiverNick) {
         this.receiverNick = receiverNick;
@@ -68,9 +68,9 @@ public class AlibabaOrderRateDetail {
     }
 
     /**
-     * 设置发送评价的用户昵称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发送评价的用户昵称     *
+     *        
+     *
      */
     public void setPosterNick(String posterNick) {
         this.posterNick = posterNick;
@@ -86,9 +86,9 @@ public class AlibabaOrderRateDetail {
     }
 
     /**
-     * 设置评价上线时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     评价上线时间     *
+     *        
+     *
      */
     public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;

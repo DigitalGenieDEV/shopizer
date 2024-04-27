@@ -24,7 +24,6 @@ import java.util.Collection;
 
 /**
  * 
- * @author hongbang.hb
  *
  */
 public interface HttpResponseBuilder {

@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setPriceRanges(ProductSearchQueryProductDetailModelPriceRange[] priceRanges) {
         this.priceRanges = priceRanges;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置商品库存     *
+     *     商品库存     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setAmountOnSale(Integer amountOnSale) {
         this.amountOnSale = amountOnSale;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置价格区间     *
+     *     价格区间     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setPriceRangeList(ProductSearchQueryProductDetailModelPriceRangeV[] priceRangeList) {
         this.priceRangeList = priceRangeList;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置普通报价-FIXED_PRICE("0"),SKU规格报价-SKU_PRICE("1"),SKU区间报价（商品维度）-SKU_PRICE_RANGE_FOR_OFFER("2"),SKU区间报价（SKU维度）-SKU_PRICE_RANGE("3")，     *
+     *     普通报价-FIXED_PRICE("0"),SKU规格报价-SKU_PRICE("1"),SKU区间报价（商品维度）-SKU_PRICE_RANGE_FOR_OFFER("2"),SKU区间报价（SKU维度）-SKU_PRICE_RANGE("3")，     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setQuoteType(Integer quoteType) {
         this.quoteType = quoteType;
@@ -84,9 +84,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置分销价，一件代发价格     *
+     *     分销价，一件代发价格     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setConsignPrice(String consignPrice) {
         this.consignPrice = consignPrice;
@@ -102,9 +102,9 @@ public class ProductSearchQueryProductDetailModelProductSaleInfo {
     }
 
     /**
-     * 设置精选货源价格     *
+     *     精选货源价格     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setJxhyPrice(String jxhyPrice) {
         this.jxhyPrice = jxhyPrice;

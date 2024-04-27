@@ -12,9 +12,9 @@ public class ComAlibabaOceanOpenplatformBizTradeResultTradeWithholdPreparePayRes
     }
 
     /**
-     * 设置支付是否成功     *
+     *     支付是否成功     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setIsPaySuccess(Boolean isPaySuccess) {
         this.isPaySuccess = isPaySuccess;
@@ -30,9 +30,9 @@ public class ComAlibabaOceanOpenplatformBizTradeResultTradeWithholdPreparePayRes
     }
 
     /**
-     * 设置支付成功渠道     *
+     *     支付成功渠道     *
      * 参数示例：<pre>Alipay</pre>     
-     * 此参数必填
+     *
      */
     public void setPayChannel(String payChannel) {
         this.payChannel = payChannel;
@@ -48,9 +48,9 @@ public class ComAlibabaOceanOpenplatformBizTradeResultTradeWithholdPreparePayRes
     }
 
     /**
-     * 设置支付是否成功     *
+     *     支付是否成功     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setPaySuccess(Boolean paySuccess) {
         this.paySuccess = paySuccess;

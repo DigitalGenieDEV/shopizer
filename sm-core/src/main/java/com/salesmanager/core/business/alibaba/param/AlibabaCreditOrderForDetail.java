@@ -12,9 +12,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置订单金额     *
+     *     订单金额     *
      * 参数示例：<pre>10</pre>     
-     * 此参数必填
+     *    
      */
     public void setPayAmount(Long payAmount) {
         this.payAmount = payAmount;
@@ -30,9 +30,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置支付时间     *
+     *     支付时间     *
      * 参数示例：<pre>2018-01-01 00:00:00</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
@@ -48,9 +48,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置状态     *
+     *     状态     *
      * 参数示例：<pre>END</pre>     
-     * 此参数必填
+     *    
      */
     public void setStatus(String status) {
         this.status = status;
@@ -66,9 +66,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置最晚还款时间     *
+     *     最晚还款时间     *
      * 参数示例：<pre>2018-01-01 00:00:00</pre>     
-     * 此参数必填
+     *    
      */
     public void setGracePeriodEndTime(String gracePeriodEndTime) {
         this.gracePeriodEndTime = gracePeriodEndTime;
@@ -84,9 +84,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置状态描述     *
+     *     状态描述     *
      * 参数示例：<pre>已完结</pre>     
-     * 此参数必填
+     *    
      */
     public void setStatusStr(String statusStr) {
         this.statusStr = statusStr;
@@ -102,9 +102,9 @@ public class AlibabaCreditOrderForDetail {
     }
 
     /**
-     * 设置应还金额     *
+     *     应还金额     *
      * 参数示例：<pre>11</pre>     
-     * 此参数必填
+     *    
      */
     public void setRestRepayAmount(Long restRepayAmount) {
         this.restRepayAmount = restRepayAmount;

@@ -29,9 +29,6 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * 类MapiHttpClient.java的实现描述：mapi专用的httpClient
- *
- * @author yuan.gy
  */
 public class MapiHttpClient {
 
@@ -78,12 +75,12 @@ public class MapiHttpClient {
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            //设置头部信息
+            //    头部信息
             Map<String, String> clientHttpHeader = MapiHttpSupport.buildHttpHeader(invokeContext, clientPolicy);
             for (Map.Entry<String, String> entry : clientHttpHeader.entrySet()) {
                 conn.setRequestProperty(entry.getKey(), entry.getValue());
             }
-            //设置签名
+            //    签名
             conn.setRequestProperty("X-Sign-HMAC", signature);
 
             //查询体body

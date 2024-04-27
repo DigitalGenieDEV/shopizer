@@ -15,9 +15,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货时间     *
+     *        
+     *
      */
     public void setDeliveredTime(Date deliveredTime) {
         this.deliveredTime = deliveredTime;
@@ -33,9 +33,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流编号     *
+     *        
+     *
      */
     public void setLogisticsCode(String logisticsCode) {
         this.logisticsCode = logisticsCode;
@@ -51,9 +51,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置SELF_SEND_GOODS("0")自行发货，在线发货ONLINE_SEND_GOODS("1"，不需要物流的发货 NO_LOGISTICS_SEND_GOODS("2")     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     SELF_SEND_GOODS("0")自行发货，在线发货ONLINE_SEND_GOODS("1"，不需要物流的发货 NO_LOGISTICS_SEND_GOODS("2")     *
+     *        
+     *
      */
     public void setType(String type) {
         this.type = type;
@@ -69,9 +69,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置主键id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     主键id     *
+     *        
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -87,9 +87,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置状态     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     状态     *
+     *        
+     *
      */
     public void setStatus(String status) {
         this.status = status;
@@ -105,9 +105,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置修改时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改时间     *
+     *        
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -123,9 +123,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置创建时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时间     *
+     *        
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -141,9 +141,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置运费(单位为元)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运费(单位为元)     *
+     *        
+     *
      */
     public void setCarriage(BigDecimal carriage) {
         this.carriage = carriage;
@@ -159,9 +159,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货省     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货省     *
+     *        
+     *
      */
     public void setFromProvince(String fromProvince) {
         this.fromProvince = fromProvince;
@@ -177,9 +177,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货市     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货市     *
+     *        
+     *
      */
     public void setFromCity(String fromCity) {
         this.fromCity = fromCity;
@@ -195,9 +195,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货区     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货区     *
+     *        
+     *
      */
     public void setFromArea(String fromArea) {
         this.fromArea = fromArea;
@@ -213,9 +213,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货街道地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货街道地址     *
+     *        
+     *
      */
     public void setFromAddress(String fromAddress) {
         this.fromAddress = fromAddress;
@@ -231,9 +231,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货联系电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货联系电话     *
+     *        
+     *
      */
     public void setFromPhone(String fromPhone) {
         this.fromPhone = fromPhone;
@@ -249,9 +249,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货联系手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货联系手机     *
+     *        
+     *
      */
     public void setFromMobile(String fromMobile) {
         this.fromMobile = fromMobile;
@@ -267,9 +267,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置发货地址邮编     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货地址邮编     *
+     *        
+     *
      */
     public void setFromPost(String fromPost) {
         this.fromPost = fromPost;
@@ -285,9 +285,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流公司Id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司Id     *
+     *        
+     *
      */
     public void setLogisticsCompanyId(Long logisticsCompanyId) {
         this.logisticsCompanyId = logisticsCompanyId;
@@ -303,9 +303,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流公司编号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司编号     *
+     *        
+     *
      */
     public void setLogisticsCompanyNo(String logisticsCompanyNo) {
         this.logisticsCompanyNo = logisticsCompanyNo;
@@ -321,9 +321,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流公司名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司名称     *
+     *        
+     *
      */
     public void setLogisticsCompanyName(String logisticsCompanyName) {
         this.logisticsCompanyName = logisticsCompanyName;
@@ -339,9 +339,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流公司运单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司运单号     *
+     *        
+     *
      */
     public void setLogisticsBillNo(String logisticsBillNo) {
         this.logisticsBillNo = logisticsBillNo;
@@ -357,9 +357,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置商品明细条目id，如有多个以,分隔     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     商品明细条目id，如有多个以,分隔     *
+     *        
+     *
      */
     public void setSubItemIds(String subItemIds) {
         this.subItemIds = subItemIds;
@@ -375,9 +375,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货省     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货省     *
+     *        
+     *
      */
     public void setToProvince(String toProvince) {
         this.toProvince = toProvince;
@@ -393,9 +393,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货市     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货市     *
+     *        
+     *
      */
     public void setToCity(String toCity) {
         this.toCity = toCity;
@@ -411,9 +411,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货区     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货区     *
+     *        
+     *
      */
     public void setToArea(String toArea) {
         this.toArea = toArea;
@@ -429,9 +429,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货街道地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货街道地址     *
+     *        
+     *
      */
     public void setToAddress(String toAddress) {
         this.toAddress = toAddress;
@@ -447,9 +447,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货联系电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货联系电话     *
+     *        
+     *
      */
     public void setToPhone(String toPhone) {
         this.toPhone = toPhone;
@@ -465,9 +465,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货联系手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货联系手机     *
+     *        
+     *
      */
     public void setToMobile(String toMobile) {
         this.toMobile = toMobile;
@@ -483,9 +483,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置收货地址邮编     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货地址邮编     *
+     *        
+     *
      */
     public void setToPost(String toPost) {
         this.toPost = toPost;
@@ -501,9 +501,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置无需物流类别     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     无需物流类别     *
+     *        
+     *
      */
     public void setNoLogisticsCondition(String noLogisticsCondition) {
         this.noLogisticsCondition = noLogisticsCondition;
@@ -519,9 +519,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置物流姓名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流姓名     *
+     *        
+     *
      */
     public void setNoLogisticsName(String noLogisticsName) {
         this.noLogisticsName = noLogisticsName;
@@ -537,9 +537,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置联系方式     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系方式     *
+     *        
+     *
      */
     public void setNoLogisticsTel(String noLogisticsTel) {
         this.noLogisticsTel = noLogisticsTel;
@@ -555,9 +555,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置无需物流业务单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     无需物流业务单号     *
+     *        
+     *
      */
     public void setNoLogisticsBillNo(String noLogisticsBillNo) {
         this.noLogisticsBillNo = noLogisticsBillNo;
@@ -573,9 +573,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置是否使用限时达物流     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否使用限时达物流     *
+     *        
+     *
      */
     public void setIsTimePromise(Boolean isTimePromise) {
         this.isTimePromise = isTimePromise;
@@ -591,9 +591,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo {
     }
 
     /**
-     * 设置限时达物流，预计到达时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     限时达物流，预计到达时间     *
+     *        
+     *
      */
     public void setArriveTime(Date arriveTime) {
         this.arriveTime = arriveTime;

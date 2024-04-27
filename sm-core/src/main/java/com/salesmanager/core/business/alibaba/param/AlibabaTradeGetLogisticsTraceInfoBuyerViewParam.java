@@ -21,9 +21,9 @@ public class AlibabaTradeGetLogisticsTraceInfoBuyerViewParam extends AbstractAPI
     }
 
     /**
-     * 设置该订单下的物流编号     *
+     *     该订单下的物流编号     *
      * 参数示例：<pre>AL8234243</pre>     
-     * 此参数必填
+     *
      */
     public void setLogisticsId(String logisticsId) {
         this.logisticsId = logisticsId;
@@ -39,9 +39,9 @@ public class AlibabaTradeGetLogisticsTraceInfoBuyerViewParam extends AbstractAPI
     }
 
     /**
-     * 设置订单号     *
+     *     订单号     *
      * 参数示例：<pre>13342343</pre>     
-     * 此参数必填
+     *
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -57,9 +57,9 @@ public class AlibabaTradeGetLogisticsTraceInfoBuyerViewParam extends AbstractAPI
     }
 
     /**
-     * 设置是1688业务还是icbu业务     *
+     *     是1688业务还是icbu业务     *
      * 参数示例：<pre>1688或者alibaba</pre>     
-     * 此参数必填
+     *
      */
     public void setWebSite(String webSite) {
         this.webSite = webSite;

@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author hongbang.hb
  *
  */
 public abstract class AbstractHttpClient {

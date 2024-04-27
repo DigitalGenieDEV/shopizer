@@ -15,9 +15,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置阶段id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     阶段id     *
+     *        
+     *
      */
     public void setStepOrderId(Long stepOrderId) {
         this.stepOrderId = stepOrderId;
@@ -43,7 +43,7 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置waitactivate  未开始（待激活）
+     *     waitactivate  未开始（待激活）
     waitsellerpush 等待卖家推进
     success 本阶段完成
     settlebill 分账
@@ -54,8 +54,8 @@ public class AlibabaTradeStepOrderModel {
     waitbuyerreceive 等待买家确认收货
     waitselleract 等待卖家XX操作
     waitbuyerconfirmaction 等待买家确认XX操作     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *        
+     *
      */
     public void setStepOrderStatus(String stepOrderStatus) {
         this.stepOrderStatus = stepOrderStatus;
@@ -75,13 +75,13 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置1 未冻结/未付款
+     *     1 未冻结/未付款
     2 已冻结/已付款
     4 已退款
     6 已转交易
     8 交易未付款被关闭     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *        
+     *
      */
     public void setStepPayStatus(Integer stepPayStatus) {
         this.stepPayStatus = stepPayStatus;
@@ -97,9 +97,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置阶段序列：1、2、3...     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     阶段序列：1、2、3...     *
+     *        
+     *
      */
     public void setStepNo(Integer stepNo) {
         this.stepNo = stepNo;
@@ -115,9 +115,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否最后一个阶段     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否最后一个阶段     *
+     *        
+     *
      */
     public void setLastStep(Boolean lastStep) {
         this.lastStep = lastStep;
@@ -133,9 +133,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否已打款给卖家     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否已打款给卖家     *
+     *        
+     *
      */
     public void setHasDisbursed(Boolean hasDisbursed) {
         this.hasDisbursed = hasDisbursed;
@@ -151,9 +151,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置创建时需要付款的金额，不含运费     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时需要付款的金额，不含运费     *
+     *        
+     *
      */
     public void setPayFee(BigDecimal payFee) {
         this.payFee = payFee;
@@ -169,9 +169,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置应付款（含运费）= 单价×数量-单品优惠-店铺优惠+运费+修改的金额（除运费外，均指分摊后的金额）     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     应付款（含运费）= 单价×数量-单品优惠-店铺优惠+运费+修改的金额（除运费外，均指分摊后的金额）     *
+     *        
+     *
      */
     public void setActualPayFee(BigDecimal actualPayFee) {
         this.actualPayFee = actualPayFee;
@@ -187,9 +187,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置本阶段分摊的店铺优惠     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     本阶段分摊的店铺优惠     *
+     *        
+     *
      */
     public void setDiscountFee(BigDecimal discountFee) {
         this.discountFee = discountFee;
@@ -205,9 +205,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置本阶段分摊的单品优惠     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     本阶段分摊的单品优惠     *
+     *        
+     *
      */
     public void setItemDiscountFee(BigDecimal itemDiscountFee) {
         this.itemDiscountFee = itemDiscountFee;
@@ -223,9 +223,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置本阶段分摊的单价     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     本阶段分摊的单价     *
+     *        
+     *
      */
     public void setPrice(BigDecimal price) {
         this.price = price;
@@ -241,9 +241,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置购买数量     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     购买数量     *
+     *        
+     *
      */
     public void setAmount(Long amount) {
         this.amount = amount;
@@ -259,9 +259,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置运费     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运费     *
+     *        
+     *
      */
     public void setPostFee(BigDecimal postFee) {
         this.postFee = postFee;
@@ -277,9 +277,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置修改价格修改的金额     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改价格修改的金额     *
+     *        
+     *
      */
     public void setAdjustFee(BigDecimal adjustFee) {
         this.adjustFee = adjustFee;
@@ -295,9 +295,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置创建时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时间     *
+     *        
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -313,9 +313,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置修改时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改时间     *
+     *        
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -331,9 +331,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置开始时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     开始时间     *
+     *        
+     *
      */
     public void setEnterTime(Date enterTime) {
         this.enterTime = enterTime;
@@ -349,9 +349,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置付款时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     付款时间     *
+     *        
+     *
      */
     public void setPayTime(Date payTime) {
         this.payTime = payTime;
@@ -367,9 +367,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置卖家操作时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家操作时间     *
+     *        
+     *
      */
     public void setSellerActionTime(Date sellerActionTime) {
         this.sellerActionTime = sellerActionTime;
@@ -385,9 +385,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置本阶段结束时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     本阶段结束时间     *
+     *        
+     *
      */
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
@@ -403,9 +403,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置卖家操作留言路径     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家操作留言路径     *
+     *        
+     *
      */
     public void setMessagePath(String messagePath) {
         this.messagePath = messagePath;
@@ -421,9 +421,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置卖家上传图片凭据路径     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家上传图片凭据路径     *
+     *        
+     *
      */
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
@@ -439,9 +439,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置卖家操作留言     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家操作留言     *
+     *        
+     *
      */
     public void setMessage(String message) {
         this.message = message;
@@ -457,9 +457,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置使用的模板id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     使用的模板id     *
+     *        
+     *
      */
     public void setTemplateId(Long templateId) {
         this.templateId = templateId;
@@ -475,9 +475,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置当前步骤的名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     当前步骤的名称     *
+     *        
+     *
      */
     public void setStepName(String stepName) {
         this.stepName = stepName;
@@ -493,9 +493,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置卖家操作名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家操作名称     *
+     *        
+     *
      */
     public void setSellerActionName(String sellerActionName) {
         this.sellerActionName = sellerActionName;
@@ -511,9 +511,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置买家不付款的超时时间(秒)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     买家不付款的超时时间(秒)     *
+     *        
+     *
      */
     public void setBuyerPayTimeout(Long buyerPayTimeout) {
         this.buyerPayTimeout = buyerPayTimeout;
@@ -529,9 +529,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置买家不确认的超时时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     买家不确认的超时时间     *
+     *        
+     *
      */
     public void setBuyerConfirmTimeout(Long buyerConfirmTimeout) {
         this.buyerConfirmTimeout = buyerConfirmTimeout;
@@ -547,9 +547,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否需要物流     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否需要物流     *
+     *        
+     *
      */
     public void setNeedLogistics(Boolean needLogistics) {
         this.needLogistics = needLogistics;
@@ -565,9 +565,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否需要卖家操作和买家确认     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否需要卖家操作和买家确认     *
+     *        
+     *
      */
     public void setNeedSellerAction(Boolean needSellerAction) {
         this.needSellerAction = needSellerAction;
@@ -583,9 +583,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置阶段结束是否打款     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     阶段结束是否打款     *
+     *        
+     *
      */
     public void setTransferAfterConfirm(Boolean transferAfterConfirm) {
         this.transferAfterConfirm = transferAfterConfirm;
@@ -601,9 +601,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否需要卖家推进     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否需要卖家推进     *
+     *        
+     *
      */
     public void setNeedSellerCallNext(Boolean needSellerCallNext) {
         this.needSellerCallNext = needSellerCallNext;
@@ -619,9 +619,9 @@ public class AlibabaTradeStepOrderModel {
     }
 
     /**
-     * 设置是否允许即时到帐     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否允许即时到帐     *
+     *        
+     *
      */
     public void setInstantPay(Boolean instantPay) {
         this.instantPay = instantPay;

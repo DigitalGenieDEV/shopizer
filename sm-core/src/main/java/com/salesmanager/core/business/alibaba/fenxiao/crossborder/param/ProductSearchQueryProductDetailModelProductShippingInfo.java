@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSendGoodsAddressText(String sendGoodsAddressText) {
         this.sendGoodsAddressText = sendGoodsAddressText;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置重，单位kg     *
+     *     重，单位kg     *
      * 参数示例：<pre>200</pre>     
-     * 此参数必填
+     *
      */
     public void setWeight(Double weight) {
         this.weight = weight;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置宽，单位cm     *
+     *     宽，单位cm     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setWidth(Double width) {
         this.width = width;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置高，单位cm     *
+     *     高，单位cm     *
      * 参数示例：<pre>3</pre>     
-     * 此参数必填
+     *
      */
     public void setHeight(Double height) {
         this.height = height;
@@ -84,9 +84,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置长，单位cm     *
+     *     长，单位cm     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *
      */
     public void setLength(Double length) {
         this.length = length;
@@ -102,9 +102,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置sku物流规格信息     *
+     *     sku物流规格信息     *
      * 参数示例：<pre>sku信息</pre>     
-     * 此参数必填
+     *
      */
     public void setSkuShippingInfoList(ComAlibabaCbuOfferModelSkuShippingInfo[] skuShippingInfoList) {
         this.skuShippingInfoList = skuShippingInfoList;
@@ -120,9 +120,9 @@ public class ProductSearchQueryProductDetailModelProductShippingInfo {
     }
 
     /**
-     * 设置发货保障     *
+     *     发货保障     *
      * 参数示例：<pre>shipIn24Hours-24小时发货 shipIn48Hours-48小时发货</pre>     
-     * 此参数必填
+     *
      */
     public void setShippingTimeGuarantee(String shippingTimeGuarantee) {
         this.shippingTimeGuarantee = shippingTimeGuarantee;

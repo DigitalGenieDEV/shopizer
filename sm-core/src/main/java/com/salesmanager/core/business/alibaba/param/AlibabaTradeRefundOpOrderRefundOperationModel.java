@@ -15,9 +15,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作后的退款状态     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作后的退款状态     *
+     *        
+     *
      */
     public void setAfterOperateStatus(String afterOperateStatus) {
         this.afterOperateStatus = afterOperateStatus;
@@ -33,9 +33,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作前的退款状态     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作前的退款状态     *
+     *        
+     *
      */
     public void setBeforeOperateStatus(String beforeOperateStatus) {
         this.beforeOperateStatus = beforeOperateStatus;
@@ -51,9 +51,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置分阶段订单正向操作关闭退款时的阶段ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     分阶段订单正向操作关闭退款时的阶段ID     *
+     *        
+     *
      */
     public void setCloseRefundStepId(Long closeRefundStepId) {
         this.closeRefundStepId = closeRefundStepId;
@@ -69,9 +69,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置是否小二修改过退款单     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否小二修改过退款单     *
+     *        
+     *
      */
     public void setCrmModifyRefund(Boolean crmModifyRefund) {
         this.crmModifyRefund = crmModifyRefund;
@@ -87,9 +87,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置描述、说明     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     描述、说明     *
+     *        
+     *
      */
     public void setDiscription(String discription) {
         this.discription = discription;
@@ -105,9 +105,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置联系人EMAIL     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人EMAIL     *
+     *        
+     *
      */
     public void setEmail(String email) {
         this.email = email;
@@ -123,9 +123,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置运单号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运单号     *
+     *        
+     *
      */
     public void setFreightBill(String freightBill) {
         this.freightBill = freightBill;
@@ -141,9 +141,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置创建时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时间     *
+     *        
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -159,9 +159,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置修改时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改时间     *
+     *        
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -177,9 +177,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置主键，退款操作记录流水号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     主键，退款操作记录流水号     *
+     *        
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -195,9 +195,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置凭证状态，1:正常 2:后台小二屏蔽     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     凭证状态，1:正常 2:后台小二屏蔽     *
+     *        
+     *
      */
     public void setMessageStatus(Integer messageStatus) {
         this.messageStatus = messageStatus;
@@ -213,9 +213,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置联系人手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人手机     *
+     *        
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -231,9 +231,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置留言类型 3:小二留言给买家和卖家 4:给买家的留言 5:给卖家的留言 7:cbu的普通留言等同于淘宝的1     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     留言类型 3:小二留言给买家和卖家 4:给买家的留言 5:给卖家的留言 7:cbu的普通留言等同于淘宝的1     *
+     *        
+     *
      */
     public void setMsgType(Integer msgType) {
         this.msgType = msgType;
@@ -249,9 +249,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作备注     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作备注     *
+     *        
+     *
      */
     public void setOperateRemark(String operateRemark) {
         this.operateRemark = operateRemark;
@@ -267,9 +267,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作类型 取代operateType     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作类型 取代operateType     *
+     *        
+     *
      */
     public void setOperateTypeInt(Integer operateTypeInt) {
         this.operateTypeInt = operateTypeInt;
@@ -285,9 +285,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作者-memberID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作者-memberID     *
+     *        
+     *
      */
     public void setOperatorId(String operatorId) {
         this.operatorId = operatorId;
@@ -303,9 +303,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作者-loginID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作者-loginID     *
+     *        
+     *
      */
     public void setOperatorLoginId(String operatorLoginId) {
         this.operatorLoginId = operatorLoginId;
@@ -321,9 +321,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作者角色名称 买家 卖家 系统     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作者角色名称 买家 卖家 系统     *
+     *        
+     *
      */
     public void setOperatorRoleId(Integer operatorRoleId) {
         this.operatorRoleId = operatorRoleId;
@@ -339,9 +339,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置操作者-userID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作者-userID     *
+     *        
+     *
      */
     public void setOperatorUserId(Long operatorUserId) {
         this.operatorUserId = operatorUserId;
@@ -357,9 +357,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置联系人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人电话     *
+     *        
+     *
      */
     public void setPhone(String phone) {
         this.phone = phone;
@@ -375,9 +375,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置退货地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     退货地址     *
+     *        
+     *
      */
     public void setRefundAddress(String refundAddress) {
         this.refundAddress = refundAddress;
@@ -393,9 +393,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置退款记录ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     退款记录ID     *
+     *        
+     *
      */
     public void setRefundId(String refundId) {
         this.refundId = refundId;
@@ -411,9 +411,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置卖家拒绝退款原因     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家拒绝退款原因     *
+     *        
+     *
      */
     public void setRejectReason(String rejectReason) {
         this.rejectReason = rejectReason;
@@ -429,9 +429,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置凭证图片地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     凭证图片地址     *
+     *        
+     *
      */
     public void setVouchers(List vouchers) {
         this.vouchers = vouchers;
@@ -447,9 +447,9 @@ public class AlibabaTradeRefundOpOrderRefundOperationModel {
     }
 
     /**
-     * 设置物流公司详情     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     物流公司详情     *
+     *        
+     *
      */
     public void setLogisticsCompany(AlibabaTradeRefundOpLogisticsCompanyModel logisticsCompany) {
         this.logisticsCompany = logisticsCompany;

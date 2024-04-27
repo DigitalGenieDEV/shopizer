@@ -12,9 +12,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置外部机构子订单ID     *
+     *     外部机构子订单ID     *
      * 参数示例：<pre>4590347523948375</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -30,9 +30,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置外部机构主订单ID     *
+     *     外部机构主订单ID     *
      * 参数示例：<pre>4590347523948370</pre>     
-     * 此参数必填
+     *    
      */
     public void setParentOrderId(String parentOrderId) {
         this.parentOrderId = parentOrderId;
@@ -48,9 +48,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置1688采购子订单ID     *
+     *     1688采购子订单ID     *
      * 参数示例：<pre>3209572465452734</pre>     
-     * 此参数必填
+     *    
      */
     public void setPurchaseOrderId(Long purchaseOrderId) {
         this.purchaseOrderId = purchaseOrderId;
@@ -66,9 +66,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置1688采购子订单ID     *
+     *     1688采购子订单ID     *
      * 参数示例：<pre>3209572465452730</pre>     
-     * 此参数必填
+     *    
      */
     public void setPurchaseParentOrderId(Long purchaseParentOrderId) {
         this.purchaseParentOrderId = purchaseParentOrderId;
@@ -84,9 +84,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAppKey(Long appKey) {
         this.appKey = appKey;
@@ -102,9 +102,9 @@ public class AlibabaCbuOrderParamOrderRelationParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAgentUserId(Long agentUserId) {
         this.agentUserId = agentUserId;

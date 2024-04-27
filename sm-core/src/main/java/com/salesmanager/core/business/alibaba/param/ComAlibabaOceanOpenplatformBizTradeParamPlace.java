@@ -12,9 +12,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamPlace {
     }
 
     /**
-     * 设置地址code     *
+     *     地址code     *
      * 参数示例：<pre>511300</pre>     
-     * 此参数必填
+     *
      */
     public void setCode(String code) {
         this.code = code;
@@ -30,9 +30,9 @@ public class ComAlibabaOceanOpenplatformBizTradeParamPlace {
     }
 
     /**
-     * 设置地址name     *
+     *     地址name     *
      * 参数示例：<pre>南充</pre>     
-     * 此参数必填
+     *
      */
     public void setName(String name) {
         this.name = name;

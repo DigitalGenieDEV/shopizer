@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradePaymentAgreement {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setPayChannel(String payChannel) {
         this.payChannel = payChannel;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradePaymentAgreement {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setBindingStatus(String bindingStatus) {
         this.bindingStatus = bindingStatus;
@@ -48,9 +48,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradePaymentAgreement {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setSignedStatus(String signedStatus) {
         this.signedStatus = signedStatus;
@@ -66,9 +66,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradePaymentAgreement {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setSignUrl(String signUrl) {
         this.signUrl = signUrl;
@@ -84,9 +84,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradePaymentAgreement {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAgreementNo(String agreementNo) {
         this.agreementNo = agreementNo;

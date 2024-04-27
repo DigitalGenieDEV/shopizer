@@ -12,9 +12,9 @@ public class ProductSearchKeywordQueryResult {
     }
 
     /**
-     * 设置返回信息     *
+     *     返回信息     *
           
-     * 此参数必填
+     *    
      */
     public void setResult(ProductSearchKeywordQueryResultResultModelV result) {
         this.result = result;

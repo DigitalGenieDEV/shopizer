@@ -12,9 +12,9 @@ public class WangwangnickOpenuidDecryptResult {
     }
 
     /**
-     * 设置用以唤起旺旺的旺旺昵称     *
+     *     用以唤起旺旺的旺旺昵称     *
           
-     * 此参数必填
+     *
      */
     public void setWangwangNick(String wangwangNick) {
         this.wangwangNick = wangwangNick;

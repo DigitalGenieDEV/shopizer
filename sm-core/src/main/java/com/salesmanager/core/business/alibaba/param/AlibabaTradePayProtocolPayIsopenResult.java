@@ -12,9 +12,9 @@ public class AlibabaTradePayProtocolPayIsopenResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class AlibabaTradePayProtocolPayIsopenResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *    
      */
     public void setCode(String code) {
         this.code = code;
@@ -48,9 +48,9 @@ public class AlibabaTradePayProtocolPayIsopenResult {
     }
 
     /**
-     * 设置错误消息     *
+     *     错误消息     *
           
-     * 此参数必填
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -66,9 +66,9 @@ public class AlibabaTradePayProtocolPayIsopenResult {
     }
 
     /**
-     * 设置签约状态     *
+     *     签约状态     *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOceanOpenplatformBizTradeResultTradeWithholdStatusResult result) {
         this.result = result;

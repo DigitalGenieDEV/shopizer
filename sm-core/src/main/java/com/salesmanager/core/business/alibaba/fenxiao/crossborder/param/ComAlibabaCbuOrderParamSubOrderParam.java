@@ -12,9 +12,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置子单id     *
+     *     子单id     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -30,9 +30,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置1688商品id需明文     *
+     *     1688商品id需明文     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setProductId(String productId) {
         this.productId = productId;
@@ -48,9 +48,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置1688商品名称需明文     *
+     *     1688商品名称需明文     *
      * 参数示例：<pre>袜子</pre>     
-     * 此参数必填
+     *
      */
     public void setProductName(String productName) {
         this.productName = productName;
@@ -66,9 +66,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置1688skuId需明文     *
+     *     1688skuId需明文     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setSkuId(String skuId) {
         this.skuId = skuId;
@@ -84,9 +84,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置1688sku名称需明文     *
+     *     1688sku名称需明文     *
      * 参数示例：<pre>绿色</pre>     
-     * 此参数必填
+     *
      */
     public void setSkuName(String skuName) {
         this.skuName = skuName;
@@ -102,9 +102,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置子单购买数量     *
+     *     子单购买数量     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setBuyAmount(Long buyAmount) {
         this.buyAmount = buyAmount;
@@ -120,9 +120,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置实付金额 单位分     *
+     *     实付金额 单位分     *
      * 参数示例：<pre>100</pre>     
-     * 此参数必填
+     *
      */
     public void setPaidFee(Long paidFee) {
         this.paidFee = paidFee;
@@ -138,9 +138,9 @@ public class ComAlibabaCbuOrderParamSubOrderParam {
     }
 
     /**
-     * 设置退款状态 0-未退款或退款关闭 1-退款     *
+     *     退款状态 0-未退款或退款关闭 1-退款     *
      * 参数示例：<pre>0</pre>     
-     * 此参数必填
+     *
      */
     public void setRefundStatus(String refundStatus) {
         this.refundStatus = refundStatus;

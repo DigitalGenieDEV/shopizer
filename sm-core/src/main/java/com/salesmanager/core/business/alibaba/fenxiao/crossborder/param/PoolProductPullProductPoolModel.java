@@ -12,9 +12,9 @@ public class PoolProductPullProductPoolModel {
     }
 
     /**
-     * 设置商品ID     *
+     *     商品ID     *
      * 参数示例：<pre>111111</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -30,9 +30,9 @@ public class PoolProductPullProductPoolModel {
     }
 
     /**
-     * 设置机构类目ID     *
+     *     机构类目ID     *
      * 参数示例：<pre>11111</pre>     
-     * 此参数必填
+     *
      */
     public void setBizCategoryId(String bizCategoryId) {
         this.bizCategoryId = bizCategoryId;

@@ -12,9 +12,9 @@ public class AlibabaTradeRefundReturnGoodsResult {
     }
 
     /**
-     * 设置返回结果     *
+     *     返回结果     *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOceanOpenplatformBizTradeResultRefundReturnGoodsResult result) {
         this.result = result;

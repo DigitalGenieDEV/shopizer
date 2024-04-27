@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAccountType(String accountType) {
         this.accountType = accountType;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
@@ -48,9 +48,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -66,9 +66,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCallerInfo(AlibabaOceanOpenplatformCommonCallerInfo callerInfo) {
         this.callerInfo = callerInfo;
@@ -84,9 +84,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOpRequestId(String opRequestId) {
         this.opRequestId = opRequestId;
@@ -102,9 +102,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置跨境宝支付传入kjpayV2     *
+     *     跨境宝支付传入kjpayV2     *
      * 参数示例：<pre>kjpayV2</pre>     
-     * 此参数必填
+     *
      */
     public void setPayChannel(String payChannel) {
         this.payChannel = payChannel;
@@ -120,9 +120,9 @@ public class AlibabaOceanOpenplatformBizTradeParamTradeWithholdPreparePayParam {
     }
 
     /**
-     * 设置付款总金额,单位分     *
+     *     付款总金额,单位分     *
      * 参数示例：<pre>123</pre>     
-     * 此参数必填
+     *
      */
     public void setPayAmount(Long payAmount) {
         this.payAmount = payAmount;

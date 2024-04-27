@@ -26,9 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * 类SyncMapiClient.java的实现描述：mapi client
- *
- * @author yuan.gy on 2020/10/21 2:50 下午
  */
 public class SyncMapiClient {
 

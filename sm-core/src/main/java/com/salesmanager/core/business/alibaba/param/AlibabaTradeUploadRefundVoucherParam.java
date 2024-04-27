@@ -21,9 +21,9 @@ public class AlibabaTradeUploadRefundVoucherParam extends AbstractAPIRequest<Ali
     }
 
     /**
-     * 设置凭证图片数据。小于1M，jpg格式。     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     凭证图片数据。小于1M，jpg格式。     *
+     *    
+     *    
      */
     public void setImageData(byte[] imageData) {
         this.imageData = imageData;

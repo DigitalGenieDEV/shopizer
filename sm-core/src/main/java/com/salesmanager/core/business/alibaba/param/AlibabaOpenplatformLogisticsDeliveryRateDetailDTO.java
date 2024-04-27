@@ -12,9 +12,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDetailDTO {
     }
 
     /**
-     * 设置费率操作类型：INSERT,UPDATE,DELETE     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     费率操作类型：INSERT,UPDATE,DELETE     *
+     *        
+     *    
      */
     public void setOperateType(String operateType) {
         this.operateType = operateType;
@@ -30,9 +30,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDetailDTO {
     }
 
     /**
-     * 设置是否系统模板     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否系统模板     *
+     *        
+     *    
      */
     public void setIsSysRate(Boolean isSysRate) {
         this.isSysRate = isSysRate;
@@ -48,9 +48,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDetailDTO {
     }
 
     /**
-     * 设置地址编码文本，用顿号隔开。例如：上海、福建省、广东省     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地址编码文本，用顿号隔开。例如：上海、福建省、广东省     *
+     *        
+     *    
      */
     public void setToAreaCodeText(String toAreaCodeText) {
         this.toAreaCodeText = toAreaCodeText;
@@ -66,9 +66,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDetailDTO {
     }
 
     /**
-     * 设置普通子模板费率     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     普通子模板费率     *
+     *        
+     *    
      */
     public void setRateDTO(AlibabaOpenplatformLogisticsDeliveryRateDTO rateDTO) {
         this.rateDTO = rateDTO;
@@ -84,9 +84,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDetailDTO {
     }
 
     /**
-     * 设置系统子模板费率     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     系统子模板费率     *
+     *        
+     *    
      */
     public void setSysRateDTO(AlibabaOpenplatformLogisticsDeliverySysRateDTO sysRateDTO) {
         this.sysRateDTO = sysRateDTO;

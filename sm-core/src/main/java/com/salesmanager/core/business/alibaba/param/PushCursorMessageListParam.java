@@ -22,9 +22,9 @@ public class PushCursorMessageListParam extends AbstractAPIRequest<PushCursorMes
     }
 
     /**
-     * 设置消息创建时间查找范围开始     *
+     *     消息创建时间查找范围开始     *
      * 参数示例：<pre>20130417000000000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateStartTime(Date createStartTime) {
         this.createStartTime = createStartTime;
@@ -40,9 +40,9 @@ public class PushCursorMessageListParam extends AbstractAPIRequest<PushCursorMes
     }
 
     /**
-     * 设置消息创建时间查找范围结束     *
+     *     消息创建时间查找范围结束     *
      * 参数示例：<pre>20130417000000000+0800</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateEndTime(Date createEndTime) {
         this.createEndTime = createEndTime;
@@ -58,9 +58,9 @@ public class PushCursorMessageListParam extends AbstractAPIRequest<PushCursorMes
     }
 
     /**
-     * 设置每次取的数据量，范围20-200，默认20     *
+     *     每次取的数据量，范围20-200，默认20     *
      * 参数示例：<pre>20</pre>     
-     * 此参数必填
+     *    
      */
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
@@ -76,9 +76,9 @@ public class PushCursorMessageListParam extends AbstractAPIRequest<PushCursorMes
     }
 
     /**
-     * 设置消息类型     *
+     *     消息类型     *
      * 参数示例：<pre>ORDER_BUYER_MAKER</pre>     
-     * 此参数必填
+     *    
      */
     public void setType(String type) {
         this.type = type;
@@ -94,9 +94,9 @@ public class PushCursorMessageListParam extends AbstractAPIRequest<PushCursorMes
     }
 
     /**
-     * 设置用户Id     *
+     *     用户Id     *
      * 参数示例：<pre>b2b-4137495171f2513</pre>     
-     * 此参数必填
+     *    
      */
     public void setUserInfo(String userInfo) {
         this.userInfo = userInfo;

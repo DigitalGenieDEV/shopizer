@@ -14,9 +14,9 @@ public class AlibabaOpenplatformTradeModelPayEntryItemDesc {
     }
 
     /**
-     * 设置服务描述     *
+     *     服务描述     *
      * 参数示例：<pre>改颜色</pre>     
-     * 此参数必填
+     *
      */
     public void setServiceAttriribute(String serviceAttriribute) {
         this.serviceAttriribute = serviceAttriribute;
@@ -32,9 +32,9 @@ public class AlibabaOpenplatformTradeModelPayEntryItemDesc {
     }
 
     /**
-     * 设置服务名称     *
+     *     服务名称     *
      * 参数示例：<pre>包装</pre>     
-     * 此参数必填
+     *
      */
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
@@ -50,9 +50,9 @@ public class AlibabaOpenplatformTradeModelPayEntryItemDesc {
     }
 
     /**
-     * 设置单价 （单位元）     *
+     *     单价 （单位元）     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setServicePrice(BigDecimal servicePrice) {
         this.servicePrice = servicePrice;

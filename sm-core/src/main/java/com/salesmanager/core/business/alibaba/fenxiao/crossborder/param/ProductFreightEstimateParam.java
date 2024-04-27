@@ -21,9 +21,9 @@ public class ProductFreightEstimateParam extends AbstractAPIRequest<ProductFreig
     }
 
     /**
-     * 设置入参     *
+     *     入参     *
      * 参数示例：<pre>如下</pre>     
-     * 此参数必填
+     *
      */
     public void setProductFreightQueryParamsNew(ProductFreightEstimateProductFreightQueryParamsNew productFreightQueryParamsNew) {
         this.productFreightQueryParamsNew = productFreightQueryParamsNew;

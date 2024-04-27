@@ -24,11 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * API请求实体
- * <p>
- * 
- * @author jade
- * @author xiaoning.qxn
  */
 public class Request {
 
@@ -49,8 +44,7 @@ public class Request {
 	}
 
 	/**
-	 * 使用API唯一标示：namespace，name，version构建一个API request
-	 * 
+	 *
 	 * @param namespace
 	 * @param name
 	 * @param version

@@ -21,9 +21,9 @@ public class ProductSearchQuerySellerOfferListParam extends AbstractAPIRequest<P
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOfferQueryParam(ProductSearchQuerySellerOfferListParamOfferQueryParam offerQueryParam) {
         this.offerQueryParam = offerQueryParam;

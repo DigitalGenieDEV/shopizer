@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelOrderEntryCountModel {
     }
 
     /**
-     * 设置子订单id     *
+     *     子订单id     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setId(Long id) {
         this.id = id;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelOrderEntryCountModel {
     }
 
     /**
-     * 设置子订单购买商品数量     *
+     *     子订单购买商品数量     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setCount(Integer count) {
         this.count = count;

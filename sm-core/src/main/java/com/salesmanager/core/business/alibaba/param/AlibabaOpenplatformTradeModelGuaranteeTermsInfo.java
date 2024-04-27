@@ -12,9 +12,9 @@ public class AlibabaOpenplatformTradeModelGuaranteeTermsInfo {
     }
 
     /**
-     * 设置保障条款     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     保障条款     *
+     *        
+     *
      */
     public void setAssuranceInfo(String assuranceInfo) {
         this.assuranceInfo = assuranceInfo;
@@ -30,9 +30,9 @@ public class AlibabaOpenplatformTradeModelGuaranteeTermsInfo {
     }
 
     /**
-     * 设置保障方式。国际站：TA(信保)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     保障方式。国际站：TA(信保)     *
+     *        
+     *
      */
     public void setAssuranceType(String assuranceType) {
         this.assuranceType = assuranceType;
@@ -48,9 +48,9 @@ public class AlibabaOpenplatformTradeModelGuaranteeTermsInfo {
     }
 
     /**
-     * 设置质量保证类型。国际站：pre_shipment(发货前),post_delivery(发货后)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     质量保证类型。国际站：pre_shipment(发货前),post_delivery(发货后)     *
+     *        
+     *
      */
     public void setQualityAssuranceType(String qualityAssuranceType) {
         this.qualityAssuranceType = qualityAssuranceType;

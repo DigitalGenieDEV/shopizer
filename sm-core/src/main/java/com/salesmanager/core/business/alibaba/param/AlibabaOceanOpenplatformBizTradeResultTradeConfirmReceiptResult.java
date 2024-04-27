@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradeConfirmReceiptResult {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradeConfirmReceiptResult {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setErrorInfo(String errorInfo) {
         this.errorInfo = errorInfo;
@@ -48,9 +48,9 @@ public class AlibabaOceanOpenplatformBizTradeResultTradeConfirmReceiptResult {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;

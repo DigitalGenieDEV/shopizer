@@ -12,9 +12,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置关键词     *
+     *     关键词     *
      * 参数示例：<pre>饼干</pre>     
-     * 此参数必填
+     *
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
@@ -30,9 +30,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setBeginPage(Integer beginPage) {
         this.beginPage = beginPage;
@@ -48,9 +48,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -66,9 +66,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置筛选参数，多个通过英文逗号分隔，枚举参见解决方案介绍     *
+     *     筛选参数，多个通过英文逗号分隔，枚举参见解决方案介绍     *
      * 参数示例：<pre>shipInToday,ksCiphertext</pre>     
-     * 此参数必填
+     *
      */
     public void setFilter(String filter) {
         this.filter = filter;
@@ -84,9 +84,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置排序参数，枚举参见解决方案介绍     *
+     *     排序参数，枚举参见解决方案介绍     *
      * 参数示例：<pre>{"price":"asc"}</pre>     
-     * 此参数必填
+     *
      */
     public void setSort(String sort) {
         this.sort = sort;
@@ -102,9 +102,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置外部用户id     *
+     *     外部用户id     *
      * 参数示例：<pre>123</pre>     
-     * 此参数必填
+     *
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -120,9 +120,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置批发价开始     *
+     *     批发价开始     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setPriceStart(String priceStart) {
         this.priceStart = priceStart;
@@ -138,9 +138,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置批发价结束     *
+     *     批发价结束     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setPriceEnd(String priceEnd) {
         this.priceEnd = priceEnd;
@@ -156,9 +156,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置类目id     *
+     *     类目id     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -174,9 +174,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置城市     *
+     *     城市     *
      * 参数示例：<pre>japan</pre>     
-     * 此参数必填
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -192,9 +192,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置商家店铺id脱敏     *
+     *     商家店铺id脱敏     *
      * 参数示例：<pre>123</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId;
@@ -210,9 +210,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置商家店铺id脱敏     *
+     *     商家店铺id脱敏     *
      * 参数示例：<pre>123</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerOpenId(String sellerOpenId) {
         this.sellerOpenId = sellerOpenId;
@@ -228,9 +228,9 @@ public class ProductSearchQuerySellerOfferListParamOfferQueryParam {
     }
 
     /**
-     * 设置商品Id     *
+     *     商品Id     *
      * 参数示例：<pre>123</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;

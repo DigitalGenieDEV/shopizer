@@ -23,9 +23,9 @@ public class ReadableAlibabaProductSearchQueryPriceInfo {
     }
 
     /**
-     * 设置批发价     *
+     *     批发价     *
      * 参数示例：<pre>10</pre>
-     * 此参数必填
+     *    
      */
     public void setPrice(String price) {
         this.price = price;
@@ -41,9 +41,9 @@ public class ReadableAlibabaProductSearchQueryPriceInfo {
     }
 
     /**
-     * 设置精选货源价     *
+     *     精选货源价     *
      * 参数示例：<pre>10</pre>
-     * 此参数必填
+     *    
      */
     public void setJxhyPrice(String jxhyPrice) {
         this.jxhyPrice = jxhyPrice;
@@ -59,9 +59,9 @@ public class ReadableAlibabaProductSearchQueryPriceInfo {
     }
 
     /**
-     * 设置批发精选货源价     *
+     *     批发精选货源价     *
      * 参数示例：<pre>10</pre>
-     * 此参数必填
+     *    
      */
     public void setPfJxhyPrice(String pfJxhyPrice) {
         this.pfJxhyPrice = pfJxhyPrice;
@@ -77,9 +77,9 @@ public class ReadableAlibabaProductSearchQueryPriceInfo {
     }
 
     /**
-     * 设置一件代发价     *
+     *     一件代发价     *
      * 参数示例：<pre>10</pre>
-     * 此参数必填
+     *    
      */
     public void setConsignPrice(String consignPrice) {
         this.consignPrice = consignPrice;

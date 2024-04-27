@@ -12,16 +12,12 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
     }
 
     /**
-     * 30天销量
      */
     private Integer monthSold;
 
@@ -43,9 +39,6 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
@@ -61,9 +54,6 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
@@ -79,9 +69,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -97,9 +87,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSubjectTrans(String subjectTrans) {
         this.subjectTrans = subjectTrans;
@@ -115,9 +105,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setDescription(String description) {
         this.description = description;
@@ -133,9 +123,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *
+     *    
      */
     public void setMainVideo(String mainVideo) {
         this.mainVideo = mainVideo;
@@ -151,9 +141,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setDetailVideo(String detailVideo) {
         this.detailVideo = detailVideo;
@@ -169,9 +159,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProductImage(ProductSearchQueryProductDetailModelProductImage productImage) {
         this.productImage = productImage;
@@ -187,9 +177,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProductAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttribute) {
         this.productAttribute = productAttribute;
@@ -205,9 +195,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProductSkuInfos(ProductSearchQueryProductDetailModelSkuInfo[] productSkuInfos) {
         this.productSkuInfos = productSkuInfos;
@@ -223,9 +213,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProductSaleInfo(ProductSearchQueryProductDetailModelProductSaleInfo productSaleInfo) {
         this.productSaleInfo = productSaleInfo;
@@ -241,9 +231,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setProductShippingInfo(ProductSearchQueryProductDetailModelProductShippingInfo productShippingInfo) {
         this.productShippingInfo = productShippingInfo;
@@ -259,9 +249,9 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setIsJxhy(Boolean isJxhy) {
         this.isJxhy = isJxhy;
@@ -277,9 +267,8 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *        
+     *
      */
     public void setSellerOpenId(String sellerOpenId) {
         this.sellerOpenId = sellerOpenId;
@@ -295,9 +284,8 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *        
+     *
      */
     public void setMinOrderQuantity(Integer minOrderQuantity) {
         this.minOrderQuantity = minOrderQuantity;
@@ -306,16 +294,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private Integer batchNumber;
 
     /**
-     * @return 一手数量
      */
     public Integer getBatchNumber() {
         return batchNumber;
     }
 
     /**
-     * 设置一手数量     *
-     * 参数示例：<pre>200</pre>     
-     * 此参数必填
+     *
      */
     public void setBatchNumber(Integer batchNumber) {
         this.batchNumber = batchNumber;
@@ -324,16 +309,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private String status;
 
     /**
-     * @return 商品状态。published:上网状态;member expired:会员撤销;auto expired:自然过期;expired:过期(包含手动过期与自动过期);member deleted:会员删除;modified:修改;new:新发;deleted:删除;TBD:to be delete;approved:审批通过;auditing:审核中;untread:审核不通过;
      */
     public String getStatus() {
         return status;
     }
 
     /**
-     * 设置商品状态。published:上网状态;member expired:会员撤销;auto expired:自然过期;expired:过期(包含手动过期与自动过期);member deleted:会员删除;modified:修改;new:新发;deleted:删除;TBD:to be delete;approved:审批通过;auditing:审核中;untread:审核不通过;     *
-     * 参数示例：<pre>published</pre>     
-     * 此参数必填
+     *
      */
     public void setStatus(String status) {
         this.status = status;
@@ -342,16 +324,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private ComAlibabaCbuOfferModelOutProductTagInfo[] tagInfoList;
 
     /**
-     * @return 商品服务标签
      */
     public ComAlibabaCbuOfferModelOutProductTagInfo[] getTagInfoList() {
         return tagInfoList;
     }
 
     /**
-     * 设置商品服务标签     *
-     * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setTagInfoList(ComAlibabaCbuOfferModelOutProductTagInfo[] tagInfoList) {
         this.tagInfoList = tagInfoList;
@@ -360,16 +339,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private String traceInfo;
 
     /**
-     * @return 打点信息，用于向1688上报打点数据
      */
     public String getTraceInfo() {
         return traceInfo;
     }
 
     /**
-     * 设置打点信息，用于向1688上报打点数据     *
-     * 参数示例：<pre>object_id@620201390233^object_type@offer</pre>     
-     * 此参数必填
+     *
      */
     public void setTraceInfo(String traceInfo) {
         this.traceInfo = traceInfo;
@@ -378,16 +354,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private ProductSearchQueryProductDetailModelSellerMixSetting sellerMixSetting;
 
     /**
-     * @return 卖家混批配置
      */
     public ProductSearchQueryProductDetailModelSellerMixSetting getSellerMixSetting() {
         return sellerMixSetting;
     }
 
     /**
-     * 设置卖家混批配置     *
-     * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerMixSetting(ProductSearchQueryProductDetailModelSellerMixSetting sellerMixSetting) {
         this.sellerMixSetting = sellerMixSetting;
@@ -396,16 +369,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private String productCargoNumber;
 
     /**
-     * @return 商品货号
      */
     public String getProductCargoNumber() {
         return productCargoNumber;
     }
 
     /**
-     * 设置商品货号     *
-     * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setProductCargoNumber(String productCargoNumber) {
         this.productCargoNumber = productCargoNumber;
@@ -414,16 +384,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private ProductSearchQueryProductDetailModelSellerDataInfo sellerDataInfo;
 
     /**
-     * @return 商家属性数据
      */
     public ProductSearchQueryProductDetailModelSellerDataInfo getSellerDataInfo() {
         return sellerDataInfo;
     }
 
     /**
-     * 设置商家属性数据     *
-     * 参数示例：<pre>{}</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerDataInfo(ProductSearchQueryProductDetailModelSellerDataInfo sellerDataInfo) {
         this.sellerDataInfo = sellerDataInfo;
@@ -432,16 +399,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private String soldOut;
 
     /**
-     * @return 商品销量
      */
     public String getSoldOut() {
         return soldOut;
     }
 
     /**
-     * 设置商品销量     *
-     * 参数示例：<pre>12342</pre>     
-     * 此参数必填
+     *
      */
     public void setSoldOut(String soldOut) {
         this.soldOut = soldOut;
@@ -450,16 +414,13 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
     private ProductSearchQueryProductDetailModelChannelPrice channelPrice;
 
     /**
-     * @return 渠道价格数据
      */
     public ProductSearchQueryProductDetailModelChannelPrice getChannelPrice() {
         return channelPrice;
     }
 
     /**
-     * 设置渠道价格数据     *
-     * 参数示例：<pre>如下</pre>     
-     * 此参数必填
+     *
      */
     public void setChannelPrice(ProductSearchQueryProductDetailModelChannelPrice channelPrice) {
         this.channelPrice = channelPrice;

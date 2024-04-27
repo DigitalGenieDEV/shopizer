@@ -12,9 +12,9 @@ public class AlibabaTradeOrderRateInfo {
     }
 
     /**
-     * 设置买家评价状态(4:已评论,5:未评论,6;不需要评论)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     买家评价状态(4:已评论,5:未评论,6;不需要评论)     *
+     *        
+     *
      */
     public void setBuyerRateStatus(Integer buyerRateStatus) {
         this.buyerRateStatus = buyerRateStatus;
@@ -30,9 +30,9 @@ public class AlibabaTradeOrderRateInfo {
     }
 
     /**
-     * 设置卖家评价状态(4:已评论,5:未评论,6;不需要评论)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家评价状态(4:已评论,5:未评论,6;不需要评论)     *
+     *        
+     *
      */
     public void setSellerRateStatus(Integer sellerRateStatus) {
         this.sellerRateStatus = sellerRateStatus;
@@ -48,9 +48,9 @@ public class AlibabaTradeOrderRateInfo {
     }
 
     /**
-     * 设置卖家給买家的评价     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     卖家給买家的评价     *
+     *        
+     *
      */
     public void setBuyerRateList(AlibabaOrderRateDetail[] buyerRateList) {
         this.buyerRateList = buyerRateList;
@@ -66,9 +66,9 @@ public class AlibabaTradeOrderRateInfo {
     }
 
     /**
-     * 设置买家給卖家的评价     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     买家給卖家的评价     *
+     *        
+     *
      */
     public void setSellerRateList(AlibabaOrderRateDetail[] sellerRateList) {
         this.sellerRateList = sellerRateList;

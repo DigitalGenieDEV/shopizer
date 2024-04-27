@@ -21,9 +21,9 @@ public class ProductSearchImageQueryParam extends AbstractAPIRequest<ProductSear
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOfferQueryParam(ProductSearchImageQueryParamOfferQueryParam offerQueryParam) {
         this.offerQueryParam = offerQueryParam;

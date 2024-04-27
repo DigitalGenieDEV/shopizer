@@ -12,9 +12,9 @@ public class TradeModelExtensionList {
     }
 
     /**
-     * 设置交易方式     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     交易方式     *
+     *    
+     *
      */
     public void setTradeWay(String tradeWay) {
         this.tradeWay = tradeWay;
@@ -30,9 +30,9 @@ public class TradeModelExtensionList {
     }
 
     /**
-     * 设置交易方式名称     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     交易方式名称     *
+     *    
+     *
      */
     public void setName(String name) {
         this.name = name;
@@ -48,9 +48,9 @@ public class TradeModelExtensionList {
     }
 
     /**
-     * 设置开放平台下单时候传入的tradeType     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     开放平台下单时候传入的tradeType     *
+     *    
+     *
      */
     public void setTradeType(String tradeType) {
         this.tradeType = tradeType;
@@ -66,9 +66,9 @@ public class TradeModelExtensionList {
     }
 
     /**
-     * 设置交易描述     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     交易描述     *
+     *    
+     *
      */
     public void setDescription(String description) {
         this.description = description;
@@ -84,9 +84,9 @@ public class TradeModelExtensionList {
     }
 
     /**
-     * 设置是否支持     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     是否支持     *
+     *    
+     *
      */
     public void setOpSupport(Boolean opSupport) {
         this.opSupport = opSupport;

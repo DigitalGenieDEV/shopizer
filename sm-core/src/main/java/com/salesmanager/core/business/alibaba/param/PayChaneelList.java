@@ -12,9 +12,9 @@ public class PayChaneelList {
     }
 
     /**
-     * 设置支付渠道     *
+     *     支付渠道     *
      * 参数示例：<pre>"alipay"</pre>     
-     * 此参数必填
+     *    
      */
     public void setName(String name) {
         this.name = name;
@@ -30,9 +30,9 @@ public class PayChaneelList {
     }
 
     /**
-     * 设置可用额度金额，单位为分     *
+     *     可用额度金额，单位为分     *
      * 参数示例：<pre>100</pre>     
-     * 此参数必填
+     *    
      */
     public void setAmountLimit(Long amountLimit) {
         this.amountLimit = amountLimit;

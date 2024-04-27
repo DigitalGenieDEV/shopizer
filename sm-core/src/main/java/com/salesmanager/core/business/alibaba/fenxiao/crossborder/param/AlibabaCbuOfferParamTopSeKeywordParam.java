@@ -12,9 +12,9 @@ public class AlibabaCbuOfferParamTopSeKeywordParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAppKey(Long appKey) {
         this.appKey = appKey;
@@ -30,9 +30,9 @@ public class AlibabaCbuOfferParamTopSeKeywordParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -48,9 +48,9 @@ public class AlibabaCbuOfferParamTopSeKeywordParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
@@ -66,9 +66,9 @@ public class AlibabaCbuOfferParamTopSeKeywordParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setHotKeywordType(String hotKeywordType) {
         this.hotKeywordType = hotKeywordType;

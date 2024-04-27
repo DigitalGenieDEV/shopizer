@@ -12,9 +12,9 @@ public class ProductSearchOfferRecommendResult {
     }
 
     /**
-     * 设置返回信息     *
+     *     返回信息     *
           
-     * 此参数必填
+     *
      */
     public void setResult(ComAlibabaOpenapiSharedCommonRecommendResultModel result) {
         this.result = result;

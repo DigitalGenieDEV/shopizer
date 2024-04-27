@@ -14,9 +14,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置计件类型。0:重量 1:件数 2:体积     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     计件类型。0:重量 1:件数 2:体积     *
+     *        
+     *
      */
     public void setChargeType(Integer chargeType) {
         this.chargeType = chargeType;
@@ -32,9 +32,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置创建人     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建人     *
+     *        
+     *
      */
     public void setCreator(String creator) {
         this.creator = creator;
@@ -50,9 +50,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置创建时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时间     *
+     *        
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -68,9 +68,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置修改时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改时间     *
+     *        
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -86,9 +86,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置主键id，也就是子模板id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     主键id，也就是子模板id     *
+     *        
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -104,9 +104,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置是否系统模板     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否系统模板     *
+     *        
+     *
      */
     public void setIsSysTemplate(Boolean isSysTemplate) {
         this.isSysTemplate = isSysTemplate;
@@ -122,9 +122,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置会员memberId     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     会员memberId     *
+     *        
+     *
      */
     public void setMemberId(String memberId) {
         this.memberId = memberId;
@@ -140,9 +140,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置修改人     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改人     *
+     *        
+     *
      */
     public void setModifier(String modifier) {
         this.modifier = modifier;
@@ -158,9 +158,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置运费承担类型 卖家承担：0；买家承担：1。     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运费承担类型 卖家承担：0；买家承担：1。     *
+     *        
+     *
      */
     public void setServiceChargeType(Integer serviceChargeType) {
         this.serviceChargeType = serviceChargeType;
@@ -176,9 +176,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置服务类型。0:快递 1:货运 2:货到付款     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     服务类型。0:快递 1:货运 2:货到付款     *
+     *        
+     *
      */
     public void setServiceType(Integer serviceType) {
         this.serviceType = serviceType;
@@ -194,9 +194,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置主模板id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     主模板id     *
+     *        
+     *
      */
     public void setTemplateId(Long templateId) {
         this.templateId = templateId;
@@ -212,9 +212,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置子模板类型 0基准 1增值。默认0。     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     子模板类型 0基准 1增值。默认0。     *
+     *        
+     *
      */
     public void setType(Integer type) {
         this.type = type;
@@ -230,9 +230,9 @@ public class AlibabaOpenplatformLogisticsDeliverySubTemplateDTO {
     }
 
     /**
-     * 设置操作类型：INSERT，UPDATE，DELETE     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     操作类型：INSERT，UPDATE，DELETE     *
+     *        
+     *
      */
     public void setOperateType(String operateType) {
         this.operateType = operateType;

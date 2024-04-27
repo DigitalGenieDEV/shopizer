@@ -12,9 +12,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置订单预览结果，过自动拆单会返回多个记录     *
+     *     订单预览结果，过自动拆单会返回多个记录     *
           
-     * 此参数必填
+     *
      */
     public void setOrderPreviewResuslt(AlibabaCreateOrderPreviewResultModel[] orderPreviewResuslt) {
         this.orderPreviewResuslt = orderPreviewResuslt;
@@ -30,9 +30,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -48,9 +48,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -66,9 +66,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置错误信息     *
+     *     错误信息     *
           
-     * 此参数必填
+     *
      */
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
@@ -84,9 +84,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置运费说明的商品列表     *
+     *     运费说明的商品列表     *
           
-     * 此参数必填
+     *
      */
     public void setPostFeeByDescOfferList(long[] postFeeByDescOfferList) {
         this.postFeeByDescOfferList = postFeeByDescOfferList;
@@ -102,9 +102,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置代销商品列表     *
+     *     代销商品列表     *
           
-     * 此参数必填
+     *
      */
     public void setConsignOfferList(long[] consignOfferList) {
         this.consignOfferList = consignOfferList;
@@ -120,9 +120,9 @@ public class AlibabaCreateOrderPreviewResult {
     }
 
     /**
-     * 设置不支持跨境宝支付的商品列表     *
+     *     不支持跨境宝支付的商品列表     *
           
-     * 此参数必填
+     *
      */
     public void setUnsupportedCrossBorderPayOfferList(long[] unsupportedCrossBorderPayOfferList) {
         this.unsupportedCrossBorderPayOfferList = unsupportedCrossBorderPayOfferList;

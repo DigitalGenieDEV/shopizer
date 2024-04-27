@@ -12,9 +12,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置计算完货品金额后再次进行的减免金额. 单位: 分     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     计算完货品金额后再次进行的减免金额. 单位: 分     *
+     *        
+     *    
      */
     public void setDiscountFee(Long discountFee) {
         this.discountFee = discountFee;
@@ -30,9 +30,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置当前交易可以支持的交易方式列表。某些场景的创建订单接口需要使用。     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     当前交易可以支持的交易方式列表。某些场景的创建订单接口需要使用。     *
+     *        
+     *    
      */
     public void setTradeModeNameList(String[] tradeModeNameList) {
         this.tradeModeNameList = tradeModeNameList;
@@ -48,9 +48,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置状态     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     状态     *
+     *        
+     *    
      */
     public void setStatus(Boolean status) {
         this.status = status;
@@ -66,9 +66,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置是否有淘货源单品优惠  false:有单品优惠   true：没有单品优惠     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否有淘货源单品优惠  false:有单品优惠   true：没有单品优惠     *
+     *        
+     *    
      */
     public void setTaoSampleSinglePromotion(Boolean taoSampleSinglePromotion) {
         this.taoSampleSinglePromotion = taoSampleSinglePromotion;
@@ -84,9 +84,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置订单总费用, 单位为分.     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单总费用, 单位为分.     *
+     *        
+     *    
      */
     public void setSumPayment(Long sumPayment) {
         this.sumPayment = sumPayment;
@@ -102,9 +102,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置返回信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     返回信息     *
+     *        
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -120,9 +120,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置总运费信息, 单位为分.     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     总运费信息, 单位为分.     *
+     *        
+     *    
      */
     public void setSumCarriage(Long sumCarriage) {
         this.sumCarriage = sumCarriage;
@@ -138,9 +138,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置返回码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     返回码     *
+     *        
+     *    
      */
     public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
@@ -156,9 +156,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置不包含运费的货品总费用, 单位为分.     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     不包含运费的货品总费用, 单位为分.     *
+     *        
+     *    
      */
     public void setSumPaymentNoCarriage(Long sumPaymentNoCarriage) {
         this.sumPaymentNoCarriage = sumPaymentNoCarriage;
@@ -174,9 +174,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置附加费,单位，分     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     附加费,单位，分     *
+     *        
+     *    
      */
     public void setAdditionalFee(Long additionalFee) {
         this.additionalFee = additionalFee;
@@ -192,9 +192,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置订单下单流程     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单下单流程     *
+     *        
+     *    
      */
     public void setFlowFlag(String flowFlag) {
         this.flowFlag = flowFlag;
@@ -210,9 +210,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置规格信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     规格信息     *
+     *        
+     *    
      */
     public void setCargoList(AlibabaCreateOrderPreviewResultCargoModel[] cargoList) {
         this.cargoList = cargoList;
@@ -228,9 +228,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置可用店铺级别优惠列表     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     可用店铺级别优惠列表     *
+     *        
+     *    
      */
     public void setShopPromotionList(AlibabaTradePromotionModel[] shopPromotionList) {
         this.shopPromotionList = shopPromotionList;
@@ -246,9 +246,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置当前交易可以支持的交易方式列表。结果可以参照1688下单预览页面的交易方式。     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     当前交易可以支持的交易方式列表。结果可以参照1688下单预览页面的交易方式。     *
+     *        
+     *    
      */
     public void setTradeModelList(TradeModelExtensionList[] tradeModelList) {
         this.tradeModelList = tradeModelList;
@@ -264,9 +264,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置当前交易支持的支付渠道，name：渠道名字，amountLimit：可用额度金额，单位为分 ，null表示没有额度概念     *
+     *     当前交易支持的支付渠道，name：渠道名字，amountLimit：可用额度金额，单位为分 ，null表示没有额度概念     *
      * 参数示例：<pre>[{"name":"alipay"}]</pre>     
-     * 此参数必填
+     *    
      */
     public void setPayChannelList(ComAlibabaOceanOpenplatformBizTradeResultPayChannel[] payChannelList) {
         this.payChannelList = payChannelList;
@@ -282,9 +282,9 @@ public class AlibabaCreateOrderPreviewResultModel {
     }
 
     /**
-     * 设置当前交易支持的支付渠道信息     *
+     *     当前交易支持的支付渠道信息     *
      * 参数示例：<pre>[]</pre>     
-     * 此参数必填
+     *    
      */
     public void setPayChannelInfos(PayChaneelList[] payChannelInfos) {
         this.payChannelInfos = payChannelInfos;

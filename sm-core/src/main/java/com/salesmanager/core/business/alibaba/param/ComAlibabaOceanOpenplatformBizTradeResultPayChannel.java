@@ -12,9 +12,9 @@ public class ComAlibabaOceanOpenplatformBizTradeResultPayChannel {
     }
 
     /**
-     * 设置支付渠道     *
+     *     支付渠道     *
      * 参数示例：<pre>alipay</pre>     
-     * 此参数必填
+     *
      */
     public void setChannel(String channel) {
         this.channel = channel;
@@ -30,9 +30,9 @@ public class ComAlibabaOceanOpenplatformBizTradeResultPayChannel {
     }
 
     /**
-     * 设置是否支持     *
+     *     是否支持     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setAvaliable(Boolean avaliable) {
         this.avaliable = avaliable;

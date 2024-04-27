@@ -12,9 +12,9 @@ public class ProductSearchTopKeywordResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(AlibabaOpenapiSharedCommonResultModel result) {
         this.result = result;

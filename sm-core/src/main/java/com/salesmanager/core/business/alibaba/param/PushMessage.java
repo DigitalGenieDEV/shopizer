@@ -14,9 +14,9 @@ public class PushMessage {
     }
 
     /**
-     * 设置消息唯一id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息唯一id     *
+     *        
+     *
      */
     public void setMsgId(Long msgId) {
         this.msgId = msgId;
@@ -32,9 +32,9 @@ public class PushMessage {
     }
 
     /**
-     * 设置消息类型     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息类型     *
+     *        
+     *
      */
     public void setType(String type) {
         this.type = type;
@@ -50,9 +50,9 @@ public class PushMessage {
     }
 
     /**
-     * 设置消息关联的用户memberId     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息关联的用户memberId     *
+     *        
+     *
      */
     public void setUserInfo(String userInfo) {
         this.userInfo = userInfo;
@@ -68,9 +68,9 @@ public class PushMessage {
     }
 
     /**
-     * 设置消息内容     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息内容     *
+     *        
+     *
      */
     public void setData(Map data) {
         this.data = data;
@@ -86,9 +86,9 @@ public class PushMessage {
     }
 
     /**
-     * 设置消息创建的时间戳，单位毫秒     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息创建的时间戳，单位毫秒     *
+     *        
+     *
      */
     public void setGmtBorn(Long gmtBorn) {
         this.gmtBorn = gmtBorn;

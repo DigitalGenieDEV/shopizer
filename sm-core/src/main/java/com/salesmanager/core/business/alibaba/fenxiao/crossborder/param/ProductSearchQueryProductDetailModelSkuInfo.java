@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置库存     *
+     *     库存     *
      * 参数示例：<pre>库存</pre>     
-     * 此参数必填
+     *
      */
     public void setAmountOnSale(Integer amountOnSale) {
         this.amountOnSale = amountOnSale;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置价格     *
+     *     价格     *
      * 参数示例：<pre>价格</pre>     
-     * 此参数必填
+     *
      */
     public void setPrice(String price) {
         this.price = price;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置精选货源价格     *
+     *     精选货源价格     *
      * 参数示例：<pre>精选货源价格</pre>     
-     * 此参数必填
+     *
      */
     public void setJxhyPrice(String jxhyPrice) {
         this.jxhyPrice = jxhyPrice;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置sku     *
+     *     sku     *
      * 参数示例：<pre>sku</pre>     
-     * 此参数必填
+     *
      */
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
@@ -84,9 +84,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置specid     *
+     *     specid     *
      * 参数示例：<pre>specid</pre>     
-     * 此参数必填
+     *
      */
     public void setSpecId(String specId) {
         this.specId = specId;
@@ -102,9 +102,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置属性     *
+     *     属性     *
      * 参数示例：<pre>属性</pre>     
-     * 此参数必填
+     *
      */
     public void setSkuAttributes(ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes) {
         this.skuAttributes = skuAttributes;
@@ -120,9 +120,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置皮阿法精选货源价     *
+     *     皮阿法精选货源价     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setPfJxhyPrice(String pfJxhyPrice) {
         this.pfJxhyPrice = pfJxhyPrice;
@@ -138,9 +138,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置分销价格，一件代发价     *
+     *     分销价格，一件代发价     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setConsignPrice(String consignPrice) {
         this.consignPrice = consignPrice;
@@ -156,9 +156,9 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
     }
 
     /**
-     * 设置sku级别     *
+     *     sku级别     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setCargoNumber(String cargoNumber) {
         this.cargoNumber = cargoNumber;

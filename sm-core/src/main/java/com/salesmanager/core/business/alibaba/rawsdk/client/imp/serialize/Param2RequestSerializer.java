@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.alibaba.rawsdk.client.policy.Protocol;
 
 /**
- * @author hongbang.hb
  *
  */
 public class Param2RequestSerializer extends AbstractParamRequestSerializer {

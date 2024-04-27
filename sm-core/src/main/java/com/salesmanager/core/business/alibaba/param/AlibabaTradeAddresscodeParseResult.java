@@ -12,9 +12,9 @@ public class AlibabaTradeAddresscodeParseResult {
     }
 
     /**
-     * 设置解析后的收获地址     *
+     *     解析后的收获地址     *
           
-     * 此参数必填
+     *
      */
     public void setResult(AlibabaTradeReceiveAddress result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaTradeAddresscodeParseResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeAddresscodeParseResult {
     }
 
     /**
-     * 设置错误信息     *
+     *     错误信息     *
           
-     * 此参数必填
+     *
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;

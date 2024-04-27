@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformBizTradeResultPayTypeInfo {
     }
 
     /**
-     * 设置支付渠道编码     *
+     *     支付渠道编码     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *    
      */
     public void setCode(Long code) {
         this.code = code;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformBizTradeResultPayTypeInfo {
     }
 
     /**
-     * 设置支付渠道名称     *
+     *     支付渠道名称     *
      * 参数示例：<pre>支付宝</pre>     
-     * 此参数必填
+     *    
      */
     public void setName(String name) {
         this.name = name;

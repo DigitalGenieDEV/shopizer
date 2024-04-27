@@ -12,9 +12,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setCountry(String country) {
         this.country = country;
@@ -30,9 +30,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setSite(String site) {
         this.site = site;
@@ -48,9 +48,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setOutLoginId(String outLoginId) {
         this.outLoginId = outLoginId;
@@ -66,9 +66,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -84,9 +84,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setEmail(String email) {
         this.email = email;
@@ -102,9 +102,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -120,9 +120,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setMobileArea(String mobileArea) {
         this.mobileArea = mobileArea;
@@ -138,9 +138,9 @@ public class AccountUserRegisterParamCountryAccount {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setIp(String ip) {
         this.ip = ip;

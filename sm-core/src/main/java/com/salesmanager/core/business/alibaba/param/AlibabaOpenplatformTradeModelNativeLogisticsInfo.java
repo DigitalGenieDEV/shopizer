@@ -12,9 +12,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置详细地址     *
+     *     详细地址     *
      * 参数示例：<pre>杭州市网商路699号</pre>     
-     * 此参数必填
+     *
      */
     public void setAddress(String address) {
         this.address = address;
@@ -30,9 +30,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置县，区     *
+     *     县，区     *
      * 参数示例：<pre>滨江区</pre>     
-     * 此参数必填
+     *
      */
     public void setArea(String area) {
         this.area = area;
@@ -48,9 +48,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置省市区编码     *
+     *     省市区编码     *
      * 参数示例：<pre>330108</pre>     
-     * 此参数必填
+     *
      */
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
@@ -66,9 +66,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置城市     *
+     *     城市     *
      * 参数示例：<pre>杭州市</pre>     
-     * 此参数必填
+     *
      */
     public void setCity(String city) {
         this.city = city;
@@ -84,9 +84,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置联系人姓名     *
+     *     联系人姓名     *
      * 参数示例：<pre>张三</pre>     
-     * 此参数必填
+     *
      */
     public void setContactPerson(String contactPerson) {
         this.contactPerson = contactPerson;
@@ -102,9 +102,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置传真     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     传真     *
+     *        
+     *
      */
     public void setFax(String fax) {
         this.fax = fax;
@@ -120,9 +120,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置手机     *
+     *     手机     *
      * 参数示例：<pre>13988888888</pre>     
-     * 此参数必填
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -138,9 +138,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置省份     *
+     *     省份     *
      * 参数示例：<pre>浙江省</pre>     
-     * 此参数必填
+     *
      */
     public void setProvince(String province) {
         this.province = province;
@@ -156,9 +156,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置电话     *
+     *     电话     *
      * 参数示例：<pre>0517-88990077</pre>     
-     * 此参数必填
+     *
      */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
@@ -174,9 +174,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置邮编     *
+     *     邮编     *
      * 参数示例：<pre>000000</pre>     
-     * 此参数必填
+     *
      */
     public void setZip(String zip) {
         this.zip = zip;
@@ -192,9 +192,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置运单明细     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     运单明细     *
+     *        
+     *
      */
     public void setLogisticsItems(AlibabaOpenplatformTradeModelNativeLogisticsItemsInfo[] logisticsItems) {
         this.logisticsItems = logisticsItems;
@@ -210,9 +210,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置镇，街道地址码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     镇，街道地址码     *
+     *        
+     *
      */
     public void setTownCode(String townCode) {
         this.townCode = townCode;
@@ -228,9 +228,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置镇，街道     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     镇，街道     *
+     *        
+     *
      */
     public void setTown(String town) {
         this.town = town;
@@ -246,9 +246,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置解密地址ID，用于电商平台收货人信息加密场景使用，非订单加密场景请勿使用。     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     解密地址ID，用于电商平台收货人信息加密场景使用，非订单加密场景请勿使用。     *
+     *    
+     *
      */
     public void setCaid(String caid) {
         this.caid = caid;
@@ -264,9 +264,9 @@ public class AlibabaOpenplatformTradeModelNativeLogisticsInfo {
     }
 
     /**
-     * 设置真实承运物流公司code     *
+     *     真实承运物流公司code     *
      * 参数示例：<pre>""</pre>     
-     * 此参数必填
+     *
      */
     public void setRealLogisticsCompanyNo(String realLogisticsCompanyNo) {
         this.realLogisticsCompanyNo = realLogisticsCompanyNo;

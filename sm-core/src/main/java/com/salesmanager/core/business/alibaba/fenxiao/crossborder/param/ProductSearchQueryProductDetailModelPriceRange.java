@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelPriceRange {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setStartQuantity(Integer startQuantity) {
         this.startQuantity = startQuantity;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelPriceRange {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setPrice(Long price) {
         this.price = price;

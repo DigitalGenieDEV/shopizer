@@ -11,22 +11,19 @@ import java.io.InputStream;
 import java.text.ParseException;
 
 /**
- * @author hongbang.hb
  *
  */
 public interface DeSerializer {
 
 	/**
-	 * 返回该反序列化接口支持的数据协议.
-	 * 
+	 *
 	 * @see com.alibaba.openapi.client.policy.Protocol
 	 * @return
 	 */
 	public String supportedContentType();
 
 	/**
-	 * 把istream反序列化为一个ResponseWrapper对象
-	 * 
+	 *
 	 * @param istream
 	 * @param resultType
 	 * @param charSet
@@ -38,8 +35,7 @@ public interface DeSerializer {
 			throws IOException, ParseException;
 
 	/**
-	 * 把istream反序列化为一个异常对象
-	 * 
+	 *
 	 * @param inputStream
 	 * @param statusCode
 	 * @param charSet

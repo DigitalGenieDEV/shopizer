@@ -12,9 +12,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置收货地址id     *
+     *     收货地址id     *
      * 参数示例：<pre>1234</pre>     
-     * 此参数必填
+     *    
      */
     public void setAddressId(Long addressId) {
         this.addressId = addressId;
@@ -30,9 +30,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置收货人姓名     *
+     *     收货人姓名     *
      * 参数示例：<pre>张三</pre>     
-     * 此参数必填
+     *    
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
@@ -48,9 +48,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置手机     *
+     *     手机     *
      * 参数示例：<pre>15251667788</pre>     
-     * 此参数必填
+     *    
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -66,9 +66,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置电话     *
+     *     电话     *
      * 参数示例：<pre>0517-88990077</pre>     
-     * 此参数必填
+     *    
      */
     public void setPhone(String phone) {
         this.phone = phone;
@@ -84,9 +84,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置邮编     *
+     *     邮编     *
      * 参数示例：<pre>000000</pre>     
-     * 此参数必填
+     *    
      */
     public void setPostCode(String postCode) {
         this.postCode = postCode;
@@ -102,9 +102,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置市文本     *
+     *     市文本     *
      * 参数示例：<pre>杭州市</pre>     
-     * 此参数必填
+     *    
      */
     public void setCityText(String cityText) {
         this.cityText = cityText;
@@ -120,9 +120,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置省份文本     *
+     *     省份文本     *
      * 参数示例：<pre>浙江省</pre>     
-     * 此参数必填
+     *    
      */
     public void setProvinceText(String provinceText) {
         this.provinceText = provinceText;
@@ -138,9 +138,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置区文本     *
+     *     区文本     *
      * 参数示例：<pre>滨江区</pre>     
-     * 此参数必填
+     *    
      */
     public void setAreaText(String areaText) {
         this.areaText = areaText;
@@ -156,9 +156,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置镇文本     *
+     *     镇文本     *
      * 参数示例：<pre>长河镇</pre>     
-     * 此参数必填
+     *    
      */
     public void setTownText(String townText) {
         this.townText = townText;
@@ -174,9 +174,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置街道地址     *
+     *     街道地址     *
      * 参数示例：<pre>网商路699号</pre>     
-     * 此参数必填
+     *    
      */
     public void setAddress(String address) {
         this.address = address;
@@ -192,9 +192,9 @@ public class AlibabaTradeFastAddress {
     }
 
     /**
-     * 设置地址编码     *
+     *     地址编码     *
      * 参数示例：<pre>310107</pre>     
-     * 此参数必填
+     *    
      */
     public void setDistrictCode(String districtCode) {
         this.districtCode = districtCode;

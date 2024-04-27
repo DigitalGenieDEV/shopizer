@@ -21,9 +21,9 @@ public class CategoryTranslationGetByIdParam extends AbstractAPIRequest<Category
     }
 
     /**
-     * 设置用户在机构的唯一ID。不超过64位，由数字和字母组成。     *
+     *     用户在机构的唯一ID。不超过64位，由数字和字母组成。     *
      * 参数示例：<pre>23423532fwef</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -39,9 +39,9 @@ public class CategoryTranslationGetByIdParam extends AbstractAPIRequest<Category
     }
 
     /**
-     * 设置语种。见常见问题中的枚举。     *
+     *     语种。见常见问题中的枚举。     *
      * 参数示例：<pre>ja</pre>     
-     * 此参数必填
+     *    
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -57,9 +57,9 @@ public class CategoryTranslationGetByIdParam extends AbstractAPIRequest<Category
     }
 
     /**
-     * 设置类目ID     *
+     *     类目ID     *
      * 参数示例：<pre>0</pre>     
-     * 此参数必填
+     *    
      */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;

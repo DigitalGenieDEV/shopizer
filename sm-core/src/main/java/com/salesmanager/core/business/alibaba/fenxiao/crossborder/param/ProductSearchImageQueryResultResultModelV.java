@@ -12,9 +12,9 @@ public class ProductSearchImageQueryResultResultModelV {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
      * 参数示例：<pre>是否成功</pre>     
-     * 此参数必填
+     *
      */
     public void setSuccess(String success) {
         this.success = success;
@@ -30,9 +30,9 @@ public class ProductSearchImageQueryResultResultModelV {
     }
 
     /**
-     * 设置code     *
+     *     code     *
      * 参数示例：<pre>code</pre>     
-     * 此参数必填
+     *
      */
     public void setCode(String code) {
         this.code = code;
@@ -48,9 +48,9 @@ public class ProductSearchImageQueryResultResultModelV {
     }
 
     /**
-     * 设置message     *
+     *     message     *
      * 参数示例：<pre>message</pre>     
-     * 此参数必填
+     *
      */
     public void setMessage(String message) {
         this.message = message;
@@ -66,9 +66,9 @@ public class ProductSearchImageQueryResultResultModelV {
     }
 
     /**
-     * 设置结果     *
+     *     结果     *
      * 参数示例：<pre>结果</pre>     
-     * 此参数必填
+     *
      */
     public void setResult(ProductSearchImageQueryModelPageInfoV result) {
         this.result = result;

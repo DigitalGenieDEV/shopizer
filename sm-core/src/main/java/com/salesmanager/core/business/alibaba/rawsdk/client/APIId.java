@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * 
- * @author hongbang.hb
  *
  */
 public class APIId implements Serializable {

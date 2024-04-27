@@ -12,9 +12,9 @@ public class TradeCrossLogisticsOrderSyncResult {
     }
 
     /**
-     * 设置返回信息     *
+     *     返回信息     *
           
-     * 此参数必填
+     *
      */
     public void setResult(ComAlibabaOpenapiSharedCommonResultModel result) {
         this.result = result;

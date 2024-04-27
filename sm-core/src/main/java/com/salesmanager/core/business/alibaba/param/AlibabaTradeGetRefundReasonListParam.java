@@ -21,9 +21,9 @@ public class AlibabaTradeGetRefundReasonListParam extends AbstractAPIRequest<Ali
     }
 
     /**
-     * 设置主订单id     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     主订单id     *
+     *    
+     *
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -39,9 +39,9 @@ public class AlibabaTradeGetRefundReasonListParam extends AbstractAPIRequest<Ali
     }
 
     /**
-     * 设置子订单id     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     子订单id     *
+     *    
+     *
      */
     public void setOrderEntryIds(long[] orderEntryIds) {
         this.orderEntryIds = orderEntryIds;
@@ -57,9 +57,9 @@ public class AlibabaTradeGetRefundReasonListParam extends AbstractAPIRequest<Ali
     }
 
     /**
-     * 设置货物状态     *
+     *     货物状态     *
      * 参数示例：<pre>售中等待买家发货:”refundWaitSellerSend"; 售中等待买家收货:"refundWaitBuyerReceive"; 售中已收货（未确认完成交易）:"refundBuyerReceived" 售后未收货:"aftersaleBuyerNotReceived"; 售后已收到货:"aftersaleBuyerReceived"</pre>     
-     * 此参数必填
+     *
      */
     public void setGoodsStatus(String goodsStatus) {
         this.goodsStatus = goodsStatus;

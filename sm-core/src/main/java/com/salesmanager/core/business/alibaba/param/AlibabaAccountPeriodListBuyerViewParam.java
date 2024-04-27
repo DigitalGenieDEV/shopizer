@@ -15,16 +15,13 @@ public class AlibabaAccountPeriodListBuyerViewParam extends AbstractAPIRequest<A
     private Long pageIndex;
 
     /**
-     * @return 页码
+     * @return
      */
     public Long getPageIndex() {
         return pageIndex;
     }
 
     /**
-     * 设置页码     *
-     * 参数示例：<pre>1</pre>     
-     * 此参数必填
      */
     public void setPageIndex(Long pageIndex) {
         this.pageIndex = pageIndex;
@@ -33,16 +30,12 @@ public class AlibabaAccountPeriodListBuyerViewParam extends AbstractAPIRequest<A
     private String sellerLoginId;
 
     /**
-     * @return 卖家ID，不填则查询全部
      */
     public String getSellerLoginId() {
         return sellerLoginId;
     }
 
     /**
-     * 设置卖家ID，不填则查询全部     *
-     * 参数示例：<pre>alitestforisv01</pre>     
-     * 此参数必填
      */
     public void setSellerLoginId(String sellerLoginId) {
         this.sellerLoginId = sellerLoginId;

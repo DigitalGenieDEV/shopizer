@@ -14,9 +14,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置订单id     *
+     *     订单id     *
      * 参数示例：<pre>1234</pre>     
-     * 此参数必填
+     *    
      */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -32,9 +32,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置商品id，子单或主子和一订单必填     *
+     *     商品id，子单或主子和一订单必填     *
      * 参数示例：<pre>12</pre>     
-     * 此参数必填
+     *    
      */
     public void setProductId(String productId) {
         this.productId = productId;
@@ -50,9 +50,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置商品名称，子单或主子和一订单必填     *
+     *     商品名称，子单或主子和一订单必填     *
      * 参数示例：<pre>手套</pre>     
-     * 此参数必填
+     *    
      */
     public void setProductName(String productName) {
         this.productName = productName;
@@ -68,9 +68,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置skuId，子单或主子和一订单必填     *
+     *     skuId，子单或主子和一订单必填     *
      * 参数示例：<pre>adsds1213</pre>     
-     * 此参数必填
+     *    
      */
     public void setSkuId(String skuId) {
         this.skuId = skuId;
@@ -86,9 +86,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置sku名称，子单或主子和一订单必填     *
+     *     sku名称，子单或主子和一订单必填     *
      * 参数示例：<pre>绿色</pre>     
-     * 此参数必填
+     *    
      */
     public void setSkuName(String skuName) {
         this.skuName = skuName;
@@ -104,9 +104,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置购买数量     *
+     *     购买数量     *
      * 参数示例：<pre>2</pre>     
-     * 此参数必填
+     *    
      */
     public void setBuyAmount(Long buyAmount) {
         this.buyAmount = buyAmount;
@@ -122,9 +122,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置创建时间     *
+     *     创建时间     *
      * 参数示例：<pre>2023-10-01 10:10:10</pre>     
-     * 此参数必填
+     *    
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
@@ -140,9 +140,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置下游用户id     *
+     *     下游用户id     *
      * 参数示例：<pre>1212113</pre>     
-     * 此参数必填
+     *    
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -158,9 +158,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置支付时间     *
+     *     支付时间     *
      * 参数示例：<pre>2023-10-01 10:10:10</pre>     
-     * 此参数必填
+     *    
      */
     public void setPayTime(Date payTime) {
         this.payTime = payTime;
@@ -176,9 +176,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置结束时间     *
+     *     结束时间     *
      * 参数示例：<pre>2023-10-01 10:10:10</pre>     
-     * 此参数必填
+     *    
      */
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
@@ -194,9 +194,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置实付金额 分     *
+     *     实付金额 分     *
      * 参数示例：<pre>200</pre>     
-     * 此参数必填
+     *    
      */
     public void setPaidFee(Long paidFee) {
         this.paidFee = paidFee;
@@ -212,9 +212,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置退款状态 0-未退款（退款关闭，未申请） 1-退款     *
+     *     退款状态 0-未退款（退款关闭，未申请） 1-退款     *
      * 参数示例：<pre>0</pre>     
-     * 此参数必填
+     *    
      */
     public void setRefundStatus(String refundStatus) {
         this.refundStatus = refundStatus;
@@ -230,9 +230,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置子单详情，无则不传     *
+     *     子单详情，无则不传     *
      * 参数示例：<pre>子单详情</pre>     
-     * 此参数必填
+     *    
      */
     public void setSubOrderList(ComAlibabaCbuOrderParamOrderParamV[] subOrderList) {
         this.subOrderList = subOrderList;
@@ -248,9 +248,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置payed-已支付  success-交易成功 close-交易关闭     *
+     *     payed-已支付  success-交易成功 close-交易关闭     *
      * 参数示例：<pre>success</pre>     
-     * 此参数必填
+     *    
      */
     public void setStatus(String status) {
         this.status = status;
@@ -266,9 +266,9 @@ public class ComAlibabaCbuOrderParamOrderParamV {
     }
 
     /**
-     * 设置一主多子需传子单信息     *
+     *     一主多子需传子单信息     *
      * 参数示例：<pre>子单信息</pre>     
-     * 此参数必填
+     *    
      */
     public void setSubOrderParamList(ComAlibabaCbuOrderParamSubOrderParam[] subOrderParamList) {
         this.subOrderParamList = subOrderParamList;

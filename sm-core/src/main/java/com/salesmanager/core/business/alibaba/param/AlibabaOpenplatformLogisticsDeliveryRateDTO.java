@@ -14,9 +14,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置创建人     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建人     *
+     *        
+     *
      */
     public void setCreator(String creator) {
         this.creator = creator;
@@ -32,9 +32,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置首重（单位：克）或首件（单位：件）     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     首重（单位：克）或首件（单位：件）     *
+     *        
+     *
      */
     public void setFirstUnit(Long firstUnit) {
         this.firstUnit = firstUnit;
@@ -50,9 +50,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置首重或首件的价格     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     首重或首件的价格     *
+     *        
+     *
      */
     public void setFirstUnitFee(Long firstUnitFee) {
         this.firstUnitFee = firstUnitFee;
@@ -68,9 +68,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置创建时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     创建时间     *
+     *        
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -86,9 +86,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置修改时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改时间     *
+     *        
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -104,9 +104,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置主键id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     主键id     *
+     *        
+     *
      */
     public void setId(Long id) {
         this.id = id;
@@ -122,9 +122,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置最低一票     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     最低一票     *
+     *        
+     *
      */
     public void setLeastExpenses(Long leastExpenses) {
         this.leastExpenses = leastExpenses;
@@ -140,9 +140,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置会员memberId     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     会员memberId     *
+     *        
+     *
      */
     public void setMemberId(String memberId) {
         this.memberId = memberId;
@@ -158,9 +158,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置修改人     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     修改人     *
+     *        
+     *
      */
     public void setModifier(String modifier) {
         this.modifier = modifier;
@@ -176,9 +176,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置续重（单位：克）或续件（单位：件）单位     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     续重（单位：克）或续件（单位：件）单位     *
+     *        
+     *
      */
     public void setNextUnit(Long nextUnit) {
         this.nextUnit = nextUnit;
@@ -194,9 +194,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置续重件价格     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     续重件价格     *
+     *        
+     *
      */
     public void setNextUnitFee(Long nextUnitFee) {
         this.nextUnitFee = nextUnitFee;
@@ -212,9 +212,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置子模板id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     子模板id     *
+     *        
+     *
      */
     public void setSubTemplateId(Long subTemplateId) {
         this.subTemplateId = subTemplateId;
@@ -230,9 +230,9 @@ public class AlibabaOpenplatformLogisticsDeliveryRateDTO {
     }
 
     /**
-     * 设置到达区地址列表（使用行政区编码）     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     到达区地址列表（使用行政区编码）     *
+     *        
+     *
      */
     public void setToAreaCodeList(String[] toAreaCodeList) {
         this.toAreaCodeList = toAreaCodeList;

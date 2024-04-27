@@ -12,9 +12,9 @@ public class AlibabaTradeFastOffer {
     }
 
     /**
-     * 设置下单失败的商品     *
+     *     下单失败的商品     *
      * 参数示例：<pre>554456348334</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferId(String offerId) {
         this.offerId = offerId;
@@ -30,9 +30,9 @@ public class AlibabaTradeFastOffer {
     }
 
     /**
-     * 设置下单失败商品的规格ID     *
+     *     下单失败商品的规格ID     *
      * 参数示例：<pre>b266e0726506185beaf205cbae88530d</pre>     
-     * 此参数必填
+     *
      */
     public void setSpecId(String specId) {
         this.specId = specId;
@@ -48,9 +48,9 @@ public class AlibabaTradeFastOffer {
     }
 
     /**
-     * 设置下单失败的错误编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     下单失败的错误编码     *
+     *        
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -66,9 +66,9 @@ public class AlibabaTradeFastOffer {
     }
 
     /**
-     * 设置下单失败的错误描述     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     下单失败的错误描述     *
+     *        
+     *
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;

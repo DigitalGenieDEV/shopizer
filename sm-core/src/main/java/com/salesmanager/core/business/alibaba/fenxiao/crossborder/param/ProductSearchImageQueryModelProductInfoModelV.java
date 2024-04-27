@@ -12,9 +12,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置图片url     *
+     *     图片url     *
      * 参数示例：<pre>图片url</pre>     
-     * 此参数必填
+     *
      */
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
@@ -30,9 +30,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置标题     *
+     *     标题     *
      * 参数示例：<pre>标题</pre>     
-     * 此参数必填
+     *
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -48,9 +48,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置多语言标题     *
+     *     多语言标题     *
      * 参数示例：<pre>多语言标题</pre>     
-     * 此参数必填
+     *
      */
     public void setSubjectTrans(String subjectTrans) {
         this.subjectTrans = subjectTrans;
@@ -66,9 +66,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置价格     *
+     *     价格     *
      * 参数示例：<pre>价格</pre>     
-     * 此参数必填
+     *
      */
     public void setPriceInfo(ProductSearchImageQueryModelPriceInfoV priceInfo) {
         this.priceInfo = priceInfo;
@@ -84,9 +84,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置商品id     *
+     *     商品id     *
      * 参数示例：<pre>商品id</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -102,9 +102,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置是否精选货源     *
+     *     是否精选货源     *
      * 参数示例：<pre>是否精选货源</pre>     
-     * 此参数必填
+     *
      */
     public void setIsJxhy(Boolean isJxhy) {
         this.isJxhy = isJxhy;
@@ -120,9 +120,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置复购率     *
+     *     复购率     *
      * 参数示例：<pre>13%</pre>     
-     * 此参数必填
+     *
      */
     public void setRepurchaseRate(String repurchaseRate) {
         this.repurchaseRate = repurchaseRate;
@@ -138,9 +138,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置30天销量     *
+     *     30天销量     *
      * 参数示例：<pre>1234</pre>     
-     * 此参数必填
+     *
      */
     public void setMonthSold(Integer monthSold) {
         this.monthSold = monthSold;
@@ -156,9 +156,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置向1688上报打点数据     *
+     *     向1688上报打点数据     *
      * 参数示例：<pre>object_id@620201390233^object_type@offer</pre>     
-     * 此参数必填
+     *
      */
     public void setTraceInfo(String traceInfo) {
         this.traceInfo = traceInfo;
@@ -174,9 +174,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置是否一件代发     *
+     *     是否一件代发     *
      * 参数示例：<pre>true</pre>     
-     * 此参数必填
+     *
      */
     public void setIsOnePsale(Boolean isOnePsale) {
         this.isOnePsale = isOnePsale;
@@ -192,9 +192,9 @@ public class ProductSearchImageQueryModelProductInfoModelV {
     }
 
     /**
-     * 设置商家身份     *
+     *     商家身份     *
      * 参数示例：<pre>super_factory-超级工厂 powerful_merchants-实力商家 tp_member-诚信通会员</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerIdentities(String[] sellerIdentities) {
         this.sellerIdentities = sellerIdentities;

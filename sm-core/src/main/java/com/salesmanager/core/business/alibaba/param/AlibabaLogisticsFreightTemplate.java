@@ -12,9 +12,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置地址信息     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地址信息     *
+     *        
+     *    
      */
     public void setAddressCodeText(String addressCodeText) {
         this.addressCodeText = addressCodeText;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置发货地址地区码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货地址地区码     *
+     *        
+     *    
      */
     public void setFromAreaCode(String fromAreaCode) {
         this.fromAreaCode = fromAreaCode;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置模版ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     模版ID     *
+     *        
+     *    
      */
     public void setId(Long id) {
         this.id = id;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置会员ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     会员ID     *
+     *        
+     *    
      */
     public void setMemberId(String memberId) {
         this.memberId = memberId;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     名称     *
+     *        
+     *    
      */
     public void setName(String name) {
         this.name = name;
@@ -102,9 +102,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置备注     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     备注     *
+     *        
+     *    
      */
     public void setRemark(String remark) {
         this.remark = remark;
@@ -120,9 +120,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置状态     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     状态     *
+     *        
+     *    
      */
     public void setStatus(Integer status) {
         this.status = status;
@@ -138,9 +138,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置快递子模版     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     快递子模版     *
+     *        
+     *    
      */
     public void setExpressSubTemplate(AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO expressSubTemplate) {
         this.expressSubTemplate = expressSubTemplate;
@@ -156,9 +156,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置货运子模版     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     货运子模版     *
+     *        
+     *    
      */
     public void setLogisticsSubTemplate(AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO logisticsSubTemplate) {
         this.logisticsSubTemplate = logisticsSubTemplate;
@@ -174,9 +174,9 @@ public class AlibabaLogisticsFreightTemplate {
     }
 
     /**
-     * 设置货到付款子模版     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     货到付款子模版     *
+     *        
+     *    
      */
     public void setCodSubTemplate(AlibabaOpenplatformLogisticsDeliverySubTemplateDetailDTO codSubTemplate) {
         this.codSubTemplate = codSubTemplate;

@@ -14,9 +14,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置买家userId     *
+     *     买家userId     *
      * 参数示例：<pre>112312331</pre>     
-     * 此参数必填
+     *
      */
     public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
@@ -32,9 +32,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置买家loginId     *
+     *     买家loginId     *
      * 参数示例：<pre>alitestforisv01</pre>     
-     * 此参数必填
+     *
      */
     public void setBuyerLoginId(String buyerLoginId) {
         this.buyerLoginId = buyerLoginId;
@@ -50,9 +50,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置创建时间     *
+     *     创建时间     *
      * 参数示例：<pre>20170913231727000+0800</pre>     
-     * 此参数必填
+     *
      */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
@@ -68,9 +68,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置修改时间     *
+     *     修改时间     *
      * 参数示例：<pre>20170913231727000+0800</pre>     
-     * 此参数必填
+     *
      */
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
@@ -86,9 +86,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置授信日期     *
+     *     授信日期     *
      * 参数示例：<pre>20170913231727000+0800</pre>     
-     * 此参数必填
+     *
      */
     public void setGmtQuota(Date gmtQuota) {
         this.gmtQuota = gmtQuota;
@@ -104,9 +104,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置授信额度值,单位为分     *
+     *     授信额度值,单位为分     *
      * 参数示例：<pre>10000</pre>     
-     * 此参数必填
+     *
      */
     public void setQuota(Long quota) {
         this.quota = quota;
@@ -122,9 +122,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置可用授信额度值,单位为分     *
+     *     可用授信额度值,单位为分     *
      * 参数示例：<pre>10000</pre>     
-     * 此参数必填
+     *
      */
     public void setSurplusQuota(Long surplusQuota) {
         this.surplusQuota = surplusQuota;
@@ -140,9 +140,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置卖家userId     *
+     *     卖家userId     *
      * 参数示例：<pre>121312441</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
@@ -158,9 +158,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置卖家loginId     *
+     *     卖家loginId     *
      * 参数示例：<pre>alitestforisv02</pre>     
-     * 此参数必填
+     *
      */
     public void setSellerLoginId(String sellerLoginId) {
         this.sellerLoginId = sellerLoginId;
@@ -176,9 +176,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置状态     *
+     *     状态     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setStatus(Integer status) {
         this.status = status;
@@ -194,9 +194,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置状态描述     *
+     *     状态描述     *
      * 参数示例：<pre>有效</pre>     
-     * 此参数必填
+     *
      */
     public void setStatusStr(String statusStr) {
         this.statusStr = statusStr;
@@ -212,9 +212,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置账期日期     *
+     *     账期日期     *
      * 参数示例：<pre>如每月28日记做：28</pre>     
-     * 此参数必填
+     *
      */
     public void setTapDate(Integer tapDate) {
         this.tapDate = tapDate;
@@ -230,9 +230,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置账期日期描述     *
+     *     账期日期描述     *
      * 参数示例：<pre>两个月一结，20号</pre>     
-     * 此参数必填
+     *
      */
     public void setTapDateStr(String tapDateStr) {
         this.tapDateStr = tapDateStr;
@@ -248,9 +248,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置逾期次数     *
+     *     逾期次数     *
      * 参数示例：<pre>0</pre>     
-     * 此参数必填
+     *
      */
     public void setTapOverdue(Integer tapOverdue) {
         this.tapOverdue = tapOverdue;
@@ -266,9 +266,9 @@ public class AlibabaOceanOpenplatformBizTradeCommonModelAccountPeriodInfo {
     }
 
     /**
-     * 设置账期类型     *
+     *     账期类型     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setTapType(Integer tapType) {
         this.tapType = tapType;

@@ -21,9 +21,9 @@ public class ProductTopListQueryParam extends AbstractAPIRequest<ProductTopListQ
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setRankQueryParams(ProductTopListQueryRankQueryParams rankQueryParams) {
         this.rankQueryParams = rankQueryParams;

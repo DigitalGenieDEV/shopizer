@@ -12,9 +12,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundListResult {
     }
 
     /**
-     * 设置退款单列表     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     退款单列表     *
+     *        
+     *
      */
     public void setOpOrderRefundModels(AlibabaTradeRefundOpOrderRefundModel[] opOrderRefundModels) {
         this.opOrderRefundModels = opOrderRefundModels;
@@ -30,9 +30,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundListResult {
     }
 
     /**
-     * 设置符合条件总的记录条数     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     符合条件总的记录条数     *
+     *        
+     *
      */
     public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;
@@ -48,9 +48,9 @@ public class AlibabaTradeRefundOpQueryOrderRefundListResult {
     }
 
     /**
-     * 设置查询的当前页码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     查询的当前页码     *
+     *        
+     *
      */
     public void setCurrentPageNum(Integer currentPageNum) {
         this.currentPageNum = currentPageNum;

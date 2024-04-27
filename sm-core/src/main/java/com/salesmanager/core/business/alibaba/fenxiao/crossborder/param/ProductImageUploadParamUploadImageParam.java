@@ -12,9 +12,9 @@ public class ProductImageUploadParamUploadImageParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setImageBase64(String imageBase64) {
         this.imageBase64 = imageBase64;
@@ -30,9 +30,9 @@ public class ProductImageUploadParamUploadImageParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setAppKey(Long appKey) {
         this.appKey = appKey;
@@ -48,9 +48,9 @@ public class ProductImageUploadParamUploadImageParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;

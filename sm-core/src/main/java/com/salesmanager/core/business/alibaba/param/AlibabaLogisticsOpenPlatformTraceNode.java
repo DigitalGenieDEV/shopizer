@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置动作     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     动作     *
+     *        
+     *
      */
     public void setAction(String action) {
         this.action = action;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置地区编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地区编码     *
+     *        
+     *
      */
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setEncrypt(String encrypt) {
         this.encrypt = encrypt;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置流转节点的时间     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     流转节点的时间     *
+     *        
+     *
      */
     public void setAcceptTime(String acceptTime) {
         this.acceptTime = acceptTime;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置备注，如：在浙江浦江县公司进行下级地点扫描，即将发往：广东深圳公司     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     备注，如：在浙江浦江县公司进行下级地点扫描，即将发往：广东深圳公司     *
+     *        
+     *
      */
     public void setRemark(String remark) {
         this.remark = remark;
@@ -102,9 +102,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFacilityType(String facilityType) {
         this.facilityType = facilityType;
@@ -120,9 +120,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFacilityNo(String facilityNo) {
         this.facilityNo = facilityNo;
@@ -138,9 +138,9 @@ public class AlibabaLogisticsOpenPlatformTraceNode {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;

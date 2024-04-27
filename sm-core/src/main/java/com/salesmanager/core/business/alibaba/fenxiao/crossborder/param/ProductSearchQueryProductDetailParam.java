@@ -21,9 +21,9 @@ public class ProductSearchQueryProductDetailParam extends AbstractAPIRequest<Pro
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOfferDetailParam(ProductSearchQueryProductDetailParamOfferDetailParam offerDetailParam) {
         this.offerDetailParam = offerDetailParam;

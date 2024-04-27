@@ -12,9 +12,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置sku标识     *
+     *     sku标识     *
      * 参数示例：<pre>1234</pre>     
-     * 此参数必填
+     *
      */
     public void setSku(String sku) {
         this.sku = sku;
@@ -30,9 +30,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置中文名称     *
+     *     中文名称     *
      * 参数示例：<pre>测试</pre>     
-     * 此参数必填
+     *
      */
     public void setCName(String cName) {
         this.cName = cName;
@@ -48,9 +48,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置英文名称     *
+     *     英文名称     *
      * 参数示例：<pre>test</pre>     
-     * 此参数必填
+     *
      */
     public void setEnName(String enName) {
         this.enName = enName;
@@ -66,9 +66,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置申报价值     *
+     *     申报价值     *
      * 参数示例：<pre>3000.0</pre>     
-     * 此参数必填
+     *
      */
     public void setAmount(Double amount) {
         this.amount = amount;
@@ -84,9 +84,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置数量     *
+     *     数量     *
      * 参数示例：<pre>1.0</pre>     
-     * 此参数必填
+     *
      */
     public void setQuantity(Double quantity) {
         this.quantity = quantity;
@@ -102,9 +102,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置重量（kg）     *
+     *     重量（kg）     *
      * 参数示例：<pre>0.5</pre>     
-     * 此参数必填
+     *
      */
     public void setWeight(Double weight) {
         this.weight = weight;
@@ -120,9 +120,9 @@ public class AlibabaTradeCustomsAttributesInfo {
     }
 
     /**
-     * 设置报关币种     *
+     *     报关币种     *
      * 参数示例：<pre>CNY</pre>     
-     * 此参数必填
+     *
      */
     public void setCurrency(String currency) {
         this.currency = currency;

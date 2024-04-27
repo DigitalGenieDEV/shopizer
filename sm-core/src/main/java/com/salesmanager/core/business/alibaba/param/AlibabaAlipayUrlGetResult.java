@@ -12,9 +12,9 @@ public class AlibabaAlipayUrlGetResult {
     }
 
     /**
-     * 设置错误信息     *
+     *     错误信息     *
           
-     * 此参数必填
+     *
      */
     public void setErroMsg(String erroMsg) {
         this.erroMsg = erroMsg;
@@ -30,9 +30,9 @@ public class AlibabaAlipayUrlGetResult {
     }
 
     /**
-     * 设置支付链接     *
+     *     支付链接     *
           
-     * 此参数必填
+     *
      */
     public void setPayUrl(String payUrl) {
         this.payUrl = payUrl;
@@ -48,9 +48,9 @@ public class AlibabaAlipayUrlGetResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *
      */
     public void setSuccess(Boolean success) {
         this.success = success;
@@ -66,9 +66,9 @@ public class AlibabaAlipayUrlGetResult {
     }
 
     /**
-     * 设置错误码     *
+     *     错误码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;

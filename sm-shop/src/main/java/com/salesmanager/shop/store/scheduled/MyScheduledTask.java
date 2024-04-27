@@ -31,7 +31,7 @@ public class MyScheduledTask {
     protected MerchantStoreService merchantService;
 
 
-//    @Scheduled(cron = "0/5 * * * * *") // 每隔五秒执行一次
+//    @Scheduled(cron = "0/5 * * * * *")
     void execute1688ProductImportTask() throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam productSearchKeywordQueryParamOfferQueryParam = new ProductSearchKeywordQueryParamOfferQueryParam();
         productSearchKeywordQueryParamOfferQueryParam.setPageSize(10);

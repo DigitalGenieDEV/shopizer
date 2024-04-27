@@ -12,9 +12,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置路线名称     *
+     *     路线名称     *
      * 参数示例：<pre>欧洲小包</pre>     
-     * 此参数必填
+     *
      */
     public void setChannelName(String channelName) {
         this.channelName = channelName;
@@ -30,9 +30,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置路线id     *
+     *     路线id     *
      * 参数示例：<pre>1</pre>     
-     * 此参数必填
+     *
      */
     public void setChannelId(String channelId) {
         this.channelId = channelId;
@@ -48,9 +48,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置货代公司id     *
+     *     货代公司id     *
      * 参数示例：<pre>222</pre>     
-     * 此参数必填
+     *
      */
     public void setShippingCompanyId(String shippingCompanyId) {
         this.shippingCompanyId = shippingCompanyId;
@@ -66,9 +66,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置货代公司名称     *
+     *     货代公司名称     *
      * 参数示例：<pre>货代公司1</pre>     
-     * 此参数必填
+     *
      */
     public void setShippingCompanyName(String shippingCompanyName) {
         this.shippingCompanyName = shippingCompanyName;
@@ -84,9 +84,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置国家code     *
+     *     国家code     *
      * 参数示例：<pre>UK</pre>     
-     * 此参数必填
+     *
      */
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
@@ -102,9 +102,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置国家     *
+     *     国家     *
      * 参数示例：<pre>英国</pre>     
-     * 此参数必填
+     *
      */
     public void setCountry(String country) {
         this.country = country;
@@ -120,9 +120,9 @@ public class AlibabaTradeOverseasExtraAddress {
     }
 
     /**
-     * 设置买家邮箱     *
+     *     买家邮箱     *
      * 参数示例：<pre>aaa@gmail.com</pre>     
-     * 此参数必填
+     *
      */
     public void setEmail(String email) {
         this.email = email;

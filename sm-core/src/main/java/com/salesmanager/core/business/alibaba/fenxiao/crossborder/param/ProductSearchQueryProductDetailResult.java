@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailResult {
     }
 
     /**
-     * 设置     *
+     *          *
           
-     * 此参数必填
+     *    
      */
     public void setResult(ProductSearchQueryProductDetailResutResultModel result) {
         this.result = result;

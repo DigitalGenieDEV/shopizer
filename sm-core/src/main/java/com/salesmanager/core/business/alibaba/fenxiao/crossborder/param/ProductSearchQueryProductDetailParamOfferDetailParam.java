@@ -12,9 +12,6 @@ public class ProductSearchQueryProductDetailParamOfferDetailParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -30,9 +27,6 @@ public class ProductSearchQueryProductDetailParamOfferDetailParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setCountry(String country) {
         this.country = country;
@@ -48,9 +42,6 @@ public class ProductSearchQueryProductDetailParamOfferDetailParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setOutMemberId(String outMemberId) {
         this.outMemberId = outMemberId;
@@ -66,9 +57,6 @@ public class ProductSearchQueryProductDetailParamOfferDetailParam {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
      */
     public void setAppKey(String appKey) {
         this.appKey = appKey;

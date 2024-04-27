@@ -12,9 +12,9 @@ public class AlibabaOceanOpenplatformCommonOrderRefundReasonListResult {
     }
 
     /**
-     * 设置错误码     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     错误码     *
+     *    
+     *    
      */
     public void setCode(String code) {
         this.code = code;
@@ -30,9 +30,9 @@ public class AlibabaOceanOpenplatformCommonOrderRefundReasonListResult {
     }
 
     /**
-     * 设置错误信息     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     错误信息     *
+     *    
+     *    
      */
     public void setMessage(String message) {
         this.message = message;
@@ -48,9 +48,9 @@ public class AlibabaOceanOpenplatformCommonOrderRefundReasonListResult {
     }
 
     /**
-     * 设置结果     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     结果     *
+     *    
+     *    
      */
     public void setResult(AlibabaOceanOpenplatformBizTradeResultOrderRefundReasonListResult result) {
         this.result = result;
@@ -66,9 +66,9 @@ public class AlibabaOceanOpenplatformCommonOrderRefundReasonListResult {
     }
 
     /**
-     * 设置是否成功     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     是否成功     *
+     *    
+     *    
      */
     public void setSuccess(Boolean success) {
         this.success = success;

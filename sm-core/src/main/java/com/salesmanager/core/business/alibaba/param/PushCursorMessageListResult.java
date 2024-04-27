@@ -12,9 +12,9 @@ public class PushCursorMessageListResult {
     }
 
     /**
-     * 设置推送消息列表     *
+     *     推送消息列表     *
           
-     * 此参数必填
+     *    
      */
     public void setPushMessageList(PushMessage[] pushMessageList) {
         this.pushMessageList = pushMessageList;

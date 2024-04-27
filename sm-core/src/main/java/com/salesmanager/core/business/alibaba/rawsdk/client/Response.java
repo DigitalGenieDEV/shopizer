@@ -19,9 +19,6 @@ package com.salesmanager.core.business.alibaba.rawsdk.client;
 import com.salesmanager.core.business.alibaba.rawsdk.client.entity.ResponseWrapper;
 
 /**
- * http调用返回的结果对象
- * 
- * @author jade
  */
 public class Response {
 	private static final String DEFAULT_CHARSET = "UTF-8";

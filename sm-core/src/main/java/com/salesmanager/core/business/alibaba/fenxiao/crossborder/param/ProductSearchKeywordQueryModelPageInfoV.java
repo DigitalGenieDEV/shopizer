@@ -12,9 +12,9 @@ public class ProductSearchKeywordQueryModelPageInfoV {
     }
 
     /**
-     * 设置总条数     *
+     *     总条数     *
      * 参数示例：<pre>分页</pre>     
-     * 此参数必填
+     *
      */
     public void setTotalRecords(Integer totalRecords) {
         this.totalRecords = totalRecords;
@@ -30,9 +30,9 @@ public class ProductSearchKeywordQueryModelPageInfoV {
     }
 
     /**
-     * 设置总页码     *
+     *     总页码     *
      * 参数示例：<pre>分页</pre>     
-     * 此参数必填
+     *
      */
     public void setTotalPage(Integer totalPage) {
         this.totalPage = totalPage;
@@ -48,9 +48,9 @@ public class ProductSearchKeywordQueryModelPageInfoV {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>分页</pre>     
-     * 此参数必填
+     *
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -66,9 +66,9 @@ public class ProductSearchKeywordQueryModelPageInfoV {
     }
 
     /**
-     * 设置分页     *
+     *     分页     *
      * 参数示例：<pre>分页</pre>     
-     * 此参数必填
+     *
      */
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
@@ -84,9 +84,9 @@ public class ProductSearchKeywordQueryModelPageInfoV {
     }
 
     /**
-     * 设置数据     *
+     *     数据     *
      * 参数示例：<pre>数据</pre>     
-     * 此参数必填
+     *
      */
     public void setData(ProductSearchKeywordQueryModelProductInfoModelV[] data) {
         this.data = data;

@@ -12,9 +12,9 @@ public class PushMessagePage {
     }
 
     /**
-     * 设置分页的消息数据列表     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     分页的消息数据列表     *
+     *        
+     *
      */
     public void setDatas(PushMessage[] datas) {
         this.datas = datas;
@@ -30,9 +30,9 @@ public class PushMessagePage {
     }
 
     /**
-     * 设置消息总数     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     消息总数     *
+     *        
+     *
      */
     public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;

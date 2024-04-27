@@ -21,9 +21,9 @@ public class ProductImageUploadParam extends AbstractAPIRequest<ProductImageUplo
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setUploadImageParam(ProductImageUploadParamUploadImageParam uploadImageParam) {
         this.uploadImageParam = uploadImageParam;

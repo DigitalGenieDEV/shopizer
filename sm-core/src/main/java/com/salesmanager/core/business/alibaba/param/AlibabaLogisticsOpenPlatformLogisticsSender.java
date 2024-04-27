@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置发件人姓名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发件人姓名     *
+     *        
+     *
      */
     public void setSenderName(String senderName) {
         this.senderName = senderName;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置发件人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发件人电话     *
+     *        
+     *
      */
     public void setSenderPhone(String senderPhone) {
         this.senderPhone = senderPhone;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置发件人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发件人电话     *
+     *        
+     *
      */
     public void setSenderMobile(String senderMobile) {
         this.senderMobile = senderMobile;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setEncrypt(String encrypt) {
         this.encrypt = encrypt;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置省编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省编码     *
+     *        
+     *
      */
     public void setSenderProvinceCode(String senderProvinceCode) {
         this.senderProvinceCode = senderProvinceCode;
@@ -102,9 +102,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置城市编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     城市编码     *
+     *        
+     *
      */
     public void setSenderCityCode(String senderCityCode) {
         this.senderCityCode = senderCityCode;
@@ -120,9 +120,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置国家编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家编码     *
+     *        
+     *
      */
     public void setSenderCountyCode(String senderCountyCode) {
         this.senderCountyCode = senderCountyCode;
@@ -138,9 +138,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置发货人地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发货人地址     *
+     *        
+     *
      */
     public void setSenderAddress(String senderAddress) {
         this.senderAddress = senderAddress;
@@ -156,9 +156,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置省份     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省份     *
+     *        
+     *
      */
     public void setSenderProvince(String senderProvince) {
         this.senderProvince = senderProvince;
@@ -174,9 +174,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置城市     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     城市     *
+     *        
+     *
      */
     public void setSenderCity(String senderCity) {
         this.senderCity = senderCity;
@@ -192,9 +192,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsSender {
     }
 
     /**
-     * 设置国家     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家     *
+     *        
+     *
      */
     public void setSenderCounty(String senderCounty) {
         this.senderCounty = senderCounty;

@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelProductAttribute {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAttributeId(String attributeId) {
         this.attributeId = attributeId;
@@ -30,9 +30,9 @@ public class ProductSearchQueryProductDetailModelProductAttribute {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
@@ -48,9 +48,9 @@ public class ProductSearchQueryProductDetailModelProductAttribute {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setValue(String value) {
         this.value = value;
@@ -66,9 +66,9 @@ public class ProductSearchQueryProductDetailModelProductAttribute {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setAttributeNameTrans(String attributeNameTrans) {
         this.attributeNameTrans = attributeNameTrans;
@@ -84,9 +84,9 @@ public class ProductSearchQueryProductDetailModelProductAttribute {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setValueTrans(String valueTrans) {
         this.valueTrans = valueTrans;

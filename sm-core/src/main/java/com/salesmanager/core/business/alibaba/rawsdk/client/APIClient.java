@@ -9,7 +9,6 @@ import com.salesmanager.core.business.alibaba.rawsdk.client.exception.OceanExcep
 import com.salesmanager.core.business.alibaba.rawsdk.client.policy.RequestPolicy;
 
 /**
- * @author hongbang.hb
  *
  */
 public interface APIClient {

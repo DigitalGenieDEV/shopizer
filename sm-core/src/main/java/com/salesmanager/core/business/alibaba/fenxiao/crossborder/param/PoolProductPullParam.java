@@ -21,9 +21,9 @@ public class PoolProductPullParam extends AbstractAPIRequest<PoolProductPullResu
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setOfferPoolQueryParam(PoolProductPullOfferPoolQueryParam offerPoolQueryParam) {
         this.offerPoolQueryParam = offerPoolQueryParam;

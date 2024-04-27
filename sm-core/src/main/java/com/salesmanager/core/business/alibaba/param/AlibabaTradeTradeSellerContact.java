@@ -12,9 +12,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置联系电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系电话     *
+     *        
+     *
      */
     public void setPhone(String phone) {
         this.phone = phone;
@@ -30,9 +30,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置传真     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     传真     *
+     *        
+     *
      */
     public void setFax(String fax) {
         this.fax = fax;
@@ -48,9 +48,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置邮箱     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     邮箱     *
+     *        
+     *
      */
     public void setEmail(String email) {
         this.email = email;
@@ -66,9 +66,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置联系人在平台的IM账号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人在平台的IM账号     *
+     *        
+     *
      */
     public void setImInPlatform(String imInPlatform) {
         this.imInPlatform = imInPlatform;
@@ -84,9 +84,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置联系人名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人名称     *
+     *        
+     *
      */
     public void setName(String name) {
         this.name = name;
@@ -102,9 +102,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置联系人手机号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     联系人手机号     *
+     *        
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -120,9 +120,9 @@ public class AlibabaTradeTradeSellerContact {
     }
 
     /**
-     * 设置公司名称     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     公司名称     *
+     *        
+     *
      */
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
@@ -131,16 +131,16 @@ public class AlibabaTradeTradeSellerContact {
     private String wgSenderName;
 
     /**
-     * @return 发件人名称，在微供等分销场景下由分销商设置
+     * @return 发件人名称，在微供等分销场景下由分销商
      */
     public String getWgSenderName() {
         return wgSenderName;
     }
 
     /**
-     * 设置发件人名称，在微供等分销场景下由分销商设置     *
+     *     发件人名称，在微供等分销场景下由分销商         *
      * 参数示例：<pre>张**</pre>     
-     * 此参数必填
+     *
      */
     public void setWgSenderName(String wgSenderName) {
         this.wgSenderName = wgSenderName;
@@ -149,16 +149,16 @@ public class AlibabaTradeTradeSellerContact {
     private String wgSenderPhone;
 
     /**
-     * @return 发件人电话，在微供等分销场景下由分销商设置
+     * @return 发件人电话，在微供等分销场景下由分销商
      */
     public String getWgSenderPhone() {
         return wgSenderPhone;
     }
 
     /**
-     * 设置发件人电话，在微供等分销场景下由分销商设置     *
+     *     发件人电话，在微供等分销场景下由分销商         *
      * 参数示例：<pre>13800000000</pre>     
-     * 此参数必填
+     *
      */
     public void setWgSenderPhone(String wgSenderPhone) {
         this.wgSenderPhone = wgSenderPhone;

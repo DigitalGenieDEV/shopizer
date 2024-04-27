@@ -21,9 +21,9 @@ public class WangwangnickOpenuidDecryptParam extends AbstractAPIRequest<Wangwang
     }
 
     /**
-     * 设置待解密的openUid     *
-     * 参数示例：<pre> </pre>     
-     * 此参数必填
+     *     待解密的openUid     *
+     *    
+     *    
      */
     public void setOpenUid(String openUid) {
         this.openUid = openUid;

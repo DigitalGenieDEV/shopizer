@@ -12,9 +12,9 @@ public class AlibabaTradeGetBuyerViewResult {
     }
 
     /**
-     * 设置订单详情信息     *
+     *     订单详情信息     *
           
-     * 此参数必填
+     *
      */
     public void setResult(AlibabaOpenplatformTradeModelTradeInfo result) {
         this.result = result;
@@ -30,9 +30,9 @@ public class AlibabaTradeGetBuyerViewResult {
     }
 
     /**
-     * 设置错误代码     *
+     *     错误代码     *
           
-     * 此参数必填
+     *
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeGetBuyerViewResult {
     }
 
     /**
-     * 设置错误描述     *
+     *     错误描述     *
           
-     * 此参数必填
+     *
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -66,9 +66,9 @@ public class AlibabaTradeGetBuyerViewResult {
     }
 
     /**
-     * 设置是否成功     *
+     *     是否成功     *
           
-     * 此参数必填
+     *
      */
     public void setSuccess(String success) {
         this.success = success;

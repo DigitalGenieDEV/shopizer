@@ -12,9 +12,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置收件人名字     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收件人名字     *
+     *        
+     *    
      */
     public void setReceiverName(String receiverName) {
         this.receiverName = receiverName;
@@ -30,9 +30,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置收件人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收件人电话     *
+     *        
+     *    
      */
     public void setReceiverPhone(String receiverPhone) {
         this.receiverPhone = receiverPhone;
@@ -48,9 +48,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置收件人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收件人电话     *
+     *        
+     *    
      */
     public void setReceiverMobile(String receiverMobile) {
         this.receiverMobile = receiverMobile;
@@ -66,9 +66,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *    
      */
     public void setEncrypt(String encrypt) {
         this.encrypt = encrypt;
@@ -84,9 +84,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置省编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省编码     *
+     *        
+     *    
      */
     public void setReceiverProvinceCode(String receiverProvinceCode) {
         this.receiverProvinceCode = receiverProvinceCode;
@@ -102,9 +102,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置市编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     市编码     *
+     *        
+     *    
      */
     public void setReceiverCityCode(String receiverCityCode) {
         this.receiverCityCode = receiverCityCode;
@@ -120,9 +120,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置国家编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家编码     *
+     *        
+     *    
      */
     public void setReceiverCountyCode(String receiverCountyCode) {
         this.receiverCountyCode = receiverCountyCode;
@@ -138,9 +138,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地址     *
+     *        
+     *    
      */
     public void setReceiverAddress(String receiverAddress) {
         this.receiverAddress = receiverAddress;
@@ -156,9 +156,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置省份     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     省份     *
+     *        
+     *    
      */
     public void setReceiverProvince(String receiverProvince) {
         this.receiverProvince = receiverProvince;
@@ -174,9 +174,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置城市     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     城市     *
+     *        
+     *    
      */
     public void setReceiverCity(String receiverCity) {
         this.receiverCity = receiverCity;
@@ -192,9 +192,9 @@ public class AlibabaLogisticsOpenPlatformLogisticsReceiver {
     }
 
     /**
-     * 设置国家     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     国家     *
+     *        
+     *    
      */
     public void setReceiverCounty(String receiverCounty) {
         this.receiverCounty = receiverCounty;

@@ -12,9 +12,9 @@ public class ProductFreightEstimateProductFreightQueryParamsNew {
     }
 
     /**
-     * 设置商品ID     *
+     *     商品ID     *
      * 参数示例：<pre>111111111</pre>     
-     * 此参数必填
+     *
      */
     public void setOfferId(Long offerId) {
         this.offerId = offerId;
@@ -30,9 +30,9 @@ public class ProductFreightEstimateProductFreightQueryParamsNew {
     }
 
     /**
-     * 设置中国省份编码     *
+     *     中国省份编码     *
      * 参数示例：<pre>如浙江省330000</pre>     
-     * 此参数必填
+     *
      */
     public void setToProvinceCode(String toProvinceCode) {
         this.toProvinceCode = toProvinceCode;
@@ -48,9 +48,9 @@ public class ProductFreightEstimateProductFreightQueryParamsNew {
     }
 
     /**
-     * 设置中国城市编码     *
+     *     中国城市编码     *
      * 参数示例：<pre>如杭州市330100</pre>     
-     * 此参数必填
+     *
      */
     public void setToCityCode(String toCityCode) {
         this.toCityCode = toCityCode;
@@ -66,9 +66,9 @@ public class ProductFreightEstimateProductFreightQueryParamsNew {
     }
 
     /**
-     * 设置中国地区编码     *
+     *     中国地区编码     *
      * 参数示例：<pre>如滨江区330108</pre>     
-     * 此参数必填
+     *
      */
     public void setToCountryCode(String toCountryCode) {
         this.toCountryCode = toCountryCode;
@@ -84,9 +84,9 @@ public class ProductFreightEstimateProductFreightQueryParamsNew {
     }
 
     /**
-     * 设置购买件数     *
+     *     购买件数     *
      * 参数示例：<pre>3</pre>     
-     * 此参数必填
+     *
      */
     public void setTotalNum(Long totalNum) {
         this.totalNum = totalNum;

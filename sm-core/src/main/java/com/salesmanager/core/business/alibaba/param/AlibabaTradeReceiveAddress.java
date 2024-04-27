@@ -12,9 +12,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置街道地址，不包括省市编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     街道地址，不包括省市编码     *
+     *        
+     *
      */
     public void setAddress(String address) {
         this.address = address;
@@ -30,9 +30,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置地址区域编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地址区域编码     *
+     *        
+     *
      */
     public void setAddressCode(String addressCode) {
         this.addressCode = addressCode;
@@ -48,9 +48,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置* 地址区域编码对应的文本（包括国家，省，城市）     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     * 地址区域编码对应的文本（包括国家，省，城市）     *
+     *        
+     *
      */
     public void setAddressCodeText(String addressCodeText) {
         this.addressCodeText = addressCodeText;
@@ -66,9 +66,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置地址ID     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     地址ID     *
+     *        
+     *
      */
     public void setAddressId(Long addressId) {
         this.addressId = addressId;
@@ -84,9 +84,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置业务类型     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     业务类型     *
+     *        
+     *
      */
     public void setBizType(String bizType) {
         this.bizType = bizType;
@@ -102,9 +102,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置是否为默认地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否为默认地址     *
+     *        
+     *
      */
     public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
@@ -120,9 +120,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置收货人姓名     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     收货人姓名     *
+     *        
+     *
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
@@ -138,9 +138,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置是否最近使用的地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     是否最近使用的地址     *
+     *        
+     *
      */
     public void setLatest(Boolean latest) {
         this.latest = latest;
@@ -156,9 +156,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     手机     *
+     *        
+     *
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -174,9 +174,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     电话     *
+     *        
+     *
      */
     public void setPhone(String phone) {
         this.phone = phone;
@@ -192,9 +192,9 @@ public class AlibabaTradeReceiveAddress {
     }
 
     /**
-     * 设置邮编     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     邮编     *
+     *        
+     *
      */
     public void setPostCode(String postCode) {
         this.postCode = postCode;

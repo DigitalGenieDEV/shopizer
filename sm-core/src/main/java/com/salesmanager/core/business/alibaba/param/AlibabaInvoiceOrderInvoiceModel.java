@@ -12,9 +12,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置发票公司名称(即发票抬头-title)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发票公司名称(即发票抬头-title)     *
+     *        
+     *
      */
     public void setInvoiceCompanyName(String invoiceCompanyName) {
         this.invoiceCompanyName = invoiceCompanyName;
@@ -30,9 +30,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置发票类型. 0：普通发票，1:增值税发票，9未知类型     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     发票类型. 0：普通发票，1:增值税发票，9未知类型     *
+     *        
+     *
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
@@ -48,9 +48,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置本地发票号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     本地发票号     *
+     *        
+     *
      */
     public void setLocalInvoiceId(Long localInvoiceId) {
         this.localInvoiceId = localInvoiceId;
@@ -66,9 +66,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置订单Id     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     订单Id     *
+     *        
+     *
      */
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
@@ -84,9 +84,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(收件人)址区域编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (收件人)址区域编码     *
+     *        
+     *
      */
     public void setReceiveCode(String receiveCode) {
         this.receiveCode = receiveCode;
@@ -102,9 +102,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(收件人) 省市区编码对应的文案(增值税发票信息)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (收件人) 省市区编码对应的文案(增值税发票信息)     *
+     *        
+     *
      */
     public void setReceiveCodeText(String receiveCodeText) {
         this.receiveCodeText = receiveCodeText;
@@ -120,9 +120,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置（收件者）发票收货人手机     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     （收件者）发票收货人手机     *
+     *        
+     *
      */
     public void setReceiveMobile(String receiveMobile) {
         this.receiveMobile = receiveMobile;
@@ -138,9 +138,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置（收件者）发票收货人     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     （收件者）发票收货人     *
+     *        
+     *
      */
     public void setReceiveName(String receiveName) {
         this.receiveName = receiveName;
@@ -156,9 +156,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置（收件者）发票收货人电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     （收件者）发票收货人电话     *
+     *        
+     *
      */
     public void setReceivePhone(String receivePhone) {
         this.receivePhone = receivePhone;
@@ -174,9 +174,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置（收件者）发票收货地址邮编     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     （收件者）发票收货地址邮编     *
+     *        
+     *
      */
     public void setReceivePost(String receivePost) {
         this.receivePost = receivePost;
@@ -192,9 +192,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(收件人) 街道地址(增值税发票信息)     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (收件人) 街道地址(增值税发票信息)     *
+     *        
+     *
      */
     public void setReceiveStreet(String receiveStreet) {
         this.receiveStreet = receiveStreet;
@@ -210,9 +210,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(公司)银行账号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (公司)银行账号     *
+     *        
+     *
      */
     public void setRegisterAccountId(String registerAccountId) {
         this.registerAccountId = registerAccountId;
@@ -228,9 +228,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(公司)开户银行     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (公司)开户银行     *
+     *        
+     *
      */
     public void setRegisterBank(String registerBank) {
         this.registerBank = registerBank;
@@ -246,9 +246,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(注册)省市区编码     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (注册)省市区编码     *
+     *        
+     *
      */
     public void setRegisterCode(String registerCode) {
         this.registerCode = registerCode;
@@ -264,9 +264,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(注册)省市区文本     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (注册)省市区文本     *
+     *        
+     *
      */
     public void setRegisterCodeText(String registerCodeText) {
         this.registerCodeText = registerCodeText;
@@ -282,9 +282,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置（公司）注册电话     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     （公司）注册电话     *
+     *        
+     *
      */
     public void setRegisterPhone(String registerPhone) {
         this.registerPhone = registerPhone;
@@ -300,9 +300,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置(注册)街道地址     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     (注册)街道地址     *
+     *        
+     *
      */
     public void setRegisterStreet(String registerStreet) {
         this.registerStreet = registerStreet;
@@ -318,9 +318,9 @@ public class AlibabaInvoiceOrderInvoiceModel {
     }
 
     /**
-     * 设置纳税人识别号     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *     纳税人识别号     *
+     *        
+     *
      */
     public void setTaxpayerIdentify(String taxpayerIdentify) {
         this.taxpayerIdentify = taxpayerIdentify;

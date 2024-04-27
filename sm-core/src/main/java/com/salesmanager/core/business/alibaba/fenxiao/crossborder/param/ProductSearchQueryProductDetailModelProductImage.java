@@ -12,9 +12,9 @@ public class ProductSearchQueryProductDetailModelProductImage {
     }
 
     /**
-     * 设置     *
-     * 参数示例：<pre></pre>     
-     * 此参数必填
+     *          *
+     *        
+     *
      */
     public void setImages(String[] images) {
         this.images = images;
