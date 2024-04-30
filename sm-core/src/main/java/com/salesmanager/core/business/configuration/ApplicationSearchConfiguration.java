@@ -18,7 +18,8 @@ import modules.commons.search.configuration.SearchHost;
 
 @Configuration
 @ConfigurationProperties(prefix = "search")
-@PropertySource("classpath:shopizer-core.properties")
+//@PropertySource("classpath:shopizer-core.properties")
+@PropertySource("classpath:profiles/${spring.profiles.active:local}/shopizer-core.properties")
 public class ApplicationSearchConfiguration {
 	
     private String clusterName;
