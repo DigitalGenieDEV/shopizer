@@ -99,6 +99,7 @@ public interface DeptRepository extends JpaRepository<Dept, Integer> {
 	@Modifying
 	@Query(value ="UPDATE DEPT SET "
 				+ "ORD = :#{#dept.ord}, "
+				+ "PARENT_ID = :#{#dept.parentId}, "
 				+ "MOD_ID = :#{#dept.mod_id}, "
 				+ "MOD_IP = :#{#dept.mod_ip}, "
 				+ "MOD_DATE = NOW() "
