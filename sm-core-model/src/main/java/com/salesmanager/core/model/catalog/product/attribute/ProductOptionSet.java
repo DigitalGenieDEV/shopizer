@@ -67,7 +67,7 @@ public class ProductOptionSet extends SalesManagerEntity<Long, ProductOptionSet>
 	private boolean optionDisplayOnly = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="CATEGORY_ID", nullable=false)
+	@JoinColumn(name="CATEGORY_ID", nullable=true)
 	private Category category;
 
 	@Column(name="OPTION_SET_FOR_SALE_TYPE", length=20)

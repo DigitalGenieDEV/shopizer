@@ -543,6 +543,24 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	@Override
+	public List<ReadableCategory> getListByDepth(MerchantStore store, int depth, Language language) {
+		List<Category> listByDepth = categoryService.getListByDepth(store, depth, language);
+		if(listByDepth == null) {
+			throw new ResourceNotFoundException("Category with friendlyUrl [" + listByDepth + "] was not found");
+		}
+		return listByDepth.stream().map(category -> {
+			ReadableCategoryPopulator categoryPopulator = new ReadableCategoryPopulator();
+			ReadableCategory readableCategory = new ReadableCategory();
+			try {
+				categoryPopulator.populate(category, readableCategory, store, language);
+			} catch (ConversionException e) {
+				throw new RuntimeException(e);
+			}
+			return readableCategory;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
 	public ReadableCategoryList listByProduct(MerchantStore store, Long product, Language language) {
 		Validate.notNull(product, "Product id must not be null");
 		Validate.notNull(store, "Store must not be null");

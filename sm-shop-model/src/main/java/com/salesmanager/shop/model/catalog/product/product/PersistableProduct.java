@@ -29,6 +29,36 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private Long outProductId;
 
+	private String certificationDocument;
+
+	private String intellectualPropertyDocuments;
+
+	private String exportDeclarationDocuments;
+
+
+	public String getCertificationDocument() {
+		return certificationDocument;
+	}
+
+	public void setCertificationDocument(String certificationDocument) {
+		this.certificationDocument = certificationDocument;
+	}
+
+	public String getIntellectualPropertyDocuments() {
+		return intellectualPropertyDocuments;
+	}
+
+	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
+		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
+	}
+
+	public String getExportDeclarationDocuments() {
+		return exportDeclarationDocuments;
+	}
+
+	public void setExportDeclarationDocuments(String exportDeclarationDocuments) {
+		this.exportDeclarationDocuments = exportDeclarationDocuments;
+	}
 
 	public Long getOutProductId() {
 		return outProductId;

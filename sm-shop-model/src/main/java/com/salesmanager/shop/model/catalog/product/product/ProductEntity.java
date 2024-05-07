@@ -34,7 +34,7 @@ public class ProductEntity extends Product implements Serializable {
 	private Integer batchNumber;
 
 	private Integer minOrderQuantity;
-
+	
 	private List<PriceRange> priceSupplyRangeList;
 
 

@@ -103,6 +103,21 @@ public class CategoryApi {
 		return new ResponseEntity<EntityExists>(new EntityExists(isCategoryExist), HttpStatus.OK);
 	}
 
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/private/category/depth/list" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	@ApiOperation(httpMethod = "GET", value = "category List By Depth", notes = "", response = EntityExists.class)
+	public ResponseEntity<List<ReadableCategory>> categoryListByDepth(@RequestParam(value = "depth") int depth,
+											   @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
+		List<ReadableCategory> readableCategories = categoryFacade.getListByDepth(merchantStore, depth, language);
+		return new ResponseEntity<List<ReadableCategory>>(readableCategories, HttpStatus.OK);
+	}
+
+
+
 	/**
 	 * Get all category starting from root filter can be used for filtering on
 	 * fields only featured is supported

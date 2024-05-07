@@ -24,6 +24,7 @@ public class AlibabaCategoryServiceImpl implements AlibabaCategoryService{
         CategoryTranslationGetByIdResult result = apiExecutor.execute(param, ApiFor1688Constants.ACCESS_TOKEN).getResult();
         LOGGER.info("AlibabaProductServiceImpl searchKeyword result" + JSON.toJSON(result));
         if (!result.getResult().getSuccess()){
+            LOGGER.error("AlibabaCategoryServiceImpl getCategoryById error" + result.getResult().getMessage()+ "categoryId:"+ categoryId);
             throw new RuntimeException("AlibabaProductServiceImpl searchKeyword error" + JSON.toJSON(param));
         }
         return result.getResult().getResult();

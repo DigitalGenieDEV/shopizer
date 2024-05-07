@@ -195,6 +195,7 @@ public class ProductApi {
 			@RequestParam(value = "optionValues", required = false) List<Long> optionValueIds,
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "owner", required = false) Long owner,
+			@RequestParam(value = "productType", required = false) String productType,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
 			@RequestParam(value = "origin", required = false, defaultValue = ProductCriteria.ORIGIN_SHOP) String origin,
 			// page

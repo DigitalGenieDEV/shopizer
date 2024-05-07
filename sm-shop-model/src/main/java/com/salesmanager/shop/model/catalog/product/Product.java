@@ -20,7 +20,17 @@ public class Product extends Entity implements Serializable {
 	private int sortOrder;
 	private String dateAvailable;
 	private String creationDate;
-	
+
+	private String modificationDate;
+
+	public String getModificationDate() {
+		return modificationDate;
+	}
+
+	public void setModificationDate(String modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+
 	public boolean isProductShipeable() {
 		return productShipeable;
 	}

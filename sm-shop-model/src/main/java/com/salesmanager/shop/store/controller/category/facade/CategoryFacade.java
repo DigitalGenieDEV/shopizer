@@ -101,8 +101,11 @@ public interface CategoryFacade {
 	 * @param store
 	 */
 	void setVisible(PersistableCategory category, MerchantStore store);
-	
-	
+
+
+
+	List<ReadableCategory> getListByDepth(MerchantStore store, int depth, Language language);
+
 	/**
 	 * List category by product
 	 * @param store

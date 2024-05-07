@@ -164,8 +164,10 @@ public class ReadableProductPopulator extends
 			}
 
 			if(source.getAuditSection()!=null) {
-			  target.setCreationDate(DateUtil.formatDate(source.getAuditSection().getDateCreated()));
+			  	target.setCreationDate(DateUtil.formatDate(source.getAuditSection().getDateCreated()));
+				target.setModificationDate(DateUtil.formatDate(source.getAuditSection().getDateModified()));
 			}
+
 
 /*			if(source.getProductReviewAvg()!=null) {
 				double avg = source.getProductReviewAvg().doubleValue();

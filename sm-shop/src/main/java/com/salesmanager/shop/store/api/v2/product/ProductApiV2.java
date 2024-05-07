@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
@@ -355,6 +356,37 @@ public class ProductApiV2 {
 
 		}
 	}
+
+
+	/**
+	 * query Product Count By Category
+	 * @param lang
+	 * @param merchantStore
+	 * @param categoryIds
+	 * @return
+	 */
+	@RequestMapping(value = "/private/product/count/by/category", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public Long queryProductCountByCategory(
+			@RequestParam(value = "lang", required = false) String lang,
+			@ApiIgnore MerchantStore merchantStore,
+			@RequestParam(value = "categoryIds", required = false) List<Long> categoryIds) {
+		ProductCriteria searchCriterias = new ProductCriteria();
+		searchCriterias.setCategoryIds(categoryIds);
+		searchCriterias.setMaxCount(10);
+
+		try {
+			ReadableProductList productListsByCriterias = productFacadeV2.getProductListsByCriterias(merchantStore, null, searchCriterias);
+			return productListsByCriterias.getRecordsTotal();
+		} catch (Exception e) {
+			LOGGER.error("Error while filtering product count", e);
+			throw new ServiceRuntimeException(e);
+
+		}
+	}
+
 	
 	/** updates price quantity **/
 	@ResponseStatus(HttpStatus.OK)
@@ -507,7 +539,8 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping(value = "/private/product/searchProductByKeywords", produces = { APPLICATION_JSON_VALUE })
+	@ResponseBody
+	@RequestMapping(value = "/private/product/searchProductByKeywords", method = RequestMethod.POST)
 	@ApiOperation(httpMethod = "POST", value = "search product by keywords",
 			notes = "search product by keywords", produces = "application/json",
 			response = ReadableProductPageInfo.class)
@@ -520,16 +553,17 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping(value = "/private/product/import", produces = { APPLICATION_JSON_VALUE })
-	@ApiOperation(httpMethod = "GET", value = "import product", notes = "import product", produces = "application/json", response = Void.class)
+	@ResponseBody
+	@PostMapping(value = "/private/product/import", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "import product", notes = "import product", produces = "application/json", response = Void.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	public void importAlibabaProduct(
-			@RequestParam List<Long> productIds,
-			@RequestParam List<Long> categoryIds,
+			@RequestParam(value = "productIds") List<Long> productIds,
+			@RequestParam(value = "leftCategoryId") Long leftCategoryId,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws ServiceException {
-		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, categoryIds);
+		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
 	}
 
 
