@@ -74,7 +74,7 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 	void deleteAdminMenu(int id);
 
 	@Modifying
-	@Query(value = "UPDATE ADMINMENU SET " + "ORD = :#{#adminMenu.ord}, " + "MOD_ID = :#{#adminMenu.mod_id}, "
+	@Query(value = "UPDATE ADMINMENU SET ORD = :#{#adminMenu.ord}, PARENT_ID = :#{#adminMenu.parentId}, MOD_ID = :#{#adminMenu.mod_id}, "
 			+ "MOD_IP = :#{#adminMenu.mod_ip}, " + "MOD_DATE = NOW() "
 			+ "WHERE ID = :#{#adminMenu.id}", nativeQuery = true)
 	void updateChangeOrd(@Param("adminMenu") AdminMenu adminMenu);
