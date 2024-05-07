@@ -49,7 +49,7 @@ public class Dept extends SalesManagerEntity<Integer, Dept> {
 	private String content;
 
 	@NotEmpty
-	@Column(name = "ORD", nullable = false)
+	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
 	@NotEmpty
