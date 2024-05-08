@@ -18,6 +18,8 @@ public interface AdminMenuService extends SalesManagerEntityService<Integer, Adm
 	ReadAdminMenu getById(int id) throws ServiceException;
 
 	void saveOrUpdate(AdminMenu paramVO) throws ServiceException;
+	
+	int getMaxId() throws ServiceException;
 
 	void deleteAdminMenu(int id) throws ServiceException;
 

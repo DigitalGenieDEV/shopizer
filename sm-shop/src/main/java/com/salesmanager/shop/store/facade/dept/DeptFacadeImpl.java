@@ -81,7 +81,11 @@ public class DeptFacadeImpl  implements DeptFacade {
 			deptService.saveOrUpdate(dbDept);
 
 			// set category id
-			dept.setId(dept.getId());
+			if (dept.getId() > 0) {
+				dept.setId(dept.getId());
+			}else {
+				dept.setId(deptService.getMaxId());
+			}
 			return dept;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating Dept", e);

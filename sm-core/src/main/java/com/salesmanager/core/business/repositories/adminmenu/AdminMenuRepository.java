@@ -29,10 +29,10 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ "			WHERE B.PARENT_ID = C.ID    \r\n" + " )    \r\n" + "		    \r\n"
 			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE     \r\n"
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
-	public List<ReadAdminMenu> getListAdminMenu(int visible);
+	List<ReadAdminMenu> getListAdminMenu(int visible);
 
 	@Query(value = "SELECT IFNULL(MAX(ORD) + 1,1) FROM ADMINMENU B WHERE B.PARENT_ID = ?1", nativeQuery = true)
-	public int getOrder(int parentId);
+	int getOrder(int parentId);
 	
 	@Query( value ="WITH RECURSIVE MENU_CTE AS (\r\n"
 			+ "		SELECT \r\n"
@@ -63,7 +63,11 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ " FROM ADMINMENU AS A \r\n" 
 			+ "	WHERE A.ID = ?1 ", nativeQuery = true)
 	ReadAdminMenu getById(int id);
-
+	
+	
+	@Query( value ="SELECT MAX(ID) AS ID FROM ADMINMENU", nativeQuery=true)
+	int getMaxId();
+	
 	@Modifying
 	@Query(value = "DELETE FROM ADMINMENU WHERE ID IN \r\n" + "	(\r\n" + "		SELECT 	A.ID FROM\r\n"
 			+ "		(\r\n" + "			SELECT \r\n" + "				D.ID,\r\n" + "				D.PARENT_ID\r\n"

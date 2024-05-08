@@ -19,6 +19,8 @@ public interface DeptService extends SalesManagerEntityService<Integer, Dept>  {
 	
 	ReadDept getById(int id) throws ServiceException;
 	
+	int getMaxId() throws ServiceException;
+	
 	void saveOrUpdate(Dept dept) throws ServiceException;
 	
 	void deleteDept(int id) throws ServiceException;

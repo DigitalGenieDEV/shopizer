@@ -80,8 +80,13 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 			AdminMenu dbAdminMenu = populateAdminMenu(adminMenu, target);
 			adminMenuService.saveOrUpdate(dbAdminMenu);
 
-			// set category id
-			adminMenu.setId(adminMenu.getId());
+		
+			if (adminMenu.getId() > 0) {
+				adminMenu.setId(adminMenu.getId());
+			}else {
+				adminMenu.setId(adminMenuService.getMaxId());
+			}
+			
 			return adminMenu;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating adminMenu", e);

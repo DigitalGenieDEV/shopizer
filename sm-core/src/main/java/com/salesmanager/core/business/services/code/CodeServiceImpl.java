@@ -48,6 +48,10 @@ public class CodeServiceImpl extends SalesManagerEntityServiceImpl<Integer, Code
 		}
 
 	}
+	
+	public int getMaxId() throws ServiceException {
+		return codeRepository.getMaxId();
+	}
 
 	public ReadCode getById(int id) throws ServiceException {
 		ReadCode code = codeRepository.getById(id);

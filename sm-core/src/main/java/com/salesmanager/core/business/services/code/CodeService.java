@@ -12,16 +12,18 @@ public interface CodeService extends SalesManagerEntityService<Integer, Code> {
 	List<ReadCode> getListCode(int visible) throws ServiceException;
 
 	String getCode() throws ServiceException;
-	
+
 	int getOrder(int parentId) throws ServiceException;
-	
+
 	ReadCode getById(int id) throws ServiceException;
-	
+
 	String getNamePath(int id) throws ServiceException;
-	
+
 	void saveOrUpdate(Code code) throws ServiceException;
-	
+
+	int getMaxId() throws ServiceException;
+
 	void deleteCode(int id) throws ServiceException;
-	
+
 	void updateChangeOrd(Code code) throws ServiceException;
 }

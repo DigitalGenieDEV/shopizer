@@ -35,13 +35,13 @@ public interface DeptRepository extends JpaRepository<Dept, Integer> {
 			+ "			 \r\n"
 			+ " SELECT  ID, PARENT_ID, DEPT_CODE, DEPT_NAME, TEL, CONTENT, ORD, VISIBLE, DEPTH, DEPT_NAME_PATH FROM DEPT_CTE    \r\n"
 			+ " ORDER BY  AMENU_SORT ASC", nativeQuery=true)
-	public List<ReadDept> getListDept(int visible);
+	List<ReadDept> getListDept(int visible);
 
 	@Query( value ="SELECT CONCAT('DEPT_', LPAD(IFNULL(CAST(MAX(REPLACE(DEPT_CODE, 'DEPT_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM DEPT AS A", nativeQuery=true)
-	public String getDeptCode();
+	String getDeptCode();
 	
 	@Query( value ="SELECT IFNULL(MAX(ORD) + 1,1) FROM DEPT B WHERE B.PARENT_ID = ?1", nativeQuery=true)
-	public int getOrder(int parentId);
+	int getOrder(int parentId);
 	
 	@Query( value ="WITH RECURSIVE DEPT_CTE AS (\r\n"
 			+ "		SELECT \r\n"
@@ -66,6 +66,9 @@ public interface DeptRepository extends JpaRepository<Dept, Integer> {
 			+ "		 MAX( DEPT_NAME_PATH ) AS DEPT_NAME_PATH\r\n"
 			+ "	FROM DEPT_CTE" , nativeQuery=true)
 	String  getNamePath(int id);
+	
+	@Query( value ="SELECT MAX(ID) AS ID FROM DEPT", nativeQuery=true)
+	int getMaxId();
 	
 	@Query( value =" SELECT \r\n"
 			+ "		A.ID, A.PARENT_ID, A.DEPT_CODE, A.DEPT_NAME, A.TEL, A.CONTENT, A.ORD,  A.VISIBLE \r\n"
@@ -93,7 +96,7 @@ public interface DeptRepository extends JpaRepository<Dept, Integer> {
 			+ "			\r\n"
 			+ "		)A\r\n"
 			+ "	)", nativeQuery = true)
-	public void deleteDept(int deptId);
+	void deleteDept(int deptId);
 	
 	
 	@Modifying

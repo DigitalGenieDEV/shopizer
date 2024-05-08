@@ -83,8 +83,11 @@ public class CodeFacadeImpl implements CodeFacade {
 			Code dbCode = populateCode(code, target);
 			codeService.saveOrUpdate(dbCode);
 
-			// set category id
-			code.setId(code.getId());
+			if (code.getId() > 0) {
+				code.setId(code.getId());
+			}else {
+				code.setId(codeService.getMaxId());
+			}
 			return code;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating Dept", e);

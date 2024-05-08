@@ -28,15 +28,15 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 			+ "			WHERE B.PARENT_ID = C.ID    \r\n" + " )    \r\n" + "		    \r\n"
 			+ " SELECT  ID, PARENT_ID, CODE, CODE_NAME_KR, CODE_NAME_EN, CODE_NAME_CN, CODE_NAME_JP, CODE_DESC, VALUE, ORD, VISIBLE, DEPTH, CODE_NAME_PATH FROM MENU_CTE     \r\n"
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
-	public List<ReadCode> getListCode(int visible);
+	List<ReadCode> getListCode(int visible);
 	
 	
 	@Query( value ="SELECT CONCAT('CODE_', LPAD(IFNULL(CAST(MAX(REPLACE(CODE, 'CODE_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM COMMON_CODE AS A", nativeQuery=true)
-	public String getCode();
+	String getCode();
 	
 
 	@Query( value ="SELECT IFNULL(MAX(ORD) + 1,1) FROM COMMON_CODE B WHERE B.PARENT_ID = ?1", nativeQuery=true)
-	public int getOrder(int parentId);
+	int getOrder(int parentId);
 	
 	
 	@Query( value ="WITH RECURSIVE CODE_CTE AS (\r\n"
@@ -57,6 +57,9 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 			+ "	FROM CODE_CTE" , nativeQuery=true)
 	String  getNamePath(int id);
 	
+	
+	@Query( value ="SELECT MAX(ID) AS ID FROM COMMON_CODE", nativeQuery=true)
+	int getMaxId();
 	
 	@Query( value =" SELECT \r\n"
 			+ "	A.ID, A.PARENT_ID, A.CODE, A.CODE_NAME_KR, A.CODE_NAME_EN, A.CODE_NAME_CN, A.CODE_NAME_JP, A.CODE_DESC, A.VALUE, A.ORD, A.VISIBLE  \r\n"
@@ -85,7 +88,7 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 			+ "			\r\n"
 			+ "		)A\r\n"
 			+ "	)", nativeQuery = true)
-	public void deleteCode(int deptId);
+	void deleteCode(int deptId);
 	
 	
 	@Modifying

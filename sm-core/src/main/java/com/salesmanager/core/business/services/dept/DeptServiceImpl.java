@@ -53,6 +53,10 @@ public class DeptServiceImpl extends SalesManagerEntityServiceImpl<Integer, Dept
 		}
 
 	}
+	
+	public int getMaxId() throws ServiceException{
+		return  deptRepository.getMaxId();
+	}
 
 	public ReadDept getById(int id) throws ServiceException {
 		ReadDept dept = deptRepository.getById(id);
