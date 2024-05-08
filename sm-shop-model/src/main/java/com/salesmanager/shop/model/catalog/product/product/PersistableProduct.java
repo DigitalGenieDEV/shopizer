@@ -18,9 +18,16 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String manufacturer;
+
+	private String identifier;
+
+	//todo
+	private List<String> productTag;
+
+	private List<PersistableProductAttribute> properties = new ArrayList<PersistableProductAttribute>();
 
 	private List<ProductDescription> descriptions = new ArrayList<ProductDescription>();
-	private List<PersistableProductAttribute> attributes = new ArrayList<PersistableProductAttribute>();//persist attribute and save reference
 	private List<PersistableImage> images;//persist images and save reference
 	private List<Category> categories = new ArrayList<Category>();
 	private PersistableProductInventory inventory;
@@ -29,36 +36,6 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private Long outProductId;
 
-	private String certificationDocument;
-
-	private String intellectualPropertyDocuments;
-
-	private String exportDeclarationDocuments;
-
-
-	public String getCertificationDocument() {
-		return certificationDocument;
-	}
-
-	public void setCertificationDocument(String certificationDocument) {
-		this.certificationDocument = certificationDocument;
-	}
-
-	public String getIntellectualPropertyDocuments() {
-		return intellectualPropertyDocuments;
-	}
-
-	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
-		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
-	}
-
-	public String getExportDeclarationDocuments() {
-		return exportDeclarationDocuments;
-	}
-
-	public void setExportDeclarationDocuments(String exportDeclarationDocuments) {
-		this.exportDeclarationDocuments = exportDeclarationDocuments;
-	}
 
 	public Long getOutProductId() {
 		return outProductId;
@@ -87,12 +64,15 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
-	public void setAttributes(List<PersistableProductAttribute> attributes) {
-		this.attributes = attributes;
+
+	public List<PersistableProductAttribute> getProperties() {
+		return properties;
 	}
-	public List<PersistableProductAttribute> getAttributes() {
-		return attributes;
+
+	public void setProperties(List<PersistableProductAttribute> properties) {
+		this.properties = properties;
 	}
+
 	public String getType() {
 		return type;
 	}
@@ -112,4 +92,27 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 		this.variants = variants;
 	}
 
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	public List<String> getProductTag() {
+		return productTag;
+	}
+
+	public void setProductTag(List<String> productTag) {
+		this.productTag = productTag;
+	}
 }

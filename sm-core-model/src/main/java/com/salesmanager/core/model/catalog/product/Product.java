@@ -27,7 +27,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
 import org.hibernate.annotations.Cascade;
 
 import com.salesmanager.core.model.catalog.category.Category;
@@ -72,12 +71,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
 	private Set<ProductDescription> descriptions = new HashSet<ProductDescription>();
 
-
-	/**
-	 * product tag
-	 */
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
-	private Set<ProductFeature> productFeatures = new HashSet<ProductFeature>();
 
 
 	/**
@@ -232,7 +225,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	private Integer mixNumber;
 
 	/**
-	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
 	 *
 	 * 0-No sku. Quote based on product quantity.
 	 * 1-Quotation based on SKU specifications
@@ -649,14 +641,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setBatchNumber(Integer batchNumber) {
 		this.batchNumber = batchNumber;
-	}
-
-	public Set<ProductFeature> getProductFeatures() {
-		return productFeatures;
-	}
-
-	public void setProductFeatures(Set<ProductFeature> productFeatures) {
-		this.productFeatures = productFeatures;
 	}
 
 }

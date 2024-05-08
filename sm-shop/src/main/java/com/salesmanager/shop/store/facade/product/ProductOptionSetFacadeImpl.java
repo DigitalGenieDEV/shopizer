@@ -3,6 +3,8 @@ package com.salesmanager.shop.store.facade.product;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.business.services.catalog.category.CategoryService;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.store.controller.category.facade.CategoryFacade;
@@ -42,7 +44,7 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 	private ProductTypeFacade productTypeFacade;;
 
 	@Autowired
-	private CategoryFacade categoryFacade;
+	private CategoryService categoryService;
 
 	@Override
 	public ReadableProductOptionSet get(Long id, MerchantStore store, Language language) {
@@ -177,9 +179,9 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 		Validate.notNull(optionSetForSaleType, "optionSetForSaleType cannot be null");
 
 		// find product type by id
-		ReadableCategory readable = categoryFacade.getById(null, categoryId, language);
+		Category category  = categoryService.findById(categoryId);
 
-		if(readable == null) {
+		if(category == null) {
 			throw new ResourceNotFoundException("Can't fing category [" + categoryId + "]");
 		}
 

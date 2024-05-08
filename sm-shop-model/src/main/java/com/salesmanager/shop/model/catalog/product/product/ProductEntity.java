@@ -22,6 +22,12 @@ public class ProductEntity extends Product implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private String certificationDocument;
+
+	private String intellectualPropertyDocuments;
+
+	private String exportDeclarationDocuments;
 	
 	private BigDecimal price;
 	private int quantity = 0;
@@ -63,14 +69,6 @@ public class ProductEntity extends Product implements Serializable {
 
 
 
-	/**
-	 * RENTAL additional fields
-	 * 
-	 * @return
-	 */
-
-	private int rentalDuration;
-	private int rentalPeriod;
 
 	public Boolean getGeneralMixedBatch() {
 		return generalMixedBatch;
@@ -239,21 +237,6 @@ public class ProductEntity extends Product implements Serializable {
 		this.refSku = refSku;
 	}
 
-	public int getRentalDuration() {
-		return rentalDuration;
-	}
-
-	public void setRentalDuration(int rentalDuration) {
-		this.rentalDuration = rentalDuration;
-	}
-
-	public int getRentalPeriod() {
-		return rentalPeriod;
-	}
-
-	public void setRentalPeriod(int rentalPeriod) {
-		this.rentalPeriod = rentalPeriod;
-	}
 
 	public ProductSpecification getProductSpecifications() {
 		return productSpecifications;
@@ -263,6 +246,31 @@ public class ProductEntity extends Product implements Serializable {
 		this.productSpecifications = productSpecifications;
 	}
 
+
+
+	public String getCertificationDocument() {
+		return certificationDocument;
+	}
+
+	public void setCertificationDocument(String certificationDocument) {
+		this.certificationDocument = certificationDocument;
+	}
+
+	public String getIntellectualPropertyDocuments() {
+		return intellectualPropertyDocuments;
+	}
+
+	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
+		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
+	}
+
+	public String getExportDeclarationDocuments() {
+		return exportDeclarationDocuments;
+	}
+
+	public void setExportDeclarationDocuments(String exportDeclarationDocuments) {
+		this.exportDeclarationDocuments = exportDeclarationDocuments;
+	}
 
 
 }

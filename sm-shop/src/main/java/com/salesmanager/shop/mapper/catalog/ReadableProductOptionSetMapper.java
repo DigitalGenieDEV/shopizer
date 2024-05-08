@@ -48,7 +48,8 @@ public class ReadableProductOptionSetMapper implements Mapper<ProductOptionSet, 
 		destination.setId(source.getId());
 		destination.setCode(source.getCode());
 		destination.setReadOnly(source.isOptionDisplayOnly());
-		
+
+		destination.setRequired(source.isRequired());
 		destination.setOption(this.option(source.getOption(), store, language));
 		
 		List<Long> ids = new ArrayList<Long>();

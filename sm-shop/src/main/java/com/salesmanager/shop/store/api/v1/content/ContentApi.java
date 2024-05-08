@@ -404,7 +404,7 @@ public class ContentApi {
 	}
 
 
-	@GetMapping(value = "/content/files", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/private/content/files", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
@@ -421,7 +421,7 @@ public class ContentApi {
 	 *
 	 * @param file
 	 */
-	@PostMapping(value = "/private/content/type/file/")
+	@PostMapping(value = "/private/content/type/file")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })

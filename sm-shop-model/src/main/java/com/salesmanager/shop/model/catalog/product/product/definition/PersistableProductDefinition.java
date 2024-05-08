@@ -24,7 +24,6 @@ public class PersistableProductDefinition extends ProductDefinition {
 
 
 	/**
-	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
 	 *
 	 * 0-No sku. Quote based on product quantity.
 	 * 1-Quotation based on SKU specifications

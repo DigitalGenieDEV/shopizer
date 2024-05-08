@@ -63,7 +63,7 @@ public class PersistableProductOptionSetMapper implements Mapper<PersistableProd
 		destination.setId(source.getId());
 		destination.setCode(source.getCode());
 		destination.setOptionDisplayOnly(source.isReadOnly());
-		
+		destination.setRequired(source.isRequired());
 		ProductOption option = productOptionService.getById(store, source.getOption());
 		destination.setOption(option);
 

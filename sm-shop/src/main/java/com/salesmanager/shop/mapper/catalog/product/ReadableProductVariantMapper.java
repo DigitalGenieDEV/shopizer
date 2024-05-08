@@ -94,10 +94,10 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 			destination.setImages(instanceImages);
 		}
 		
-		if(!CollectionUtils.isEmpty(source.getAvailabilities())) {
-			List<ReadableInventory> inventories = source.getAvailabilities().stream().map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
-			destination.setInventory(inventories);
-		}
+//		if(!CollectionUtils.isEmpty(source.getAvailabilities())) {
+//			List<ReadableInventory> inventories = source.getAvailabilities().stream().map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
+//			destination.setInventory(inventories);
+//		}
 		
 		return destination;
 	}

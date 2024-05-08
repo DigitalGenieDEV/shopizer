@@ -36,13 +36,9 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private List<ReadableProductProperty> properties = new ArrayList<ReadableProductProperty>();
 	private List<ReadableCategory> categories = new ArrayList<ReadableCategory>();
 	private ReadableProductType type;
-	/**
-	 * 是否可以购买
-	 */
+
 	private boolean canBePurchased = false;
 
-	// RENTAL
-	private RentalOwner owner;
 
 	public ProductDescription getDescription() {
 		return description;
@@ -116,13 +112,6 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.canBePurchased = canBePurchased;
 	}
 
-	public RentalOwner getOwner() {
-		return owner;
-	}
-
-	public void setOwner(RentalOwner owner) {
-		this.owner = owner;
-	}
 
 	public List<ReadableCategory> getCategories() {
 		return categories;

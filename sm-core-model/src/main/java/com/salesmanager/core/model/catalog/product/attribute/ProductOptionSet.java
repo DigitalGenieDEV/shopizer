@@ -66,6 +66,9 @@ public class ProductOptionSet extends SalesManagerEntity<Long, ProductOptionSet>
 	@Column(name="PRODUCT_OPTION_SET_DISP")
 	private boolean optionDisplayOnly = false;
 
+	@Column(name="REQUIRED")
+	private boolean required = false;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CATEGORY_ID", nullable=true)
 	private Category category;
@@ -137,4 +140,11 @@ public class ProductOptionSet extends SalesManagerEntity<Long, ProductOptionSet>
 		this.productTypes = productTypes;
 	}
 
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
 }

@@ -111,7 +111,7 @@ public class ReadableMerchantStorePopulator extends
 			address.setStateProvince(source.getZone().getCode());
 			try {
 				Zone z = zoneService.getZones(language).get(source.getZone().getCode());
-				address.setStateProvince(z.getCode());
+				address.setStateProvince(z == null? null : z.getCode());
 			} catch (ServiceException e) {
 				logger.error("Cannot get Zone", e);
 			}

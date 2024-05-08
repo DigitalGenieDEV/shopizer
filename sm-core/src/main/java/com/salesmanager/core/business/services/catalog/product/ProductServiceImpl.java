@@ -413,6 +413,11 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public Long countProductsByCategoryIds(List<Long> categoryIds) {
+		return productRepository.countProductsByCategoryIds(categoryIds);
+	}
+
+	@Override
 	public boolean exists(String sku, MerchantStore store) {
 		return productRepository.existsBySku(sku, store.getId());
 	}

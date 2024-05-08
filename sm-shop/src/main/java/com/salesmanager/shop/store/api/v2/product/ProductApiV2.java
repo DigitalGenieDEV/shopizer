@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.api.v2.product;
 
+import static com.salesmanager.core.model.catalog.product.ProductCriteria.ORIGIN_ADMIN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.math.BigDecimal;
@@ -8,15 +9,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
@@ -116,6 +120,9 @@ public class ProductApiV2 {
 	@Autowired
 	private AlibabaProductFacade alibabaProductFacade;
 
+	@Autowired
+	private CategoryService categoryService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
 	
@@ -152,33 +159,25 @@ public class ProductApiV2 {
 	 */
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(value = { "/private/product" })
+	@PostMapping(value = { "/private/product"})
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public @ResponseBody Entity createV2(@Valid @RequestBody PersistableProductDefinition product,
+	public @ResponseBody Entity createV2(@Valid @RequestBody PersistableProduct product,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 
+		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
+		persistableProductDefinition.setProperties(product.getProperties());
+		persistableProductDefinition.setManufacturer(product.getManufacturer());
+		persistableProductDefinition.setIdentifier(product.getIdentifier());
 		// make sure product id is null
-		product.setId(null);
-		Long id = productDefinitionFacade.saveProductDefinition(merchantStore, product, language);
+		Long id = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
+		product.setId(id);
+		productCommonFacade.saveProduct(merchantStore, product, language);
 		Entity returnEntity = new Entity();
 		returnEntity.setId(id);
 		return returnEntity;
-
 	}
 
-	/**
-	 * ------------ V2
-	 *
-	 * --- product feature
-	 */
-
-	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = { "/private/feature/product/{id}" })
-	public void createProductFeature(@PathVariable Long id,
-						 @Valid @RequestBody PersistableProductFeature persistableProductFeature) {
-
-	}
 
 
 	@ResponseStatus(HttpStatus.OK)
@@ -372,18 +371,37 @@ public class ProductApiV2 {
 	public Long queryProductCountByCategory(
 			@RequestParam(value = "lang", required = false) String lang,
 			@ApiIgnore MerchantStore merchantStore,
-			@RequestParam(value = "categoryIds", required = false) List<Long> categoryIds) {
+			@RequestParam(value = "categoryIds") List<Long> categoryIds) {
 		ProductCriteria searchCriterias = new ProductCriteria();
 		searchCriterias.setCategoryIds(categoryIds);
 		searchCriterias.setMaxCount(10);
 
 		try {
-			ReadableProductList productListsByCriterias = productFacadeV2.getProductListsByCriterias(merchantStore, null, searchCriterias);
-			return productListsByCriterias.getRecordsTotal();
+			List<Long> ids = new ArrayList<Long>();
+
+			if (categoryIds.size() == 1) {
+				com.salesmanager.core.model.catalog.category.Category category = categoryService
+						.getById(categoryIds.get(0));
+
+				if (category != null) {
+					String lineage = new StringBuilder().append(category.getLineage())
+							.toString();
+
+					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
+							.getListByLineage(merchantStore, lineage);
+
+					if (categories != null && categories.size() > 0) {
+						for (com.salesmanager.core.model.catalog.category.Category c : categories) {
+							ids.add(c.getId());
+						}
+					}
+					ids.add(category.getId());
+				}
+			}
+			return productService.countProductsByCategoryIds(ids);
 		} catch (Exception e) {
 			LOGGER.error("Error while filtering product count", e);
-			throw new ServiceRuntimeException(e);
-
+			return 0L;
 		}
 	}
 
@@ -564,6 +582,117 @@ public class ProductApiV2 {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws ServiceException {
 		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
+	}
+
+
+	/**
+	 * List products
+	 * Filtering product lists based on product option and option value ?category=1
+	 * &manufacturer=2 &type=... &lang=en|fr NOT REQUIRED, will use request language
+	 * &start=0 NOT REQUIRED, can be used for pagination &count=10 NOT REQUIRED, can
+	 * be used to limit item count
+	 *
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/private/products", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public ReadableProductList list(
+			@RequestParam(value = "lang", required = false) String lang,
+			@RequestParam(value = "category", required = false) Long category,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "sku", required = false) String sku,
+			@RequestParam(value = "manufacturer", required = false) Long manufacturer,
+			@RequestParam(value = "optionValues", required = false) List<Long> optionValueIds,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "owner", required = false) Long owner,
+			@RequestParam(value = "productType", required = false) String productType,
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
+			@RequestParam(value = "count", required = false, defaultValue = "100") Integer count, // count
+			@RequestParam(value = "slug", required = false) String slug, // category slug
+			@RequestParam(value = "available", required = false) Boolean available,
+			// per
+			// page
+			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		ProductCriteria criteria = new ProductCriteria();
+
+		criteria.setOrigin(ORIGIN_ADMIN);
+
+		// do not use legacy pagination anymore
+		if (lang != null) {
+			criteria.setLanguage(lang);
+		} else {
+			criteria.setLanguage(language.getCode());
+		}
+		if (!StringUtils.isBlank(status)) {
+			criteria.setStatus(status);
+		}
+		// Start Category handling
+		List<Long> categoryIds = new ArrayList<Long>();
+		if (slug != null) {
+			Category categoryBySlug = categoryService.getBySeUrl(merchantStore, slug, language);
+			categoryIds.add(categoryBySlug.getId());
+		}
+		if (category != null) {
+			categoryIds.add(category);
+		}
+		if (categoryIds.size() > 0) {
+			criteria.setCategoryIds(categoryIds);
+		}
+		// End Category handling
+
+		if (available != null && available) {
+			criteria.setAvailable(available);
+		}
+
+		if (manufacturer != null) {
+			criteria.setManufacturerId(manufacturer);
+		}
+
+		if (CollectionUtils.isNotEmpty(optionValueIds)) {
+			criteria.setOptionValueIds(optionValueIds);
+		}
+
+		if (owner != null) {
+			criteria.setOwnerId(owner);
+		}
+
+		if (page != null) {
+			criteria.setStartPage(page);
+		}
+
+		if (count != null) {
+			criteria.setMaxCount(count);
+		}
+
+		if (!StringUtils.isBlank(name)) {
+			criteria.setProductName(name);
+		}
+
+		if (!StringUtils.isBlank(sku)) {
+			criteria.setCode(sku);
+		}
+
+
+		try {
+			return productFacadeV2.getProductListsByCriterias(merchantStore, language, criteria);
+
+		} catch (Exception e) {
+
+			LOGGER.error("Error while filtering products product", e);
+			try {
+				response.sendError(503, "Error while filtering products " + e.getMessage());
+			} catch (Exception ignore) {
+			}
+
+			return null;
+		}
 	}
 
 

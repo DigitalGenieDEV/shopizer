@@ -12,6 +12,18 @@ public class ProductOptionSetEntity implements Serializable {
 	private Long id;
 	private String code;
 	private boolean readOnly;
+
+
+	private boolean required = false;
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
+
 	public Long getId() {
 		return id;
 	}

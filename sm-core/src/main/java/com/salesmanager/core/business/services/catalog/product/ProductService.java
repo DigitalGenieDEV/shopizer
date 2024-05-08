@@ -54,7 +54,14 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 			ProductCriteria criteria);
 	
 	boolean exists(String sku, MerchantStore store);
-	
+
+
+	/**
+	 * countProductsByCategoryIds
+	 * @param categoryIds
+	 * @return
+	 */
+	Long countProductsByCategoryIds(List<Long> categoryIds);
 	
 	/**
 	 * List using Page interface in order to unify all page requests (since 2.16.0) 

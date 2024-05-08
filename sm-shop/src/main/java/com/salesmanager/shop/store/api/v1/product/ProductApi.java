@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.api.v1.product;
 
+import static com.salesmanager.core.model.catalog.product.ProductCriteria.ORIGIN_ADMIN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
@@ -170,125 +171,7 @@ public class ProductApi {
 		productCommonFacade.deleteProduct(id, merchantStore);
 	}
 
-	/**
-	 * List products
-	 * Filtering product lists based on product option and option value ?category=1
-	 * &manufacturer=2 &type=... &lang=en|fr NOT REQUIRED, will use request language
-	 * &start=0 NOT REQUIRED, can be used for pagination &count=10 NOT REQUIRED, can
-	 * be used to limit item count
-	 *
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/products", method = RequestMethod.GET)
-	@ResponseBody
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ReadableProductList list(
-			@RequestParam(value = "lang", required = false) String lang,
-			@RequestParam(value = "category", required = false) Long category,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "sku", required = false) String sku,
-			@RequestParam(value = "manufacturer", required = false) Long manufacturer,
-			@RequestParam(value = "optionValues", required = false) List<Long> optionValueIds,
-			@RequestParam(value = "status", required = false) String status,
-			@RequestParam(value = "owner", required = false) Long owner,
-			@RequestParam(value = "productType", required = false) String productType,
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
-			@RequestParam(value = "origin", required = false, defaultValue = ProductCriteria.ORIGIN_SHOP) String origin,
-			// page
-			// 0
-			// ..
-			// n
-			// allowing
-			// navigation
-			@RequestParam(value = "count", required = false, defaultValue = "100") Integer count, // count
-			@RequestParam(value = "slug", required = false) String slug, // category slug
-			@RequestParam(value = "available", required = false) Boolean available,
-			// per
-			// page
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
 
-		ProductCriteria criteria = new ProductCriteria();
-
-		criteria.setOrigin(origin);
-
-		// do not use legacy pagination anymore
-		if (lang != null) {
-			criteria.setLanguage(lang);
-		} else {
-			criteria.setLanguage(language.getCode());
-		}
-		if (!StringUtils.isBlank(status)) {
-			criteria.setStatus(status);
-		}
-		// Start Category handling
-		List<Long> categoryIds = new ArrayList<Long>();
-		if (slug != null) {
-			Category categoryBySlug = categoryService.getBySeUrl(merchantStore, slug, language);
-			categoryIds.add(categoryBySlug.getId());
-		}
-		if (category != null) {
-			categoryIds.add(category);
-		}
-		if (categoryIds.size() > 0) {
-			criteria.setCategoryIds(categoryIds);
-		}
-		// End Category handling
-
-		if (available != null && available) {
-			criteria.setAvailable(available);
-		}
-
-		if (manufacturer != null) {
-			criteria.setManufacturerId(manufacturer);
-		}
-
-		if (CollectionUtils.isNotEmpty(optionValueIds)) {
-			criteria.setOptionValueIds(optionValueIds);
-		}
-
-		if (owner != null) {
-			criteria.setOwnerId(owner);
-		}
-
-		if (page != null) {
-			criteria.setStartPage(page);
-		}
-
-		if (count != null) {
-			criteria.setMaxCount(count);
-		}
-
-		if (!StringUtils.isBlank(name)) {
-			criteria.setProductName(name);
-		}
-
-		if (!StringUtils.isBlank(sku)) {
-			criteria.setCode(sku);
-		}
-
-		// TODO
-		// RENTAL add filter by owner
-		// REPOSITORY to use the new filters
-
-		try {
-			return productFacade.getProductListsByCriterias(merchantStore, language, criteria);
-
-		} catch (Exception e) {
-
-			LOGGER.error("Error while filtering products product", e);
-			try {
-				response.sendError(503, "Error while filtering products " + e.getMessage());
-			} catch (Exception ignore) {
-			}
-
-			return null;
-		}
-	}
 
 	/**
 	 * API for getting a product
