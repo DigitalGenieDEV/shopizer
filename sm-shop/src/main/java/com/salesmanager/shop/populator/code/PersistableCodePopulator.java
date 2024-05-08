@@ -1,4 +1,4 @@
-package com.salesmanager.shop.populator.dept;
+package com.salesmanager.shop.populator.code;
 
 import java.util.Date;
 
@@ -8,20 +8,20 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
 import com.salesmanager.core.business.exception.ConversionException;
-import com.salesmanager.core.business.services.dept.DeptService;
+import com.salesmanager.core.business.services.code.CodeService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
-import com.salesmanager.core.model.dept.Dept;
+import com.salesmanager.core.model.code.Code;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.model.dept.PersistableDept;
+import com.salesmanager.shop.model.code.PersistableCode;
 
 @Component
-public class PersistableDeptPopulator extends AbstractDataPopulator<PersistableDept, Dept> {
+public class PersistableCodePopulator extends AbstractDataPopulator<PersistableCode, Code> {
 	
 	@Inject
-	private DeptService deptService;
+	private CodeService codeService;
 	
-	public Dept populate(PersistableDept source, Dept target)
+	public Code populate(PersistableCode source, Code target)
 			throws ConversionException {
 
 		try {
@@ -29,16 +29,20 @@ public class PersistableDeptPopulator extends AbstractDataPopulator<PersistableD
 			Validate.notNull(target, "Dept target cannot be null");
 			target.setId(source.getId());
 			target.setParentId(source.getParentId());
-			target.setDeptCode(deptService.getDeptCode());
-			target.setDeptName(source.getDeptName());
-			target.setTel(source.getTel());
+			target.setCode(codeService.getCode());
+			target.setCodeNameKr(source.getCodeNameKr());
+			target.setCodeNameEn(source.getCodeNameEn());
+			target.setCodeNameCn(source.getCodeNameCn());
+			target.setCodeNameJp(source.getCodeNameJp());
+			target.setCodeDesc(source.getCodeDesc());
+			target.setValue(source.getValue());
+			target.setVisible(source.getVisible());
 			if(source.getOrd() == 0) {
-				target.setOrd(deptService.getOrder(source.getParentId()));
+				target.setOrd(codeService.getOrder(source.getParentId()));
 			}else {
 				target.setOrd(source.getOrd());
 			}
-			target.setContent(source.getContent());
-			target.setVisible(source.getVisible());
+			
 			target.setReg_id(source.getUserId());
 			target.setReg_ip(source.getUserIp());
 			target.setReg_date(new Date());
@@ -54,15 +58,14 @@ public class PersistableDeptPopulator extends AbstractDataPopulator<PersistableD
 
 	}
 
-	@Override
-	public Dept populate(PersistableDept source, Dept target, MerchantStore store, Language language)
+	public Code populate(PersistableCode source, Code code, MerchantStore store, Language language)
 			throws ConversionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	protected Dept createTarget() {
+
+	protected Code createTarget() {
 		// TODO Auto-generated method stub
 		return null;
 	}

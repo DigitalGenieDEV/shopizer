@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.adminmenu.PersistableAdminMenu;
-import com.salesmanager.shop.model.adminmenu.PersistableChangeOrdAdminMenu;
 import com.salesmanager.shop.model.adminmenu.ReadableAdminMenu;
+import com.salesmanager.shop.model.common.PersistableChangeOrd;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.adminmenu.facade.AdminMenuFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
@@ -111,7 +111,7 @@ public class AdminMenuApi {
 	 
 	 @PostMapping(value = "/private/admin/menu/changeOrd", produces = { APPLICATION_JSON_VALUE })
 	 @ResponseStatus(OK)
-	 public void changeOrd(@Valid @RequestBody PersistableChangeOrdAdminMenu adminMenu, HttpServletRequest request ) throws Exception {
+	 public void changeOrd(@Valid @RequestBody PersistableChangeOrd adminMenu, HttpServletRequest request ) throws Exception {
 		String authenticatedUser = userFacade.authenticatedUser();
 		if (authenticatedUser == null) {
 			throw new UnauthorizedException();

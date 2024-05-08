@@ -13,10 +13,10 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.adminmenu.AdminMenuService;
 import com.salesmanager.core.model.adminmenu.AdminMenu;
 import com.salesmanager.core.model.adminmenu.ReadAdminMenu;
-import com.salesmanager.shop.model.adminmenu.ChangeOrdAdminMenuEntity;
 import com.salesmanager.shop.model.adminmenu.PersistableAdminMenu;
-import com.salesmanager.shop.model.adminmenu.PersistableChangeOrdAdminMenu;
 import com.salesmanager.shop.model.adminmenu.ReadableAdminMenu;
+import com.salesmanager.shop.model.common.ChangeOrdEntity;
+import com.salesmanager.shop.model.common.PersistableChangeOrd;
 import com.salesmanager.shop.populator.adminmenu.PersistableAdminMenuPopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.adminmenu.facade.AdminMenuFacade;
@@ -110,9 +110,9 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 		adminMenuService.deleteAdminMenu(adminMenuId);
 	}
 	
-	public void updateChangeOrd(PersistableChangeOrdAdminMenu adminMenu, String ip) throws Exception{
+	public void updateChangeOrd(PersistableChangeOrd adminMenu, String ip) throws Exception{
 		if(adminMenu.getChangeOrdList().size() > 0) {
-			for(ChangeOrdAdminMenuEntity data : adminMenu.getChangeOrdList()) {
+			for(ChangeOrdEntity data : adminMenu.getChangeOrdList()) {
 				AdminMenu paramVO =  new AdminMenu();
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());

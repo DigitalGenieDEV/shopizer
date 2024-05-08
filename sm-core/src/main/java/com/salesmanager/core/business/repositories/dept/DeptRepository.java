@@ -36,9 +36,9 @@ public interface DeptRepository extends JpaRepository<Dept, Integer> {
 			+ " SELECT  ID, PARENT_ID, DEPT_CODE, DEPT_NAME, TEL, CONTENT, ORD, VISIBLE, DEPTH, DEPT_NAME_PATH FROM DEPT_CTE    \r\n"
 			+ " ORDER BY  AMENU_SORT ASC", nativeQuery=true)
 	public List<ReadDept> getListDept(int visible);
-	
-	@Query( value ="SELECT COUNT(ID) CNT FROM DEPT WHERE DEPT_CODE = ?1", nativeQuery=true)
-	public int getByCode(String code);
+
+	@Query( value ="SELECT CONCAT('DEPT_', LPAD(IFNULL(CAST(MAX(REPLACE(DEPT_CODE, 'DEPT_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM DEPT AS A", nativeQuery=true)
+	public String getDeptCode();
 	
 	@Query( value ="SELECT IFNULL(MAX(ORD) + 1,1) FROM DEPT B WHERE B.PARENT_ID = ?1", nativeQuery=true)
 	public int getOrder(int parentId);

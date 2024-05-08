@@ -1,4 +1,4 @@
-package com.salesmanager.shop.store.api.v1.dept;
+package com.salesmanager.shop.store.api.v1.code;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.model.code.PersistableCode;
+import com.salesmanager.shop.model.code.ReadableCode;
 import com.salesmanager.shop.model.common.PersistableChangeOrd;
-import com.salesmanager.shop.model.dept.PersistableDept;
-import com.salesmanager.shop.model.dept.ReadableDept;
 import com.salesmanager.shop.model.entity.EntityExists;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
-import com.salesmanager.shop.store.controller.dept.facade.DeptFacade;
+import com.salesmanager.shop.store.controller.code.facade.CodeFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
 import com.salesmanager.shop.utils.CommonUtils;
 
@@ -38,29 +38,33 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 
 @RestController
 @RequestMapping(value = "/api/v1")
-@Api(tags = { "Dept management resource (Dept Management Api)" })
-public class DeptApi {
+@Api(tags = { "CommonCode management resource (CommonCode Management Api)" })
+@SwaggerDefinition(tags = { @Tag(name = "CommonCode management resource", description = "CommonCode management") })
+public class CodeApi {
 
 	@Inject
-	private DeptFacade deptFacde;
+	private CodeFacade codeFacde;
 
 	@Inject
 	private UserFacade userFacade;
 
-	@GetMapping(value = "/private/dept")
+	@GetMapping(value = "/private/code")
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(httpMethod = "GET", value = "Get Dept by list", notes = "")
-	public ReadableDept getListDept(@RequestParam(value = "visible", required = false, defaultValue = "0") int visible)
-			throws Exception {
-		return deptFacde.getListDept(visible);
+	@ApiOperation(httpMethod = "GET", value = "Get Code by list", notes = "")
+	public ReadableCode getListAdminMenu(
+			@RequestParam(value = "visible", required = false, defaultValue = "0") int visible) throws Exception {
+		return codeFacde.getListCode(visible);
 	}
 
+
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(value = "/private/dept", produces = { APPLICATION_JSON_VALUE })
-	public PersistableDept create(@Valid @RequestBody PersistableDept dept, HttpServletRequest request)
+	@PostMapping(value = "/private/code", produces = { APPLICATION_JSON_VALUE })
+	public PersistableCode create(@Valid @RequestBody PersistableCode code, HttpServletRequest request)
 			throws Exception {
 
 		// superadmin
@@ -70,21 +74,21 @@ public class DeptApi {
 		}
 		userFacade.authorizedGroup(authenticatedUser,
 				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
-		dept.setUserIp(CommonUtils.getRemoteIp(request));
+		code.setUserIp(CommonUtils.getRemoteIp(request));
 
-		return deptFacde.saveDept(dept);
+		return codeFacde.saveCode(code);
 	}
 
-	@GetMapping(value = "/private/dept/{id}", produces = { APPLICATION_JSON_VALUE })
-	@ApiOperation(httpMethod = "GET", value = "Get dept list for an given Dept id", notes = "List current Dept and child dept")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of dept found", response = ReadableDept.class) })
-	public ReadableDept get(@PathVariable(name = "id") int deptId) throws Exception {
-		ReadableDept dept = deptFacde.getById(deptId);
-		return dept;
+	@GetMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get code list for an given Code id", notes = "List current Code and child code")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of code found", response = ReadableCode.class) })
+	public ReadableCode get(@PathVariable(name = "id") int codeId) throws Exception {
+		ReadableCode code = codeFacde.getById(codeId);
+		return code;
 	}
 
-	@PutMapping(value = "/private/dept/{id}", produces = { APPLICATION_JSON_VALUE })
-	public PersistableDept update(@PathVariable int id, @Valid @RequestBody PersistableDept dept,
+	@PutMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
+	public PersistableCode update(@PathVariable int id, @Valid @RequestBody PersistableCode code,
 			HttpServletRequest request) throws Exception {
 		// superadmin
 		String authenticatedUser = userFacade.authenticatedUser();
@@ -95,12 +99,12 @@ public class DeptApi {
 		userFacade.authorizedGroup(authenticatedUser,
 				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
 
-		dept.setId(id);
-		dept.setUserIp(CommonUtils.getRemoteIp(request));
-		return deptFacde.saveDept(dept);
+		code.setId(id);
+		code.setUserIp(CommonUtils.getRemoteIp(request));
+		return codeFacde.saveCode(code);
 	}
 
-	@DeleteMapping(value = "/private/dept/{id}", produces = { APPLICATION_JSON_VALUE })
+	@DeleteMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
 	public void delete(@PathVariable int id) throws Exception {
 		// superadmin
@@ -111,19 +115,19 @@ public class DeptApi {
 
 		userFacade.authorizedGroup(authenticatedUser,
 				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
-		deptFacde.deleteDept(id);
+		codeFacde.deleteCode(id);
 	}
 
-	@PostMapping(value = "/private/dept/changeOrd", produces = { APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/private/code/changeOrd", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
-	public void changeOrd(@Valid @RequestBody PersistableChangeOrd dept, HttpServletRequest request) throws Exception {
+	public void changeOrd(@Valid @RequestBody PersistableChangeOrd code, HttpServletRequest request) throws Exception {
 		String authenticatedUser = userFacade.authenticatedUser();
 		if (authenticatedUser == null) {
 			throw new UnauthorizedException();
 		}
 		userFacade.authorizedGroup(authenticatedUser,
 				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
-		deptFacde.updateChangeOrd(dept, CommonUtils.getRemoteIp(request));
+		codeFacde.updateChangeOrd(code, CommonUtils.getRemoteIp(request));
 
 	}
 }

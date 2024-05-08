@@ -11,7 +11,7 @@ public interface DeptService extends SalesManagerEntityService<Integer, Dept>  {
 	
 	List<ReadDept> getListDept(int visible) throws ServiceException;
 	
-	int getByCode(String code) throws ServiceException;
+	String getDeptCode() throws ServiceException;
 	
 	int getOrder(int parentId) throws ServiceException;
 	
