@@ -49,6 +49,10 @@ public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer,
 		}
 
 	}
+	
+	public int getMaxId() throws ServiceException{
+		return adminMenuRepository.getMaxId();
+	}
 
 	public void deleteAdminMenu(int adminMenuId) throws ServiceException {
 		adminMenuRepository.deleteAdminMenu(adminMenuId);

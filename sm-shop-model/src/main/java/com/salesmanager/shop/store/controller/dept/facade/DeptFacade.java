@@ -1,6 +1,6 @@
 package com.salesmanager.shop.store.controller.dept.facade;
 
-import com.salesmanager.shop.model.dept.PersistableChangeOrdDept;
+import com.salesmanager.shop.model.common.PersistableChangeOrd;
 import com.salesmanager.shop.model.dept.PersistableDept;
 import com.salesmanager.shop.model.dept.ReadableDept;
 
@@ -12,15 +12,7 @@ public interface DeptFacade {
 	 */
 	ReadableDept getListDept(int visible) throws Exception;
 
-	/**
-	 * Check if Dept code already exist
-	 * 
-	 * @param code
-	 * @return
-	 * @throws Exception
-	 */
-	boolean existByCode(String code) throws Exception;
-
+	
 	/**
 	 *
 	 * @param dept
@@ -52,5 +44,5 @@ public interface DeptFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	void updateChangeOrd(PersistableChangeOrdDept dept, String ip) throws Exception;
+	void updateChangeOrd(PersistableChangeOrd dept, String ip) throws Exception;
 }

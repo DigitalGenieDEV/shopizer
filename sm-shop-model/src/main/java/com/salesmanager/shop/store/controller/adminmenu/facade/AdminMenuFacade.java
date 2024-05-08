@@ -1,8 +1,8 @@
 package com.salesmanager.shop.store.controller.adminmenu.facade;
 
 import com.salesmanager.shop.model.adminmenu.PersistableAdminMenu;
-import com.salesmanager.shop.model.adminmenu.PersistableChangeOrdAdminMenu;
 import com.salesmanager.shop.model.adminmenu.ReadableAdminMenu;
+import com.salesmanager.shop.model.common.PersistableChangeOrd;
 
 public interface AdminMenuFacade {
 
@@ -41,6 +41,6 @@ public interface AdminMenuFacade {
 	 * @param ip
 	 * @return
 	 */
-	void updateChangeOrd(PersistableChangeOrdAdminMenu adminMenu, String ip) throws Exception;
+	void updateChangeOrd(PersistableChangeOrd adminMenu, String ip) throws Exception;
 
 }

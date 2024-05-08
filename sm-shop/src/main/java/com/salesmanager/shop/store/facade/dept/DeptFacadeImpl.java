@@ -14,8 +14,8 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.dept.DeptService;
 import com.salesmanager.core.model.dept.Dept;
 import com.salesmanager.core.model.dept.ReadDept;
-import com.salesmanager.shop.model.dept.ChangeOrdDeptEntity;
-import com.salesmanager.shop.model.dept.PersistableChangeOrdDept;
+import com.salesmanager.shop.model.common.ChangeOrdEntity;
+import com.salesmanager.shop.model.common.PersistableChangeOrd;
 import com.salesmanager.shop.model.dept.PersistableDept;
 import com.salesmanager.shop.model.dept.ReadableDept;
 import com.salesmanager.shop.populator.dept.PersistableDeptPopulator;
@@ -66,14 +66,6 @@ public class DeptFacadeImpl  implements DeptFacade {
 		}
 	}
 	
-	public boolean existByCode(String code) throws Exception{
-		try {
-			int count = deptService.getByCode(code);
-			return count > 0 ? true : false;
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
-	}
 	
 	public PersistableDept saveDept(PersistableDept dept){
 		try {
@@ -89,10 +81,14 @@ public class DeptFacadeImpl  implements DeptFacade {
 			deptService.saveOrUpdate(dbDept);
 
 			// set category id
-			dept.setId(dept.getId());
+			if (dept.getId() > 0) {
+				dept.setId(dept.getId());
+			}else {
+				dept.setId(deptService.getMaxId());
+			}
 			return dept;
 		} catch (ServiceException e) {
-			throw new ServiceRuntimeException("Error while updating category", e);
+			throw new ServiceRuntimeException("Error while updating Dept", e);
 		}
 	}
 	
@@ -131,9 +127,9 @@ public class DeptFacadeImpl  implements DeptFacade {
 		return targetData;
 	}
 	
-	public void updateChangeOrd(PersistableChangeOrdDept dept, String ip) throws Exception{
+	public void updateChangeOrd(PersistableChangeOrd dept, String ip) throws Exception{
 		if(dept.getChangeOrdList().size() > 0) {
-			for(ChangeOrdDeptEntity data : dept.getChangeOrdList()) {
+			for(ChangeOrdEntity data : dept.getChangeOrdList()) {
 				Dept paramVO =  new Dept();
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());

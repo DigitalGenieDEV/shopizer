@@ -1,4 +1,4 @@
-package com.salesmanager.core.model.adminmenu;
+package com.salesmanager.core.model.code;
 
 import java.util.Date;
 
@@ -12,36 +12,50 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
-@Table(name = "ADMINMENU", indexes = @Index(columnList = "VISIBLE, MENU_NAME"))
-public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
+@Table(name = "COMMON_CODE", indexes = @Index(columnList = "CODE, VISIBLE"), uniqueConstraints = @UniqueConstraint(columnNames = {
+		"ID" }))
+public class Code extends SalesManagerEntity<Integer, Code> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
-	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "ADMINMENU_SEQ_NEXT_VAL")
+	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "CODE_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
 	@NotEmpty
-	@Column(name = "PARENT_ID", nullable = false, length = 30, updatable = false)
+	@Column(name = "PARENT_ID", nullable = false, updatable = false)
 	private Integer parentId;
 
 	@NotEmpty
-	@Column(name = "MENU_NAME", nullable = false, length = 30)
-	private String menuName;
-
-	@Column(name = "MENU_DESC")
-	private String menuDesc;
+	@Column(name = "CODE", length = 30, nullable = false, updatable = false)
+	private String code;
 
 	@NotEmpty
-	@Column(name = "MENU_URL", nullable = false, length = 255)
-	private String menuUrl;
+	@Column(name = "CODE_NAME_KR", length = 50, nullable = false)
+	private String codeNameKr;
+
+	@Column(name = "CODE_NAME_EN", length = 100, nullable = false)
+	private String codeNameEn;
+
+	@Column(name = "CODE_NAME_CN", length = 50, nullable = false)
+	private String codeNameCn;
+
+	@Column(name = "CODE_NAME_JP", length = 50, nullable = false)
+	private String codeNameJp;
+
+	@Column(name = "VALUE", length = 50, nullable = false)
+	private String value;
+
+	@Column(name = "CODE_DESC", length = 1000, nullable = false)
+	private String codeDesc;
 
 	@NotEmpty
 	@Column(name = "ORD", nullable = false, updatable = false)
@@ -49,7 +63,7 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 
 	@NotEmpty
 	@Column(name = "VISIBLE", nullable = false)
-	private int visible;
+	private Integer visible;
 
 	@NotEmpty
 	@Column(name = "REG_ID", length = 30, nullable = false, updatable = false)
@@ -89,28 +103,60 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 		this.parentId = parentId;
 	}
 
-	public String getMenuName() {
-		return menuName;
+	public String getCode() {
+		return code;
 	}
 
-	public void setMenuName(String menuName) {
-		this.menuName = menuName;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getMenuDesc() {
-		return menuDesc;
+	public String getCodeNameKr() {
+		return codeNameKr;
 	}
 
-	public void setMenuDesc(String menuDesc) {
-		this.menuDesc = menuDesc;
+	public void setCodeNameKr(String codeNameKr) {
+		this.codeNameKr = codeNameKr;
 	}
 
-	public String getMenuUrl() {
-		return menuUrl;
+	public String getCodeNameEn() {
+		return codeNameEn;
 	}
 
-	public void setMenuUrl(String menuUrl) {
-		this.menuUrl = menuUrl;
+	public void setCodeNameEn(String codeNameEn) {
+		this.codeNameEn = codeNameEn;
+	}
+
+	public String getCodeNameCn() {
+		return codeNameCn;
+	}
+
+	public void setCodeNameCn(String codeNameCn) {
+		this.codeNameCn = codeNameCn;
+	}
+
+	public String getCodeNameJp() {
+		return codeNameJp;
+	}
+
+	public void setCodeNameJp(String codeNameJp) {
+		this.codeNameJp = codeNameJp;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getCodeDesc() {
+		return codeDesc;
+	}
+
+	public void setCodeDesc(String codeDesc) {
+		this.codeDesc = codeDesc;
 	}
 
 	public Integer getOrd() {
@@ -121,11 +167,11 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 		this.ord = ord;
 	}
 
-	public int getVisible() {
+	public Integer getVisible() {
 		return visible;
 	}
 
-	public void setVisible(int visible) {
+	public void setVisible(Integer visible) {
 		this.visible = visible;
 	}
 

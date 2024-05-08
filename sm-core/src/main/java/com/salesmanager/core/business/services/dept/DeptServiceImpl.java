@@ -31,8 +31,8 @@ public class DeptServiceImpl extends SalesManagerEntityServiceImpl<Integer, Dept
 		return deptRepository.getListDept(visible);
 	}
 
-	public int getByCode(String code) throws ServiceException {
-		return deptRepository.getByCode(code);
+	public String getDeptCode() throws ServiceException{
+		return deptRepository.getDeptCode();
 	}
 
 	public int getOrder(int parentId) throws ServiceException {
@@ -52,6 +52,10 @@ public class DeptServiceImpl extends SalesManagerEntityServiceImpl<Integer, Dept
 			this.create(dept);
 		}
 
+	}
+	
+	public int getMaxId() throws ServiceException{
+		return  deptRepository.getMaxId();
 	}
 
 	public ReadDept getById(int id) throws ServiceException {

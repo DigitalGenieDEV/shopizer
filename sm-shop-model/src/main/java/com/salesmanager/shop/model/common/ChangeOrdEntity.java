@@ -1,6 +1,6 @@
-package com.salesmanager.shop.model.adminmenu;
+package com.salesmanager.shop.model.common;
 
-public class ChangeOrdAdminMenuEntity {
+public class ChangeOrdEntity {
 	private int id = 0;
 	private int parentId = 0;
 	private int changeOrd = 0;
@@ -37,5 +37,4 @@ public class ChangeOrdAdminMenuEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
 }

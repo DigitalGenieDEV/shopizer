@@ -11,13 +11,15 @@ public interface DeptService extends SalesManagerEntityService<Integer, Dept>  {
 	
 	List<ReadDept> getListDept(int visible) throws ServiceException;
 	
-	int getByCode(String code) throws ServiceException;
+	String getDeptCode() throws ServiceException;
 	
 	int getOrder(int parentId) throws ServiceException;
 	
 	String getNamePath(int id) throws ServiceException;
 	
 	ReadDept getById(int id) throws ServiceException;
+	
+	int getMaxId() throws ServiceException;
 	
 	void saveOrUpdate(Dept dept) throws ServiceException;
 	
