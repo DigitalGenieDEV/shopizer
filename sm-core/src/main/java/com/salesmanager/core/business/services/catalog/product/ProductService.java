@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import org.springframework.data.domain.Page;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -106,6 +107,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	Product findByOutId(Long outId);
 
+
+	void updateProductAuditStatusById(String productAuditStatus, Long id);
 
 }
 

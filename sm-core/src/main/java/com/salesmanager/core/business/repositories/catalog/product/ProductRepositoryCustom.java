@@ -5,7 +5,9 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.ProductCriteria;
 import com.salesmanager.core.model.catalog.product.ProductList;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -15,7 +17,10 @@ import com.salesmanager.core.model.tax.taxclass.TaxClass;
 public interface ProductRepositoryCustom {
 
 
-		ProductList listByStore(MerchantStore store, Language language,
+	void updateProductAuditStatusById(ProductAuditStatus productAuditStatus, Long id);
+
+
+	ProductList listByStore(MerchantStore store, Language language,
 			ProductCriteria criteria);
 
 		Product getProductWithOnlyMerchantStoreById(Long productId);

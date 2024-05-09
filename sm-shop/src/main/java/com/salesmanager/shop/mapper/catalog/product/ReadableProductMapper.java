@@ -120,7 +120,8 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		destination.setId(source.getId());
 		destination.setAvailable(source.isAvailable());
 		destination.setProductShipeable(source.isProductShipeable());
-
+		destination.setProductAuditStatus(source.getProductAuditStatus() == null?
+				null : source.getProductAuditStatus().name());
 		destination.setPreOrder(source.isPreOrder());
 		destination.setRefSku(source.getRefSku());
 		destination.setSortOrder(source.getSortOrder());

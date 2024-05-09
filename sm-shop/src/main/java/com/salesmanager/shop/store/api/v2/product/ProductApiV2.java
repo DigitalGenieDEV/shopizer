@@ -22,6 +22,7 @@ import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
@@ -583,6 +584,18 @@ public class ProductApiV2 {
 			@ApiIgnore Language language) throws ServiceException {
 		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
 	}
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PostMapping(value = "/private/product/audit", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "product audit", notes = "product Audit", produces = "application/json", response = Void.class)
+	public void productAudit(
+			@RequestParam(value = "productAudit") String productAudit,
+			@RequestParam(value = "productId") Long productId) {
+		productService.updateProductAuditStatusById(productAudit, productId);
+	}
+
 
 
 	/**

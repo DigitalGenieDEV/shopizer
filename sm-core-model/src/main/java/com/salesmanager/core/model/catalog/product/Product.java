@@ -5,25 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -200,7 +182,12 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	
 	@Column(name="COND", nullable = true)
 	private ProductCondition condition;
-	
+
+
+	@Column(name="PRODUCT_AUDIT_STATUS", nullable = true)
+	@Enumerated(value = EnumType.STRING)
+	private ProductAuditStatus productAuditStatus;
+
 	/**
 	 * RENTAL ADDITIONAL FIELDS
 	 */
@@ -624,8 +611,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		this.productShipeable = productShipeable;
 	}
 
+	public ProductAuditStatus getProductAuditStatus() {
+		return productAuditStatus;
+	}
 
-
+	public void setProductAuditStatus(ProductAuditStatus productAuditStatus) {
+		this.productAuditStatus = productAuditStatus;
+	}
 
 	public Integer getMinOrderQuantity() {
 		return minOrderQuantity;

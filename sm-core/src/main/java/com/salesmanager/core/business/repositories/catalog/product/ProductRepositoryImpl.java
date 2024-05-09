@@ -12,6 +12,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -562,6 +563,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 		return productList;
 
+	}
+
+	@Override
+	public void updateProductAuditStatusById(ProductAuditStatus productAuditStatus, Long id) {
+		em.createQuery("UPDATE Product p SET p.productAuditStatus = :status WHERE p.id = :id")
+				.setParameter("status", productAuditStatus)
+				.setParameter("id", id)
+				.executeUpdate();
 	}
 
 	/**

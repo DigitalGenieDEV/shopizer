@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -269,6 +270,11 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		if (product.getId() != null && product.getId() > 0) {
 			super.update(product);
 		} else {
+			if (product.getMerchantStore().getCode().equals("DEFAULT")){
+				product.setProductAuditStatus(ProductAuditStatus.AUDIT_PASSED);
+			}else{
+				product.setProductAuditStatus(ProductAuditStatus.PENDING_AUDIT);
+			}
 			super.create(product);
 		}
 
@@ -347,6 +353,13 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	public Product findByOutId(Long outId) {
 		return productRepository.findByOutId(outId);
+	}
+
+	@Override
+	public void updateProductAuditStatusById(String productAuditStatus, Long id) {
+		Validate.notNull(ProductAuditStatus.valueOf(productAuditStatus), "product cannot be null");
+		Validate.notNull(id, "product cannot be null");
+		productRepository.updateProductAuditStatusById(ProductAuditStatus.valueOf(productAuditStatus), id);
 	}
 
 	@Override

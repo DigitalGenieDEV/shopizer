@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.model.catalog.category.CategoryType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -157,6 +159,51 @@ public class CategoryApi {
 		return categoryFacade.listByProduct(merchantStore, id, lang);
 
 	}
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/private/category/list/by/parent" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	@ApiOperation(httpMethod = "GET", value = "category List By Parent", notes = "", response = EntityExists.class)
+	public ResponseEntity<List<ReadableCategory>> listByParent(@RequestParam(value = "categoryId") Long categoryId,
+																	  @ApiIgnore Language language) throws ServiceException {
+		List<ReadableCategory> readableCategories = categoryFacade.listByParent(categoryId, language);
+		return new ResponseEntity<List<ReadableCategory>>(readableCategories, HttpStatus.OK);
+	}
+
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/private/admin/category/by/user" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	@ApiOperation(httpMethod = "GET", value = "admin Category By User CategoryId", notes = "", response = EntityExists.class)
+	public ReadableCategory adminCategoryByUserCategoryId(@RequestParam(value = "userCategoryId") Long userCategoryId,
+															   @ApiIgnore Language language) throws Exception {
+		return categoryFacade.adminCategoryByUserCategoryId(userCategoryId, language);
+	}
+
+
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(value = "/private/user/category", produces = { APPLICATION_JSON_VALUE })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	public PersistableCategory createUser(
+			@Valid @RequestBody PersistableCategory category,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language) {
+
+		// superadmin, admin and admin_catalogue
+		String authenticatedUser = userFacade.authenticatedUser();
+		if (authenticatedUser == null) {
+			throw new UnauthorizedException();
+		}
+
+		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		category.setCategoryType(CategoryType.USER.name());
+		return categoryFacade.saveCategory(merchantStore, category);
+	}
+
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/private/category", produces = { APPLICATION_JSON_VALUE })

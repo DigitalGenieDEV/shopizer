@@ -84,7 +84,21 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
     
     @Column(name="FEATURED")
     private boolean featured;
-    
+
+
+    /**
+     * admin/user
+     */
+    @Column(name="TYPE")
+    private String type;
+
+
+    /**
+     * admin/user
+     */
+    @Column(name="ADMIN_CATEGORY_ID")
+    private Long adminCategoryId;
+
     @NotEmpty
     @Column(name="CODE", length=100, nullable=false)
     private String code;
@@ -225,4 +239,19 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
       this.descriptions = descriptions;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getAdminCategoryId() {
+        return adminCategoryId;
+    }
+
+    public void setAdminCategoryId(Long adminCategoryId) {
+        this.adminCategoryId = adminCategoryId;
+    }
 }

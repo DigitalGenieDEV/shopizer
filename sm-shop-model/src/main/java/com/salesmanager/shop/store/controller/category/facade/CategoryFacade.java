@@ -1,6 +1,8 @@
 package com.salesmanager.shop.store.controller.category.facade;
 
 import java.util.List;
+
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
@@ -51,6 +53,9 @@ public interface CategoryFacade {
 	 * @throws Exception
 	 */
 	ReadableCategory getByCode(MerchantStore store, String code, Language language) throws Exception;
+
+
+	ReadableCategory adminCategoryByUserCategoryId(Long userCategoryId, Language language) throws Exception;
 
 	/**
 	 * Get a Category by the Search Engine friendly URL slug
@@ -106,6 +111,10 @@ public interface CategoryFacade {
 
 	List<ReadableCategory> getListByDepth(MerchantStore store, int depth, Language language);
 
+
+	List<ReadableCategory> listByParent(Long categoryId, Language language) throws ServiceException;
+
+
 	/**
 	 * List category by product
 	 * @param store
@@ -113,4 +122,7 @@ public interface CategoryFacade {
 	 * @return
 	 */
 	ReadableCategoryList listByProduct(MerchantStore store, Long product, Language language);
+
+
+
 }

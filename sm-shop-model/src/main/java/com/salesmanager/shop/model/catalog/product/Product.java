@@ -2,6 +2,7 @@ package com.salesmanager.shop.model.catalog.product;
 
 import java.io.Serializable;
 
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.shop.model.entity.Entity;
 
 
@@ -20,6 +21,8 @@ public class Product extends Entity implements Serializable {
 	private int sortOrder;
 	private String dateAvailable;
 	private String creationDate;
+
+	private String productAuditStatus;
 
 	private String modificationDate;
 
@@ -68,6 +71,11 @@ public class Product extends Entity implements Serializable {
 		this.visible = visible;
 	}
 
+	public String getProductAuditStatus() {
+		return productAuditStatus;
+	}
 
-
+	public void setProductAuditStatus(String productAuditStatus) {
+		this.productAuditStatus = productAuditStatus;
+	}
 }

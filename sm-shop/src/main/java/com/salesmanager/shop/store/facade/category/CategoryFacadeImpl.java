@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.catalog.category.CategoryType;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -168,6 +169,13 @@ public class CategoryFacadeImpl implements CategoryFacade {
 					.orElse(new Category());
 
 			Category dbCategory = populateCategory(store, category, target);
+
+			if (category.getCategoryType().equals(CategoryType.USER.name())){
+				dbCategory.setAdminCategoryId(category.getAdminCategoryId());
+				dbCategory.setType(CategoryType.USER.name());
+			}else {
+				dbCategory.setType(CategoryType.ADMIN.name());
+			}
 			saveCategory(store, dbCategory, null);
 
 			// set category id
@@ -320,6 +328,17 @@ public class CategoryFacadeImpl implements CategoryFacade {
 		Category category = categoryService.getByCode(store, code);
 		categoryPopulator.populate(category, readableCategory, store, language);
 
+		return readableCategory;
+	}
+
+	@Override
+	public ReadableCategory adminCategoryByUserCategoryId(Long userCategoryId, Language language) throws Exception {
+		Category userCategory =  categoryService.findById(userCategoryId);
+		Long adminCategoryId = userCategory.getAdminCategoryId();
+		Category adminCategory =   categoryService.findById(adminCategoryId);
+		ReadableCategoryPopulator categoryPopulator = new ReadableCategoryPopulator();
+		ReadableCategory readableCategory = new ReadableCategory();
+		categoryPopulator.populate(adminCategory, readableCategory, null, language);
 		return readableCategory;
 	}
 
@@ -553,6 +572,25 @@ public class CategoryFacadeImpl implements CategoryFacade {
 			ReadableCategory readableCategory = new ReadableCategory();
 			try {
 				categoryPopulator.populate(category, readableCategory, store, language);
+			} catch (ConversionException e) {
+				throw new RuntimeException(e);
+			}
+			return readableCategory;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ReadableCategory> listByParent(Long categoryId, Language language) throws ServiceException {
+		Validate.notNull(categoryId, "category id must not be null");
+
+		Category category = categoryService.getById(categoryId);
+		Validate.notNull(category, "category is null");
+		List<Category> categories = categoryService.listByParent(category, language);
+		return categories.stream().map(ca -> {
+			ReadableCategoryPopulator categoryPopulator = new ReadableCategoryPopulator();
+			ReadableCategory readableCategory = new ReadableCategory();
+			try {
+				categoryPopulator.populate(ca, readableCategory, null, language);
 			} catch (ConversionException e) {
 				throw new RuntimeException(e);
 			}

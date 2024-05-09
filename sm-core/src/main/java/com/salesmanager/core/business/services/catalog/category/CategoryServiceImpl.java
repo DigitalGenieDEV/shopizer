@@ -96,6 +96,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 		return categoryRepository.findByIdAndLanguage(categoryId, language.getId());
 	}
 
+
 	@Override
 	public void saveOrUpdate(Category category) throws ServiceException {
 

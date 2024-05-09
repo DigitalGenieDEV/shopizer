@@ -2,6 +2,8 @@ package com.salesmanager.core.business.repositories.catalog.product;
 
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -32,6 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			nativeQuery = true
 	)
 	List<Object> findBySku(String sku, Integer consultId);
+
 
 
 	@Query(value="SELECT " +

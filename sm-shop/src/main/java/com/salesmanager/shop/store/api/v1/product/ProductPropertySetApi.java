@@ -152,11 +152,12 @@ public class ProductPropertySetApi {
 	@RequestMapping(value = { "/private/product/property/category/set" }, method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public @ResponseBody List<ReadableProductOptionSet> listByCategoryId(
+	public @ResponseBody ResponseEntity<List<ReadableProductOptionSet>> listByCategoryId(
 			@ApiIgnore Language language,
 			@RequestParam(value = "categoryId", required = false) Long categoryId,
 			@RequestParam(value = "optionSetForSaleType", required = false) OptionSetForSaleType optionSetForSaleType) {
-		return productOptionSetFacade.listByCategoryId(language, categoryId, optionSetForSaleType);
+		return new ResponseEntity<>(productOptionSetFacade.listByCategoryId(language, categoryId, optionSetForSaleType), HttpStatus.OK);
+
 	}
 	
 
