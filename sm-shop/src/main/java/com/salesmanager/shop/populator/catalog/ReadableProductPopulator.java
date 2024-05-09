@@ -155,7 +155,6 @@ public class ReadableProductPopulator extends
 				address.setPhone(source.getOwner().getBilling().getTelephone());
 				address.setPostalCode(source.getOwner().getBilling().getPostalCode());
 				owner.setAddress(address);
-				target.setOwner(owner);
 			}
 
 
