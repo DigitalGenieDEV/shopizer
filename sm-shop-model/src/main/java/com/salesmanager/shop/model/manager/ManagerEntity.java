@@ -1,7 +1,5 @@
 package com.salesmanager.shop.model.manager;
 
-import java.util.Date;
-
 public class ManagerEntity {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
@@ -131,5 +129,7 @@ public class ManagerEntity {
 	public void setModDate(String modDate) {
 		this.modDate = modDate;
 	}
+	
+	
 
 }

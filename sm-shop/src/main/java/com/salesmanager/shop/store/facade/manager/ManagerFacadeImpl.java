@@ -77,7 +77,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			if (modelManager == null) {
 				throw new ResourceNotFoundException("Manager with id [" + manager.getId() + "] not found ");
 			}
-			System.out.println("manager.isActive()"+manager.isActive());
+	
 			
 			modelManager.setActive(manager.isActive());
 			managerService.saveOrUpdate(modelManager);
@@ -145,7 +145,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		if (manager == null) {
 			throw new ResourceNotFoundException("Manager [" + id + "] not found");
 		}
-		System.out.println(manager.getAuditSection().getModDate());
+
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		ReadableManager readableManager = objectMapper.convertValue(manager, ReadableManager.class);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -1,7 +1,5 @@
 package com.salesmanager.shop.model.manager;
 
-import java.util.Date;
-
 public class ReadableManager extends ManagerEntity {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
