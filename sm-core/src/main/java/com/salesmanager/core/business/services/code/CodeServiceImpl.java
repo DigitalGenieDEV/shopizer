@@ -26,6 +26,10 @@ public class CodeServiceImpl extends SalesManagerEntityServiceImpl<Integer, Code
 	public List<ReadCode> getListCode(int visible) throws ServiceException {
 		return codeRepository.getListCode(visible);
 	}
+	
+	public List<ReadCode> getListCodeDetail(String code) throws ServiceException{
+		return codeRepository.getListCodeDetail(code);
+	}
 
 	public String getCode() throws ServiceException{
 		return codeRepository.getCode();

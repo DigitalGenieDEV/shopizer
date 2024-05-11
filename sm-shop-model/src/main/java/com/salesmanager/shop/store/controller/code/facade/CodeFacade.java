@@ -1,5 +1,7 @@
 package com.salesmanager.shop.store.controller.code.facade;
 
+import java.util.List;
+
 import com.salesmanager.shop.model.code.PersistableCode;
 import com.salesmanager.shop.model.code.ReadableCode;
 import com.salesmanager.shop.model.common.PersistableChangeOrd;
@@ -12,6 +14,14 @@ public interface CodeFacade {
 	 * @return ReadableCode
 	 */
 	ReadableCode getListCode(int visible) throws Exception;
+	
+	
+	/**
+	 *
+	 * @param code
+	 * @return List<ReadableCode>
+	 */
+	List<ReadableCode> getListCodeDetail(String code) throws Exception;
 	
 	
 	/**

@@ -30,6 +30,12 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
 	List<ReadCode> getListCode(int visible);
 	
+	@Query(value = "SELECT \r\n"
+			+ "	ID, CODE_NAME_KR, CODE_NAME_CN, CODE_NAME_EN, CODE_NAME_JP, VALUE, PARENT_ID \r\n"
+			+ "FROM common_code WHERE PARENT_ID IN (\r\n"
+			+ "	SELECT  ID  FROM common_code WHERE CODE = CONCAT('CODE_',?1) \r\n"
+			+ ")", nativeQuery = true)
+	List<ReadCode> getListCodeDetail(String code);
 	
 	@Query( value ="SELECT CONCAT('CODE_', LPAD(IFNULL(CAST(MAX(REPLACE(CODE, 'CODE_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM COMMON_CODE AS A", nativeQuery=true)
 	String getCode();
