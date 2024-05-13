@@ -117,6 +117,13 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				}
 			}
 		}
+
+		if (language == null){
+			language = store.getDefaultLanguage();
+		}
+
+		Language finalLanguage = language;
+
 		destination.setId(source.getId());
 		destination.setAvailable(source.isAvailable());
 		destination.setProductShipeable(source.isProductShipeable());
@@ -298,7 +305,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		{
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
-					.map(i -> readableProductVariantMapper.convert(i, store, language)).collect(Collectors.toList());
+					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
 			destination.setVariants(instances);
 			
 			/**
@@ -403,7 +410,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 						if (pr.isPresent() && language !=null) {
 							readableProductPrice.setId(pr.get().getId());
 							Optional<ProductPriceDescription> d = pr.get().getDescriptions().stream()
-									.filter(desc -> desc.getLanguage().getCode().equals(language.getCode()))
+									.filter(desc -> desc.getLanguage().getCode().equals(finalLanguage.getCode()))
 									.findFirst();
 							if (d.isPresent()) {
 								com.salesmanager.shop.model.catalog.product.ProductPriceDescription priceDescription = new com.salesmanager.shop.model.catalog.product.ProductPriceDescription();
