@@ -10,6 +10,8 @@ import com.salesmanager.core.model.code.ReadCode;
 public interface CodeService extends SalesManagerEntityService<Integer, Code> {
 
 	List<ReadCode> getListCode(int visible) throws ServiceException;
+	
+	List<ReadCode> getListCodeDetail(String code) throws ServiceException;
 
 	String getCode() throws ServiceException;
 

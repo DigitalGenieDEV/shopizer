@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.api.v1.code;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,9 +57,17 @@ public class CodeApi {
 	@GetMapping(value = "/private/code")
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(httpMethod = "GET", value = "Get Code by list", notes = "")
-	public ReadableCode getListAdminMenu(
+	public ReadableCode getListCode(
 			@RequestParam(value = "visible", required = false, defaultValue = "0") int visible) throws Exception {
 		return codeFacde.getListCode(visible);
+	}
+	
+	@GetMapping(value = "/private/code/detail")
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(httpMethod = "GET", value = "Get Code by Detail list", notes = "")
+	public List<ReadableCode> getListCodeDetail(
+			@RequestParam(value = "code", required = true, defaultValue = "") String code) throws Exception {
+		return codeFacde.getListCodeDetail(code);
 	}
 
 

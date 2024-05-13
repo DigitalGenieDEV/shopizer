@@ -69,6 +69,30 @@ public class CodeFacadeImpl implements CodeFacade {
 		}
 
 	}
+	
+	
+	public List<ReadableCode> getListCodeDetail(String code) throws Exception {
+		try {
+			List<ReadCode> dataList = codeService.getListCodeDetail(code);
+			List<ReadableCode> sendList = new ArrayList<>();
+			for (ReadCode data : dataList) {
+				ReadableCode sendData = new ReadableCode();
+				sendData.setId(data.getId());
+				sendData.setCodeNameKr(data.getCode_Name_Kr());
+				sendData.setCodeNameEn(data.getCode_Name_En());
+				sendData.setCodeNameCn(data.getCode_Name_Cn());
+				sendData.setCodeNameJp(data.getCode_Name_Jp());
+				sendData.setValue(data.getValue());
+				sendData.setParentId(data.getParent_id());
+				sendList.add(sendData);
+			}
+
+			return sendList;
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
+
+	}
 
 	public PersistableCode saveCode(PersistableCode code) throws Exception{
 		try {
