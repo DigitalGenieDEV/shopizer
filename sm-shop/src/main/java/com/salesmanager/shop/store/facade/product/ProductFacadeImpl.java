@@ -270,6 +270,11 @@ public class ProductFacadeImpl implements ProductFacade {
 	}
 
 	@Override
+	public ReadableProduct getProductByIdForAdmin(Long id, MerchantStore store, Language language) throws ConversionException {
+		return null;
+	}
+
+	@Override
 	public ReadableProduct getProductById(Long id, MerchantStore store, Language language) {
 		Product	product = productService.getById(id);
 

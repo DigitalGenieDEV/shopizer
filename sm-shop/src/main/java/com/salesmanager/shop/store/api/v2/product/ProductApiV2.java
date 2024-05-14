@@ -195,6 +195,7 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
+	@Deprecated
 	@GetMapping(value = { "/private/product/{id}" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
@@ -454,7 +455,43 @@ public class ProductApiV2 {
 		return product;
 	}
 
+	/**
+	 * for admin
+	 * @param productId
+	 * @param lang
+	 * @param merchantStore
+	 * @param language
+	 * @return
+	 */
+	@RequestMapping(value = "/private/product/id/{productId}", method = RequestMethod.GET)
+	@ApiOperation(httpMethod = "GET", value = "Get a product by productId", notes = "For Shop purpose. Specifying ?merchant is required otherwise it falls back to DEFAULT")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
+	@ResponseBody
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public ReadableProduct getByProductIdForAdmin(@PathVariable Long productId,
+										  @RequestParam(value = "lang", required = false) String lang,
+										  @ApiIgnore MerchantStore merchantStore,
+										  @ApiIgnore Language language) {
+		ReadableProduct product = new ReadableProduct();
+		try {
+			 product = productFacadeV2.getProductByIdForAdmin(productId, merchantStore, language);
+		}catch (Exception e){
+			LOGGER.error("Error  to get Product By Id For Admin", e);
+		}
+		return product;
+	}
 
+
+	/**
+	 * for user
+	 * @param productId
+	 * @param lang
+	 * @param merchantStore
+	 * @param language
+	 * @return
+	 */
 	@RequestMapping(value = "/product/id/{productId}", method = RequestMethod.GET)
 	@ApiOperation(httpMethod = "GET", value = "Get a product by productId", notes = "For Shop purpose. Specifying ?merchant is required otherwise it falls back to DEFAULT")
 	@ApiResponses(value = {
@@ -462,7 +499,7 @@ public class ProductApiV2 {
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ReadableProduct getByProductId(@PathVariable Long productId,
+	public ReadableProduct getByProductIdForUser(@PathVariable Long productId,
 							   @RequestParam(value = "lang", required = false) String lang,
 							   @ApiIgnore MerchantStore merchantStore,
 							   @ApiIgnore Language language) {

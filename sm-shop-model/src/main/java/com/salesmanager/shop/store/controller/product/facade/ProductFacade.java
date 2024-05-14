@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.product.facade;
 
 import java.util.List;
 
+import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -23,6 +24,8 @@ public interface ProductFacade {
    * @return
    */
   Product getProduct(Long id, MerchantStore store);
+
+  ReadableProduct getProductByIdForAdmin(Long id, MerchantStore store, Language language) throws ConversionException;
 
 
   ReadableProduct getProductById(Long id, MerchantStore store, Language language);

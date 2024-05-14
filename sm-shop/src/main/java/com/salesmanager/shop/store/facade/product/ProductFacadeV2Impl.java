@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +86,29 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	public Product getProduct(Long id, MerchantStore store) {
 		//same as v1
 		return productService.findOne(id, store);
+	}
+
+	@Override
+	public ReadableProduct getProductByIdForAdmin(Long id, MerchantStore store, Language language) throws ConversionException {
+		Product product = productService.findOne(id, store);
+		if (product == null) {
+			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+		}
+
+		if (product.getMerchantStore().getId() != store.getId()) {
+			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+		}
+
+		ReadableProductFull readableProductFull = new ReadableProductFull();
+
+		ReadableProductPopulator populator = new ReadableProductPopulator();
+
+		populator.setPricingService(pricingService);
+		populator.setimageUtils(imageUtils);
+
+		ReadableProduct readableProduct = populator.populate(product, readableProductFull, store, language);
+
+		return readableProduct;
 	}
 
 	@Override
