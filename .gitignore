@@ -9,7 +9,7 @@
 */target/*
 .idea/workspace.xml
 *.class
-/bin/
+*.pem
 /WebContent/
 sm-shop/SALESMANAGER.lock.db
 .DS_Store
