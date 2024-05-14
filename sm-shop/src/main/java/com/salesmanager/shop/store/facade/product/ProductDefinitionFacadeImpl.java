@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import com.salesmanager.shop.model.catalog.product.product.definition.ReadableProductDefinitionFull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -86,7 +87,8 @@ public class ProductDefinitionFacadeImpl implements ProductDefinitionFacade {
 	@Override
 	public ReadableProductDefinition getProduct(MerchantStore store, Long id, Language language) {
 		Product product = productService.findOne(id, store);
-		return readableProductDefinitionMapper.convert(product, store, language);
+		ReadableProductDefinitionFull readableProductDefinitionFull = new ReadableProductDefinitionFull();
+		return readableProductDefinitionMapper.merge(product, readableProductDefinitionFull, store, language);
 	}
 
 	@Override

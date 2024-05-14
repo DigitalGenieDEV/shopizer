@@ -195,7 +195,6 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
-	@Deprecated
 	@GetMapping(value = { "/private/product/{id}" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
