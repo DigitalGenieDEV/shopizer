@@ -27,6 +27,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private boolean discounted = false;
 	private ReadableImage image;
 
+	private String storeName;
+
 	private Long salesVolume;
 	private List<ReadableImage> images = new ArrayList<ReadableImage>();
 	private ReadableManufacturer manufacturer;
@@ -170,5 +172,11 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	}
 
 
+	public String getStoreName() {
+		return storeName;
+	}
 
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 }
