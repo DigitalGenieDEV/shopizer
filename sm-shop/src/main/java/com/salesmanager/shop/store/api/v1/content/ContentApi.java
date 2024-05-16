@@ -425,7 +425,7 @@ public class ContentApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public void upload(@RequestParam("file") MultipartFile file, @ApiIgnore MerchantStore merchantStore,
+	public String upload(@RequestParam("file") MultipartFile file, @ApiIgnore MerchantStore merchantStore,
 					   @ApiIgnore Language language,
 					   @RequestParam(value = "fileContentType", required = true) String fileContentType) {
 
@@ -440,8 +440,8 @@ public class ContentApi {
 
 		contentFacade.addContentFile(f, merchantStore.getCode(), FileContentType.valueOf(fileContentType));
 
+		return imageUtils.buildStaticImageUtils(merchantStore, f.getName());
 	}
-
 
 
 	/**
@@ -555,6 +555,5 @@ public class ContentApi {
 			@ApiIgnore Language language) {
 		contentFacade.delete(merchantStore, name.getName(), name.getContentType());
 	}
-
 
 }
