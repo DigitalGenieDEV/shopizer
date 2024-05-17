@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAttribute;
@@ -12,6 +13,7 @@ import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductProp
 import com.salesmanager.shop.model.catalog.product.product.ProductEntity;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
+import com.salesmanager.shop.model.store.ReadableMerchantStore;
 
 public class ReadableProduct extends ProductEntity implements Serializable {
 
@@ -19,7 +21,9 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private ReadableMerchantStore merchantStore;
+
 	private ProductDescription description;
 	private ReadableProductPrice productPrice;
 	private String finalPrice = "0";
@@ -176,6 +180,14 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public String getIdentifier() {
 		return identifier;
+	}
+
+	public ReadableMerchantStore getMerchantStore() {
+		return merchantStore;
+	}
+
+	public void setMerchantStore(ReadableMerchantStore merchantStore) {
+		this.merchantStore = merchantStore;
 	}
 
 	public void setIdentifier(String identifier) {

@@ -118,12 +118,8 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
 		}
 
-		if (product.getMerchantStore().getId() != store.getId()) {
-			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
-		}
 
-
-		ReadableProduct readableProduct = readableProductMapper.convert(product, store, language);
+		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
 
 		return readableProduct;
 	}
