@@ -27,6 +27,9 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private boolean discounted = false;
 	private ReadableImage image;
 
+	private String identifier;
+
+
 	private String storeName;
 
 	private Long salesVolume;
@@ -171,6 +174,13 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.variants = variants;
 	}
 
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
 	public String getStoreName() {
 		return storeName;

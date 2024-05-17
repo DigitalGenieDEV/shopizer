@@ -103,6 +103,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		TreeMap<Long, ReadableProductOption> selectableOptions = new TreeMap<Long, ReadableProductOption>();
 
 		destination.setSku(source.getSku());
+		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
 		destination.setId(source.getId());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));

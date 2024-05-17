@@ -121,7 +121,6 @@ public class ReadableProductPopulator extends
 			target.setId(source.getId());
 			target.setAvailable(source.isAvailable());
 			target.setProductShipeable(source.isProductShipeable());
-
 			ProductSpecification specifications = new ProductSpecification();
 			specifications.setHeight(source.getProductHeight());
 			specifications.setLength(source.getProductLength());
@@ -132,7 +131,7 @@ public class ReadableProductPopulator extends
 			target.setPreOrder(source.isPreOrder());
 			target.setRefSku(source.getRefSku());
 			target.setSortOrder(source.getSortOrder());
-
+			target.setIdentifier(source.getSku());
 			if(source.getType() != null) {
 				target.setType(this.type(source.getType(), language));
 			}

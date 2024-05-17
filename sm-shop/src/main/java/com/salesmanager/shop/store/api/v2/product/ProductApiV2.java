@@ -476,6 +476,7 @@ public class ProductApiV2 {
 		ReadableProduct product = new ReadableProduct();
 		try {
 			 product = productFacadeV2.getProductByIdForAdmin(productId, merchantStore, language);
+			 product.setStoreName(merchantStore.getStorename());
 		}catch (Exception e){
 			LOGGER.error("Error  to get Product By Id For Admin", e);
 		}

@@ -32,6 +32,7 @@ public class ProductEntity extends Product implements Serializable {
 	private BigDecimal price;
 	private int quantity = 0;
 	private String sku;
+
 	private boolean preOrder = false;
 	private boolean productVirtual = false;
 	private int quantityOrderMaximum = -1;// default unlimited
