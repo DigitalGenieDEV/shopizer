@@ -497,13 +497,11 @@ public class ProductApiV2 {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
 	@ResponseBody
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public ReadableProduct getByProductIdForUser(@PathVariable Long productId,
 							   @RequestParam(value = "lang", required = false) String lang,
-							   @ApiIgnore MerchantStore merchantStore,
 							   @ApiIgnore Language language) {
-		ReadableProduct product = productFacadeV2.getProductById(productId, merchantStore, language);
+		ReadableProduct product = productFacadeV2.getProductById(productId,null, language);
 		return product;
 	}
 

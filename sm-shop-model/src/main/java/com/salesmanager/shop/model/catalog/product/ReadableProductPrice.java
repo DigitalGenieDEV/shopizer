@@ -1,6 +1,9 @@
 package com.salesmanager.shop.model.catalog.product;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import com.salesmanager.shop.model.entity.Entity;
 
 public class ReadableProductPrice extends Entity implements Serializable {
@@ -8,6 +11,8 @@ public class ReadableProductPrice extends Entity implements Serializable {
 	/**
 	 * 
 	 */
+	private List<PriceRange> priceSupplyRangeList;
+
 	private static final long serialVersionUID = 1L;
 	private String originalPrice;
 	private String finalPrice;
@@ -55,4 +60,11 @@ public class ReadableProductPrice extends Entity implements Serializable {
 		this.defaultPrice = defaultPrice;
 	}
 
+	public List<PriceRange> getPriceSupplyRangeList() {
+		return priceSupplyRangeList;
+	}
+
+	public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
+		this.priceSupplyRangeList = priceSupplyRangeList;
+	}
 }

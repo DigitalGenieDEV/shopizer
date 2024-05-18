@@ -2,6 +2,8 @@ package com.salesmanager.shop.model.catalog.product.product.variant;
 
 import com.salesmanager.shop.model.catalog.product.product.PersistableProductInventory;
 
+import java.util.List;
+
 public class PersistableProductVariant extends ProductVariant {
 
 	private static final long serialVersionUID = 1L;
@@ -11,7 +13,10 @@ public class PersistableProductVariant extends ProductVariant {
 	
 	private String variationCode;
 	private String variationValueCode;
-	
+
+//	private List<PersistableVariantOption> persistentOptions;
+
+
 	private PersistableProductInventory inventory;
 
 	public Long getVariation() {
@@ -53,8 +58,12 @@ public class PersistableProductVariant extends ProductVariant {
 	public void setInventory(PersistableProductInventory inventory) {
 		this.inventory = inventory;
 	}
-	
-	
-	
 
+//	public List<PersistableVariantOption> getPersistentOptions() {
+//		return persistentOptions;
+//	}
+//
+//	public void setPersistentOptions(List<PersistableVariantOption> persistentOptions) {
+//		this.persistentOptions = persistentOptions;
+//	}
 }
