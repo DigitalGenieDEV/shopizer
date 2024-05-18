@@ -696,7 +696,7 @@ public class ReadableProductPopulator extends
 
 	@Override
 	protected ReadableProduct createTarget() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated mepopulateDescriptionthod stub
 		return null;
 	}
 

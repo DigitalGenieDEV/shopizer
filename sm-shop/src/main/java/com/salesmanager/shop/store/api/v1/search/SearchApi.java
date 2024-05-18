@@ -9,6 +9,8 @@ import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.search.ReadableSearchProduct;
+import com.salesmanager.shop.model.search.ReadableSearchProductV2;
+import com.salesmanager.shop.model.search.ReadableSearchResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -65,10 +67,13 @@ public class SearchApi {
           @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
           @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
   })
-  public @ResponseBody List<ReadableProduct> searchV2(
+  public @ResponseBody
+  ReadableSearchResult searchV2(
           @RequestBody SearchProductRequestV2 searchProductRequestV2,
           @ApiIgnore Language language) throws Exception {
-    return  searchFacade.searchV2(searchProductRequestV2, language);
+
+    return searchFacade.searchV2(searchProductRequestV2, language);
+//    return  searchFacade.searchV2(searchProductRequestV2, language);
   }
 
 //  @PostMapping("/search/autocomplete")

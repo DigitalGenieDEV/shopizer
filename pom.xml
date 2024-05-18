@@ -284,6 +284,13 @@
 				<version>1.11.640</version>
 			</dependency>
 
+			<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda -->
+			<dependency>
+				<groupId>com.amazonaws</groupId>
+				<artifactId>aws-java-sdk-lambda</artifactId>
+				<version>1.11.648</version>
+			</dependency>
+
 			<!-- google cloud storage -->
 			<dependency>
 				<groupId>com.google.cloud</groupId>

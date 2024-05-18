@@ -180,6 +180,12 @@
 			<artifactId>aws-java-sdk-ses</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-lambda</artifactId>
+		</dependency>
+
 		<!-- google cloud storage -->
 		<dependency>
 			<groupId>com.google.cloud</groupId>

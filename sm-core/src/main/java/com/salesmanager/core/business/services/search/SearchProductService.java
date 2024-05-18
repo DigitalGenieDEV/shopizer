@@ -1,15 +1,13 @@
 package com.salesmanager.core.business.services.search;
 
 import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteRequest;
-import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteResult;
-import com.salesmanager.core.model.catalog.product.search.ProductSearchRequest;
+import com.salesmanager.core.model.catalog.product.search.*;
 
 import java.util.List;
 
 public interface SearchProductService {
 
-    List<Product> search(ProductSearchRequest request);
+    SearchProductResult search(SearchRequest request);
 
-    ProductAutocompleteResult autocomplete(ProductAutocompleteRequest request);
+    AutocompleteResult autocomplete(AutocompleteRequest request);
 }

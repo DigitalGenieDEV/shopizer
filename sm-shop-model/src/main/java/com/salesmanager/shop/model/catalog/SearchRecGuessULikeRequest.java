@@ -2,8 +2,7 @@ package com.salesmanager.shop.model.catalog;
 
 import java.io.Serializable;
 
-public class SearchProductAutocompleteRequestV2 implements Serializable  {
-
+public class SearchRecGuessULikeRequest implements Serializable {
 
     /**
      *
@@ -11,24 +10,8 @@ public class SearchProductAutocompleteRequestV2 implements Serializable  {
     private static final long serialVersionUID = 1L;
     private Integer uid;
     private String cookieid;
-    private String lang;
-    private String q;
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getQ() {
-        return q;
-    }
-
-    public void setQ(String q) {
-        this.q = q;
-    }
+    private Integer pageIdx = 0;
+    private Integer size = 20;
 
     public Integer getUid() {
         return uid;
@@ -44,5 +27,21 @@ public class SearchProductAutocompleteRequestV2 implements Serializable  {
 
     public void setCookieid(String cookieid) {
         this.cookieid = cookieid;
+    }
+
+    public Integer getPageIdx() {
+        return pageIdx;
+    }
+
+    public void setPageIdx(Integer pageIdx) {
+        this.pageIdx = pageIdx;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }

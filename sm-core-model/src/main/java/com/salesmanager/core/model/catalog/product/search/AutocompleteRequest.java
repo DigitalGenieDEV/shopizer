@@ -1,17 +1,19 @@
-package com.salesmanager.shop.model.catalog;
+package com.salesmanager.core.model.catalog.product.search;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SearchProductAutocompleteRequestV2 implements Serializable  {
+public class AutocompleteRequest {
 
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+    @JsonProperty("uid")
     private Integer uid;
+
+    @JsonProperty("cookieid")
     private String cookieid;
+
+    @JsonProperty("lang")
     private String lang;
+
+    @JsonProperty("q")
     private String q;
 
     public String getLang() {
@@ -29,6 +31,20 @@ public class SearchProductAutocompleteRequestV2 implements Serializable  {
     public void setQ(String q) {
         this.q = q;
     }
+
+//    public List<NameValuePair> getParams() {
+//        List<NameValuePair> pairs = new ArrayList<>();
+//
+//        if (lang != null) {
+//            pairs.add(new NameValuePair("lang", lang));
+//        }
+//
+//        if (q != null) {
+//            pairs.add(new NameValuePair("q", q));
+//        }
+//
+//        return pairs;
+//    }
 
     public Integer getUid() {
         return uid;
