@@ -21,6 +21,7 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 
     private ReadableProductVariation variant = null;
     private ReadableProductVariation variantValue = null;
+    private boolean checked;
 
 
 
@@ -55,4 +56,11 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
         this.variantValue = variantValue;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 }

@@ -206,6 +206,12 @@
 			<artifactId>merchantsdk</artifactId>
 		</dependency>
 
+		<!-- Paypal -->
+		<dependency>
+			<groupId>com.paypal.sdk</groupId>
+			<artifactId>checkout-sdk</artifactId>
+		</dependency>
+
 		<!-- Stripe -->
 		<dependency>
 			<groupId>com.stripe</groupId>

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>Shopping cart is responsible for storing and carrying
@@ -77,6 +78,14 @@ public class CustomerShoppingCart extends SalesManagerEntity<Long, CustomerShopp
 
     public Set<CustomerShoppingCartItem> getLineItems() {
         return lineItems;
+    }
+
+    public Set<CustomerShoppingCartItem> getCheckedLineItems() {
+        return lineItems.stream().filter(l -> l.isChecked()).collect(Collectors.toSet());
+    }
+
+    public Set<CustomerShoppingCartItem> getUncheckedLineItems() {
+        return lineItems.stream().filter(l -> !l.isChecked()).collect(Collectors.toSet());
     }
 
     public void setLineItems(Set<CustomerShoppingCartItem> lineItems) {

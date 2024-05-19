@@ -35,6 +35,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	)
 	List<Object> findBySku(String sku, Integer consultId);
 
+	@Query(
+
+			value = "select p.PRODUCT_ID from {h-schema}PRODUCT p left join {h-schema}PRODUCT_VARIANT i ON i.PRODUCT_ID = p.PRODUCT_ID where p.SKU=?1 or i.SKU=?1",
+			nativeQuery = true
+	)
+	List<Object> findBySku(String sku);
 
 
 	@Query(value="SELECT " +

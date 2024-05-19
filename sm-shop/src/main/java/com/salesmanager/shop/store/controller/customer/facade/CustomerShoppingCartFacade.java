@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.customer.facade;
 
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
+import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartData;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartItem;
@@ -16,6 +17,8 @@ public interface CustomerShoppingCartFacade {
 
     CustomerShoppingCart createCartModel(final String customerShoppingCartCode, final Customer customer) throws Exception;
 
+    CustomerShoppingCart createCartModel(final Customer customer) throws Exception;
+
     void deleteCart(final Long id) throws Exception;
 
     void deleteCart(String code) throws Exception;
@@ -24,23 +27,31 @@ public interface CustomerShoppingCartFacade {
 
     CustomerShoppingCart getCustomerShoppingCartModel(Long id) throws Exception;
 
+    CustomerShoppingCart getCustomerShoppingCartModel(Customer customer) throws Exception;
+
     void saveOrUpdateCustomerShoppingCart(CustomerShoppingCart cart) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCart(Customer customer, String cartCode, PersistableCustomerShoppingCartItem item, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCart(Customer customer, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCart(Customer customer, String cartCode, String promo, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCart(Customer customer,String promo, MerchantStore store, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart modifyCartMulti(Customer customer, String cartCode, List<PersistableCustomerShoppingCartItem> items, Language language) throws Exception;
+    ReadableCustomerShoppingCart modifyCartMulti(Customer customer, List<PersistableCustomerShoppingCartItem> items, MerchantStore store, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart addToCart(Customer customer, PersistableCustomerShoppingCartItem item, Language language) throws Exception;
+    ReadableCustomerShoppingCart addToCart(Customer customer, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception;
 
 //    ReadableCustomerShoppingCart addToCart(PersistableCustomerShoppingCartItem item, Language language);
 
-    ReadableCustomerShoppingCart removeCustomerShoppingCartItem(String cartCode, String sku, Language language, boolean returnCart) throws Exception;;
+    ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception;;
 
-    ReadableCustomerShoppingCart getById(Long id, Language language) throws Exception;
+    ReadableCustomerShoppingCart removeCartItemMulti(Customer customer, List<PersistableCustomerShoppingCartItem> items, MerchantStore store, Language language, boolean returnCart) throws Exception;
 
-    ReadableCustomerShoppingCart getByCode(String code, Language language)  throws Exception;
+    ReadableCustomerShoppingCart cleanCart(Customer customer, MerchantStore store, Language language) throws Exception;
 
-    ReadableCustomerShoppingCart readableCart(CustomerShoppingCart cart, Language language);
+    ReadableCustomerShoppingCart getById(Long id, MerchantStore merchantStore, Language language) throws Exception;
+
+    ReadableCustomerShoppingCart getByCode(String code, MerchantStore merchantStore, Language language)  throws Exception;
+
+    ReadableCustomerShoppingCart getByCustomer(Customer customer, MerchantStore merchantStore, Language language)  throws Exception;
+
+    ReadableCustomerShoppingCart readableCart(CustomerShoppingCart cart, MerchantStore store, Language language);
 }

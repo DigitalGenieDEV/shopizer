@@ -15,7 +15,7 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
     private int quantity;
     private String promoCode;
     private List<ProductAttribute> attributes;
-    private Integer merchantId;
+    private boolean checked;
 
     public String getProduct() {
         return product;
@@ -49,11 +49,12 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
         this.attributes = attributes;
     }
 
-    public Integer getMerchantId() {
-        return merchantId;
+
+    public boolean isChecked() {
+        return checked;
     }
 
-    public void setMerchantId(Integer merchantId) {
-        this.merchantId = merchantId;
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

@@ -96,6 +96,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	
 	Product getBySku(String productCode, MerchantStore merchant) throws ServiceException;
 
+	Product getBySku(String productCode) throws ServiceException;
+
 	/**
 	 * Find a product for a specific merchant
 	 * @param id

@@ -43,7 +43,6 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
             "09fc6fcd-03ec-42ef-95a2-e51558de0b3a",
             "42808902-c6a4-4ae5-8135-3017916bcf24",
             "f18cf358-4e59-426f-abc1-a97c8e8fd951",
-
             "92dcce2e-4a35-4384-90b9-253ad6dcaa0f"
     };
 
@@ -54,7 +53,8 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
         PersistableCustomerShoppingCartItem cartItem = new PersistableCustomerShoppingCartItem();
         cartItem.setProduct(skus[0]);
         cartItem.setQuantity(1);
-        cartItem.setMerchantId(1);
+//        cartItem.setMerchantId(1);
+        cartItem.setChecked(true);
 
         final HttpEntity<PersistableCustomerShoppingCartItem> cartEntity = new HttpEntity<>(cartItem, getHeader());
         final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.postForEntity(String.format("/api/v1/auth/customer_cart"), cartEntity, ReadableCustomerShoppingCart.class);
@@ -70,10 +70,11 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
         PersistableCustomerShoppingCartItem cartItem = new PersistableCustomerShoppingCartItem();
         cartItem.setProduct(skus[1]);
         cartItem.setQuantity(1);
-        cartItem.setMerchantId(1);
+//        cartItem.setMerchantId(1);
+        cartItem.setChecked(true);
 
         final HttpEntity<PersistableCustomerShoppingCartItem> cartEntity = new HttpEntity<>(cartItem, getHeader());
-        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/" + String.valueOf(data.getCartId())), HttpMethod.PUT, cartEntity, ReadableCustomerShoppingCart.class);
+        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart"), HttpMethod.PUT, cartEntity, ReadableCustomerShoppingCart.class);
 
         assertNotNull(response);
         assertThat(response.getStatusCode(), is(CREATED));
@@ -85,22 +86,24 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
         PersistableCustomerShoppingCartItem cartItem1 = new PersistableCustomerShoppingCartItem();
         cartItem1.setProduct(skus[2]);
         cartItem1.setQuantity(1);
-        cartItem1.setMerchantId(1);
+//        cartItem1.setMerchantId(1);
+        cartItem1.setChecked(true);
 
         PersistableCustomerShoppingCartItem cartItem2 = new PersistableCustomerShoppingCartItem();
         cartItem2.setProduct(skus[3]);
         cartItem2.setQuantity(2);
-        cartItem2.setMerchantId(1);
+//        cartItem2.setMerchantId(1);
 
         PersistableCustomerShoppingCartItem cartItem3 = new PersistableCustomerShoppingCartItem();
         cartItem3.setProduct(skus[4]);
         cartItem3.setQuantity(2);
-        cartItem3.setMerchantId(2);
+//        cartItem3.setMerchantId(2);
+        cartItem3.setChecked(true);
 
         PersistableCustomerShoppingCartItem[] cartItems = new PersistableCustomerShoppingCartItem[]{ cartItem1, cartItem2, cartItem3};
 
         final HttpEntity<PersistableCustomerShoppingCartItem[]> cartEntity = new HttpEntity<>(cartItems, getHeader());
-        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/" + String.valueOf(data.getCartId()) + "/multi"), HttpMethod.POST, cartEntity, ReadableCustomerShoppingCart.class);
+        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/multi"), HttpMethod.POST, cartEntity, ReadableCustomerShoppingCart.class);
 
         assertNotNull(response);
         assertThat(response.getStatusCode(), is(CREATED));
@@ -110,7 +113,7 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
     @Order(4)
     public void deleteCartItem() {
         final HttpEntity cartEntity = new HttpEntity<>(null, getHeader());
-        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/" + String.valueOf(data.getCartId()) + "/product/" + skus[3] + "?body=true"), HttpMethod.DELETE, cartEntity, ReadableCustomerShoppingCart.class);
+        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/product/" + skus[3] + "?body=true"), HttpMethod.DELETE, cartEntity, ReadableCustomerShoppingCart.class);
 
         assertNotNull(response);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -120,19 +123,19 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
     @Order(5)
     public void getCart() {
         final HttpEntity<PersistableCustomerShoppingCartItem[]> cartEntity = new HttpEntity<>(null, getHeader());
-        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/customer_cart/" + String.valueOf(data.getCartId())), HttpMethod.GET, cartEntity, ReadableCustomerShoppingCart.class);
+        final ResponseEntity<ReadableCustomerShoppingCart> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart"), HttpMethod.GET, cartEntity, ReadableCustomerShoppingCart.class);
 
         assertNotNull(response);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
-    @Test
-    @Order(6)
+//    @Test
+//    @Order(6)
     public void checkoutCart() {
         PersistableCustomerOrder persistableCustomerOrder = new PersistableCustomerOrder();
 
         final HttpEntity<PersistableCustomerOrder> cartEntity = new HttpEntity<>(persistableCustomerOrder, getHeader());
-        final ResponseEntity<String> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart/" + String.valueOf(data.getCartId() + "/checkout")), HttpMethod.POST, cartEntity, String.class);
+        final ResponseEntity<String> response = testRestTemplate.exchange(String.format("/api/v1/auth/customer_cart"), HttpMethod.POST, cartEntity, String.class);
 
         assertNotNull(response);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

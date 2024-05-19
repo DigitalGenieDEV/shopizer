@@ -37,31 +37,44 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
     private CustomerService customerService;
 
     @Override
-    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart) {
-        List<MerchantStore> stores = customerShoppingCart.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+    public List<ShoppingCart> splitCheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart) {
+        List<MerchantStore> stores = customerShoppingCart.getCheckedLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
         Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
         uniqStores.addAll(stores);
 
         Customer customer = customerService.getById(customerShoppingCart.getCustomerId());
 
         // 商户购物车
-        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
+        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getCheckedItemsShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
         return shoppingCarts;
     }
 
     @Override
-    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart, Customer customer) {
-        List<MerchantStore> stores = customerShoppingCart.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+    public List<ShoppingCart> splitUncheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart) {
+        List<MerchantStore> stores = customerShoppingCart.getUncheckedLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+        Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
+        uniqStores.addAll(stores);
+
+        Customer customer = customerService.getById(customerShoppingCart.getCustomerId());
+
+        // 商户购物车
+        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getUncheckedItemsShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
+        return shoppingCarts;
+    }
+
+    @Override
+    public List<ShoppingCart> splitCheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart, Customer customer) {
+        List<MerchantStore> stores = customerShoppingCart.getCheckedLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
         Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
         uniqStores.addAll(stores);
 
         // 商户购物车
-        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
+        List<ShoppingCart> shoppingCarts = uniqStores.stream().map(s -> getCheckedItemsShoppingCart(customerShoppingCart, s, customer)).collect(Collectors.toList());
         return shoppingCarts;
     }
 
     @Override
-    public ShoppingCart getShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer) {
+    public ShoppingCart getCheckedItemsShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer) {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setMerchantStore(store);
         shoppingCart.setCustomerId(customer.getId());
@@ -70,7 +83,25 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCart.setPromoAdded(customerShoppingCart.getPromoAdded());
         shoppingCart.setObsolete(customerShoppingCart.isObsolete());
 
-        Set<ShoppingCartItem> shoppingCartItems = new HashSet<>(customerShoppingCart.getLineItems().stream()
+        Set<ShoppingCartItem> shoppingCartItems = new HashSet<>(customerShoppingCart.getCheckedLineItems().stream()
+                .filter(i -> i.getMerchantStore().getId() == store.getId()).map(s -> getShoppingCartItem(shoppingCart, s)).collect(Collectors.toList()));
+
+        shoppingCart.setLineItems(shoppingCartItems);
+
+        return shoppingCart;
+    }
+
+    @Override
+    public ShoppingCart getUncheckedItemsShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setMerchantStore(store);
+        shoppingCart.setCustomerId(customer.getId());
+        shoppingCart.setIpAddress(customerShoppingCart.getIpAddress());
+        shoppingCart.setPromoCode(customerShoppingCart.getPromoCode());
+        shoppingCart.setPromoAdded(customerShoppingCart.getPromoAdded());
+        shoppingCart.setObsolete(customerShoppingCart.isObsolete());
+
+        Set<ShoppingCartItem> shoppingCartItems = new HashSet<>(customerShoppingCart.getUncheckedLineItems().stream()
                 .filter(i -> i.getMerchantStore().getId() == store.getId()).map(s -> getShoppingCartItem(shoppingCart, s)).collect(Collectors.toList()));
 
         shoppingCart.setLineItems(shoppingCartItems);

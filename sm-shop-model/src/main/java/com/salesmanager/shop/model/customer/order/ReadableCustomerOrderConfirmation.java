@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.customer.order;
 
 import com.salesmanager.shop.model.customer.address.Address;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.entity.Entity;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.total.ReadableTotal;
@@ -19,9 +20,18 @@ public class ReadableCustomerOrderConfirmation extends Entity {
     private String payment;
     private ReadableTotal total;
     private List<ReadableOrderProduct> products;
+    private ReadableCombineTransaction transaction;
 
     public Address getBilling() {
         return billing;
+    }
+
+    public ReadableCombineTransaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(ReadableCombineTransaction transaction) {
+        this.transaction = transaction;
     }
 
     public void setBilling(Address billing) {

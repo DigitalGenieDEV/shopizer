@@ -24,10 +24,7 @@ public class ReadableCustomerShoppingCart extends CustomerShoppingCartEntity{
     private BigDecimal total;
     private String displayTotal;
     private int quantity;
-    private Long order;
     private String promoCode;
-
-    private ReadableProductVariant variant;
 
     List<ReadableCustomerShoppingCartItem> products = new ArrayList<>();
     List<ReadableOrderTotal> totals;
@@ -82,28 +79,12 @@ public class ReadableCustomerShoppingCart extends CustomerShoppingCartEntity{
         this.quantity = quantity;
     }
 
-    public Long getOrder() {
-        return order;
-    }
-
-    public void setOrder(Long order) {
-        this.order = order;
-    }
-
     public String getPromoCode() {
         return promoCode;
     }
 
     public void setPromoCode(String promoCode) {
         this.promoCode = promoCode;
-    }
-
-    public ReadableProductVariant getVariant() {
-        return variant;
-    }
-
-    public void setVariant(ReadableProductVariant variant) {
-        this.variant = variant;
     }
 
     public List<ReadableCustomerShoppingCartItem> getProducts() {

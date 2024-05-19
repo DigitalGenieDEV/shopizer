@@ -5,6 +5,7 @@ import com.salesmanager.core.business.repositories.customer.order.CustomerOrderR
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
+import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.business.services.payments.PaymentService;
 import com.salesmanager.core.business.services.payments.TransactionService;
@@ -17,6 +18,8 @@ import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.Transaction;
@@ -57,6 +60,9 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
 
     @Inject
     private OrderService orderService;
+
+    @Inject
+    private MerchantStoreService merchantStoreService;
 
     private final CustomerOrderRepository customerOrderRepository;
 
@@ -108,12 +114,32 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
     }
 
     @Override
+    public void updateCustomerOrderStatus(CustomerOrder customerOrder, OrderStatus orderStatus) throws ServiceException {
+        customerOrder.setStatus(orderStatus);
+        saveOrUpdate(customerOrder);
+
+        List<Order> orders = customerOrder.getOrders();
+
+        for (Order order : orders) {
+            OrderStatusHistory orderHistory = new OrderStatusHistory();
+            orderHistory.setOrder(order);
+            orderHistory.setStatus(OrderStatus.PROCESSED);
+            orderHistory.setDateAdded(new Date());
+
+            orderService.addOrderStatusHistory(order, orderHistory);
+
+            order.setStatus(OrderStatus.PROCESSED);
+            orderService.saveOrUpdate(order);
+        }
+    }
+
+    @Override
     public CustomerOrder processCustomerOrder(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment) throws ServiceException {
         return process(customerOrder, customer, items, payment, null);
     }
 
     private MerchantStore defaultStore() {
-        return null;
+        return merchantStoreService.getById(1);
     }
 
     private CustomerOrder process(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment, CombineTransaction combineTransaction) throws ServiceException {
@@ -133,7 +159,7 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
 
 
         // 合并支付处理
-        CombineTransaction processCombineTransaction = combinePaymentService.processPayment(customer, payment, customerOrder, defaultStore());
+        CombineTransaction processCombineTransaction = combinePaymentService.processPayment(defaultStore(), customer, items, payment, customerOrder);
 
         this.create(customerOrder);
 
