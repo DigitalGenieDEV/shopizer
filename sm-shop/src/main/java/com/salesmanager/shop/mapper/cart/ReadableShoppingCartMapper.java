@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.model.catalog.product.description.ProductDescription;
+import com.salesmanager.shop.model.entity.ReadableDescription;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -153,13 +155,18 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 						}
 					}
 					
-					
+
+					if (shoppingCartItem.getImage() == null && shoppingCartItem.getImages() != null && shoppingCartItem.getImages().size() > 0) {
+						shoppingCartItem.setImage(shoppingCartItem.getImages().get(0));
+					}
 					
 
 					shoppingCartItem.setPrice(item.getItemPrice());
 					shoppingCartItem.setFinalPrice(pricingService.getDisplayAmount(item.getItemPrice(), store));
 
 					shoppingCartItem.setQuantity(item.getQuantity());
+					shoppingCartItem.setSku(item.getSku());
+					shoppingCartItem.setDescription(this.description(item.getProduct().getProductDescription()));
 
 					cartQuantity = cartQuantity + item.getQuantity();
 
@@ -168,7 +175,6 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 					// calculate sub total (price * quantity)
 					shoppingCartItem.setSubTotal(subTotal);
-
 					shoppingCartItem.setDisplaySubTotal(pricingService.getDisplayAmount(subTotal, store));
 
 					Set<com.salesmanager.core.model.shoppingcart.ShoppingCartAttributeItem> attributes = item
@@ -295,6 +301,15 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 		}
 
 		return destination;
+	}
+
+	private ReadableDescription description(ProductDescription description) {
+		ReadableDescription desc = new ReadableDescription();
+		desc.setDescription(description.getDescription());
+		desc.setName(description.getName());
+		desc.setId(description.getId());
+		desc.setLanguage(description.getLanguage().getCode());
+		return desc;
 	}
 	
 

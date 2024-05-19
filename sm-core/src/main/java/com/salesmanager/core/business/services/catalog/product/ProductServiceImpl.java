@@ -427,6 +427,20 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public Product getBySku(String productCode) throws ServiceException {
+		try {
+			List<Object> products = productRepository.findBySku(productCode);
+			if(products.isEmpty()) {
+				throw new ServiceException("Cannot get product with sku [" + productCode + "]");
+			}
+			BigInteger id = (BigInteger) products.get(0);
+			return this.getById(id.longValue());
+		} catch (Exception e) {
+			throw new ServiceException("Cannot get product with sku [" + productCode + "]", e);
+		}
+	}
+
+	@Override
 	public Long countProductsByCategoryIds(List<Long> categoryIds) {
 		return productRepository.countProductsByCategoryIds(categoryIds);
 	}

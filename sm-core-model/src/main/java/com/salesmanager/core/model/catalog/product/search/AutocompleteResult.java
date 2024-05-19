@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductAutocompleteResult {
+public class AutocompleteResult {
 
     @JsonProperty("suggest_num")
     private Integer suggestNum;

@@ -13,6 +13,7 @@ import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.entity.ValueList;
 
 import com.salesmanager.shop.model.search.ReadableSearchProduct;
+import com.salesmanager.shop.model.search.ReadableSearchResult;
 import modules.commons.search.request.SearchItem;
 import modules.commons.search.request.SearchResponse;
 
@@ -58,7 +59,7 @@ public interface SearchFacade {
 
 
 
-	List<ReadableProduct> searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException;
+	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException;
 
 	ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language);
 }

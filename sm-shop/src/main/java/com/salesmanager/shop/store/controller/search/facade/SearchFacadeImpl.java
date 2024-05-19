@@ -8,17 +8,20 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.services.search.SearchProductService;
-import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteRequest;
-import com.salesmanager.core.model.catalog.product.search.ProductAutocompleteResult;
-import com.salesmanager.core.model.catalog.product.search.ProductSearchRequest;
-import com.salesmanager.core.model.catalog.product.search.ProductSearchResult;
+import com.salesmanager.core.model.catalog.product.search.AutocompleteRequest;
+import com.salesmanager.core.model.catalog.product.search.AutocompleteResult;
+import com.salesmanager.core.model.catalog.product.search.SearchProductResult;
+import com.salesmanager.core.model.catalog.product.search.SearchRequest;
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
-import com.salesmanager.shop.model.catalog.product.ReadableProductList;
-import com.salesmanager.shop.model.search.ReadableSearchProduct;
+import com.salesmanager.shop.model.search.ReadableSearchProductV2;
+import com.salesmanager.shop.model.search.ReadableSearchResult;
+import com.salesmanager.shop.populator.search.ReadableSearchProductV2Populator;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import org.jsoup.helper.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -45,7 +48,6 @@ import com.salesmanager.shop.utils.ImageFilePath;
 
 import modules.commons.search.request.Aggregation;
 import modules.commons.search.request.SearchItem;
-import modules.commons.search.request.SearchRequest;
 import modules.commons.search.request.SearchResponse;
 
 @Service("searchFacade")
@@ -64,6 +66,9 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	@Inject
 	private PricingService pricingService;
+
+	@Autowired
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
 	@Inject
 	private SearchProductService searchProductService;
@@ -112,7 +117,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		
 		try {
 			LOGGER.debug("Search " + query);
-			SearchRequest searchRequest = new SearchRequest();
+			modules.commons.search.request.SearchRequest searchRequest = new modules.commons.search.request.SearchRequest();
 			searchRequest.setLanguage(languageCode);
 			searchRequest.setSearchString(query);
 			searchRequest.setStore(store.getCode().toLowerCase());
@@ -191,7 +196,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		Validate.notNull(language, "Language cannot be null");
 		Validate.notNull(store,"MerchantStore cannot be null");
 		
-		SearchRequest req = new SearchRequest();
+		modules.commons.search.request.SearchRequest req = new modules.commons.search.request.SearchRequest();
 		req.setLanguage(language.getCode());
 		req.setStore(store.getCode().toLowerCase());
 		req.setSearchString(word);
@@ -216,36 +221,45 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public List<ReadableProduct> searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException {
-		ProductSearchRequest searchProductRequest = new ProductSearchRequest();
+	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException {
+		SearchRequest searchProductRequest = new SearchRequest();
 		searchProductRequest.setLang(searchProductRequestV2.getLang());
 		searchProductRequest.setSize(searchProductRequestV2.getSize());
 		searchProductRequest.setQ(searchProductRequestV2.getQ());
 		searchProductRequest.setPageIdx(searchProductRequestV2.getPageIdx());
 		searchProductRequest.setAttrFilt(searchProductRequestV2.getAttrFilt());
-		List<Product> products = searchProductService.search(searchProductRequest);
+		searchProductRequest.setUid(searchProductRequestV2.getUid());
+		searchProductRequest.setCookieid(searchProductRequestV2.getCookieid());
+		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
-		ReadableProductPopulator populator = new ReadableProductPopulator();
+		ReadableSearchProductV2Populator populator = new ReadableSearchProductV2Populator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
+		populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 
-		ReadableProductList productList = new ReadableProductList();
-		for(Product product : products) {
+//		ReadableProductList productList = new ReadableProductList();
+		ReadableSearchResult result = new ReadableSearchResult();
+		for(Product product : searchProductResult.getProductList()) {
 			//create new proxy product
-			ReadableProduct readProduct = populator.populate(product, new ReadableProduct(), product.getMerchantStore(), language);
-			productList.getProducts().add(readProduct);
+			ReadableSearchProductV2 readProduct = populator.populate(product, new ReadableSearchProductV2(), product.getMerchantStore(), language);
+			result.getProducts().add(readProduct);
 		}
 
-		return productList.getProducts();
+		result.setNumber(searchProductRequestV2.getPageIdx());
+		result.setAttrForFilt(searchProductResult.getAttrForFilt());
+
+		return result;
 	}
 
 	@Override
 	public ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language) {
-		ProductAutocompleteRequest request = new ProductAutocompleteRequest();
+		AutocompleteRequest request = new AutocompleteRequest();
 		request.setQ(searchProductAutocompleteRequestV2.getQ());
 		request.setLang(searchProductAutocompleteRequestV2.getLang());
+		request.setCookieid(searchProductAutocompleteRequestV2.getCookieid());
+		request.setUid(searchProductAutocompleteRequestV2.getUid());
 
-		ProductAutocompleteResult result = searchProductService.autocomplete(request);
+		AutocompleteResult result = searchProductService.autocomplete(request);
 
 		ValueList valueList = new ValueList();
 		valueList.setValues(new ArrayList<>(result.getSuggest().keySet()));

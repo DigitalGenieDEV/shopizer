@@ -2,9 +2,12 @@ package com.salesmanager.shop.store.controller.customer.facade;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.business.services.payments.combine.CombinePaymentService;
+import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
@@ -19,6 +22,8 @@ import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderTotal;
 import com.salesmanager.core.model.order.OrderTotalSummary;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
@@ -31,14 +36,18 @@ import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 import com.salesmanager.shop.model.order.total.ReadableTotal;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
+import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
 import com.salesmanager.shop.model.order.v1.PersistableOrder;
 import com.salesmanager.shop.model.shoppingcart.PersistableShoppingCartItem;
 import com.salesmanager.shop.populator.customer.PersistableCustomerOrderApiPopulator;
+import com.salesmanager.shop.populator.customer.ReadableCombineTransactionPopulator;
 import com.salesmanager.shop.populator.customer.ReadableCustomerOrderPopulator;
+import com.salesmanager.shop.populator.order.transaction.PersistablePaymentPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
@@ -104,8 +113,16 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     private ReadableCustomerOrderPopulator readableCustomerOrderPopulator;
 
     @Inject
+    private CombineTransactionService combineTransactionService;
+
+    @Inject
     private CustomerFacade customerFacade;
 
+    @Inject
+    private PricingService pricingService;
+
+    @Inject
+    private CombinePaymentService combinePaymentService;
 
     @Override
     public CustomerOrder processCustomerOrder(PersistableCustomerOrder customerOrder, Customer customer, Language language, Locale locale) throws ServiceException {
@@ -118,15 +135,15 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             CustomerOrder modelCustomerOrder = new CustomerOrder();
             persistableCustomerOrderApiPopulator.populate(customerOrder, modelCustomerOrder, null, language);
 
-            Long customerShoppingCartId = customerOrder.getCustomerShoppingCartId();
-            CustomerShoppingCart cart = customerShoppingCartService.getById(customerShoppingCartId);
+//            Long customerShoppingCartId = customerOrder.getCustomerShoppingCartId();
+            CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
 
             if (cart == null) {
-                throw new ServiceException("Shopping cart with id " + customerShoppingCartId + " does not exist");
+                throw new ServiceException("Shopping cart with Customer id " + customer.getId() + " does not exist");
             }
 
-            // 用户购物车按商户拆分
-            List<MerchantStore> stores = cart.getLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
+            // 将选中商品 按商户拆分
+            List<MerchantStore> stores = cart.getCheckedLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
             Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
             uniqStores.addAll(stores);
 
@@ -168,8 +185,6 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistablePayment.setTransactionType(TransactionType.COMBINESTAMP.name());
                 persistableOrder.setPayment(persistablePayment);
 
-
-//                customerOrder.getPayment().setAmount(orderTotalSummary.ge);
                 // 创建商户订单
                 Order order = orderFacade.processOrder(persistableOrder, customer, store, language, locale);
                 orders.add(order);
@@ -181,9 +196,14 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             modelCustomerOrder.setTotal(total);
             modelCustomerOrder.setOrders(orders);
 
-            Payment paymentModule = new Payment();
+//            Payment paymentModule = new Payment();
+            PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
+            paymentPopulator.setPricingService(pricingService);
+            Payment paymentModel = new Payment();
+            customerOrder.getPayment().setAmount(String.valueOf(total));
+            paymentPopulator.populate(customerOrder.getPayment(), paymentModel, null, language);
 
-            modelCustomerOrder = customerOrderService.processCustomerOrder(modelCustomerOrder, customer, lineItems, paymentModule);
+            modelCustomerOrder = customerOrderService.processCustomerOrder(modelCustomerOrder, customer, lineItems, paymentModel);
 
 
             try {
@@ -193,7 +213,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             }
 
             // 移除购物车项
-            Set<CustomerShoppingCartItem> existsItems = cart.getLineItems();
+            Set<CustomerShoppingCartItem> existsItems = cart.getCheckedLineItems();
             List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
             for (CustomerShoppingCartItem item: existsItems) {
                 if (skus.contains(item.getSku())) {
@@ -213,7 +233,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     }
 
     @Override
-    public ReadableCustomerOrderConfirmation orderConfirmation(CustomerOrder customerOrder, Customer customer, Language language) {
+    public ReadableCustomerOrderConfirmation orderConfirmation(CustomerOrder customerOrder, Customer customer, Language language) throws Exception {
         Validate.notNull(customerOrder, "CustomerOrder cannot be null");
         Validate.notNull(customer, "Customer cannot be null");
 
@@ -252,6 +272,14 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         }
 
         orderConfirmation.setId(customerOrder.getId());
+
+        CombineTransaction combineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
+        ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
+        ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
+        populator.setPricingService(pricingService);
+        populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
+
+        orderConfirmation.setTransaction(readableCombineTransaction);
         return orderConfirmation;
     }
 
@@ -313,6 +341,34 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         }
 
         return readableCustomerOrder;
+    }
+
+    @Override
+    public ReadableCombineTransaction captureCustomerOrder(MerchantStore store, CustomerOrder customerOrder, Customer customer, Language language) throws Exception {
+        CombineTransaction combineTransaction = combinePaymentService.processCapturePayment(customerOrder, customer, store);
+
+        ReadableCombineTransaction transaction = new ReadableCombineTransaction();
+        ReadableCombineTransactionPopulator trxPopulator = new ReadableCombineTransactionPopulator();
+        trxPopulator.setPricingService(pricingService);
+
+        trxPopulator.populate(combineTransaction, transaction, store, language);
+
+        return transaction;
+    }
+
+    @Override
+    public ReadableCombineTransaction authorizeCaptureCustomerOrder(MerchantStore store, CustomerOrder customerOrder, Customer customer, Language language) throws Exception {
+        CombineTransaction combineTransaction = combinePaymentService.processAuthorizeAndCapturePayment(customerOrder, customer, store);
+
+        ReadableCombineTransaction transaction = new ReadableCombineTransaction();
+        ReadableCombineTransactionPopulator trxPopulator = new ReadableCombineTransactionPopulator();
+        trxPopulator.setPricingService(pricingService);
+
+        trxPopulator.populate(combineTransaction, transaction, store, language);
+
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PROCESSED);
+
+        return transaction;
     }
 
     private ReadableOrderTotal convertOrderTotal(OrderTotal total, MerchantStore store, Language language) {

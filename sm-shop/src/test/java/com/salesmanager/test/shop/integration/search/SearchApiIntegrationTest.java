@@ -68,7 +68,10 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
     public void searchV2() {
         SearchProductRequestV2 searchRequest = new SearchProductRequestV2();
         searchRequest.setQ("bottle");
+        searchRequest.setLang("en");
         searchRequest.setSize(20);
+        searchRequest.setUid(123);
+        searchRequest.setCookieid("111");
         final HttpEntity<SearchProductRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 
         final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
@@ -81,6 +84,9 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
         SearchProductAutocompleteRequestV2 searchRequest = new SearchProductAutocompleteRequestV2();
         searchRequest.setQ("bottle");
         searchRequest.setLang("en");
+        searchRequest.setUid(123);
+        searchRequest.setCookieid("111");
+
         final HttpEntity<SearchProductAutocompleteRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 
         final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search/autocomplete?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);

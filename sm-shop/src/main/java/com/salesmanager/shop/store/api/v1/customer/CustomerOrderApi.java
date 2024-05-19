@@ -1,12 +1,15 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
 import com.salesmanager.shop.populator.customer.ReadableCustomerPopulator;
 import com.salesmanager.shop.store.api.v1.order.OrderApi;
@@ -41,6 +44,9 @@ public class CustomerOrderApi {
 
     @Inject
     private CustomerFacade customerFacade;
+
+    @Inject
+    private CustomerOrderService customerOrderService;
 
     /**
      * List orders for authenticated customers
@@ -143,5 +149,57 @@ public class CustomerOrderApi {
         }
 
         return customerOrder;
+    }
+
+    @RequestMapping(value = { "/auth/customer_orders/{id}/capture" }, method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ReadableCombineTransaction captureCustomerOrder(@PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+                                                           @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            response.sendError(401, "Error while performing checkout customer not authorized");
+            return null;
+        }
+
+        CustomerOrder customerOrder = customerOrderService.getById(id);
+
+        if (customerOrder == null) {
+            response.sendError(404, "Customer Order id " + id + " does not exists");
+            return null;
+        }
+
+        ReadableCombineTransaction transaction = customerOrderFacade.captureCustomerOrder(merchantStore, customerOrder, customer, language);
+        return transaction;
+    }
+
+    @RequestMapping(value = { "/auth/customer_orders/{id}/authorize_capture" }, method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ReadableCombineTransaction authorizeAndCaptureCustomerOrder(@PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+                                                                       @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            response.sendError(401, "Error while performing checkout customer not authorized");
+            return null;
+        }
+
+        CustomerOrder customerOrder = customerOrderService.getById(id);
+
+        if (customerOrder == null) {
+            response.sendError(404, "Customer Order id " + id + " does not exists");
+            return null;
+        }
+
+        ReadableCombineTransaction transaction = customerOrderFacade.authorizeCaptureCustomerOrder(merchantStore, customerOrder, customer, language);
+        return transaction;
     }
 }

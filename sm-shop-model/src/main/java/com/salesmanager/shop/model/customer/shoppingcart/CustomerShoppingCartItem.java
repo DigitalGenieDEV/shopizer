@@ -20,6 +20,7 @@ public class CustomerShoppingCartItem extends ShopEntity implements Serializable
     private String code;
     private boolean productVirtual;
     private Integer merchantId;
+    private boolean checked;
 
     private String subTotal;
 
@@ -101,5 +102,13 @@ public class CustomerShoppingCartItem extends ShopEntity implements Serializable
 
     public void setMerchantId(Integer merchantId) {
         this.merchantId = merchantId;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

@@ -42,6 +42,9 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     @Transient
     private boolean productVirtual;
 
+    @Column(name="CHECKED", nullable=true)
+    private boolean checked;
+
     @Column(name="PRODUCT_VARIANT", nullable=true)
     private Long variant;
 
@@ -189,5 +192,13 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
 
     public void setMerchantStore(MerchantStore merchantStore) {
         this.merchantStore = merchantStore;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

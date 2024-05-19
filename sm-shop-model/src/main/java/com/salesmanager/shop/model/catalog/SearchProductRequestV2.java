@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.catalog;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class SearchProductRequestV2 implements Serializable {
 
@@ -8,11 +9,13 @@ public class SearchProductRequestV2 implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
+    private Integer uid;
+    private String cookieid;
     private String lang;
     private String q;
     private Integer size = 20;
     private Integer pageIdx = 1;
-    private String attrFilt;
+    private Map<String, String> attrFilt;
 
     public String getLang() {
         return lang;
@@ -46,11 +49,27 @@ public class SearchProductRequestV2 implements Serializable {
         this.pageIdx = pageIdx;
     }
 
-    public String getAttrFilt() {
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    public String getCookieid() {
+        return cookieid;
+    }
+
+    public void setCookieid(String cookieid) {
+        this.cookieid = cookieid;
+    }
+
+    public Map<String, String> getAttrFilt() {
         return attrFilt;
     }
 
-    public void setAttrFilt(String attrFilt) {
+    public void setAttrFilt(Map<String, String> attrFilt) {
         this.attrFilt = attrFilt;
     }
 }

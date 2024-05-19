@@ -53,6 +53,15 @@
 		<beans:entry key="braintree" value-ref="braintree" />
 	</util:map>
 
+	<!-- Combine Payment integration modules -->
+	<!-- This will be removed in favor of modules autodetection See https://github.com/shopizer-ecommerce/shopizer-payment-square-starter as an example -->
+	<util:map id="combinePaymentModules" map-class="java.util.HashMap"
+			  key-type="java.lang.String"
+			  value-type="com.salesmanager.core.business.modules.integration.payment.model.CombinePaymentModule">
+		<beans:entry key="PayPal" value-ref="paypal-ck" />
+	</util:map>
+
+
 	<!-- Shipping -->
 	<!-- Moving to com.salesmanager.core.business.configuration.ModulesConfiguration -->
 	<beans:bean id="usps"
@@ -87,7 +96,9 @@
 	<beans:bean id="braintree"
 		class="com.salesmanager.core.business.modules.integration.payment.impl.BraintreePayment" />
 
-
+	<!-- Combine Payment -->
+	<beans:bean id="paypal-ck"
+				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.PayPalCheckoutPayment" />
 
 	<!--Encryption -->
 	<beans:bean id="encryption"

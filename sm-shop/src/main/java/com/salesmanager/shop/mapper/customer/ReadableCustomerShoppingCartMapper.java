@@ -6,6 +6,7 @@ import com.salesmanager.core.business.services.catalog.product.variant.ProductVa
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartSplitterService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
+import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
@@ -15,6 +16,8 @@ import com.salesmanager.shop.mapper.catalog.ReadableMinimalProductMapper;
 import com.salesmanager.shop.mapper.catalog.ReadableProductVariationMapper;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCartItem;
+import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
+import com.salesmanager.shop.model.order.total.ReadableTotal;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCartItem;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
@@ -25,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -32,10 +36,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -103,21 +104,37 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
                 }
             }
 
-            // 拆分为商户购物车计算
-            List<ShoppingCart> shoppingCarts = customerShoppingCartSplitterService.splitToShoppingCart(source);
-            List<ReadableShoppingCart> readableShoppingCarts = new ArrayList<>();
-            List<ReadableCustomerShoppingCartItem> readableCustomerShoppingCartItems = new ArrayList<>();
-
-            for (ShoppingCart shoppingCart : shoppingCarts) {
+            // 将未选中商品 拆分为 商户购物车进行 购物车项价格计算
+            List<ShoppingCart> uncheckedItemsShoppingCarts = customerShoppingCartSplitterService.splitUncheckedItemsToShoppingCart(source);
+            Map<String, ReadableCustomerShoppingCartItem> readableUncheckedCustomerShoppingCartItems = new HashMap<>();
+            for (ShoppingCart shoppingCart : uncheckedItemsShoppingCarts) {
                 ReadableShoppingCart readableShoppingCart = new ReadableShoppingCart();
                 readableShoppingCartMapper.merge(shoppingCart, readableShoppingCart, shoppingCart.getMerchantStore(), language);
-                readableShoppingCarts.add(readableShoppingCart);
 
-                readableCustomerShoppingCartItems.addAll(readableShoppingCart.getProducts().stream().map(i -> convert2ReadableCustomerShoppingCartItem(i)).collect(Collectors.toList()));
+                readableShoppingCart.getProducts().stream().map(i -> convert2ReadableCustomerShoppingCartItem(i, false)).forEach(item -> {
+                    readableUncheckedCustomerShoppingCartItems.put(item.getSku(), item);
+                });
             }
 
-            BigDecimal subTotal = readableShoppingCarts.stream().map(s -> s.getSubtotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal total = readableShoppingCarts.stream().map(s -> s.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            // 将选中商品 拆分为 商户购物车进行总价计算
+            List<ShoppingCart> checkedItemsShoppingCarts = customerShoppingCartSplitterService.splitCheckedItemsToShoppingCart(source);
+            List<ReadableShoppingCart> readableCheckedItemsShoppingCarts = new ArrayList<>();
+            Map<String, ReadableCustomerShoppingCartItem> readableCheckedCustomerShoppingCartItems = new HashMap<>();
+
+            for (ShoppingCart shoppingCart : checkedItemsShoppingCarts) {
+                ReadableShoppingCart readableShoppingCart = new ReadableShoppingCart();
+                readableShoppingCartMapper.merge(shoppingCart, readableShoppingCart, shoppingCart.getMerchantStore(), language);
+                readableCheckedItemsShoppingCarts.add(readableShoppingCart);
+
+               readableShoppingCart.getProducts().stream().map(i -> convert2ReadableCustomerShoppingCartItem(i, true)).forEach(item -> {
+                   readableCheckedCustomerShoppingCartItems.put(item.getSku(), item);
+               });
+            }
+
+
+            // 选中商品计算总价
+            BigDecimal subTotal = readableCheckedItemsShoppingCarts.stream().map(s -> s.getSubtotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal total = readableCheckedItemsShoppingCarts.stream().map(s -> s.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
             destination.setSubtotal(subTotal);
             destination.setDisplaySubTotal(pricingService.getDisplayAmount(subTotal, store));
@@ -125,7 +142,52 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             destination.setTotal(total);
             destination.setDisplayTotal(pricingService.getDisplayAmount(total, store));
 
+
+            // order.total.shipping
+            // order.total.subTotal
+            // order.total.total
+            // order.total.handling
+            // order.total.discount
+            Map<String, ReadableOrderTotal> orderTotalMaps = new HashMap<>();
+            readableCheckedItemsShoppingCarts.stream().forEach(readableShoppingCart -> {
+                List<ReadableOrderTotal> orderTotals = readableShoppingCart.getTotals();
+
+                orderTotals.stream().forEach(readableOrderTotal -> {
+                    ReadableOrderTotal orderTotal = orderTotalMaps.get(readableOrderTotal.getCode());
+
+                    if (orderTotal == null) {
+                        orderTotalMaps.put(readableOrderTotal.getCode(), readableOrderTotal);
+                    } else {
+                        orderTotal.setValue(readableOrderTotal.getValue().add(orderTotal.getValue()));
+                        try {
+                            orderTotal.setTotal(pricingService.getDisplayAmount(orderTotal.getValue(), store));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                });
+            });
+
+            List<ReadableOrderTotal> totals = orderTotalMaps.values().stream().collect(Collectors.toList());
+
+            // 计算后的购车项合并
+            List<ReadableCustomerShoppingCartItem> readableCustomerShoppingCartItems = new ArrayList<>();
+            for (CustomerShoppingCartItem customerShoppingCartItem : source.getLineItems()) {
+                ReadableCustomerShoppingCartItem readableCustomerShoppingCartItem = readableCheckedCustomerShoppingCartItems.get(customerShoppingCartItem.getSku());
+
+                if (readableCustomerShoppingCartItem == null) {
+                    readableCustomerShoppingCartItem = readableUncheckedCustomerShoppingCartItems.get(customerShoppingCartItem.getSku());
+                }
+                
+                if (readableCustomerShoppingCartItem != null) {
+                    readableCustomerShoppingCartItems.add(readableCustomerShoppingCartItem);
+                }
+            }
+
             destination.setProducts(readableCustomerShoppingCartItems);
+            destination.setTotals(totals);
         } catch (Exception e) {
             throw new ConversionRuntimeException("An error occured while converting ReadableCustomerShoppingCart", e);
         }
@@ -133,7 +195,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         return destination;
     }
 
-    private ReadableCustomerShoppingCartItem convert2ReadableCustomerShoppingCartItem(ReadableShoppingCartItem readableShoppingCartItem) {
+    private ReadableCustomerShoppingCartItem convert2ReadableCustomerShoppingCartItem(ReadableShoppingCartItem readableShoppingCartItem, boolean checked) {
         ReadableCustomerShoppingCartItem readableCustomerShoppingCartItem = new ReadableCustomerShoppingCartItem();
         readableCustomerShoppingCartItem.setSubTotal(readableShoppingCartItem.getSubTotal());
         readableCustomerShoppingCartItem.setDisplaySubTotal(readableShoppingCartItem.getDisplaySubTotal());
@@ -144,6 +206,17 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setOriginalPrice(readableShoppingCartItem.getOriginalPrice());
         readableCustomerShoppingCartItem.setImage(readableShoppingCartItem.getImage());
         readableCustomerShoppingCartItem.setImages(readableShoppingCartItem.getImages());
+        readableCustomerShoppingCartItem.setChecked(checked);
+        readableCustomerShoppingCartItem.setSku(readableShoppingCartItem.getSku());
+        readableCustomerShoppingCartItem.setPrice(readableShoppingCartItem.getPrice());
+        readableCustomerShoppingCartItem.setQuantity(readableShoppingCartItem.getQuantity());
+        readableCustomerShoppingCartItem.setMixAmount(readableShoppingCartItem.getMixAmount());
+        readableCustomerShoppingCartItem.setMixNumber(readableShoppingCartItem.getMixNumber());
+        readableCustomerShoppingCartItem.setProductShipeable(readableShoppingCartItem.isProductShipeable());
+        readableCustomerShoppingCartItem.setProductVirtual(readableShoppingCartItem.isProductVirtual());
+        readableCustomerShoppingCartItem.setQuantityOrderMaximum(readableShoppingCartItem.getQuantityOrderMaximum());
+        readableCustomerShoppingCartItem.setQuantityOrderMinimum(readableShoppingCartItem.getQuantityOrderMinimum());
+
         return readableCustomerShoppingCartItem;
     }
 }

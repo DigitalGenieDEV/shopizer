@@ -13,11 +13,15 @@ import java.util.List;
 
 public interface CustomerShoppingCartSplitterService {
 
-    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart);
+    public List<ShoppingCart> splitCheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart);
 
-    public List<ShoppingCart> splitToShoppingCart(CustomerShoppingCart customerShoppingCart, Customer customer);
+    public List<ShoppingCart> splitUncheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart);
 
-    public ShoppingCart getShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer);
+    public List<ShoppingCart> splitCheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart, Customer customer);
+
+    public ShoppingCart getCheckedItemsShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer);
+
+    public ShoppingCart getUncheckedItemsShoppingCart(CustomerShoppingCart customerShoppingCart, MerchantStore store, Customer customer);
 
     public ShoppingCartItem getShoppingCartItem(ShoppingCart shoppingCart, CustomerShoppingCartItem customerShoppingCartItem);
 

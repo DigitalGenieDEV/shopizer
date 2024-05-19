@@ -6,13 +6,12 @@ import com.salesmanager.core.business.repositories.payments.combine.CombineTrans
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.payments.CombineTransaction;
+import com.salesmanager.core.model.payments.Transaction;
+import com.salesmanager.core.model.payments.TransactionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("combineTransactionService")
@@ -38,13 +37,83 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public CombineTransaction getCapturableCombineTransaction(CustomerOrder customerOrder) throws ServiceException {
-        return null;
+    public CombineTransaction  getCapturableCombineTransaction(CustomerOrder customerOrder) throws ServiceException {
+        List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrder.getId());
+        ObjectMapper mapper = new ObjectMapper();
+        CombineTransaction combineTransaction = null;
+        for(CombineTransaction transaction : combineTransactions) {
+            if(transaction.getTransactionType().name().equals(TransactionType.AUTHORIZE.name())) {
+                if(!StringUtils.isBlank(transaction.getDetails())) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Map<String,String> objects = mapper.readValue(transaction.getDetails(), Map.class);
+                        transaction.setTransactionDetails(objects);
+                        combineTransaction = transaction;
+                    } catch (Exception e) {
+                        throw new ServiceException(e);
+                    }
+                }
+            }
+            if(transaction.getTransactionType().name().equals(TransactionType.CAPTURE.name())) {
+                break;
+            }
+            if(transaction.getTransactionType().name().equals(TransactionType.REFUND.name())) {
+                break;
+            }
+        }
+        return combineTransaction;
     }
 
     @Override
     public CombineTransaction getRefundableCombineTransaction(CustomerOrder customerOrder) throws ServiceException {
-        return null;
+        List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrder.getId());
+        Map<String,CombineTransaction> finalTransactions = new HashMap<String,CombineTransaction>();
+        CombineTransaction finalTransaction = null;
+        for (CombineTransaction transaction: combineTransactions) {
+            if(transaction.getTransactionType().name().equals(TransactionType.AUTHORIZECAPTURE.name())) {
+                finalTransactions.put(TransactionType.AUTHORIZECAPTURE.name(),transaction);
+                continue;
+            }
+            if(transaction.getTransactionType().name().equals(TransactionType.CAPTURE.name())) {
+                finalTransactions.put(TransactionType.CAPTURE.name(),transaction);
+                continue;
+            }
+            if(transaction.getTransactionType().name().equals(TransactionType.REFUND.name())) {
+                //check transaction id
+                CombineTransaction previousRefund = finalTransactions.get(TransactionType.REFUND.name());
+                if(previousRefund!=null) {
+                    Date previousDate = previousRefund.getTransactionDate();
+                    Date currentDate = transaction.getTransactionDate();
+                    if(previousDate.before(currentDate)) {
+                        finalTransactions.put(TransactionType.REFUND.name(),transaction);
+                        continue;
+                    }
+                } else {
+                    finalTransactions.put(TransactionType.REFUND.name(),transaction);
+                    continue;
+                }
+            }
+        }
+
+        if(finalTransactions.containsKey(TransactionType.AUTHORIZECAPTURE.name())) {
+            finalTransaction = finalTransactions.get(TransactionType.AUTHORIZECAPTURE.name());
+        }
+
+        if(finalTransactions.containsKey(TransactionType.CAPTURE.name())) {
+            finalTransaction = finalTransactions.get(TransactionType.CAPTURE.name());
+        }
+
+        if(finalTransaction!=null && !StringUtils.isBlank(finalTransaction.getDetails())) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                @SuppressWarnings("unchecked")
+                Map<String,String> objects = mapper.readValue(finalTransaction.getDetails(), Map.class);
+                finalTransaction.setTransactionDetails(objects);
+            } catch (Exception e) {
+                throw new ServiceException(e);
+            }
+        }
+        return finalTransaction;
     }
 
     @Override
@@ -68,7 +137,7 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
 
     @Override
     public List<CombineTransaction> listCombineTransactions(Date startDate, Date endDate) throws ServiceException {
-        return null;
+        return combineTransactionRepository.findByDates(startDate, endDate);
     }
 
     @Override
@@ -92,6 +161,18 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
 
         System.out.println("Current step " + currentStep);
 
-        return last.getValue();
+        CombineTransaction lastTransaction = last.getValue();
+        ObjectMapper mapper = new ObjectMapper();
+        if(!StringUtils.isBlank(lastTransaction.getDetails())) {
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String,String> objects = mapper.readValue(lastTransaction.getDetails(), Map.class);
+                lastTransaction.setTransactionDetails(objects);
+            } catch (Exception e) {
+                throw new ServiceException(e);
+            }
+        }
+
+        return lastTransaction;
     }
 }

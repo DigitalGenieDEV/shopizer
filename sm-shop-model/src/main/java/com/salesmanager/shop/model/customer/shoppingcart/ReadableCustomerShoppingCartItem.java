@@ -27,6 +27,9 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
         this.variants = variants;
     }
 
+    private boolean checked;
+
+
     private List<ReadableProductVariation> variants = null;
 
 
@@ -50,4 +53,11 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 //        this.cartItemattributes = cartItemattributes;
 //    }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 }
