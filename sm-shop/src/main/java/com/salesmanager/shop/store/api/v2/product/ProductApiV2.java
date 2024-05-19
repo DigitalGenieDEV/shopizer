@@ -143,7 +143,7 @@ public class ProductApiV2 {
 	public @ResponseBody Entity create(
 			@Valid @RequestBody PersistableProduct product,
 			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language) throws ServiceException {
 
 		Long id = productCommonFacade.saveProduct(merchantStore, product, language);
 		Entity returnEntity = new Entity();
@@ -164,18 +164,22 @@ public class ProductApiV2 {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public @ResponseBody Entity createV2(@Valid @RequestBody PersistableProduct product,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
+			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
-		persistableProductDefinition.setProperties(product.getProperties());
-		persistableProductDefinition.setManufacturer(product.getManufacturer());
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
 		// make sure product id is null
-		Long id = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
-		product.setId(id);
+		Product productBySku = productService.getBySku(product.getIdentifier(), merchantStore);
+		Long productId = null;
+		if (productBySku == null){
+			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
+		}else{
+			productId = productBySku.getId();
+		}
+		product.setId(productId);
 		productCommonFacade.saveProduct(merchantStore, product, language);
 		Entity returnEntity = new Entity();
-		returnEntity.setId(id);
+		returnEntity.setId(productId);
 		return returnEntity;
 	}
 

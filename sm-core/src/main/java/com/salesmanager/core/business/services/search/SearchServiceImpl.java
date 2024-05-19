@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
@@ -354,19 +355,14 @@ public class SearchServiceImpl implements com.salesmanager.core.business.service
 			return null;
 
 		Map<String, String> variantMap = new HashMap<String, String>();
-		if (variant.getVariation() != null) {
-			String variantCode = variant.getVariation().getProductOption().getCode();
-			String variantValueCode = variant.getVariation().getProductOptionValue().getCode();
 
-			variantMap.put(variantCode, variantValueCode);
-
-		}
-		
-
-		if (variant.getVariationValue() != null) {
-			String variantCode = variant.getVariationValue().getProductOption().getCode();
-			String variantValueCode = variant.getVariationValue().getProductOptionValue().getCode();
-			variantMap.put(variantCode, variantValueCode);
+		// 遍历所有的 ProductVariation 并提取其 ProductOption 和 ProductOptionValue
+		for (ProductVariation variation : variant.getVariations()) {
+			if (variation != null) {
+				String variantCode = variation.getProductOption().getCode();
+				String variantValueCode = variation.getProductOptionValue().getCode();
+				variantMap.put(variantCode, variantValueCode);
+			}
 		}
 		
 		if(!StringUtils.isBlank(variant.getSku())) {

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -95,14 +97,14 @@ public class ProductVariantFacadeImpl implements ProductVariantFacade {
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(productVariant, "productVariant cannot be null");
 		Validate.notNull(productId, "Product id cannot be null");
+		Validate.notNull(productVariant.getProductVariations(), "productVariations  cannot be null");
 
 		//variation and variation value should not be of same product option code
-		if(
-			productVariant.getVariation() != null && productVariant.getVariation().longValue() > 0 &&
-			productVariant.getVariationValue() != null &&  productVariant.getVariationValue().longValue() > 0) 
-		{
+		if(CollectionUtils.isNotEmpty(productVariant.getProductVariations())) {
+			List<PersistableVariation> productVariations = productVariant.getProductVariations();
 
-			List<ProductVariation> variations = productVariationService.getByIds(Arrays.asList(productVariant.getVariation(),productVariant.getVariationValue()), store);
+			List<ProductVariation> variations = productVariationService.getByIds(
+					productVariations.stream().map(PersistableVariation::getVariationId).collect(Collectors.toList()), store);
 			
 			boolean differentOption = variations.stream().map(i -> i.getProductOption().getCode()).distinct().count() > 1;
 

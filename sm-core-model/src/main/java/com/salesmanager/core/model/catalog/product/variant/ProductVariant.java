@@ -4,24 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -69,9 +52,13 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	@Column(name = "DEFAULT_SELECTION")
 	private boolean defaultSelection = true;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_VARIATION_ID", nullable = true)
-	private ProductVariation variation;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "PRODUCT_VARIANT_VARIATION",
+			joinColumns = @JoinColumn(name = "PRODUCT_VARIANT_ID"),
+			inverseJoinColumns = @JoinColumn(name = "PRODUCT_VARIATION_ID")
+	)
+	private Set<ProductVariation> variations = new HashSet<>();
 
 	@ManyToOne(targetEntity = Product.class)
 	@JoinColumn(name = "PRODUCT_ID", nullable = false)
@@ -83,9 +70,6 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	@Column(name="SORT_ORDER")
 	private Integer sortOrder = 0;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PRODUCT_VARIATION_VALUE_ID", nullable = true)
-	private ProductVariation variationValue;
 
 	@NotEmpty
 	@Pattern(regexp="^[a-zA-Z0-9_]*$")
@@ -138,14 +122,6 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 		this.available = available;
 	}
 
-	public ProductVariation getVariation() {
-		return variation;
-	}
-
-	public void setVariation(ProductVariation variation) {
-		this.variation = variation;
-	}
-
 	public Product getProduct() {
 		return product;
 	}
@@ -154,12 +130,12 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 		this.product = product;
 	}
 
-	public ProductVariation getVariationValue() {
-		return variationValue;
+	public Set<ProductVariation> getVariations() {
+		return variations;
 	}
 
-	public void setVariationValue(ProductVariation variationValue) {
-		this.variationValue = variationValue;
+	public void setVariations(Set<ProductVariation> variations) {
+		this.variations = variations;
 	}
 
 	public boolean isDefaultSelection() {

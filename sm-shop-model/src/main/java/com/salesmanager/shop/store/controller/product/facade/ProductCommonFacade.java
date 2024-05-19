@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.product.facade;
 
 import java.util.List;
 
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
@@ -25,7 +26,7 @@ public interface ProductCommonFacade {
 	   * @return
 	   */
 	  Long saveProduct(MerchantStore store, PersistableProduct product,
-	      Language language);
+	      Language language) throws ServiceException;
 
 	  /**
 	   * Update minimal product details

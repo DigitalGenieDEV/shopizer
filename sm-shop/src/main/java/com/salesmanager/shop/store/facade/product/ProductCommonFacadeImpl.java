@@ -1,12 +1,13 @@
 package com.salesmanager.shop.store.facade.product;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
+import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +79,16 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Autowired
 	private PersistableProductMapper persistableProductMapper;
 
+	@Autowired
+	private ProductFeatureService productFeatureService;
+
 	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
 
 	@Override
 	@Transactional
-	public Long saveProduct(MerchantStore store, PersistableProduct product, Language language) {
+	public Long saveProduct(MerchantStore store, PersistableProduct product, Language language) throws ServiceException {
 
 		String manufacturer = Manufacturer.DEFAULT_MANUFACTURER;
 		if (product.getProductSpecifications() != null) {
@@ -101,17 +105,17 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			target = new Product();
 		}
 
-		try {
-			
-			target = persistableProductMapper.merge(product, target, store, language);
-			target = productService.saveProduct(target);
+		target = persistableProductMapper.merge(product, target, store, language);
 
+		System.out.println("cesssss");
 
-			return target.getId();
-		} catch (Exception e) {
-			throw new ServiceRuntimeException(e);
+		target = productService.saveProduct(target);
+
+		if (!CollectionUtils.isEmpty(product.getProductTag())){
+			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(target.getId());
+			processProductFeatureDiff(listByProductId, product.getProductTag(), target.getId());
 		}
-
+		return target.getId();
 	}
 
 	public void updateProduct(MerchantStore store, PersistableProduct product, Language language) {
@@ -475,5 +479,53 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		}
 	}
 
+
+	public void processProductFeatureDiff(List<ProductFeature> listByProductId, List<String> productTags, Long productId) throws ServiceException {
+		if(CollectionUtils.isNotEmpty(listByProductId)){
+			Set<String> existingKeys = listByProductId.stream()
+					.map(ProductFeature::getKey)
+					.collect(Collectors.toSet());
+
+			Set<String> newKeys = new HashSet<>(productTags);
+
+			Set<String> addedKeys = new HashSet<>(newKeys);
+			addedKeys.removeAll(existingKeys);
+
+			Set<String> removedKeys = new HashSet<>(existingKeys);
+			removedKeys.removeAll(newKeys);
+
+			if (addedKeys.isEmpty() && removedKeys.isEmpty()) {
+				return;
+			}
+
+			for (String key : addedKeys) {
+				ProductFeature newFeature = new ProductFeature();
+				newFeature.setProductId(productId);
+				newFeature.setKey(key);
+				newFeature.setValue("1");
+				productFeatureService.save(newFeature);
+			}
+
+			for (String key : removedKeys) {
+				ProductFeature featureToRemove = listByProductId.stream()
+						.filter(feature -> feature.getKey().equals(key))
+						.findFirst()
+						.orElse(null);
+
+				if (featureToRemove != null) {
+					productFeatureService.delete(featureToRemove);
+				}
+			}
+		}else {
+			for (String tag : productTags){
+				ProductFeature  feature = new ProductFeature();
+				feature.setProductId(productId);
+				feature.setKey(tag);
+				feature.setValue("1");
+				productFeatureService.save(feature);
+			}
+		}
+
+	}
 
 }

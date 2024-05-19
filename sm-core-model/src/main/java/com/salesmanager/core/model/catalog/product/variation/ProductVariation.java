@@ -1,28 +1,20 @@
 package com.salesmanager.core.model.catalog.product.variation;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.catalog.product.attribute.Optionable;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -47,11 +39,20 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
 
 	@Embedded
 	private AuditSection auditSection = new AuditSection();
-	
+
+
 	@Id
-	@Column(name = "PRODUCT_VARIATION_ID", unique=true, nullable=false)
-	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "PRODUCT_VARIN_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
+	@TableGenerator(
+			name = "TABLE_GEN",
+			table = "SM_SEQUENCER",
+			pkColumnName = "SEQ_NAME",
+			valueColumnName = "SEQ_COUNT",
+			pkColumnValue = "PRODUCT_VARIN_SEQ_NEXT_VAL",
+			allocationSize = 1,
+			initialValue = 1
+	)
+	@Column(name = "PRODUCT_VARIATION_ID", unique = true, nullable = false)
 	private Long id;
 	
 	/** can exist detached **/
@@ -77,6 +78,8 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
 	@Column(name="VARIANT_DEFAULT")
 	private boolean variantDefault=false;
 
+	@ManyToMany(mappedBy = "variations")
+	private Set<ProductVariant> productVariants = new HashSet<>();
 	
 	@Override
 	public AuditSection getAuditSection() {
@@ -146,5 +149,13 @@ public class ProductVariation extends SalesManagerEntity<Long, ProductVariation>
 
 	public void setVariantDefault(boolean variantDefault) {
 		this.variantDefault = variantDefault;
+	}
+
+	public Set<ProductVariant> getProductVariants() {
+		return productVariants;
+	}
+
+	public void setProductVariants(Set<ProductVariant> productVariants) {
+		this.productVariants = productVariants;
 	}
 }

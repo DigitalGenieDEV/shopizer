@@ -46,6 +46,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private List<ReadableCategory> categories = new ArrayList<ReadableCategory>();
 	private ReadableProductType type;
 
+	private List<String> tags;
+
 	private boolean canBePurchased = false;
 
 
@@ -200,5 +202,13 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
 	}
 }

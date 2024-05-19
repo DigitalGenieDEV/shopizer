@@ -1,8 +1,12 @@
 package com.salesmanager.shop.model.catalog.product.product.variant;
 
-public class PersistableVariantOption {
+import java.util.List;
+
+public class PersistableVariation {
 
     private static final long serialVersionUID = 1L;
+
+    private Long variationId;
 
     private Long optionId;
 
@@ -22,5 +26,13 @@ public class PersistableVariantOption {
 
     public void setOptionValueId(Long optionValueId) {
         this.optionValueId = optionValueId;
+    }
+
+    public Long getVariationId() {
+        return variationId;
+    }
+
+    public void setVariationId(Long variationId) {
+        this.variationId = variationId;
     }
 }
