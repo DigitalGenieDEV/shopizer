@@ -9,11 +9,19 @@ import com.salesmanager.core.model.manager.Manager;
 public interface ManagerService extends SalesManagerEntityService<Long, Manager> {
 	
 	Page<Manager> getManagerList(String keyword, String gbn, int deptId, int page, int count) throws ServiceException;
+	
+	Manager getByUserName(String userName) throws ServiceException;
 
 	Manager getId(Long id) throws ServiceException;
 	
 	int getDupEmplIdCount(String userId) throws ServiceException;
 	
 	void saveOrUpdate(Manager manager) throws ServiceException;
+	
+	void deleteManager(int grpId) throws ServiceException;
+	
+	void updateLoginFailCount(String emplId) throws ServiceException;
+	
+	void updateLoginDate(String emplId)throws ServiceException;
 
 }

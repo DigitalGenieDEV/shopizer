@@ -17,7 +17,6 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ "				, CAST(IFNULL(REPLACE(@level,'3', ''),1) AS SIGNED INTEGER) AS DEPTH    \r\n"
 			+ "				, CAST(CONCAT(LPAD(CAST(IFNULL(REPLACE(@level,'3', ''),1) AS CHAR), 5, '0'), '', LPAD(CAST(A.ORD AS CHAR), 5, '0')) AS CHAR(255)) AS AMENU_SORT    \r\n"
 			+ "				, A.MENU_NAME AS MENU_NAME_PATH    \r\n"
-
 			+ "			FROM ADMINMENU AS A    \r\n" + "			WHERE A.PARENT_ID = '0'    \r\n"
 			+ "		 AND  ((?1 = 0 AND A.VISIBLE = 'Y') OR (?1 = 1 AND A.VISIBLE IN ('Y', 'N')))        \r\n"
 			+ "			UNION ALL    \r\n" + "			    \r\n" + "			SELECT    \r\n"
@@ -27,9 +26,10 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ "				, CONCAT(C.MENU_NAME_PATH, '&gt;', B.MENU_NAME) AS MENU_NAME_PATH    \r\n"
 			+ "			FROM    \r\n" + "				ADMINMENU AS B    \r\n" + "				, MENU_CTE AS C    \r\n"
 			+ "			WHERE B.PARENT_ID = C.ID    \r\n" + " )    \r\n" + "		    \r\n"
-			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE     \r\n"
+			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE WHERE 1=1    \r\n"
+			+ "  	AND (CASE WHEN ?2 > 1 THEN  ID IN (SELECT MENU_ID FROM manager_menu_auth WHERE GRP_ID = ?2) ELSE TRUE END )   "
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
-	List<ReadAdminMenu> getListAdminMenu(int visible);
+	List<ReadAdminMenu> getListAdminMenu(int visible, int grpId);
 
 	@Query(value = "SELECT IFNULL(MAX(ORD) + 1,1) FROM ADMINMENU B WHERE B.PARENT_ID = ?1", nativeQuery = true)
 	int getOrder(int parentId);
@@ -59,7 +59,7 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 	String  getNamePath(int id);
 
 	@Query(value = " SELECT \r\n"
-			+ "		A.ID, A.PARENT_ID, A.MENU_NAME, A.MENU_DESC, A.MENU_URL, A.ORD,A.VISIBLE  \r\n"
+			+ "		A.ID, A.PARENT_ID, A.MENU_NAME, A.MENU_DESC, A.MENU_URL, A.API_URL, A.ORD,A.VISIBLE  \r\n"
 			+ " FROM ADMINMENU AS A \r\n" 
 			+ "	WHERE A.ID = ?1 ", nativeQuery = true)
 	ReadAdminMenu getById(int id);
@@ -82,4 +82,8 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ "MOD_IP = :#{#adminMenu.mod_ip}, " + "MOD_DATE = NOW() "
 			+ "WHERE ID = :#{#adminMenu.id}", nativeQuery = true)
 	void updateChangeOrd(@Param("adminMenu") AdminMenu adminMenu);
+	
+	@Query(value = "SELECT ID FROM adminmenu WHERE API_URL = ?1 ", nativeQuery = true)
+	int  getApiMenuFindId(String url);
+	
 }

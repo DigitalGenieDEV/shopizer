@@ -8,20 +8,29 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.Validate;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.adminmenu.AdminMenuService;
+import com.salesmanager.core.business.services.manager.ManagerMenuAuthService;
 import com.salesmanager.core.business.services.manager.ManagerService;
 import com.salesmanager.core.model.manager.Manager;
+import com.salesmanager.core.model.manager.ReadMenuAuth;
+import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.model.manager.ManagerAuthEntity;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
 import com.salesmanager.shop.model.manager.ReadableManagerList;
 import com.salesmanager.shop.populator.manager.PersistableManagerPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
+import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.security.facade.SecurityFacade;
 
@@ -36,14 +45,19 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 	private SecurityFacade securityFacade;
 	
 	@Inject
+	private ManagerMenuAuthService managerMenuAuthService;
+	
+	@Inject
+	private AdminMenuService adminMenuService;
+	
+	
+	@Inject
 	private ObjectMapper objectMapper;
 	
 	@Inject
 	private PersistableManagerPopulator persistableManagerPopulator;
 
 	
-	
-	@SuppressWarnings("null")
 	@Override
 	public ReadableManagerList getManagerList(String keyword, String gbn,int deptId, int page, int count) throws Exception{
 		try{
@@ -118,8 +132,6 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			
 			String newPasswordEncoded = securityFacade.encodePassword(manager.getPassword());
 			
-			manager.setPassword(newPasswordEncoded);
-			
 			Long managerId = manager.getId();
 			Manager target = Optional.ofNullable(managerId)
 					.filter(id -> id > 0)
@@ -128,6 +140,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			
 		
 			Manager dbManager = populateManager(manager, target);
+			manager.setPassword(newPasswordEncoded);
 			managerService.saveOrUpdate(dbManager);
 
 			// set category id
@@ -197,6 +210,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 				
 			
 				Manager dbManager = populateManager(persistableManager, target);
+				dbManager.setAdminPassword(persistableManager.getPassword());
 				managerService.saveOrUpdate(dbManager);
 	
 				// set category id
@@ -219,6 +233,14 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		managerService.delete(manager);
 	}
 	
+	public void updateLoginFailCount(String emplId) throws Exception{
+		managerService.updateLoginFailCount(emplId);
+	}
+	
+	public void updateLoginDate(String emplId) throws Exception{
+		managerService.updateLoginDate(emplId);
+	}
+	
 	
 	private Manager populateManager( PersistableManager manager, Manager target) {
 		try {
@@ -226,6 +248,47 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		} catch (ConversionException e) {
 			throw new ServiceRuntimeException(e);
 		}
+	}
+	
+	
+	@Override
+	public String authenticatedManager() throws Exception{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null) {
+			throw new UnauthorizedException("Manager Not authorized");
+		}
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			return currentUserName;
+		}
+		return null;
+	}
+	
+	public String authorizedMenu(String userName, String url) throws Exception{
+		Manager manager = managerService.getByUserName(userName);
+		boolean authFlag = false;
+		if(manager.getGrpId() == 1) {
+			authFlag = true;
+		}else {
+			int menuId = adminMenuService.getApiMenuFindId(url);
+			if(menuId > 0) {
+				int authCnt = managerMenuAuthService.getMenuAuthCnt(manager.getGrpId(), menuId);
+				if(authCnt > 0) {
+					authFlag = true;
+				}else {
+					authFlag = false;
+				}
+			}else {
+				authFlag = true;
+			}
+		}
+		if(!authFlag) {
+			throw new UnauthorizedException("User " + userName + " not authorized");
+		}
+		
+		return "";
 	}
 	
 }

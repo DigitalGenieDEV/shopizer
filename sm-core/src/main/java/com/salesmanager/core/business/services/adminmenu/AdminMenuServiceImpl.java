@@ -23,8 +23,8 @@ public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer,
 		this.adminMenuRepository = adminMenuRepository;
 	}
 
-	public List<ReadAdminMenu> getListAdminMenu(int visible) throws ServiceException {
-		return adminMenuRepository.getListAdminMenu(visible);
+	public List<ReadAdminMenu> getListAdminMenu(int visible, int grpId) throws ServiceException {
+		return adminMenuRepository.getListAdminMenu(visible,grpId);
 	}
 
 	public int getOrder(int parentId) throws ServiceException {
@@ -60,5 +60,9 @@ public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer,
 
 	public void updateChangeOrd(AdminMenu adminMenu) throws ServiceException {
 		adminMenuRepository.updateChangeOrd(adminMenu);
+	}
+	
+	public int getApiMenuFindId(String url) throws ServiceException {
+		return adminMenuRepository.getApiMenuFindId(url);
 	}
 }

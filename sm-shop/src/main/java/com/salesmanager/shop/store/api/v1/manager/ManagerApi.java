@@ -2,10 +2,6 @@ package com.salesmanager.shop.store.api.v1.manager;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.entity.EntityExists;
 import com.salesmanager.shop.model.entity.UniqueEntity;
 import com.salesmanager.shop.model.manager.PersistableManager;
@@ -47,7 +40,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
-import springfox.documentation.annotations.ApiIgnore;
 
 /** Api for managing admin users */
 @RestController
@@ -66,43 +58,26 @@ public class ManagerApi {
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
 			@RequestParam(value = "gbn", required = false) String gbn,
 			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(value = "deptId", required = false, defaultValue = "0") int deptId) throws Exception {
+			@RequestParam(value = "deptId", required = false, defaultValue = "0") int deptId,HttpServletRequest request) throws Exception {
 
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 */
-
-		/*
-		 * UserCriteria criteria = new UserCriteria(); if
-		 * (!StringUtils.isBlank(emailAddress)) { criteria.setAdminEmail(emailAddress);
-		 * }
-		 * 
-		 * criteria.setStoreCode(merchantStore.getCode());
-		 * 
-		 * if (!userFacade.userInRoles(authenticatedUser,
-		 * Arrays.asList(Constants.GROUP_SUPERADMIN))) { if
-		 * (!userFacade.authorizedStore(authenticatedUser, merchantStore.getCode())) {
-		 * throw new UnauthorizedException("Operation unauthorized for user [" +
-		 * authenticatedUser + "] and store [" + merchantStore + "]"); } }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_RETAIL) .collect(Collectors.toList()));
-		 */
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		return managerFacade.getManagerList(gbn, keyword, deptId, page, count);
 	}
 
 	@PatchMapping(value = "/private/managers/{id}/enabled", produces = { APPLICATION_JSON_VALUE })
-	public void updateEnabled(@PathVariable Long id, @Valid @RequestBody PersistableManager manager) throws Exception {
+	public void updateEnabled(@PathVariable Long id, @Valid @RequestBody PersistableManager manager,HttpServletRequest request) throws Exception {
 
-		// superadmin, admin and retail_admin
-//		String authenticatedUser = userFacade.authenticatedUser();
-//		if (authenticatedUser == null) {
-//			throw new UnauthorizedException();
-//		}
-//
-//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		manager.setId(id);
 		managerFacade.updateEnabled(manager);
@@ -135,23 +110,12 @@ public class ManagerApi {
 	@PostMapping(value = { "/private/managers/" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Creates a new Managers", notes = "", response = PersistableManager.class)
 	public PersistableManager create(@Valid @RequestBody PersistableManager manager, HttpServletRequest request)  throws Exception {
-//		/** Must be superadmin or admin */
-//		String authenticatedUser = userFacade.authenticatedUser();
-//		if (authenticatedUser == null) {
-//			throw new UnauthorizedException();
-//		}
-//		// only admin and superadmin allowed
-//		userFacade.authorizedGroup(authenticatedUser,
-//				Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL)
-//						.collect(Collectors.toList()));
-//
-//		/** if user is admin, user must be in that store */
-//		if (!userFacade.userInRoles(authenticatedUser, Arrays.asList(Constants.GROUP_SUPERADMIN))) {
-//			if (!userFacade.authorizedStore(authenticatedUser, merchantStore.getCode())) {
-//				throw new UnauthorizedException("Operation unauthorized for user [" + authenticatedUser
-//						+ "] and store [" + merchantStore.getCode() + "]");
-//			}
-//		}
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		manager.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerFacade.create(manager);
 	}
@@ -174,14 +138,6 @@ public class ManagerApi {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	public ReadableManager get( @PathVariable Long id, HttpServletRequest request)  throws Exception{
-
-//		String authenticatedUser = userFacade.authenticatedUser();
-//		if (authenticatedUser == null) {
-//			throw new UnauthorizedException();
-//		}
-		// only admin and superadmin allowed
-//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-
 		return managerFacade.getById(id);
 	}
 	
@@ -190,6 +146,14 @@ public class ManagerApi {
 	@PutMapping(value = {"/private/managers/{id}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a Manager", notes = "", response = PersistableManager.class)
 	public PersistableManager update(@Valid @RequestBody PersistableManager manager, HttpServletRequest request) throws Exception {
+		
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		
 		manager.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerFacade.update( manager);
 	}
@@ -197,9 +161,22 @@ public class ManagerApi {
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = { "/private/managers/{id}" })
 	@ApiOperation(httpMethod = "DELETE", value = "Deletes Managers", notes = "", response = Void.class)
-	public void delete(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, @PathVariable Long id,
+	public void delete(@PathVariable Long id,
 			HttpServletRequest request) throws Exception {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		managerFacade.delete(id);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PatchMapping(value = {"/private/managers/loginSuccess" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PATHCH", value = "Updates a Login Success", notes = "")
+	public void updateLoginSuccess(@Valid @RequestBody PersistableManager manager) throws Exception {
+		managerFacade.updateLoginDate(manager.getEmplId());
 	}
 }

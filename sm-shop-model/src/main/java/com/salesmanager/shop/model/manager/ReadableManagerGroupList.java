@@ -7,7 +7,6 @@ import com.salesmanager.shop.model.entity.ReadableList;
 
 public class ReadableManagerGroupList extends ReadableList {
 
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	private List<ReadableManagerGroup> data = new ArrayList<ReadableManagerGroup>();

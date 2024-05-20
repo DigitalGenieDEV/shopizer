@@ -9,7 +9,7 @@ import com.salesmanager.core.model.adminmenu.ReadAdminMenu;
 
 public interface AdminMenuService extends SalesManagerEntityService<Integer, AdminMenu> {
 
-	List<ReadAdminMenu> getListAdminMenu(int visible) throws ServiceException;
+	List<ReadAdminMenu> getListAdminMenu(int visible,int grpId) throws ServiceException;
 
 	int getOrder(int parentId) throws ServiceException;
 
@@ -24,4 +24,6 @@ public interface AdminMenuService extends SalesManagerEntityService<Integer, Adm
 	void deleteAdminMenu(int id) throws ServiceException;
 
 	void updateChangeOrd(AdminMenu adminMenu) throws ServiceException;
+	
+	int getApiMenuFindId(String url) throws ServiceException;
 }
