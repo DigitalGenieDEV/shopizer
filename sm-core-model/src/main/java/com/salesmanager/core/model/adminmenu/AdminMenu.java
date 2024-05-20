@@ -44,6 +44,10 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 	private String menuUrl;
 
 	@NotEmpty
+	@Column(name = "API_URL", nullable = false, length = 255)
+	private String apiUrl;
+
+	@NotEmpty
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
@@ -111,6 +115,14 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 
 	public void setMenuUrl(String menuUrl) {
 		this.menuUrl = menuUrl;
+	}
+
+	public String getApiUrl() {
+		return apiUrl;
+	}
+
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
 	}
 
 	public Integer getOrd() {

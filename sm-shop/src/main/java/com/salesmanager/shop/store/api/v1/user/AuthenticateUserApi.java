@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.security.AuthenticationRequest;
 import com.salesmanager.shop.store.security.AuthenticationResponse;
 import com.salesmanager.shop.store.security.JWTTokenUtil;
@@ -55,6 +56,9 @@ public class AuthenticateUserApi {
 
     @Inject
     private JWTTokenUtil jwtTokenUtil;
+    
+	@Inject
+	private ManagerFacade managerFacade;
 
 	/**
 	 * Authenticate a user using username & password
@@ -82,6 +86,11 @@ public class AuthenticateUserApi {
 
     	} catch(Exception e) {
     		if(e instanceof BadCredentialsException) {
+    			try {
+					managerFacade.updateLoginFailCount(authenticationRequest.getUsername());
+				} catch (Exception e1) {
+					
+				}
     			return new ResponseEntity<>("{\"message\":\"Bad credentials\"}",HttpStatus.UNAUTHORIZED);
     		}
     		LOGGER.error("Error during authentication " + e.getMessage());

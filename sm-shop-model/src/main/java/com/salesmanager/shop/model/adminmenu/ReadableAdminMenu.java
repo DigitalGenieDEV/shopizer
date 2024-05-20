@@ -11,6 +11,7 @@ public class ReadableAdminMenu {
 	private String menuName = "ROOT";
 	private String menuDesc = "ROOT";
 	private String menuUrl = "/";
+	private String apiUrl = "/";
 	private int ord = 0;
 	private int depth = 0;
 	private int visible = 0;
@@ -55,6 +56,14 @@ public class ReadableAdminMenu {
 
 	public void setMenuUrl(String menuUrl) {
 		this.menuUrl = menuUrl;
+	}
+
+	public String getApiUrl() {
+		return apiUrl;
+	}
+
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
 	}
 
 	public int getOrd() {

@@ -6,6 +6,7 @@ public class PersistableAdminMenu {
 	private String menuName = "";
 	private String menuDesc = "";
 	private String menuUrl = "";
+	private String apiUrl = "";
 	private int visible;
 	private int ord;
 	private String userId = "";
@@ -49,6 +50,14 @@ public class PersistableAdminMenu {
 
 	public void setMenuUrl(String menuUrl) {
 		this.menuUrl = menuUrl;
+	}
+
+	public String getApiUrl() {
+		return apiUrl;
+	}
+
+	public void setApiUrl(String apiUrl) {
+		this.apiUrl = apiUrl;
 	}
 
 	public int getVisible() {

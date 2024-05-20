@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.repositories.manager;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.manager.Manager;
@@ -31,6 +32,23 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 			+ "	,USER_ID FROM MANAGER B WHERE B.USER_ID = ?1", nativeQuery=true)
 	Manager getId(Long id);
 	
+	
+	@Query( value ="SELECT B.* FROM MANAGER B WHERE ACTIVE = 1 AND  B.EMPL_ID = ?1", nativeQuery=true)
+	Manager getByUserName(String userName);
+	
 	@Query( value ="SELECT COUNT(USER_ID) FROM MANAGER B WHERE B.EMPL_ID = ?1", nativeQuery=true)
 	int getDupEmplIdCount(String userId);
+
+	@Modifying
+	@Query(value ="DELETE FROM MANAGER WHERE GRP_ID = ?1", nativeQuery=true)
+	void deleteManager(int grpId);
+	
+	@Modifying
+	@Query(value ="UPDATE MANAGER SET LOGIN_FAIL_COUNT = (LOGIN_FAIL_COUNT+1) WHERE EMPL_ID = ?1", nativeQuery=true)
+	void updateLoginFailCount(String emplId);
+	
+	@Modifying
+	@Query(value ="UPDATE MANAGER SET LOGIN_FAIL_COUNT=0, LOGIN_DATE = NOW() WHERE EMPL_ID = ?1", nativeQuery=true)
+	void updateLoginDate(String emplId);
 }
+

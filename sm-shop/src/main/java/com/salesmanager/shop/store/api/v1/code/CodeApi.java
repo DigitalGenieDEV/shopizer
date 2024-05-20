@@ -4,16 +4,12 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.code.PersistableCode;
 import com.salesmanager.shop.model.code.ReadableCode;
 import com.salesmanager.shop.model.common.PersistableChangeOrd;
-import com.salesmanager.shop.model.entity.EntityExists;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.code.facade.CodeFacade;
-import com.salesmanager.shop.store.controller.user.facade.UserFacade;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.utils.CommonUtils;
 
 import io.swagger.annotations.Api;
@@ -52,7 +46,7 @@ public class CodeApi {
 	private CodeFacade codeFacde;
 
 	@Inject
-	private UserFacade userFacade;
+	private ManagerFacade managerFacade;
 
 	@GetMapping(value = "/private/code")
 	@ResponseStatus(HttpStatus.OK)
@@ -76,13 +70,12 @@ public class CodeApi {
 	public PersistableCode create(@Valid @RequestBody PersistableCode code, HttpServletRequest request)
 			throws Exception {
 
-		// superadmin
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		code.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return codeFacde.saveCode(code);
@@ -99,14 +92,12 @@ public class CodeApi {
 	@PutMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
 	public PersistableCode update(@PathVariable int id, @Valid @RequestBody PersistableCode code,
 			HttpServletRequest request) throws Exception {
-		// superadmin
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		code.setId(id);
 		code.setUserIp(CommonUtils.getRemoteIp(request));
@@ -115,27 +106,25 @@ public class CodeApi {
 
 	@DeleteMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
-	public void delete(@PathVariable int id) throws Exception {
-		// superadmin
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+	public void delete(@PathVariable int id,HttpServletRequest request) throws Exception {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		codeFacde.deleteCode(id);
 	}
 
 	@PostMapping(value = "/private/code/changeOrd", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
 	public void changeOrd(@Valid @RequestBody PersistableChangeOrd code, HttpServletRequest request) throws Exception {
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN).collect(Collectors.toList()));
+	
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		codeFacde.updateChangeOrd(code, CommonUtils.getRemoteIp(request));
 
 	}

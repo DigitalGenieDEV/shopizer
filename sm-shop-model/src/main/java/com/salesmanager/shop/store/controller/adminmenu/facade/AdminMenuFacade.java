@@ -11,7 +11,7 @@ public interface AdminMenuFacade {
 	 * @param visible
 	 * @return ReadableAdminMenu
 	 */
-	ReadableAdminMenu getListAdminMenu(int visible) throws Exception;
+	ReadableAdminMenu getListAdminMenu(int visible,int grpId) throws Exception;
 
 	/**
 	 *
