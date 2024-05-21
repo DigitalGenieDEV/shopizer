@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.services.amazonaws;
 
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.AWSLambda;
@@ -23,7 +24,7 @@ public class LambdaInvokeServiceImpl implements LambdaInvokeService {
         InvokeResult invokeResult = null;
 
         AWSLambda awsLambda = AWSLambdaClientBuilder.standard()
-                .withCredentials(new ProfileCredentialsProvider())
+                .withCredentials(new EnvironmentVariableCredentialsProvider())
                 .withRegion(Regions.AP_NORTHEAST_2).build();
 
         invokeResult = awsLambda.invoke(invokeRequest);

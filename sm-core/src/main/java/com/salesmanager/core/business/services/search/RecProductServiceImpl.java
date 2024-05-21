@@ -7,6 +7,8 @@ import com.salesmanager.core.business.services.amazonaws.LambdaInvokeService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.recommend.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service("searchRecService")
 public class RecProductServiceImpl implements RecProductService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecProductServiceImpl.class);
 
     @Inject
     private ProductService productService;
@@ -46,6 +50,7 @@ public class RecProductServiceImpl implements RecProductService {
             return guessULikeResult;
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error("guess u like exception", e);
         }
 
         return null;
@@ -61,6 +66,7 @@ public class RecProductServiceImpl implements RecProductService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                LOGGER.error("get product id [" + p.getProductId() + "] exception", e);
             }
         }
 
@@ -82,6 +88,7 @@ public class RecProductServiceImpl implements RecProductService {
             return relateItemResult;
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error("relate item exception", e);
         }
 
         return null;
@@ -100,6 +107,7 @@ public class RecProductServiceImpl implements RecProductService {
             return selectionItemResult;
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error("selection item exception", e);
         }
 
         return null;
