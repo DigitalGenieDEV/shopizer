@@ -1,19 +1,28 @@
 package com.salesmanager.core.model.catalog.product.recommend;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.salesmanager.core.model.catalog.product.Product;
 
 import java.util.List;
 
 public class GuessULikeResult {
 
-    @JsonProperty("product_list")
-    private List<ProductResult> productList;
+    private List<Product> productList;
 
-    public List<ProductResult> getProductList() {
+    private String cacheid;
+
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(List<ProductResult> productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }

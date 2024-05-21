@@ -7,8 +7,8 @@ public class GuessULikeRequest {
     @JsonProperty("uid")
     private Integer uid;
 
-    @JsonProperty("cookieid")
-    private String cookieid;
+    @JsonProperty("deviceid")
+    private String deviceid;
 
     @JsonProperty("size")
     private Integer size = 20;
@@ -16,6 +16,8 @@ public class GuessULikeRequest {
     @JsonProperty("page_idx")
     private Integer pageIdx = 0;
 
+    @JsonProperty("cacheid")
+    private String cacheid;
 
     public Integer getUid() {
         return uid;
@@ -23,14 +25,6 @@ public class GuessULikeRequest {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public String getCookieid() {
-        return cookieid;
-    }
-
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
     }
 
     public Integer getSize() {
@@ -47,5 +41,21 @@ public class GuessULikeRequest {
 
     public void setPageIdx(Integer pageIdx) {
         this.pageIdx = pageIdx;
+    }
+
+    public String getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }

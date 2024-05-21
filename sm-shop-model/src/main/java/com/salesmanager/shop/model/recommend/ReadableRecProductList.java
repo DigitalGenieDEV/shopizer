@@ -14,11 +14,21 @@ public class ReadableRecProductList extends ReadableList {
 
     private List<ReadableRecProduct> products = new ArrayList<>();
 
+    private String cacheid;
+
     public List<ReadableRecProduct> getProducts() {
         return products;
     }
 
     public void setProducts(List<ReadableRecProduct> products) {
         this.products = products;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }

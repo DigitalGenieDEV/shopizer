@@ -10,7 +10,7 @@ public class SearchProductAutocompleteRequestV2 implements Serializable  {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String cookieid;
+    private String deviceid;
     private String lang;
     private String q;
 
@@ -38,11 +38,11 @@ public class SearchProductAutocompleteRequestV2 implements Serializable  {
         this.uid = uid;
     }
 
-    public String getCookieid() {
-        return cookieid;
+    public String getDeviceid() {
+        return deviceid;
     }
 
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
     }
 }

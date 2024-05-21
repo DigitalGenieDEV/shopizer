@@ -35,12 +35,15 @@ public class RecProductServiceImpl implements RecProductService {
     }
 
     @Override
-    public List<Product> guessULike(GuessULikeRequest request) {
+    public GuessULikeResult guessULike(GuessULikeRequest request) {
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_GUESS_LIKE, objectMapper.writeValueAsString(request));
-            GuessULikeResult result = objectMapper.readValue(response, GuessULikeResult.class);
+            GuessULikeInvokeResult result = objectMapper.readValue(response, GuessULikeInvokeResult.class);
 
-            return getProductList(result.getProductList());
+            GuessULikeResult guessULikeResult = new GuessULikeResult();
+            guessULikeResult.setProductList(getProductList(result.getProductList()));
+            guessULikeResult.setCacheid(result.getCacheid());
+            return guessULikeResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,12 +70,16 @@ public class RecProductServiceImpl implements RecProductService {
     }
 
     @Override
-    public List<Product> relateItem(RelateItemRequest request) {
+    public RelateItemResult relateItem(RelateItemRequest request) {
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_DETAILPAGE_RIR, objectMapper.writeValueAsString(request));
-            GuessULikeResult result = objectMapper.readValue(response, GuessULikeResult.class);
+            RelateItemInvokeResult result = objectMapper.readValue(response, RelateItemInvokeResult.class);
 
-            return getProductList(result.getProductList());
+            RelateItemResult relateItemResult = new RelateItemResult();
+            relateItemResult.setCacheid(result.getCacheid());
+            relateItemResult.setProductList(getProductList(result.getProductList()));
+
+            return relateItemResult;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,12 +88,16 @@ public class RecProductServiceImpl implements RecProductService {
     }
 
     @Override
-    public List<Product> selectionItem(SelectionItemRequest request) {
+    public SelectionItemResult selectionItem(SelectionItemRequest request) {
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_SELECTION_PROD, objectMapper.writeValueAsString(request));
-            GuessULikeResult result = objectMapper.readValue(response, GuessULikeResult.class);
+            SelectionItemInvokeResult result = objectMapper.readValue(response, SelectionItemInvokeResult.class);
 
-            return getProductList(result.getProductList());
+
+            SelectionItemResult selectionItemResult = new SelectionItemResult();
+            selectionItemResult.setCacheid(result.getCacheid());
+            selectionItemResult.setProductList(getProductList(result.getProductList()));
+            return selectionItemResult;
         } catch (Exception e) {
             e.printStackTrace();
         }

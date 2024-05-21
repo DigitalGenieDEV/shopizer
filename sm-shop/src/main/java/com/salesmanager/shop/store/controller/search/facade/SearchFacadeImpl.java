@@ -229,7 +229,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setPageIdx(searchProductRequestV2.getPageIdx());
 		searchProductRequest.setAttrFilt(searchProductRequestV2.getAttrFilt());
 		searchProductRequest.setUid(searchProductRequestV2.getUid());
-		searchProductRequest.setCookieid(searchProductRequestV2.getCookieid());
+		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceid());
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
 		ReadableSearchProductV2Populator populator = new ReadableSearchProductV2Populator();
@@ -256,7 +256,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		AutocompleteRequest request = new AutocompleteRequest();
 		request.setQ(searchProductAutocompleteRequestV2.getQ());
 		request.setLang(searchProductAutocompleteRequestV2.getLang());
-		request.setCookieid(searchProductAutocompleteRequestV2.getCookieid());
+		request.setDeviceid(searchProductAutocompleteRequestV2.getDeviceid());
 		request.setUid(searchProductAutocompleteRequestV2.getUid());
 
 		AutocompleteResult result = searchProductService.autocomplete(request);

@@ -9,7 +9,7 @@ public class SearchRecGuessULikeRequest implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String cookieid;
+    private String deviceid;
     private Integer pageIdx = 0;
     private Integer size = 20;
 
@@ -19,14 +19,6 @@ public class SearchRecGuessULikeRequest implements Serializable {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public String getCookieid() {
-        return cookieid;
-    }
-
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
     }
 
     public Integer getPageIdx() {
@@ -43,5 +35,13 @@ public class SearchRecGuessULikeRequest implements Serializable {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public String getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
     }
 }
