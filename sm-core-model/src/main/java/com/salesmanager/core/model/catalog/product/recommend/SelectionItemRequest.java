@@ -16,8 +16,8 @@ public class SelectionItemRequest {
     @JsonProperty("page_idx")
     private Integer pageIdx = 0;
 
-    @JsonProperty("selection_id")
-    private Integer selectionId;
+    @JsonProperty("tag")
+    private String tag;
 
     public Integer getUid() {
         return uid;
@@ -51,11 +51,11 @@ public class SelectionItemRequest {
         this.pageIdx = pageIdx;
     }
 
-    public Integer getSelectionId() {
-        return selectionId;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSelectionId(Integer selectionId) {
-        this.selectionId = selectionId;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

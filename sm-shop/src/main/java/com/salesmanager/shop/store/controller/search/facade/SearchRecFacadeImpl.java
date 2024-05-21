@@ -63,7 +63,7 @@ public class SearchRecFacadeImpl implements SearchRecFacade{
         selectionItemRequest.setCookieid(request.getCookieid());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
-        selectionItemRequest.setSelectionId(request.getSelectionId());
+        selectionItemRequest.setTag(request.getTag());
         selectionItemRequest.setUid(request.getSize());
 
         return convert2ReadableProduct(recProductService.selectionItem(selectionItemRequest), language);

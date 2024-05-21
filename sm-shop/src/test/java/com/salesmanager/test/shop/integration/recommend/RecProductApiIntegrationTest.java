@@ -69,7 +69,7 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
         request.setUid(123);
         request.setSize(20);
         request.setPageIdx(0);
-        request.setSelectionId(122926);
+        request.setTag("tag");
 
         final HttpEntity<SearchRecSelectionRequest> searchEntity = new HttpEntity<>(request, getHeader());
 

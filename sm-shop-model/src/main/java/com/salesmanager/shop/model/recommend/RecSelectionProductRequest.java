@@ -10,7 +10,7 @@ public class RecSelectionProductRequest {
     private String cookieid;
     private Integer pageIdx = 0;
     private Integer size = 20;
-    private Integer selectionId;
+    private String tag;
 
     public Integer getUid() {
         return uid;
@@ -44,11 +44,11 @@ public class RecSelectionProductRequest {
         this.size = size;
     }
 
-    public Integer getSelectionId() {
-        return selectionId;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSelectionId(Integer selectionId) {
-        this.selectionId = selectionId;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

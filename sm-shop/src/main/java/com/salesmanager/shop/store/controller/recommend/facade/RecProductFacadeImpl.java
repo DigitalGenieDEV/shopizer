@@ -8,7 +8,10 @@ import com.salesmanager.core.model.catalog.product.recommend.GuessULikeRequest;
 import com.salesmanager.core.model.catalog.product.recommend.RelateItemRequest;
 import com.salesmanager.core.model.catalog.product.recommend.SelectionItemRequest;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.ReadableProductVariationMapper;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.recommend.*;
+import com.salesmanager.shop.populator.manufacturer.ReadableManufacturerPopulator;
 import com.salesmanager.shop.populator.recommend.ReadableRecProductPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.utils.ImageFilePath;
@@ -30,6 +33,9 @@ public class RecProductFacadeImpl implements RecProductFacade{
 
     @Autowired
     private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+    @Autowired
+    private ReadableProductVariantMapper readableProductVariantMapper;
 
     @Inject
     @Qualifier("img")
@@ -74,7 +80,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         selectionItemRequest.setCookieid(request.getCookieid());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
-        selectionItemRequest.setSelectionId(request.getSelectionId());
+        selectionItemRequest.setTag(request.getTag());
         selectionItemRequest.setUid(request.getSize());
 
         List<Product> products = recProductService.selectionItem(selectionItemRequest);
@@ -94,6 +100,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         populator.setPricingService(pricingService);
         populator.setimageUtils(imageUtils);
         populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+        populator.setReadableProductVariantMapper(readableProductVariantMapper);
 
         ReadableRecProductList productList = new ReadableRecProductList();
         for(Product product : products) {

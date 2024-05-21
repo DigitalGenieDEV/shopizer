@@ -50,19 +50,19 @@ public class RecProductServiceImpl implements RecProductService {
 
     private List<Product> getProductList(List<ProductResult> productResults) {
         List<Product> products = new ArrayList<>();
-        for (ProductResult p : productResults) {
-            try {
-                Product product = productService.getById(Long.valueOf(p.getProductId()));
-                if(product != null && product.getId() != null && product.getId() > 0) {
-                    products.add(product);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        for (ProductResult p : productResults) {
+//            try {
+//                Product product = productService.getById(Long.valueOf(p.getProductId()));
+//                if(product != null && product.getId() != null && product.getId() > 0) {
+//                    products.add(product);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
-//        Product product = productService.getById(350l);
-//        products.add(product);
+        Product product = productService.getById(350l);
+        products.add(product);
         return products;
     }
 

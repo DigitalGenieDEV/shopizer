@@ -2,6 +2,7 @@ package com.salesmanager.shop.populator.customer;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.business.services.reference.currency.CurrencyService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.common.Billing;
@@ -30,6 +31,9 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CountryService countryService;
 
     @Autowired
     private CustomerPopulator customerPopulator;
@@ -86,7 +90,20 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
 
             target.setCustomerEmailAddress(customer.getEmailAddress());
 
-            Delivery delivery = customer.getDelivery();
+//            Delivery delivery = customer.getDelivery();
+//            target.setDelivery(delivery);
+
+
+
+            Delivery delivery = new Delivery();
+            delivery.setAddress(source.getAddress().getAddress());
+            delivery.setCity(source.getAddress().getCity());
+            delivery.setCompany(source.getAddress().getCompany());
+            delivery.setFirstName(source.getAddress().getFirstName());
+            delivery.setLastName(source.getAddress().getLastName());
+            delivery.setPostalCode(source.getAddress().getPostalCode());
+            delivery.setTelephone(source.getAddress().getPhone());
+            delivery.setCountry(countryService.getByCode(source.getAddress().getCountryCode()));
             target.setDelivery(delivery);
 
             Billing billing = customer.getBilling();
