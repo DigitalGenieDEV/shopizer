@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.shop.model.manager.PersistableManagerAuthList;
-import com.salesmanager.shop.model.manager.PersistableManagerGroup;
-import com.salesmanager.shop.model.manager.ReadableManagerList;
+import com.salesmanager.shop.model.manager.ReadableManagerCategoryAuth;
+import com.salesmanager.shop.model.manager.ReadableManagerCategoryAuthList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerCategoryAuthFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerMenuAuthFacade;
 import com.salesmanager.shop.utils.CommonUtils;
@@ -31,22 +31,24 @@ import io.swagger.annotations.Tag;
 /** Api for managing manager menu auth */
 @RestController
 @RequestMapping(value = "/api/v1")
-@Api(tags = { "Manager AdminMenu Auth management resource (Manager AdminMenu Management Api)" })
-@SwaggerDefinition(tags = { @Tag(name = "Manager AdminMenu Auth management resource", description = "Manager AdminMenu Auth") })
-public class ManagerMenuAuthApi {
+@Api(tags = { "Manager Auth management resource (Manager Auth Management Api)" })
+@SwaggerDefinition(tags = { @Tag(name = "Manager Auth management resource", description = "ManagerAuth") })
+public class ManagerAuthApi {
 
 	@Inject
 	private ManagerMenuAuthFacade managerMenuAuthFacade;
+	
+	@Inject
+	private ManagerCategoryAuthFacade managerCategoryAuthFacade;
 	
 	@Inject
 	private ManagerFacade managerFacade;
 	
 	
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = { "/private/manager/menu/auth" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = { "/private/manager/auth/menu" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get list of Manager AdminMenu Auth", notes = "", response = PersistableManagerAuthList.class)
 	public PersistableManagerAuthList list(@RequestParam(value = "grpId", required = false, defaultValue = "0") int grpId) throws Exception {
-	
 		return managerMenuAuthFacade.getManagerAdminMenuAuthList(grpId);
 	}
 	
@@ -57,8 +59,8 @@ public class ManagerMenuAuthApi {
 	 * @return
 	 */
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = { "/private/manager/menu/auth" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "POST", value = "Creates a new Manager Groups", notes = "", response = PersistableManagerGroup.class)
+	@PostMapping(value = { "/private/manager/auth" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Creates a new Manager Groups", notes = "", response = PersistableManagerAuthList.class)
 	public PersistableManagerAuthList create(@Valid @RequestBody PersistableManagerAuthList menuAuthList, HttpServletRequest request)  throws Exception {
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
@@ -69,5 +71,22 @@ public class ManagerMenuAuthApi {
 		String userIp = CommonUtils.getRemoteIp(request);
 		return managerMenuAuthFacade.create(menuAuthList, userIp);
 	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/private/manager/auth/category/full" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of Manager AdminMenu Full Auth", notes = "", response = ReadableManagerCategoryAuth.class)
+	public ReadableManagerCategoryAuth categoryAuthFullList(
+			@RequestParam(value = "grpId", required = false, defaultValue = "0") int grpId) throws Exception {
+		return managerCategoryAuthFacade.getCategoryAuthFullList(grpId);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/private/manager/auth/category" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of Manager AdminMenu Auth", notes = "", response = ReadableManagerCategoryAuthList.class)
+	public ReadableManagerCategoryAuthList categoryAuthList(
+			@RequestParam(value = "grpId", required = false, defaultValue = "0") int grpId) throws Exception {
+		return managerCategoryAuthFacade.getCategoryAuthList(grpId);
+	}
+	
 	
 }

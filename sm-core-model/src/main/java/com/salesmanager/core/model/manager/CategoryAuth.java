@@ -19,7 +19,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
-@Table(name = "CATEGROY_AUTH", indexes = @Index(columnList = "CATEGORY_ID, CATEGORY_PARENT_ID"), uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "CATEGORY_AUTH", indexes = @Index(columnList = "CATEGORY_ID, GRP_ID"), uniqueConstraints = @UniqueConstraint(columnNames = {
 		"ID" }))
 public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> implements Auditable2 {
 
@@ -28,7 +28,7 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 	@Id
 	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
-	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "ADM_MENU_AUTH_SEQ_NEXT_VAL")
+	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "CATEGORY_AUTH_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
@@ -37,16 +37,24 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 	private Integer categoryId;
 
 	@NotEmpty
-	@Column(name = "CATEGORY_PARENT_ID", nullable = false, updatable = false)
-	private Integer categoryParentId;
+	@Column(name = "GRP_ID", nullable = false, updatable = false)
+	private Integer grpId;
+
+	@Column(name = "REG_ID", updatable = true)
+	private String regId;
 
 	@NotEmpty
-	@Column(name = "CATEGORY_NAME", length = 100, nullable = false, updatable = false)
-	private String categoryName;
-	
+	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false)
+	private String regIp;
+
+	@Column(name = "MOD_ID", updatable = true)
+	private String modId;
+
+	@Column(name = "MOD_IP", updatable = true)
+	private String modIp;
+
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();
-
 
 	public Integer getId() {
 		return id;
@@ -64,20 +72,44 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 		this.categoryId = categoryId;
 	}
 
-	public Integer getCategoryParentId() {
-		return categoryParentId;
+	public Integer getGrpId() {
+		return grpId;
 	}
 
-	public void setCategoryParentId(Integer categoryParentId) {
-		this.categoryParentId = categoryParentId;
+	public void setGrpId(Integer grpId) {
+		this.grpId = grpId;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public String getRegId() {
+		return regId;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
+
+	public String getRegIp() {
+		return regIp;
+	}
+
+	public void setRegIp(String regIp) {
+		this.regIp = regIp;
+	}
+
+	public String getModId() {
+		return modId;
+	}
+
+	public void setModId(String modId) {
+		this.modId = modId;
+	}
+
+	public String getModIp() {
+		return modIp;
+	}
+
+	public void setModIp(String modIp) {
+		this.modIp = modIp;
 	}
 
 	public AuditSection2 getAuditSection() {
