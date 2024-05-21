@@ -107,12 +107,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     private ProductService productService;
 
     @Override
-    public void importProduct(List<Long> productIds, String language,
+    public List<Long> importProduct(List<Long> productIds, String language,
                               MerchantStore merchantStore, List<Long> categoryIds) throws ServiceException {
         if (CollectionUtils.isEmpty(productIds)){
             throw new ServiceException(ServiceException.EXCEPTION_VALIDATION,
                     "Invalid date format","validaion.param.error");
         }
+        List<Long> productIdList = new ArrayList<>();
         productIds.forEach(productId ->{
             ProductSearchQueryProductDetailParamOfferDetailParam productSearchQueryProductDetailParamOfferDetailParam = new ProductSearchQueryProductDetailParamOfferDetailParam();
             productSearchQueryProductDetailParamOfferDetailParam.setOfferId(productId);
@@ -120,15 +121,16 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModel = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParam);
             try {
 
-                saveProduct(productSearchQueryProductDetailModelProductDetailModel,
+                Long itemId = saveProduct(productSearchQueryProductDetailModelProductDetailModel,
                         language, merchantStore, categoryIds);
+                productIdList.add(itemId);
             } catch (Exception e) {
                 System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                         +productSearchQueryProductDetailModelProductDetailModel.getOfferId());
                 LOGGER.error("import product error", e);
             }
         });
-
+        return productIds;
     }
 
     @Override
@@ -153,7 +155,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         return productPageInfo;
     }
 
-    public void saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
+    public Long saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
                             String language, MerchantStore store, List<Long> categoryIds) throws Exception {
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
@@ -263,8 +265,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         System.out.println(jsonString);
         productCommonFacade.saveProduct(store, persistableProduct, ko);
-
         Thread.sleep(1000);
+        return productId;
     }
 
 

@@ -168,8 +168,12 @@ public class ProductApiV2 {
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
+
 		// make sure product id is null
-		Product productBySku = productService.getBySku(product.getIdentifier(), merchantStore);
+		Product productBySku = null;
+		if(StringUtils.isNotBlank(product.getIdentifier())){
+			productBySku = productService.getBySku(product.getIdentifier(), merchantStore);
+		}
 		Long productId = null;
 		if (productBySku == null){
 			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
@@ -234,8 +238,8 @@ public class ProductApiV2 {
 	 */
 	@RequestMapping(value = { "/product/name/{friendlyUrl}",
 			"/product/friendly/{friendlyUrl}" }, method = RequestMethod.GET)
-	@ApiOperation(httpMethod = "GET", value = "Get a product by friendlyUrl (slug) version 2", notes = "For shop purpose. Specifying ?merchant is "
-			+ "required otherwise it falls back to DEFAULT")
+//	@ApiOperation(httpMethod = "GET", value = "Get a product by friendlyUrl (slug) version 2", notes = "For shop purpose. Specifying ?merchant is "
+//			+ "required otherwise it falls back to DEFAULT")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
 	@ResponseBody
@@ -616,12 +620,12 @@ public class ProductApiV2 {
 	@ApiOperation(httpMethod = "POST", value = "import product", notes = "import product", produces = "application/json", response = Void.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
-	public void importAlibabaProduct(
+	public List<Long> importAlibabaProduct(
 			@RequestParam(value = "productIds") List<Long> productIds,
 			@RequestParam(value = "leftCategoryId") Long leftCategoryId,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws ServiceException {
-		alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
+		return alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
 	}
 
 
