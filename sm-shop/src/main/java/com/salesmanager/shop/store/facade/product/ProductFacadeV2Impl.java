@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductListMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -64,6 +65,10 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	
 	@Autowired
 	private ReadableProductMapper readableProductMapper;
+
+
+	@Autowired
+	private ReadableProductListMapper readableProductListMapper;
 	
 	@Autowired
 	private ProductVariantService productVariantService;
@@ -113,7 +118,6 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		populator.setimageUtils(imageUtils);
 
 		ReadableProduct readableProduct = populator.populate(product, readableProductFull, store, language);
-
 
 		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
 
@@ -265,7 +269,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		 * ReadableProductMapper
 		 */
 		
-		List<ReadableProduct> readableProducts = products.stream().map(p -> readableProductMapper.convert(p, store, language))
+		List<ReadableProduct> readableProducts = products.stream().map(p -> readableProductListMapper.convert(p, store, language))
 				.sorted(Comparator.comparing(ReadableProduct::getSortOrder)).collect(Collectors.toList());
 
 
