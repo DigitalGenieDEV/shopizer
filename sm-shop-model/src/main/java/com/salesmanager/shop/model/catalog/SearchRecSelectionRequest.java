@@ -9,10 +9,11 @@ public class SearchRecSelectionRequest implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String cookieid;
+    private String deviceid;
     private Integer pageIdx = 0;
     private Integer size = 20;
-    private Integer selectionId;
+    private String tag;
+    private String cacheid;
 
     public Integer getUid() {
         return uid;
@@ -20,14 +21,6 @@ public class SearchRecSelectionRequest implements Serializable {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public String getCookieid() {
-        return cookieid;
-    }
-
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
     }
 
     public Integer getPageIdx() {
@@ -46,11 +39,27 @@ public class SearchRecSelectionRequest implements Serializable {
         this.size = size;
     }
 
-    public Integer getSelectionId() {
-        return selectionId;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSelectionId(Integer selectionId) {
-        this.selectionId = selectionId;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }

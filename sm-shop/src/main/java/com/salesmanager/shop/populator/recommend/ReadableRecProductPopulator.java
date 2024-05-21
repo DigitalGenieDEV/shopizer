@@ -11,14 +11,17 @@ import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.attribute.*;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValue;
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
+import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ProductTypeDescription;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.recommend.ReadableRecProduct;
@@ -45,6 +48,9 @@ public class ReadableRecProductPopulator  extends
 
     private  ReadableManufacturerPopulator readableManufacturerPopulator = new ReadableManufacturerPopulator();
 
+
+    private ReadableProductVariantMapper readableProductVariantMapper;
+
     private ImageFilePath imageUtils;
 
     public ImageFilePath getimageUtils() {
@@ -69,6 +75,22 @@ public class ReadableRecProductPopulator  extends
 
     public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
         this.readableMerchantStorePopulator = readableMerchantStorePopulator;
+    }
+
+    public ReadableManufacturerPopulator getReadableManufacturerPopulator() {
+        return readableManufacturerPopulator;
+    }
+
+    public void setReadableManufacturerPopulator(ReadableManufacturerPopulator readableManufacturerPopulator) {
+        this.readableManufacturerPopulator = readableManufacturerPopulator;
+    }
+
+    public ReadableProductVariantMapper getReadableProductVariantMapper() {
+        return readableProductVariantMapper;
+    }
+
+    public void setReadableProductVariantMapper(ReadableProductVariantMapper readableProductVariantMapper) {
+        this.readableProductVariantMapper = readableProductVariantMapper;
     }
 
     @Override
@@ -475,6 +497,18 @@ public class ReadableRecProductPopulator  extends
 
             }
 
+
+
+            // variants
+            if (!CollectionUtils.isEmpty(source.getVariants()))
+
+            {
+                List<ReadableProductVariant> instances = source
+                        .getVariants().stream()
+                        .map(i -> readableProductVariantMapper.convert(i, store, lang)).collect(Collectors.toList());
+                target.setVariants(instances);
+
+            }
 
 
             //remove products from invisible category -> set visible = false

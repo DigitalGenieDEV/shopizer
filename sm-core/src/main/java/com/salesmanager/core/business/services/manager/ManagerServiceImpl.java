@@ -38,6 +38,10 @@ public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Man
 		return managerRepository.getById(id);
 	}
 	
+	public Manager getByUserName(String userName) throws ServiceException{
+		return managerRepository.getByUserName(userName);
+	}
+	
 	public int getDupEmplIdCount(String userId) throws ServiceException{
 		return managerRepository.getDupEmplIdCount(userId);
 	}
@@ -50,6 +54,18 @@ public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Man
 		} else {
 			this.create(manger);
 		}
+	}
+	
+	public void deleteManager(int grpId) throws ServiceException{
+		managerRepository.deleteManager(grpId);
+	}
+	
+	public void updateLoginFailCount(String emplId) throws ServiceException{
+		managerRepository.updateLoginFailCount(emplId);
+	}
+	
+	public void updateLoginDate(String emplId)throws ServiceException{
+		managerRepository.updateLoginDate(emplId);
 	}
 
 	

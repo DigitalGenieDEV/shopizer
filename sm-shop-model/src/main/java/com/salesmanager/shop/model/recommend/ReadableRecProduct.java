@@ -5,12 +5,14 @@ import com.salesmanager.shop.model.catalog.product.ProductDescription;
 import com.salesmanager.shop.model.catalog.product.ReadableImage;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
+import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.entity.Entity;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReadableRecProduct extends Entity implements Serializable {
@@ -56,6 +58,8 @@ public class ReadableRecProduct extends Entity implements Serializable {
     private boolean discounted = false;
 
     private boolean canBePurchased = false;
+
+    private List<ReadableProductVariant> variants = new ArrayList<ReadableProductVariant>();
 
     private boolean productVirtual = false;
     private int quantityOrderMaximum = -1;// default unlimited
@@ -237,5 +241,13 @@ public class ReadableRecProduct extends Entity implements Serializable {
 
     public void setImages(List<ReadableImage> images) {
         this.images = images;
+    }
+
+    public List<ReadableProductVariant> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<ReadableProductVariant> variants) {
+        this.variants = variants;
     }
 }

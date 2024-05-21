@@ -37,36 +37,36 @@ public class SearchRecFacadeImpl implements SearchRecFacade{
     @Override
     public List<ReadableProduct> searchRecGuessULike(SearchRecGuessULikeRequest request, Language language) throws ConversionException {
         GuessULikeRequest guessULikeRequest = new GuessULikeRequest();
-        guessULikeRequest.setCookieid(request.getCookieid());
+        guessULikeRequest.setDeviceid(request.getDeviceid());
         guessULikeRequest.setUid(request.getUid());
         guessULikeRequest.setPageIdx(request.getPageIdx());
         guessULikeRequest.setSize(request.getSize());
 
-        return convert2ReadableProduct(recProductService.guessULike(guessULikeRequest), language);
+        return convert2ReadableProduct(recProductService.guessULike(guessULikeRequest).getProductList(), language);
     }
 
     @Override
     public List<ReadableProduct> searchRecRelateItem(SearchRecRelateItemRequest request, Language language) throws ConversionException {
         RelateItemRequest relateItemRequest = new RelateItemRequest();
-        relateItemRequest.setCookieid(request.getCookieid());
+        relateItemRequest.setDeviceid(request.getDeviceid());
         relateItemRequest.setUid(request.getUid());
         relateItemRequest.setProductId(request.getProductId());
         relateItemRequest.setPageIdx(request.getPageIdx());
         relateItemRequest.setSize(request.getSize());
 
-        return convert2ReadableProduct(recProductService.relateItem(relateItemRequest), language);
+        return convert2ReadableProduct(recProductService.relateItem(relateItemRequest).getProductList(), language);
     }
 
     @Override
     public List<ReadableProduct> searchRecSelectionItem(SearchRecSelectionRequest request, Language language) throws ConversionException {
         SelectionItemRequest selectionItemRequest = new SelectionItemRequest();
-        selectionItemRequest.setCookieid(request.getCookieid());
+        selectionItemRequest.setDeviceid(request.getDeviceid());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
-        selectionItemRequest.setSelectionId(request.getSelectionId());
+        selectionItemRequest.setTag(request.getTag());
         selectionItemRequest.setUid(request.getSize());
 
-        return convert2ReadableProduct(recProductService.selectionItem(selectionItemRequest), language);
+        return convert2ReadableProduct(recProductService.selectionItem(selectionItemRequest).getProductList(), language);
     }
 
     private List<ReadableProduct> convert2ReadableProduct(List<Product> products, Language language) throws ConversionException {

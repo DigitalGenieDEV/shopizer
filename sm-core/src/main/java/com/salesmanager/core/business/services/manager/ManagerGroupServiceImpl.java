@@ -11,8 +11,8 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.manager.ManagerGroupRepository;
 import com.salesmanager.core.business.repositories.manager.PageableManagerGroupRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.salesmanager.core.model.manager.Manager;
 import com.salesmanager.core.model.manager.ManagerGroup;
+import com.salesmanager.core.model.manager.ReadManagerGroup;
 
 @Service("managerGroupService")
 public class ManagerGroupServiceImpl  extends SalesManagerEntityServiceImpl<Integer, ManagerGroup> implements ManagerGroupService {
@@ -29,8 +29,23 @@ public class ManagerGroupServiceImpl  extends SalesManagerEntityServiceImpl<Inte
 		this.managerGroupRepository = managerGroupRepository;
 	}
 	
-	public Page<ManagerGroup> getManagerGroupList(String keyword, int page, int count)throws ServiceException{
+	public Page<ReadManagerGroup> getManagerGroupList(String keyword, int page, int count, int visible)throws ServiceException{
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableManagerGroupRepository.getManagerGroupList(keyword, pageRequest);
+		return pageableManagerGroupRepository.getManagerGroupList(keyword, visible, pageRequest);
 	}
+	
+	public ReadManagerGroup getById(int id) throws ServiceException{
+		return managerGroupRepository.getById(id);
+	}
+	
+	@Override
+	public void saveOrUpdate(ManagerGroup mangerGroup) throws ServiceException {
+		// save or update (persist and attach entities
+		if (mangerGroup.getId() != null && mangerGroup.getId() > 0) {
+			super.update(mangerGroup);
+		} else {
+			this.create(mangerGroup);
+		}
+	}
+	
 }

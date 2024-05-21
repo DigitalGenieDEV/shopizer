@@ -67,4 +67,36 @@ public interface ManagerFacade {
 	 * @throws Exception
 	 */
 	void delete(Long id) throws Exception;
+	
+	
+	/**
+
+	 *  @param emplId
+	 * @return 
+	 * @throws Exception
+	 */
+	void updateLoginFailCount(String emplId) throws Exception;
+	
+	
+	/**
+
+	 *  @param emplId
+	 * @return 
+	 * @throws Exception
+	 */
+	void updateLoginDate(String emplId) throws Exception;
+	
+	
+  /**
+   * Retrieve authenticated user
+   * @return
+   */
+  String authenticatedManager() throws Exception;
+  
+  /**
+   * Retrieve authenticated user
+   * @return
+ * @throws Exception 
+   */
+  String authorizedMenu(String authenticatedManager, String url) throws Exception;
 }

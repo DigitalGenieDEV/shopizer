@@ -38,6 +38,7 @@ import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmat
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import com.salesmanager.shop.model.order.shipping.PersistableDeliveryAddress;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 import com.salesmanager.shop.model.order.total.ReadableTotal;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
@@ -185,6 +186,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistablePayment.setTransactionType(TransactionType.COMBINESTAMP.name());
                 persistableOrder.setPayment(persistablePayment);
 
+
+                persistableOrder.setAddress(customerOrder.getAddress());
                 // 创建商户订单
                 Order order = orderFacade.processOrder(persistableOrder, customer, store, language, locale);
                 orders.add(order);

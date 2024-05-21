@@ -9,7 +9,7 @@ public class SearchRecRelateItemRequest implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String cookieid;
+    private String deviceid;
     private Integer pageIdx = 0;
     private Integer size = 20;
     private Integer productId;
@@ -20,14 +20,6 @@ public class SearchRecRelateItemRequest implements Serializable {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public String getCookieid() {
-        return cookieid;
-    }
-
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
     }
 
     public Integer getPageIdx() {
@@ -52,5 +44,13 @@ public class SearchRecRelateItemRequest implements Serializable {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public String getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
     }
 }

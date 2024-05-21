@@ -7,8 +7,8 @@ public class SelectionItemRequest {
     @JsonProperty("uid")
     private Integer uid;
 
-    @JsonProperty("cookieid")
-    private String cookieid;
+    @JsonProperty("deviceid")
+    private String deviceid;
 
     @JsonProperty("size")
     private Integer size = 20;
@@ -16,8 +16,11 @@ public class SelectionItemRequest {
     @JsonProperty("page_idx")
     private Integer pageIdx = 0;
 
-    @JsonProperty("selection_id")
-    private Integer selectionId;
+    @JsonProperty("tag")
+    private String tag;
+
+    @JsonProperty("cacheid")
+    private String cacheid;
 
     public Integer getUid() {
         return uid;
@@ -25,14 +28,6 @@ public class SelectionItemRequest {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public String getCookieid() {
-        return cookieid;
-    }
-
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
     }
 
     public Integer getSize() {
@@ -51,11 +46,27 @@ public class SelectionItemRequest {
         this.pageIdx = pageIdx;
     }
 
-    public Integer getSelectionId() {
-        return selectionId;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSelectionId(Integer selectionId) {
-        this.selectionId = selectionId;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }

@@ -5,6 +5,7 @@ public class ReadableManagerGroup {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String grpName = "";
+	private int cnt = 0;
 
 	public int getId() {
 		return id;
@@ -20,6 +21,14 @@ public class ReadableManagerGroup {
 
 	public void setGrpName(String grpName) {
 		this.grpName = grpName;
+	}
+
+	public int getCnt() {
+		return cnt;
+	}
+
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
 	}
 
 }

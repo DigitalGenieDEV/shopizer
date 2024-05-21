@@ -33,9 +33,9 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 	 
 	
 	@Override
-	public ReadableAdminMenu getListAdminMenu(int visible) throws Exception{
+	public ReadableAdminMenu getListAdminMenu(int visible, int grpId) throws Exception{
 		try{
-		  List<ReadAdminMenu> dataList = adminMenuService.getListAdminMenu(visible);
+		  List<ReadAdminMenu> dataList = adminMenuService.getListAdminMenu(visible,grpId);
 		  List<ReadableAdminMenu> tempList = new ArrayList<>();
 	      if (dataList.isEmpty()) {
 	    	  ReadableAdminMenu rootDept = new ReadableAdminMenu();
@@ -105,6 +105,7 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 			  sendData.setMenuDesc(data.getMenu_Desc());
 			  sendData.setMenuNamePath(adminMenuService.getNamePath(data.getId()).replaceAll("&gt;", " > "));
 			  sendData.setMenuUrl(data.getMenu_Url());
+			  sendData.setApiUrl(data.getApi_Url());
 			  sendData.setVisible(data.getVisible());
 		}
 		return sendData;

@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import com.salesmanager.core.model.common.CredentialsReset;
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
@@ -34,7 +35,7 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	private Long id;
 
 	@NotEmpty
-	@Column(name = "EMPL_ID", nullable = false, length = 11, updatable = false)
+	@Column(name = "EMPL_ID", nullable = false, length = 12, updatable = false)
 	private String emplId;
 
 	@NotEmpty
@@ -114,6 +115,19 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 
 	@Column(name = "MOD_IP", updatable = true)
 	private String modIp;
+	
+	@Embedded
+	private CredentialsReset credentialsResetRequest = null;
+
+
+	public CredentialsReset getCredentialsResetRequest() {
+		return credentialsResetRequest;
+	}
+
+	public void setCredentialsResetRequest(CredentialsReset credentialsResetRequest) {
+		this.credentialsResetRequest = credentialsResetRequest;
+	}
+	
 
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();

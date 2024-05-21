@@ -31,6 +31,7 @@ public class PersistableAdminMenuPopulator extends AbstractDataPopulator<Persist
 			target.setMenuName(source.getMenuName());
 			target.setMenuDesc(source.getMenuDesc());
 			target.setMenuUrl(source.getMenuUrl());
+			target.setApiUrl(source.getApiUrl());
 			target.setVisible(source.getVisible());
 			if (source.getOrd() == 0) {
 				target.setOrd(adminMenuSerivce.getOrder(source.getParentId()));

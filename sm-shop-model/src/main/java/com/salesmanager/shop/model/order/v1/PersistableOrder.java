@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.order.v1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.shop.model.order.shipping.PersistableDeliveryAddress;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 
 /**
@@ -17,6 +18,8 @@ public class PersistableOrder extends Order {
 	private static final long serialVersionUID = 1L;
 	
 	private PersistablePayment payment;
+
+	private PersistableDeliveryAddress address;
 	private Long shippingQuote;
 	@JsonIgnore
 	private Long shoppingCartId;
@@ -56,7 +59,12 @@ public class PersistableOrder extends Order {
 	public void setShippingQuote(Long shippingQuote) {
 		this.shippingQuote = shippingQuote;
 	}
-	
 
+	public PersistableDeliveryAddress getAddress() {
+		return address;
+	}
 
+	public void setAddress(PersistableDeliveryAddress address) {
+		this.address = address;
+	}
 }

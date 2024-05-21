@@ -6,6 +6,7 @@ public interface ReadAdminMenu {
 	 String getMenu_Name();
 	 String getMenu_Desc();
 	 String getMenu_Url();
+	 String getApi_Url();
 	 int getVisible();
 	 int getOrd();
 	 int getDepth();

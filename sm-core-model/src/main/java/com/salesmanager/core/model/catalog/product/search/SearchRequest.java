@@ -9,8 +9,8 @@ public class SearchRequest {
     @JsonProperty("uid")
     private Integer uid;
 
-    @JsonProperty("cookieid")
-    private String cookieid;
+    @JsonProperty("deviceid")
+    private String deviceid;
 
     @JsonProperty("lang")
     private String lang;
@@ -102,11 +102,12 @@ public class SearchRequest {
         this.uid = uid;
     }
 
-    public String getCookieid() {
-        return cookieid;
+
+    public String getDeviceid() {
+        return deviceid;
     }
 
-    public void setCookieid(String cookieid) {
-        this.cookieid = cookieid;
+    public void setDeviceid(String deviceid) {
+        this.deviceid = deviceid;
     }
 }

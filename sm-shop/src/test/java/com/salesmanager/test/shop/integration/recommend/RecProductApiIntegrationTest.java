@@ -34,7 +34,7 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchRecGuessULike() {
         SearchRecGuessULikeRequest request = new SearchRecGuessULikeRequest();
-        request.setCookieid("111");
+        request.setDeviceid("111");
         request.setUid(123);
         request.setSize(20);
         request.setPageIdx(0);
@@ -49,7 +49,7 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchRecRelateItem() {
         SearchRecRelateItemRequest request = new SearchRecRelateItemRequest();
-        request.setCookieid("111");
+        request.setDeviceid("111");
         request.setUid(123);
         request.setSize(20);
         request.setPageIdx(0);
@@ -65,11 +65,11 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchSelectionProduct() {
         SearchRecSelectionRequest request = new SearchRecSelectionRequest();
-        request.setCookieid("111");
+        request.setDeviceid("111");
         request.setUid(123);
         request.setSize(20);
         request.setPageIdx(0);
-        request.setSelectionId(122926);
+        request.setTag("CURATE_EXHIBITION");
 
         final HttpEntity<SearchRecSelectionRequest> searchEntity = new HttpEntity<>(request, getHeader());
 

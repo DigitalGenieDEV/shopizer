@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.salesmanager.core.business.services.reference.country.CountryService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 	private CurrencyService currencyService;
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private CountryService countryService;
 /*	@Autowired
 	private ShoppingCartService shoppingCartService;
 	@Autowired
@@ -114,8 +118,22 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			
 			target.setCustomerEmailAddress(customer.getEmailAddress());
 			
+//			Delivery delivery = customer.getDelivery();
+//			target.setDelivery(delivery);
 			Delivery delivery = customer.getDelivery();
+			delivery.setAddress(source.getAddress().getAddress());
+			delivery.setCity(source.getAddress().getCity());
+			delivery.setCompany(source.getAddress().getCompany());
+			delivery.setFirstName(source.getAddress().getFirstName());
+			delivery.setLastName(source.getAddress().getLastName());
+			delivery.setPostalCode(source.getAddress().getPostalCode());
+			delivery.setTelephone(source.getAddress().getPhone());
+			delivery.setCountry(countryService.getByCode(source.getAddress().getCountryCode()));
 			target.setDelivery(delivery);
+
+
+//			Delivery delivery = customer.getDelivery();
+//			target.setDelivery(delivery);
 			
 			Billing billing = customer.getBilling();
 			target.setBilling(billing);
