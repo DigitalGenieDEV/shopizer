@@ -32,12 +32,10 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
 
-	@JsonIgnore
-	@ManyToOne(targetEntity = Product.class)
-	@JoinColumn(name = "PRODUCT_ID", nullable = false)
-	private Product product;
+	@Column(name = "PRODUCT_ID", nullable = false)
+	private Long productId;
 
-	@Column(name = "KEY", nullable = false)
+	@Column(name = "KEY_NAME", nullable = false)
 	private String key;
 
 	@Column(name = "VALUE", nullable = false)
@@ -74,12 +72,12 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	}
 
 
-	public Product getProduct() {
-		return product;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	@Override

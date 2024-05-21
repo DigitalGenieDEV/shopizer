@@ -7,49 +7,12 @@ import java.util.List;
 public class PersistableProductVariant extends ProductVariant {
 
 	private static final long serialVersionUID = 1L;
-	
-	private Long variation;
-	private Long variationValue;
-	
-	private String variationCode;
-	private String variationValueCode;
-
-//	private List<PersistableVariantOption> persistentOptions;
-
 
 	private PersistableProductInventory inventory;
 
-	public Long getVariation() {
-		return variation;
-	}
 
-	public void setVariation(Long variation) {
-		this.variation = variation;
-	}
+	private List<PersistableVariation> productVariations = null;
 
-	public Long getVariationValue() {
-		return variationValue;
-	}
-
-	public void setVariationValue(Long variationValue) {
-		this.variationValue = variationValue;
-	}
-
-	public String getVariationCode() {
-		return variationCode;
-	}
-
-	public void setVariationCode(String variationCode) {
-		this.variationCode = variationCode;
-	}
-
-	public String getVariationValueCode() {
-		return variationValueCode;
-	}
-
-	public void setVariationValueCode(String variationValueCode) {
-		this.variationValueCode = variationValueCode;
-	}
 
 	public PersistableProductInventory getInventory() {
 		return inventory;
@@ -59,11 +22,12 @@ public class PersistableProductVariant extends ProductVariant {
 		this.inventory = inventory;
 	}
 
-//	public List<PersistableVariantOption> getPersistentOptions() {
-//		return persistentOptions;
-//	}
-//
-//	public void setPersistentOptions(List<PersistableVariantOption> persistentOptions) {
-//		this.persistentOptions = persistentOptions;
-//	}
+
+	public List<PersistableVariation> getProductVariations() {
+		return productVariations;
+	}
+
+	public void setProductVariations(List<PersistableVariation> productVariations) {
+		this.productVariations = productVariations;
+	}
 }

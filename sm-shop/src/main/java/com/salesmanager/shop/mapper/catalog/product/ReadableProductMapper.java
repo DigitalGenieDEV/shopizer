@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -100,7 +101,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 		// read only product values
 		// will contain options
-		TreeMap<Long, ReadableProductOption> selectableOptions = new TreeMap<Long, ReadableProductOption>();
+		TreeMap<Long, ReadableProductOption> /**/selectableOptions = new TreeMap<Long, ReadableProductOption>();
 
 		destination.setSku(source.getSku());
 		destination.setIdentifier(source.getSku());
@@ -166,6 +167,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, store))
 					.collect(Collectors.toList());
 			destination.setImages(imageList);
+			imageList.forEach(image->{
+				if(image.isDefaultImage()){
+					destination.setImage(image);
+				}});
 		}
 
 		if (!CollectionUtils.isEmpty(source.getAttributes())) {
@@ -606,40 +611,25 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			MerchantStore store, Language language) {
 
 
-		ReadableProductOption option = this.option(selectableOptions, instance.getVariation().getProductOption(), language);
-		option.setVariant(true);
-
-
-		// take care of option value
-		Optional<ReadableProductOptionValue> optionOptionValue = this
-				.optionValue(instance.getVariation().getProductOptionValue(), store, language);
-
-		if (optionOptionValue.isPresent()) {
-			optionOptionValue.get().setId(instance.getId());
-			if (instance.isDefaultSelection()) {
-				optionOptionValue.get().setDefaultValue(true);
-			}
-			addOptionValue(option, optionOptionValue.get());
-
+		if (instance == null || instance.getVariations() == null) {
+			return;
 		}
 
-		if (instance.getVariationValue() != null) {
-			ReadableProductOption optionValue = this.option(selectableOptions, instance.getVariationValue().getProductOption(), language);
+		for (ProductVariation variation : instance.getVariations()) {
+			ReadableProductOption option = this.option(selectableOptions, variation.getProductOption(), language);
+			option.setVariant(true);
 
-			// take care of option value
-			Optional<ReadableProductOptionValue> optionValueOptionValue = this
-					.optionValue(instance.getVariationValue().getProductOptionValue(), store, language);
-
-
-			if (optionValueOptionValue.isPresent()) {
-				optionValueOptionValue.get().setId(instance.getId());
+			Optional<ReadableProductOptionValue> optionValueOpt = this.optionValue(variation.getProductOptionValue(), store, language);
+			if (optionValueOpt.isPresent()) {
+				ReadableProductOptionValue optionValue = optionValueOpt.get();
+				optionValue.setId(instance.getId());
 				if (instance.isDefaultSelection()) {
-					optionValueOptionValue.get().setDefaultValue(true);
+					optionValue.setDefaultValue(true);
 				}
-				addOptionValue(optionValue, optionValueOptionValue.get());
+				addOptionValue(option, optionValue);
 			}
-
 		}
+
 
 	}
 	

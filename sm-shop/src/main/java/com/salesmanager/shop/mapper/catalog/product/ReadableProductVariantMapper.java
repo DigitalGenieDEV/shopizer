@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.shop.model.catalog.product.variation.ReadableProductVariation;
 import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +79,6 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 		}
 		
 		destination.setProductShipeable(baseProduct.isProductShipeable());
-		
-		//destination.setStore(null);
-		destination.setStore(store.getCode());
-		destination.setVariation(readableProductVariationMapper.convert(source.getVariation(), store, language));
-		if(source.getVariationValue() != null) {
-			destination.setVariationValue(readableProductVariationMapper.convert(source.getVariationValue(), store, language));
-		}
 
 		if(source.getProductVariantGroup() != null) {
 			Set<String> nameSet = new HashSet<>();
@@ -93,11 +87,19 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 					.collect(Collectors.toList());
 			destination.setImages(instanceImages);
 		}
-		
-//		if(!CollectionUtils.isEmpty(source.getAvailabilities())) {
-//			List<ReadableInventory> inventories = source.getAvailabilities().stream().map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
-//			destination.setInventory(inventories);
-//		}
+
+		if (source.getVariations() != null) {
+			List<ReadableProductVariation> variations = source.getVariations().stream()
+					.map(v -> readableProductVariationMapper.convert(v, store, language))
+					.collect(Collectors.toList());
+			destination.setVariations(variations);
+		}
+
+
+		if(!CollectionUtils.isEmpty(source.getAvailabilities())) {
+			List<ReadableInventory> inventories = source.getAvailabilities().stream().map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
+			destination.setInventory(inventories);
+		}
 		
 		return destination;
 	}

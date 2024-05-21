@@ -8,9 +8,12 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
+import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -76,6 +79,9 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	
 	@Inject
 	private PricingService pricingService;
+
+	@Autowired
+	private ProductFeatureService productFeatureService;
 	
 	@Inject
 	@Qualifier("img")
@@ -108,18 +114,45 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		ReadableProduct readableProduct = populator.populate(product, readableProductFull, store, language);
 
+
+		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
+
+		if (!CollectionUtils.isEmpty(instances)){
+			MerchantStore finalStore = store;
+			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
+			readableProduct.setVariants(readableInstances);
+		}
+
+		List<ProductFeature> listByProductId = productFeatureService.findListByProductId(id);
+		if (!CollectionUtils.isEmpty(listByProductId)){
+			List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
+			readableProduct.setTags(collect);
+		}
+
 		return readableProduct;
 	}
 
 	@Override
 	public ReadableProduct getProductById(Long id, MerchantStore store, Language language){
+		if (store == null){
+			Product productWithOnlyMerchantStoreById = productService.getProductWithOnlyMerchantStoreById(id);
+			store = productWithOnlyMerchantStoreById.getMerchantStore();
+		}
+
 		Product	product = productService.findOne(id, store);
 		if (product == null) {
 			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
 		}
 
-
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
+
+		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
+
+		if (!CollectionUtils.isEmpty(instances)){
+			MerchantStore finalStore = store;
+			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
+			readableProduct.setVariants(readableInstances);
+		}
 
 		return readableProduct;
 	}

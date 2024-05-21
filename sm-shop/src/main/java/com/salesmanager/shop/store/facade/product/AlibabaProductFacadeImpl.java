@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.facade.product;
 
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
@@ -40,6 +41,7 @@ import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProdu
 import com.salesmanager.shop.model.catalog.product.product.definition.PersistableProductDefinition;
 import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
+import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import com.salesmanager.shop.model.catalog.product.variation.PersistableProductVariation;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
@@ -151,7 +153,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         return productPageInfo;
     }
 
-    @Transactional
     public void saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
                             String language, MerchantStore store, List<Long> categoryIds) throws Exception {
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
@@ -379,6 +380,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
 
             productInventory.setPrice(price);
+            List<PersistableVariation> persistableVariationList = new ArrayList<>();
             for (int s =0; s<skuAttributes.length; s++){
                 PersistableProductVariation productVariant = new PersistableProductVariation();
 
@@ -443,9 +445,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 }else {
                     productVariationId = productVariationFacade.create(productVariant, store, language);
                 }
-                persistableProductVariant.setVariation(productVariationId);
+                PersistableVariation persistableVariation = new PersistableVariation();
+                persistableVariation.setVariationId(productVariationId);
+                persistableVariation.setOptionId(productOption.getId());
+                persistableVariation.setOptionValueId(optionValue.getId());
+                persistableVariationList.add(persistableVariation);
             }
-
+            persistableProductVariant.setProductVariations(persistableVariationList);
             persistableProductVariant.setSku(UUID.randomUUID().toString());
             persistableProductVariant.setInventory(productInventory);
             variants.add(persistableProductVariant);

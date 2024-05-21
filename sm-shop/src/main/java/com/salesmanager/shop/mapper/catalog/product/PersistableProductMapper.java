@@ -2,12 +2,7 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,8 +59,9 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	
 	@Autowired
 	private PersistableProductVariantMapper persistableProductVariantMapper;
-	
 
+	@Autowired
+	private PersistableProductAttributeMapper persistableProductAttributeMapper;
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -93,9 +89,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	    Validate.notNull(destination,"Product must not be null");
 
 		try {
-
 			//core properties
-			destination.setSku(source.getSku());
+			destination.setSku(source.getSku() == null? source.getIdentifier() : source.getSku());
 
 			destination.setAvailable(source.isVisible());
 			destination.setDateAvailable(new Date());
@@ -119,6 +114,29 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setMixNumber(source.getMixNumber());
 				destination.setMixAmount(source.getMixAmount());
 				destination.setGeneralMixedBatch(source.getGeneralMixedBatch());
+			}
+
+			//MANUFACTURER
+			if(!StringUtils.isBlank(source.getManufacturer())) {
+				Manufacturer manufacturer = manufacturerService.getByCode(store, source.getManufacturer());
+				if(manufacturer == null) {
+					throw new ConversionException("Manufacturer [" + source.getManufacturer() + "] does not exist");
+				}
+				destination.setManufacturer(manufacturer);
+			}
+
+			//attributes
+			if(source.getProperties()!=null) {
+				List<ProductAttribute> productAttributes = new ArrayList<>();
+				for(com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute attr : source.getProperties()) {
+
+					ProductAttribute attribute = persistableProductAttributeMapper.convert(attr, store, language);
+
+					attribute.setProduct(destination);
+					productAttributes.add(attribute);
+				}
+				Set<ProductAttribute> mismatchedAttributes = findMismatchedAttributes(destination.getAttributes(), productAttributes);
+				destination.setAttributes(mismatchedAttributes);
 			}
 
 			/**
@@ -247,7 +265,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			 * Variants
 			 */
 			if(!CollectionUtils.isEmpty(source.getVariants())) {
-				Set<ProductVariant> variants = source.getVariants().stream().map(v -> this.variant(destination, v, store, language)).collect(Collectors.toSet());
+				Set<ProductVariant> variants = source.getVariants().stream().map(v -> this.variant(destination, source.getId(), v, store, language)).collect(Collectors.toSet());
 
 				destination.setVariants(variants);
 			}
@@ -304,7 +322,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 		
 	}
 	
-	private ProductVariant variant(Product product, PersistableProductVariant variant, MerchantStore store, Language language) {
+	private ProductVariant variant(Product product, Long sourceProductId,PersistableProductVariant variant, MerchantStore store, Language language) {
+		variant.setProductId(sourceProductId);
 		ProductVariant var = persistableProductVariantMapper.convert(variant, store, language);
 		var.setProduct(product);
 		return var;
@@ -313,7 +332,33 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	private ProductAvailability defaultAvailability(List <ProductAvailability> availabilityList) {
 		return availabilityList.stream().filter(a -> a.getRegion() != null && a.getRegion().equals(Constants.ALL_REGIONS)).findFirst().get();
 	}
-	
+
+
+	public static Set<ProductAttribute> findMismatchedAttributes(Set<ProductAttribute> destination, List<ProductAttribute> source) {
+		Map<Long, Set<Long>> destinationMap = destination.stream()
+				.collect(Collectors.toMap(
+						pa -> pa.getProductOption().getId(),
+						pa -> new HashSet<>(Collections.singletonList(pa.getProductOptionValue().getId())),
+						(existing, replacement) -> {
+							existing.addAll(replacement);
+							return existing;
+						}
+				));
+
+		Set<ProductAttribute> mismatchedAttributes = new HashSet<>();
+
+		for (ProductAttribute sourceAttr : source) {
+			Long optionId = sourceAttr.getProductOption().getId();
+			Long optionValueId = sourceAttr.getProductOptionValue().getId();
+
+			if (!destinationMap.containsKey(optionId) || !destinationMap.get(optionId).contains(optionValueId)) {
+				mismatchedAttributes.add(sourceAttr);
+			}
+		}
+
+		return mismatchedAttributes;
+	}
+
 
 
 }

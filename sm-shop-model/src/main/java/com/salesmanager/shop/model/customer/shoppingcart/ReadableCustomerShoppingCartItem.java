@@ -19,9 +19,18 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
     private String displaySubTotal;
 //    private List<ReadableShoppingCartAttribute> cartItemattributes = new ArrayList<ReadableShoppingCartAttribute>();
 
-    private ReadableProductVariation variant = null;
-    private ReadableProductVariation variantValue = null;
+    public List<ReadableProductVariation> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<ReadableProductVariation> variants) {
+        this.variants = variants;
+    }
+
     private boolean checked;
+
+
+    private List<ReadableProductVariation> variants = null;
 
 
 
@@ -43,18 +52,6 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 //    public void setCartItemattributes(List<ReadableShoppingCartAttribute> cartItemattributes) {
 //        this.cartItemattributes = cartItemattributes;
 //    }
-    public ReadableProductVariation getVariant() {
-        return variant;
-    }
-    public void setVariant(ReadableProductVariation variant) {
-        this.variant = variant;
-    }
-    public ReadableProductVariation getVariantValue() {
-        return variantValue;
-    }
-    public void setVariantValue(ReadableProductVariation variantValue) {
-        this.variantValue = variantValue;
-    }
 
     public boolean isChecked() {
         return checked;

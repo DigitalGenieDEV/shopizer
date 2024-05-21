@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -331,7 +332,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 					}
 				}
 			}
-			
+
 
 
 		} catch (Exception e) {

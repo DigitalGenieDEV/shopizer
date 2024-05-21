@@ -37,4 +37,15 @@ public interface ProductVariationRepository extends JpaRepository<ProductVariati
 			+ "left join fetch pv.descriptions pvd where pm.id = ?1 and p.id in (?2)")
 	List<ProductVariation> findByIds(Integer storeId, List<Long> ids);
 
+
+
+	@Query("select distinct p from ProductVariation p "
+			+ "join fetch p.merchantStore pm "
+			+ "left join fetch p.productOption po "
+			+ "left join fetch po.descriptions pod "
+			+ "left join fetch p.productOptionValue pv "
+			+ "left join fetch pv.descriptions pvd "
+			+ "where pm.id = ?1 and po.id = ?2 and pv.id = ?3")
+	Optional<ProductVariation> findByOptionAndValue(Integer storeId, Long optionId, Long optionValueId);
+
 }

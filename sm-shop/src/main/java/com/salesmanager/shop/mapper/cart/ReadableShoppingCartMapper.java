@@ -141,10 +141,9 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 						if(productVariant.isEmpty()) {
 							throw new ConversionRuntimeException("An error occured during shopping cart [" + source.getShoppingCartCode() + "] conversion, productVariant [" + item.getVariant() + "] not found");
 						}
-						shoppingCartItem.setVariant(readableProductVariationMapper.convert(productVariant.get().getVariation(), store, language));
-						if(productVariant.get().getVariationValue() != null) {
-							shoppingCartItem.setVariantValue(readableProductVariationMapper.convert(productVariant.get().getVariationValue(), store, language));
-						}
+						shoppingCartItem.setVariants(
+								productVariant.get().getVariations().stream().map(productVariation -> readableProductVariationMapper.convert(productVariation, store, language)).collect(Collectors.toList()));
+
 						
 						if(productVariant.get().getProductVariantGroup() != null) {
 							Set<String> nameSet = new HashSet<>();

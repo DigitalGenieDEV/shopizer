@@ -199,8 +199,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         ReadableCustomerShoppingCartItem readableCustomerShoppingCartItem = new ReadableCustomerShoppingCartItem();
         readableCustomerShoppingCartItem.setSubTotal(readableShoppingCartItem.getSubTotal());
         readableCustomerShoppingCartItem.setDisplaySubTotal(readableShoppingCartItem.getDisplaySubTotal());
-        readableCustomerShoppingCartItem.setVariant(readableShoppingCartItem.getVariant());
-        readableCustomerShoppingCartItem.setVariantValue(readableShoppingCartItem.getVariantValue());
+        readableCustomerShoppingCartItem.setVariants(readableShoppingCartItem.getVariants());
         readableCustomerShoppingCartItem.setDescription(readableShoppingCartItem.getDescription());
         readableCustomerShoppingCartItem.setProductPrice(readableShoppingCartItem.getProductPrice());
         readableCustomerShoppingCartItem.setFinalPrice(readableShoppingCartItem.getFinalPrice());
