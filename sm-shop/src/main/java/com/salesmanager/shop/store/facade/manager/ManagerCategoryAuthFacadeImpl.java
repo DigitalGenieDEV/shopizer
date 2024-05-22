@@ -31,7 +31,6 @@ public class ManagerCategoryAuthFacadeImpl implements ManagerCategoryAuthFacade 
 		List<ReadCategoryAuth> categoryDataList = managerCategoryAuthService.getCategoryList();
 		List<ReadCategoryAuth> dataList = managerCategoryAuthService.getCategoryAuthFullList(grpId);
 		List<ReadableManagerCategoryAuth> tempList = new ArrayList<>();
-		List<ReadableManagerCategoryAuth> tempList2 = new ArrayList<>();
 		if (dataList.isEmpty()) {
 			ReadableManagerCategoryAuth rootDept = new ReadableManagerCategoryAuth();
 			return rootDept;
@@ -42,73 +41,33 @@ public class ManagerCategoryAuthFacadeImpl implements ManagerCategoryAuthFacade 
 						if (data.getDepth().equals(1)) {
 							if (category.getLineage().indexOf(data.getLineage()) != -1) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
+								setTempList(tempList, sendData, category);
 							}
 						} else if (data.getDepth().equals(2)) {
 							if (category.getId().equals(data.getParentId())) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
+								setTempList(tempList, sendData, category);
 							}
 
 							if (category.getLineage().indexOf(data.getLineage()) != -1) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
-
+								setTempList(tempList, sendData, category);
 							}
 
 						} else if (data.getDepth().equals(3)) {
 							String arrayLineage[] = data.getLineage().substring(1).split("/");
 							if (category.getId().equals(Integer.parseInt(arrayLineage[0]))) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
-								
+								setTempList(tempList, sendData, category);
 							}
 							if (category.getId().equals(Integer.parseInt(arrayLineage[1]))) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
-								
+								setTempList(tempList, sendData, category);
 							}
-						
+
 							if (category.getLineage().indexOf(data.getLineage()) != -1) {
 								ReadableManagerCategoryAuth sendData = new ReadableManagerCategoryAuth();
-								sendData.setId(category.getId());
-								sendData.setParentId(category.getParentId());
-								sendData.setCategoryName(category.getCategoryName());
-								sendData.setCategoryNamePath(category.getCategoryPathName());
-								sendData.setLineage(category.getLineage());
-								sendData.setDepth(category.getDepth());
-								tempList.add(sendData);
-
+								setTempList(tempList, sendData, category);
 							}
 						}
 					}
@@ -119,15 +78,12 @@ public class ManagerCategoryAuthFacadeImpl implements ManagerCategoryAuthFacade 
 			this.settingCateogoryAuth(tempList, 0, rootMenuVO);
 			return rootMenuVO;
 		}
-
 	}
 
 	public ReadableManagerCategoryAuthList getCategoryAuthList(int grpId) throws Exception {
 		ReadableManagerCategoryAuthList target = new ReadableManagerCategoryAuthList();
 		ArrayList<CategoryAuthEntity> categoryList = new ArrayList<CategoryAuthEntity>();
-
 		List<ReadCategoryAuth> categoryDataList = managerCategoryAuthService.getCategoryList();
-
 		List<CategoryAuth> dataList = managerCategoryAuthService.getCategoryAuthList(grpId);
 
 		if (dataList.size() > 0) {
@@ -138,17 +94,25 @@ public class ManagerCategoryAuthFacadeImpl implements ManagerCategoryAuthFacade 
 						CategoryAuthEntity targetData = objectMapper.convertValue(category, CategoryAuthEntity.class);
 						categoryList.add(targetData);
 					}
-
 				}
 			}
 		}
 		target.setData(categoryList);
-
 		return target;
 	}
 
-	private int settingCateogoryAuth(List<ReadableManagerCategoryAuth> menu_all_list, int list_pointer,
-			ReadableManagerCategoryAuth parent_domain) throws Exception {
+	private List<ReadableManagerCategoryAuth> setTempList(List<ReadableManagerCategoryAuth> tempList, ReadableManagerCategoryAuth sendData, ReadCategoryAuth category){
+		sendData.setId(category.getId());
+		sendData.setParentId(category.getParentId());
+		sendData.setCategoryName(category.getCategoryName());
+		sendData.setCategoryNamePath(category.getCategoryPathName());
+		sendData.setLineage(category.getLineage());
+		sendData.setDepth(category.getDepth());
+		tempList.add(sendData);
+		return tempList;
+	}
+
+	private int settingCateogoryAuth(List<ReadableManagerCategoryAuth> menu_all_list, int list_pointer,ReadableManagerCategoryAuth parent_domain) throws Exception {
 		int tmp_list_pointer = list_pointer;
 		ReadableManagerCategoryAuth front_menu_domain = null;
 		for (int i = tmp_list_pointer; i < menu_all_list.size(); i++) {
