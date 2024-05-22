@@ -12,12 +12,13 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
-@Table(name = "ADMINMENU", indexes = @Index(columnList = "VISIBLE, MENU_NAME"))
+@Table(name = "ADMINMENU", indexes = @Index(columnList = "VISIBLE, MENU_NAME"), uniqueConstraints = @UniqueConstraint(columnNames = {"ID" }))
 public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> {
 	private static final long serialVersionUID = 1L;
 

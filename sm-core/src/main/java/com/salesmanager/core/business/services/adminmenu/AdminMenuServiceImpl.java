@@ -15,6 +15,8 @@ import com.salesmanager.core.model.adminmenu.ReadAdminMenu;
 @Service("adminMenuService")
 public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer, AdminMenu>
 		implements AdminMenuService {
+	
+	@Inject
 	private AdminMenuRepository adminMenuRepository;
 
 	@Inject
