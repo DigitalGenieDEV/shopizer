@@ -175,7 +175,7 @@ public class ManagerApi {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping(value = {"/private/managers/loginSuccess" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PATHCH", value = "Updates a Login Success", notes = "")
+	@ApiOperation(httpMethod = "PATCH", value = "Updates a Login Success", notes = "")
 	public void updateLoginSuccess(@Valid @RequestBody PersistableManager manager) throws Exception {
 		managerFacade.updateLoginDate(manager.getEmplId());
 	}
