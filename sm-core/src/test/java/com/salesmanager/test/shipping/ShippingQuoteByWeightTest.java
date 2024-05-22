@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
+import org.junit.Test;
 import javax.inject.Inject;
 
 import org.junit.Ignore;
@@ -41,7 +41,6 @@ import com.salesmanager.core.modules.integration.shipping.model.CustomShippingQu
 import com.salesmanager.core.modules.integration.shipping.model.CustomShippingQuotesConfiguration;
 import com.salesmanager.core.modules.integration.shipping.model.CustomShippingQuotesRegion;
 
-@Ignore
 public class ShippingQuoteByWeightTest extends com.salesmanager.test.common.AbstractSalesManagerCoreTestCase {
 	
 	private static final Date date = new Date(System.currentTimeMillis());
@@ -55,8 +54,7 @@ public class ShippingQuoteByWeightTest extends com.salesmanager.test.common.Abst
 
 	
 	
-	@Ignore
-	//@Test
+	@Test
 	public void testGetCustomShippingQuotesByWeight() throws ServiceException {
 
 	    Language en = languageService.getByCode("en");

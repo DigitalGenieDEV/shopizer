@@ -6,19 +6,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.salesmanager.core.model.common.Criteria;
+import com.salesmanager.shop.model.shipping.PersistableMerchantShippingConfiguration;
+import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfiguration;
+import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfigurationList;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.shipping.ShippingService;
@@ -37,13 +35,12 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.shipping.facade.ShippingFacade;
 import com.salesmanager.shop.utils.AuthorizationUtils;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -65,7 +62,7 @@ public class ShippingConfigurationApi {
 
 	@ApiOperation(httpMethod = "GET", value = "Get shipping origin for a specific merchant store", notes = "", produces = "application/json", response = ReadableAddress.class)
 	@RequestMapping(value = { "/private/shipping/origin" }, method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	@ResponseBody
 	public ReadableAddress shippingOrigin(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 
@@ -78,7 +75,7 @@ public class ShippingConfigurationApi {
 	}
 
 	@RequestMapping(value = { "/private/shipping/origin" }, method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public void saveShippingOrigin(@RequestBody PersistableAddress address, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
 
@@ -93,7 +90,7 @@ public class ShippingConfigurationApi {
 	// list packaging
 	@ApiOperation(httpMethod = "GET", value = "Get list of configured packages types for a specific merchant store", notes = "", produces = "application/json", response = List.class)
 	@RequestMapping(value = { "/private/shipping/packages" }, method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public List<PackageDetails> listPackages(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 
 		String user = authorizationUtils.authenticatedUser();
@@ -107,7 +104,7 @@ public class ShippingConfigurationApi {
 	// get packaging
 	@ApiOperation(httpMethod = "GET", value = "Get package details", notes = "", produces = "application/json", response = PackageDetails.class)
 	@RequestMapping(value = { "/private/shipping/package/{code}" }, method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public PackageDetails getPackage(@PathVariable String code, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
 
@@ -122,7 +119,7 @@ public class ShippingConfigurationApi {
 	// create packaging
 	@ApiOperation(httpMethod = "POST", value = "Create new package specification", notes = "", produces = "application/json", response = Void.class)
 	@RequestMapping(value = { "/private/shipping/package" }, method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public void createPackage(@RequestBody PackageDetails details, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
 
@@ -137,7 +134,7 @@ public class ShippingConfigurationApi {
 	// edit packaging
 	@ApiOperation(httpMethod = "PUT", value = "Edit package specification", notes = "", produces = "application/json", response = Void.class)
 	@RequestMapping(value = { "/private/shipping/package/{code}" }, method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public void updatePackage(@PathVariable String code, @RequestBody PackageDetails details,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 
@@ -152,7 +149,7 @@ public class ShippingConfigurationApi {
 	// delete packaging
 	@ApiOperation(httpMethod = "DELETE", value = "Delete a package specification", notes = "", produces = "application/json", response = Void.class)
 	@RequestMapping(value = { "/private/shipping/package/{code}" }, method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(OK)
 	public void deletePackage(@PathVariable String code, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
 
@@ -317,5 +314,71 @@ public class ShippingConfigurationApi {
 	 * moduleCode:CODE, active:true, defaultSelected:false, environment: "TEST",
 	 * integrationKeys { "key":"value", "anotherkey":"anothervalue"... }
 	 */
+
+	@GetMapping(value = "/private/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get shipping configuration by id", notes = "Get shipping configuration by id")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Configuration found", response = ReadableMerchantShippingConfiguration.class) })
+	public ReadableMerchantShippingConfiguration get(
+			@PathVariable(name = "id") Long id) {
+		return shippingFacade.getById(null, id);
+	}
+
+	@GetMapping(value = "/private/shipping/configurations", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get list of shipping configurations", notes = "Get list of shipping configurations with pagination")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")
+	})
+	public ReadableMerchantShippingConfigurationList list(
+			@RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+			@ApiIgnore MerchantStore merchantStore) {
+		Criteria criteria = new Criteria();
+		criteria.setStartIndex(startPage);
+		criteria.setPageSize(pageSize);
+		try {
+			return shippingFacade.list(merchantStore, criteria);
+		} catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@PostMapping(value = "/private/shipping/configuration", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "Create a new shipping configuration", notes = "Create a new shipping configuration")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Configuration created", response = PersistableMerchantShippingConfiguration.class) })
+	public ResponseEntity<PersistableMerchantShippingConfiguration> create(
+			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language) {
+		try {
+			shippingFacade.save(merchantStore, configuration);
+		} catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<>(configuration, HttpStatus.CREATED);
+	}
+
+	@PutMapping(value = "/private/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "PUT", value = "Update a shipping configuration", notes = "Update a shipping configuration")
+	public ResponseEntity<PersistableMerchantShippingConfiguration> update(
+			@PathVariable Long id,
+			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
+			@ApiIgnore MerchantStore merchantStore) {
+		configuration.setId(id);
+		try {
+			shippingFacade.save(merchantStore, configuration);
+		} catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseEntity<>(configuration, OK);
+	}
+
+	@DeleteMapping(value = "/private/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ResponseStatus(OK)
+	@ApiOperation(httpMethod = "DELETE", value = "Delete a shipping configuration", notes = "Delete a shipping configuration")
+	public void delete(@PathVariable("id") Long id, @ApiIgnore MerchantStore merchantStore) {
+		shippingFacade.delete(merchantStore, id);
+	}
 
 }

@@ -2,13 +2,19 @@ package com.salesmanager.shop.store.controller.shipping.facade;
 
 import java.util.List;
 
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.model.common.Criteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.PackageDetails;
+import com.salesmanager.core.model.shipping.ShippingOrigin;
 import com.salesmanager.shop.model.references.PersistableAddress;
 import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.references.ReadableCountry;
 import com.salesmanager.shop.model.shipping.ExpeditionConfiguration;
+import com.salesmanager.shop.model.shipping.PersistableMerchantShippingConfiguration;
+import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfiguration;
+import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfigurationList;
 
 public interface ShippingFacade {
 	
@@ -17,7 +23,7 @@ public interface ShippingFacade {
 	
 	
 	ReadableAddress getShippingOrigin(MerchantStore store);
-	void saveShippingOrigin(PersistableAddress address, MerchantStore store);
+	ShippingOrigin saveShippingOrigin(PersistableAddress address, MerchantStore store);
 	
 
 	void createPackage(PackageDetails packaging, MerchantStore store);
@@ -37,8 +43,14 @@ public interface ShippingFacade {
 	void updatePackage(String code, PackageDetails packaging, MerchantStore store);
 	
 	void deletePackage(String code, MerchantStore store);
-	
-	
+
+	ReadableMerchantShippingConfiguration getById(MerchantStore store, Long id);
+
+	ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria) throws ServiceException;
+
+	void save(MerchantStore store, PersistableMerchantShippingConfiguration configuration) throws ServiceException;
+
+	void delete(MerchantStore store, Long id);
 
 
 }

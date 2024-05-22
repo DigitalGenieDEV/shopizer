@@ -39,8 +39,9 @@ public class ShippingConfiguration implements JSONAware {
 	
 	private BigDecimal handlingFees = null;
 	private boolean taxOnShipping = false;
-	
-	
+
+	private String placeOfShipment;
+
 	//JSON bindings
 	private String shipType;
 	private String shipBaseType;
@@ -128,6 +129,13 @@ public class ShippingConfiguration implements JSONAware {
 		setShippingType(sType);
 	}
 
+	public String getPlaceOfShipment() {
+		return placeOfShipment;
+	}
+
+	public void setPlaceOfShipment(String placeOfShipment) {
+		this.placeOfShipment = placeOfShipment;
+	}
 
 	public void setShipOptionPriceType(String shipOptionPriceType) {
 		this.shipOptionPriceType = shipOptionPriceType;
@@ -188,6 +196,7 @@ public class ShippingConfiguration implements JSONAware {
 		data.put("shipOptionPriceType", this.getShippingOptionPriceType().name());
 		data.put("shipType", this.getShippingType().name());
 		data.put("shipPackageType", this.getShippingPackageType().name());
+		data.put("placeOfShipment", this.getPlaceOfShipment());
 		if(shipFreeType!=null) {
 			data.put("shipFreeType", this.getFreeShippingType().name());
 		}
