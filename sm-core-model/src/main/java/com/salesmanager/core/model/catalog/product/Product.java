@@ -179,6 +179,9 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	 */
 	@Column(name = "REF_SKU")
 	private String refSku;
+
+	@Column(name = "SHIPPING_TEMPLATE_ID")
+	private Long shippingTemplateId;
 	
 	@Column(name="COND", nullable = true)
 	private ProductCondition condition;
@@ -635,4 +638,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		this.batchNumber = batchNumber;
 	}
 
+	public Long getShippingTemplateId() {
+		return shippingTemplateId;
+	}
+
+	public void setShippingTemplateId(Long shippingTemplateId) {
+		this.shippingTemplateId = shippingTemplateId;
+	}
 }

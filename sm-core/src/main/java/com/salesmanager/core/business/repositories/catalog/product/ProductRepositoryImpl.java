@@ -1171,19 +1171,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			qs.append("left join fetch p.type type ");
 			
 			//variants
-			qs.append("left join fetch p.variants pinst ");
-			qs.append("left join fetch pinst.variations pv ");
-			qs.append("left join fetch pv.productOption pvpo ");
-			qs.append("left join fetch pv.productOptionValue pvpov ");
+			qs.append("left join fetch p.variants pinst ") ;
+			qs.append("left join fetch pinst.variations pvv ");
+			qs.append("left join fetch pvv.productOption pvpo " );
+			qs.append("left join fetch pvv.productOptionValue pvpov " );
 			qs.append("left join fetch pvpo.descriptions pvpod ");
 			qs.append("left join fetch pvpov.descriptions pvpovd ");
-//
-//			qs.append("left join fetch pinst.variationValue pvv ");
-//			qs.append("left join fetch pvv.productOption pvvpo ");
-//			qs.append("left join fetch pvv.productOptionValue pvvpov ");
-//			qs.append("left join fetch pvvpo.descriptions povvpod ");
-//			qs.append("left join fetch pvpov.descriptions povvpovd ");
-			
+
 			//variant availability and price
 			qs.append("left join fetch pinst.availabilities pinsta ");
 			qs.append("left join fetch pinsta.prices pinstap ");
