@@ -12,6 +12,8 @@ import java.util.Date;
 
 public class ReadableMerchantShippingConfiguration implements Serializable {
 
+    private Integer productNum;
+
     private Long id;
 
     private MerchantStore merchantStore;
@@ -210,6 +212,14 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
 
     public String getReturnShippingPrice() {
         return returnShippingPrice;
+    }
+
+    public Integer getProductNum() {
+        return productNum;
+    }
+
+    public void setProductNum(Integer productNum) {
+        this.productNum = productNum;
     }
 
     public void setReturnShippingPrice(String returnShippingPrice) {

@@ -450,6 +450,10 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		return productRepository.existsBySku(sku, store.getId());
 	}
 
+	@Override
+	public Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer storeId){
+		return productRepository.countProductByShippingTemplateIdAndStoreId(shippingTemplateId, storeId);
+	}
 
 
 }

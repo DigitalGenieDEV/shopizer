@@ -24,6 +24,15 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	boolean existsBySku(String sku, Integer store);
 
 
+	@Query(value="SELECT " +
+			" COUNT(*) " +
+			"FROM " +
+			"Product p " +
+			"JOIN MerchantStore m ON m.id = ?2 " +
+			"WHERE p.shippingTemplateId = ?1 ")
+	Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer store);
+
+
 	@Query(value = "SELECT COUNT(p) FROM Product p JOIN p.categories c WHERE c.id IN :categoryIds")
 	Long countProductsByCategoryIds(@Param("categoryIds") List<Long> categoryIds);
 

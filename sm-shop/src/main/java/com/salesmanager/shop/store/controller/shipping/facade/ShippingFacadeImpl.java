@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.shipping.MerchantShippingConfigurationService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.common.Criteria;
@@ -58,6 +59,9 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	
 	@Autowired
 	ZoneService zoneService;
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private MerchantShippingConfigurationService merchantShippingConfigurationService;
@@ -424,8 +428,40 @@ public class ShippingFacadeImpl implements ShippingFacade {
 
 
 	public ReadableMerchantShippingConfiguration convertToReadable(MerchantShippingConfiguration source) {
-		return new ReadableMerchantShippingConfiguration();
+		if (source == null) {
+			return null;
+		}
+
+		ReadableMerchantShippingConfiguration target = new ReadableMerchantShippingConfiguration();
+		target.setId(source.getId());
+		target.setMerchantStore(source.getMerchantStore());
+		target.setDateCreated(source.getAuditSection().getDateCreated());
+		target.setDateModified(source.getAuditSection().getDateModified());
+		target.setModifiedBy(source.getAuditSection().getModifiedBy());
+		target.setName(source.getName());
+		target.setKey(source.getKey());
+		target.setActive(source.getActive());
+		target.setDefaultShipping(source.getDefaultShipping());
+		target.setValue(source.getValue());
+		target.setShippingType(source.getShippingType());
+		target.setShippingBasisType(source.getShippingBasisType());
+		target.setShippingPackageType(source.getShippingPackageType());
+		target.setTransportationMethods(source.getTransportationMethod());
+		target.setShippingOptionPriceType(source.getShippingOptionPriceType());
+		if (source.getShippingOrigin() != null) {
+			target.setShippingOrigin(buildReadableAddress(source.getShippingOrigin()));
+		}
+		if (source.getReturnShippingOrigin() != null) {
+			target.setReturnShippingOrigin(buildReadableAddress(source.getReturnShippingOrigin()));
+		}
+		target.setFreeShippingEnabled(source.isFreeShippingEnabled());
+		target.setOrderTotalFreeShipping(source.getOrderTotalFreeShipping());
+		target.setReturnShippingPrice(source.getReturnShippingPrice());
+		Integer productNum = productService.countProductByShippingTemplateIdAndStoreId(source.getId(), source.getMerchantStore().getId());
+		target.setProductNum(productNum == null? 0 : productNum);
+		return target;
 	}
+
 
 	public ReadableMerchantShippingConfigurationList convertToReadableList(MerchantShippingConfigurationList source) {
 		ReadableMerchantShippingConfigurationList list = new ReadableMerchantShippingConfigurationList();

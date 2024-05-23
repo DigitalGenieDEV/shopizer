@@ -57,6 +57,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	boolean exists(String sku, MerchantStore store);
 
 
+	Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer storeId);
+
 	/**
 	 * countProductsByCategoryIds
 	 * @param categoryIds
