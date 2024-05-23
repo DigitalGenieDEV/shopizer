@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -426,6 +427,36 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<Long, Cont
 		 * }
 		 */
 	}
+
+	@Override
+	public List<String> getContentFilesNames(String merchantStoreCode, FileContentType fileContentType,
+											 String sortBy, Boolean ascending, String searchQuery)
+			throws ServiceException {
+		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
+
+		String p = null;
+		Optional<String> path = Optional.ofNullable(p);
+
+
+		Optional<String> sort =  Optional.ofNullable(sortBy);
+		Optional<Boolean> ascendingOptional = Optional.ofNullable(ascending);
+		Optional<String> searchQueryOptional = Optional.ofNullable(searchQuery);
+
+		return contentFileManager.getFileNames(merchantStoreCode, path, fileContentType
+				,sort , ascendingOptional, searchQueryOptional);
+	}
+
+	@Override
+	public Integer getContentFilesCount(String merchantStoreCode, FileContentType fileContentType)
+			throws ServiceException {
+		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
+
+		String p = null;
+		Optional<String> path = Optional.ofNullable(p);
+		List<String> fileNames = contentFileManager.getFileNames(merchantStoreCode, path, fileContentType);
+		return CollectionUtils.isEmpty(fileNames) ? 0: fileNames.size();
+	}
+
 
 	@Override
 	public ContentDescription getBySeUrl(MerchantStore store, String seUrl) {

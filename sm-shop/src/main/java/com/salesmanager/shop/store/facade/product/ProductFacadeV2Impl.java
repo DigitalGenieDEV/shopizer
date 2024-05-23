@@ -9,10 +9,14 @@ import javax.inject.Inject;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
+import com.salesmanager.core.business.services.shipping.MerchantShippingConfigurationService;
 import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.system.MerchantShippingConfiguration;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductListMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +95,9 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
+
+	@Autowired
+	private MerchantShippingConfigurationService merchantShippingConfigurationService;
 
 
 	@Override
@@ -258,6 +265,17 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			}
 		}
 
+		if (StringUtils.isNotBlank(criterias.getShippingType())){
+			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
+			List<Long> shippingTemplateId = new ArrayList<>();
+			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
+				if (merchantShippingConfiguration.getShippingType() == ShippingType.valueOf(criterias.getShippingType())){
+					shippingTemplateId.add(merchantShippingConfiguration.getId());
+				}
+			});
+			criterias.setShippingTemplateIds(shippingTemplateId);
+		}
+
 		
 		Page<Product> modelProductList = productService.listByStore(store, language, criterias, criterias.getStartPage(), criterias.getMaxCount());
 		
@@ -269,6 +287,73 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		 * ReadableProductMapper
 		 */
 		
+		List<ReadableProduct> readableProducts = products.stream().map(p -> readableProductListMapper.convert(p, store, language))
+				.sorted(Comparator.comparing(ReadableProduct::getSortOrder)).collect(Collectors.toList());
+
+
+		productList.setRecordsTotal(modelProductList.getTotalElements());
+		productList.setNumber(modelProductList.getNumberOfElements());
+		productList.setProducts(readableProducts);
+		productList.setTotalPages(modelProductList.getTotalPages());
+
+		return productList;
+	}
+
+
+	@Override
+	public ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language,
+														  ProductCriteria criterias) throws Exception {
+		Validate.notNull(criterias, "ProductCriteria must be set for this product");
+
+		/** This is for category **/
+		if (CollectionUtils.isNotEmpty(criterias.getCategoryIds())) {
+
+			if (criterias.getCategoryIds().size() == 1) {
+
+				com.salesmanager.core.model.catalog.category.Category category = categoryService
+						.getById(criterias.getCategoryIds().get(0));
+
+				if (category != null) {
+					String lineage = new StringBuilder().append(category.getLineage())
+							.toString();
+
+					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
+							.getListByLineage(store, lineage);
+
+					List<Long> ids = new ArrayList<Long>();
+					if (categories != null && categories.size() > 0) {
+						for (com.salesmanager.core.model.catalog.category.Category c : categories) {
+							ids.add(c.getId());
+						}
+					}
+					ids.add(category.getId());
+					criterias.setCategoryIds(ids);
+				}
+			}
+		}
+
+		if (StringUtils.isNotBlank(criterias.getShippingType())){
+			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
+			List<Long> shippingTemplateId = new ArrayList<>();
+			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
+				if (merchantShippingConfiguration.getShippingType() == ShippingType.valueOf(criterias.getShippingType())){
+					shippingTemplateId.add(merchantShippingConfiguration.getId());
+				}
+			});
+			criterias.setShippingTemplateIds(shippingTemplateId);
+		}
+
+
+		Page<Product> modelProductList = productService.simpleListByStore(store, language, criterias, criterias.getStartPage(), criterias.getMaxCount());
+
+		List<Product> products = modelProductList.getContent();
+		ReadableProductList productList = new ReadableProductList();
+
+
+		/**
+		 * ReadableProductMapper
+		 */
+
 		List<ReadableProduct> readableProducts = products.stream().map(p -> readableProductListMapper.convert(p, store, language))
 				.sorted(Comparator.comparing(ReadableProduct::getSortOrder)).collect(Collectors.toList());
 

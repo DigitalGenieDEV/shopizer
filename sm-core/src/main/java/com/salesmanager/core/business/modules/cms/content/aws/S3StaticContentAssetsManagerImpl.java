@@ -3,8 +3,10 @@ package com.salesmanager.core.business.modules.cms.content.aws;
 import java.io.ByteArrayOutputStream;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -72,6 +74,75 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			LOGGER.error("Error while getting file", e);
 			throw new ServiceException(e);
 
+		}
+	}
+
+
+	@Override
+	public List<String> getFileNames(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType,
+									 Optional<String> sortBy, Optional<Boolean> ascending, Optional<String> searchQuery) throws ServiceException {
+		try {
+			String bucketName = bucketName();
+
+			String prefix = nodePath(merchantStoreCode, fileContentType);
+			if (folderPath.isPresent()) {
+				prefix = prefix + folderPath.get();
+			}
+
+			ListObjectsV2Request listObjectsRequest = new ListObjectsV2Request().withBucketName(bucketName).withPrefix(prefix);
+
+			List<String> fileNames = new ArrayList<>();
+
+			final AmazonS3 s3 = s3Client();
+			ListObjectsV2Result results = s3.listObjectsV2(listObjectsRequest);
+			List<S3ObjectSummary> objects = results.getObjectSummaries();
+
+			if (searchQuery.isPresent()) {
+				String search = searchQuery.get().toLowerCase();
+				objects = objects.stream()
+						.filter(os -> os.getKey().toLowerCase().contains(search))
+						.collect(Collectors.toList());
+			}
+
+			if (sortBy.isPresent()) {
+				String sortCriteria = sortBy.get().toLowerCase();
+				boolean isAscending = ascending.orElse(true);
+				Comparator<S3ObjectSummary> comparator;
+
+				switch (sortCriteria) {
+					case "name":
+						comparator = Comparator.comparing(S3ObjectSummary::getKey);
+						break;
+					case "size":
+						comparator = Comparator.comparingLong(S3ObjectSummary::getSize);
+						break;
+					default:
+						comparator = Comparator.comparing(S3ObjectSummary::getKey); // 默认按名称排序
+						break;
+				}
+
+				if (!isAscending) {
+					comparator = comparator.reversed();
+				}
+
+				objects.sort(comparator);
+			}
+
+			for (S3ObjectSummary os : objects) {
+				if (isInsideSubFolder(os.getKey())) {
+					continue;
+				}
+				String mimetype = URLConnection.guessContentTypeFromName(os.getKey());
+				if (!StringUtils.isBlank(mimetype)) {
+					fileNames.add(getName(os.getKey()));
+				}
+			}
+
+			LOGGER.info("Content get file names");
+			return fileNames;
+		} catch (final Exception e) {
+			LOGGER.error("Error while getting file names", e);
+			throw new ServiceException(e);
 		}
 	}
 

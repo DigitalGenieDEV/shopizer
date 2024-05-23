@@ -9,28 +9,36 @@ public class ProductCriteria extends Criteria {
 	
 	public static final String ORIGIN_SHOP = "shop";
 	public static final String ORIGIN_ADMIN = "admin";
-	
+
 	private String productName;
 	private List<AttributeCriteria> attributeCriteria;
 	private String origin = ORIGIN_SHOP;
 
-	
+	private String shippingType;
+	private Long startTime;
+
+	private Long endTime;
+	private String auditStatus;
+
+
+	private List<Long> shippingTemplateIds;
+
 	private Boolean available = null;
-	
+
 	private List<Long> categoryIds;
 	private List<String> availabilities;
 	private List<Long> productIds;
 	private List<Long> optionValueIds;
 	private String sku;
-	
+
 	//V2
 	private List<String> optionValueCodes;
 	private String option;
-	
+
 	private String status;
-	
+
 	private Long manufacturerId = null;
-	
+
 	private Long ownerId = null;
 
 	public String getProductName() {
@@ -147,5 +155,43 @@ public class ProductCriteria extends Criteria {
 	}
 
 
+	public String getShippingType() {
+		return shippingType;
+	}
 
+	public void setShippingType(String shippingType) {
+		this.shippingType = shippingType;
+	}
+
+	public Long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Long startTime) {
+		this.startTime = startTime;
+	}
+
+	public Long getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Long endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getAuditStatus() {
+		return auditStatus;
+	}
+
+	public void setAuditStatus(String auditStatus) {
+		this.auditStatus = auditStatus;
+	}
+
+	public List<Long> getShippingTemplateIds() {
+		return shippingTemplateIds;
+	}
+
+	public void setShippingTemplateIds(List<Long> shippingTemplateIds) {
+		this.shippingTemplateIds = shippingTemplateIds;
+	}
 }

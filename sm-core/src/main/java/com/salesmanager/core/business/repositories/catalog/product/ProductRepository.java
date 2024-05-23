@@ -23,6 +23,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"WHERE (pv.sku = ?1 OR p.sku = ?1)")
 	boolean existsBySku(String sku, Integer store);
 
+	@Query(value="SELECT " +
+			" COUNT(*) " +
+			"FROM " +
+			"Product p ")
+	Integer countProduct();
+
 
 	@Query(value="SELECT " +
 			" COUNT(*) " +

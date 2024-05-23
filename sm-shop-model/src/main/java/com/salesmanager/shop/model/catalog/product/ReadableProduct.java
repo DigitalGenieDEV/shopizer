@@ -34,6 +34,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private String identifier;
 
 
+	private String auditStatus;
+
 	private String storeName;
 
 	private Long salesVolume;

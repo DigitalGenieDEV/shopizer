@@ -142,7 +142,12 @@ public interface ContentService
     List<String> getContentFilesNames(String merchantStoreCode,
 			FileContentType fileContentType) throws ServiceException;
 
-    /**
+	List<String> getContentFilesNames(String merchantStoreCode, FileContentType fileContentType,
+									  String sortBy, Boolean ascending, String searchQuery)throws ServiceException;
+
+	Integer getContentFilesCount(String merchantStoreCode, FileContentType fileContentType)
+			throws ServiceException;
+	/**
      * Add the store logo
      * @param merchantStoreCode
      * @param cmsContentImage

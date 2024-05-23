@@ -95,23 +95,23 @@ public class ContentAdministrationApi {
 		return files;
 	}
 	
-	/**
-	 * @param path
-	 * @param merchantStore
-	 * @param language
-	 * @return
-	 * @throws Exception
-	 */
-	@GetMapping(value = "/private/content/folder", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ContentFolder folder(
-			@RequestParam(value = "path", required = false) String path,
-			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) throws Exception {
-		String decodedPath = decodeContentPath(path);
-		return contentFacade.getContentFolder(decodedPath, merchantStore);
-	}
+//	/**
+//	 * @param path
+//	 * @param merchantStore
+//	 * @param language
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@GetMapping(value = "/private/content/folder", produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//	public ContentFolder folder(
+//			@RequestParam(value = "path", required = false) String path,
+//			@ApiIgnore MerchantStore merchantStore,
+//			@ApiIgnore Language language) throws Exception {
+//		String decodedPath = decodeContentPath(path);
+//		return contentFacade.getContentFolder(decodedPath, merchantStore);
+//	}
 	
 	
 	/**
@@ -161,27 +161,27 @@ public class ContentAdministrationApi {
 
 	}
 	
-	@GetMapping(value = "/content/images/download")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public @ResponseBody String download(
-			@RequestParam(value = "path", required = true) String path,
-			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) {
-		String fileName = path.substring(path.lastIndexOf("/")+1, path.length());
-		try {
-	    
-			//OutputContentFile file = contentFacade.download(merchantStore, FileContentType.IMAGE, fileName);
-			//return file.getFile().toByteArray();
-			//return "https://s3.ca-central-1.amazonaws.com/shopizer-carl/files/DEFAULT/85.jpg";
-			return null;
-		} catch (Exception e) {
-			//throw new ServiceRuntimeException("Error while getting file bytes");
-			LOGGER.error("Error when renaming file",e);
-			throw new ServiceRuntimeException("Error while downloading file [" + fileName + "]");
-		}
-
-	}
+//	@GetMapping(value = "/content/images/download")
+//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//	public @ResponseBody String download(
+//			@RequestParam(value = "path", required = true) String path,
+//			@ApiIgnore MerchantStore merchantStore,
+//			@ApiIgnore Language language) {
+//		String fileName = path.substring(path.lastIndexOf("/")+1, path.length());
+//		try {
+//
+//			//OutputContentFile file = contentFacade.download(merchantStore, FileContentType.IMAGE, fileName);
+//			//return file.getFile().toByteArray();
+//			//return "https://s3.ca-central-1.amazonaws.com/shopizer-carl/files/DEFAULT/85.jpg";
+//			return null;
+//		} catch (Exception e) {
+//			//throw new ServiceRuntimeException("Error while getting file bytes");
+//			LOGGER.error("Error when renaming file",e);
+//			throw new ServiceRuntimeException("Error while downloading file [" + fileName + "]");
+//		}
+//
+//	}
 	
 	@PostMapping(value = "/private/content/images/rename", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
@@ -191,11 +191,11 @@ public class ContentAdministrationApi {
 	public FileStatus rename(
 			@RequestParam(value = "path", required = true) String path,
 			@RequestParam(value = "newName", required = true) String newName,
-			@ApiIgnore MerchantStore merchantStore, 
+			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
 
 		try {
-			
+
 			String fileName = path.substring(path.lastIndexOf("/")+1, path.length());
 			contentFacade.renameFile(merchantStore, FileContentType.IMAGE, fileName, newName);
 			return new FileStatus();

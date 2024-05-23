@@ -24,4 +24,7 @@ public interface FileGet {
 
   List<OutputContentFile> getFiles(final String merchantStoreCode,
 		  Optional<String> path, FileContentType fileContentType) throws ServiceException;
+
+  List<String> getFileNames(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType,
+                              Optional<String> sortBy, Optional<Boolean> ascending, Optional<String> searchQuery) throws ServiceException;
 }

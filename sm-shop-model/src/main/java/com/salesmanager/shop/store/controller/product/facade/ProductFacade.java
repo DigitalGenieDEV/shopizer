@@ -74,6 +74,10 @@ public interface ProductFacade {
   ReadableProductList getProductListsByCriterias(MerchantStore store, Language language,
       ProductCriteria criterias) throws Exception;
 
+
+
+  ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language,
+                                                       ProductCriteria criterias) throws Exception;
   /**
    * Get related items
    *

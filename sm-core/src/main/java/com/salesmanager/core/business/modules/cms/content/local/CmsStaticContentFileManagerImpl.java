@@ -264,6 +264,11 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	}
 
 	@Override
+	public List<String> getFileNames(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType, Optional<String> sortBy, Optional<Boolean> ascending, Optional<String> searchQuery) throws ServiceException {
+		return null;
+	}
+
+	@Override
 	public void removeFile(final String merchantStoreCode, final FileContentType staticContentType,
 			final String fileName, Optional<String> folderPath) throws ServiceException {
 

@@ -81,6 +81,11 @@ public class StaticContentFileManagerImpl extends StaticContentFileManager {
 	}
 
 	@Override
+	public List<String> getFileNames(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType, Optional<String> sortBy, Optional<Boolean> ascending, Optional<String> searchQuery) throws ServiceException {
+		return getFile.getFileNames(merchantStoreCode, folderPath, fileContentType, sortBy, ascending, searchQuery);
+	}
+
+	@Override
 	public void removeFiles(String merchantStoreCode, Optional<String> path) throws ServiceException {
 		removeFile.removeFiles(merchantStoreCode, path);
 	}

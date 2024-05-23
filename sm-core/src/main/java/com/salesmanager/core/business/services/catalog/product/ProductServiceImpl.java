@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.alibaba.fastjson.JSON;
-import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
+import com.salesmanager.core.model.catalog.product.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -39,9 +39,6 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.business.utils.CatalogServiceHelper;
 import com.salesmanager.core.business.utils.CoreConfiguration;
 import com.salesmanager.core.model.catalog.category.Category;
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.ProductCriteria;
-import com.salesmanager.core.model.catalog.product.ProductList;
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.relationship.ProductRelationship;
@@ -273,6 +270,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		} else {
 			if (product.getMerchantStore().getCode().equals("DEFAULT")){
 				product.setProductAuditStatus(ProductAuditStatus.AUDIT_PASSED);
+				product.setProductStatus(ProductStatus.SALE);
 			}else{
 				product.setProductAuditStatus(ProductAuditStatus.PENDING_AUDIT);
 			}
@@ -361,6 +359,14 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		Validate.notNull(ProductAuditStatus.valueOf(productAuditStatus), "product cannot be null");
 		Validate.notNull(id, "product cannot be null");
 		productRepository.updateProductAuditStatusById(ProductAuditStatus.valueOf(productAuditStatus), id);
+		if (ProductAuditStatus.valueOf(productAuditStatus) == ProductAuditStatus.AUDIT_PASSED){
+			productRepository.updateProductStatusById(ProductStatus.SALE, id);
+		}
+	}
+
+	@Override
+	public Integer countProduct() {
+		return productRepository.countProduct();
 	}
 
 	@Override
@@ -378,6 +384,24 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Page<Product> p = new PageImpl(productList.getProducts(),pageRequest, productList.getTotalCount());
 		
+		return p;
+	}
+
+	@Override
+	public Page<Product> simpleListByStore(MerchantStore store, Language language, ProductCriteria criteria, int page,
+									 int count) {
+
+		criteria.setPageSize(page);
+		criteria.setPageSize(count);
+		criteria.setLegacyPagination(false);
+
+		ProductList productList = productRepository.listByStore(store, language, criteria);
+
+		PageRequest pageRequest = PageRequest.of(page, count);
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Page<Product> p = new PageImpl(productList.getProducts(),pageRequest, productList.getTotalCount());
+
 		return p;
 	}
 

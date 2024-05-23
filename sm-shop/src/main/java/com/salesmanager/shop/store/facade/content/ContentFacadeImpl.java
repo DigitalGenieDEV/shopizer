@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.shop.model.content.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.slf4j.Logger;
@@ -31,12 +32,6 @@ import com.salesmanager.core.model.content.InputContentFile;
 import com.salesmanager.core.model.content.OutputContentFile;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.model.content.ContentDescriptionEntity;
-import com.salesmanager.shop.model.content.ContentFile;
-import com.salesmanager.shop.model.content.ContentFolder;
-import com.salesmanager.shop.model.content.ContentImage;
-import com.salesmanager.shop.model.content.ReadableContentEntity;
-import com.salesmanager.shop.model.content.ReadableContentFull;
 import com.salesmanager.shop.model.content.box.PersistableContentBox;
 import com.salesmanager.shop.model.content.box.ReadableContentBox;
 import com.salesmanager.shop.model.content.box.ReadableContentBoxFull;
@@ -113,6 +108,30 @@ public class ContentFacadeImpl implements ContentFacade {
 			throw new ServiceRuntimeException("Error while getting folder " + e.getMessage(), e);
 		}
 	}
+
+
+	@Override
+	public ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType,
+										  ContentListQueryRequest contentListQueryRequest) throws Exception {
+		try {
+			List<String> imageNames = Optional
+					.ofNullable(contentService.getContentFilesNames(store.getCode(), fileContentType, contentListQueryRequest.getSortBy(),
+							contentListQueryRequest.getAscending(), contentListQueryRequest.getSearchQueryName()))
+					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path  "));
+
+			// images from CMS
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store))
+					.collect(Collectors.toList());
+
+			ContentFolder contentFolder = new ContentFolder();
+			contentFolder.getContent().addAll(contentImages);
+			return contentFolder;
+
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException("Error while getting folder " + e.getMessage(), e);
+		}
+	}
+
 
 	private ContentImage convertToContentImage(String name, MerchantStore store) {
 		String path = absolutePath(store, null);
@@ -816,6 +835,17 @@ public class ContentFacadeImpl implements ContentFacade {
 			throw new ServiceRuntimeException("Exception while deleting content " + e.getMessage(), e);
 		}
 
+	}
+
+	@Override
+	public Integer getContentFilesCount(String merchantStoreCode, FileContentType fileContentType) {
+		Validate.notNull(merchantStoreCode, "MerchantStore not null");
+		Validate.notNull(fileContentType, "fileContentType  must not be null");
+		try {
+			return contentService.getContentFilesCount(merchantStoreCode, fileContentType);
+		} catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

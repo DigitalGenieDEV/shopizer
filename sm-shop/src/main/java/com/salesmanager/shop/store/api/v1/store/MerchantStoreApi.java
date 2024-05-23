@@ -310,6 +310,25 @@ public class MerchantStoreApi {
 		storeFacade.addStoreLogo(code, cmsContentImage);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(value = { "/auth/store/{storeCode}/marketing/logo" })
+	@ApiOperation(httpMethod = "POST", value = "Add store logo", notes = "")
+	public void addLogoBySeller(@PathVariable String storeCode, @RequestParam("file") MultipartFile uploadfile,
+						HttpServletRequest request) {
+
+		// user doing action must be attached to the store being modified
+		String userName = getUserFromRequest(request);
+
+		validateUserPermission(userName, storeCode);
+
+		if (uploadfile.isEmpty()) {
+			throw new RestApiException("Upload file is empty");
+		}
+
+		InputContentFile cmsContentImage = createInputContentFile(uploadfile);
+		storeFacade.addStoreLogo(storeCode, cmsContentImage);
+	}
+
 	private InputContentFile createInputContentFile(MultipartFile image) {
 
 		InputContentFile cmsContentImage = null;

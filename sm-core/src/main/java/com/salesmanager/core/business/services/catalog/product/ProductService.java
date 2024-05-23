@@ -77,6 +77,17 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	 */
 	Page<Product> listByStore(MerchantStore store, Language language,
 			ProductCriteria criteria, int page, int count);
+	/**
+	 * List using Page interface in order to unify all page requests (since 2.16.0)
+	 * @param store
+	 * @param language
+	 * @param criteria
+	 * @param page
+	 * @param count
+	 * @return
+	 */
+	Page<Product> simpleListByStore(MerchantStore store, Language language,
+							  ProductCriteria criteria, int page, int count);
 
 	List<Product> listByStore(MerchantStore store);
 
@@ -114,5 +125,7 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	void updateProductAuditStatusById(String productAuditStatus, Long id);
 
+
+	Integer countProduct();
 }
 

@@ -224,6 +224,10 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	private Integer quoteType;
 
 
+	@Column(name="PRODUCT_STATUS", nullable = true)
+	@Enumerated(value = EnumType.STRING)
+	private ProductStatus productStatus;
+
 
 	@Column(name="RENTAL_DURATION", nullable = true)
 	private Integer rentalDuration;
@@ -644,5 +648,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setShippingTemplateId(Long shippingTemplateId) {
 		this.shippingTemplateId = shippingTemplateId;
+	}
+
+	public ProductStatus getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(ProductStatus productStatus) {
+		this.productStatus = productStatus;
 	}
 }

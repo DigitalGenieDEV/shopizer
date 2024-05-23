@@ -154,7 +154,12 @@ public class ProductFacadeImpl implements ProductFacade {
 
 		return productList;
 	}
-	
+
+	@Override
+	public ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language, ProductCriteria criterias) throws Exception {
+		return null;
+	}
+
 	@Override
 	public ReadableProduct getProductByCode(MerchantStore store, String uniqueCode, Language language) {
 
