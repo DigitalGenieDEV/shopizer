@@ -5,7 +5,6 @@ public class ChangeOrdEntity {
 	private int parentId = 0;
 	private int changeOrd = 0;
 
-
 	public int getId() {
 		return id;
 	}
@@ -29,6 +28,5 @@ public class ChangeOrdEntity {
 	public void setChangeOrd(int changeOrd) {
 		this.changeOrd = changeOrd;
 	}
-
 
 }

@@ -80,7 +80,7 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 	@Modifying
 	@Query(value = "UPDATE ADMINMENU SET ORD = :#{#adminMenu.ord}, PARENT_ID = :#{#adminMenu.parentId}, MOD_ID = :#{#adminMenu.auditSection.modId}, "
 			+ "MOD_IP = :#{#adminMenu.auditSection.modIp}, " + "MOD_DATE = NOW() "
-			+ "WHERE ID = :#{#adminMenuid}", nativeQuery = true)
+			+ "WHERE ID = :#{#adminMenu.id}", nativeQuery = true)
 	void updateChangeOrd(@Param("adminMenu") AdminMenu adminMenu);
 	
 	@Query(value = "SELECT ID FROM adminmenu WHERE API_URL = ?1 ", nativeQuery = true)

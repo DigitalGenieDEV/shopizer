@@ -67,7 +67,7 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 	    }
 	}
 	
-	public PersistableAdminMenu saveAdminMenu(PersistableAdminMenu adminMenu){
+	public PersistableAdminMenu saveAdminMenu(PersistableAdminMenu adminMenu) throws Exception{
 		try {
 
 			int adminMenuId = adminMenu.getId();
@@ -79,6 +79,7 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 		
 			AdminMenu dbAdminMenu = populateAdminMenu(adminMenu, target);
 			adminMenuService.saveOrUpdate(dbAdminMenu);
+			adminMenuService.resetAllEntriesInCash();
 
 		
 			if (adminMenu.getId() > 0) {
@@ -114,6 +115,7 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 
 	public void deleteAdminMenu(int adminMenuId) throws Exception{
 		adminMenuService.deleteAdminMenu(adminMenuId);
+		adminMenuService.resetAllEntriesInCash();
 	}
 	
 	public void updateChangeOrd(PersistableChangeOrd adminMenu, String ip, String userId) throws Exception{
@@ -127,6 +129,7 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 				paramVO.getAuditSection().setModIp(ip);
 				adminMenuService.updateChangeOrd(paramVO);
 			}
+			adminMenuService.resetAllEntriesInCash();
 		}
 		
 	}

@@ -28,7 +28,6 @@ public class UserMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer, 
 
 	@Cacheable(value = "userMenuCode")
 	public List<ReadUserMenu> getListUserMenu(int visible) throws ServiceException {
-		System.out.println("1111");
 		return uerMenuRepository.getListUserMenu(visible);
 	}
 

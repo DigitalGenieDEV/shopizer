@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -25,6 +27,7 @@ public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer,
 		this.adminMenuRepository = adminMenuRepository;
 	}
 
+	@Cacheable(value = "adminMenuCode")
 	public List<ReadAdminMenu> getListAdminMenu(int visible, int grpId) throws ServiceException {
 		return adminMenuRepository.getListAdminMenu(visible,grpId);
 	}
@@ -66,5 +69,10 @@ public class AdminMenuServiceImpl extends SalesManagerEntityServiceImpl<Integer,
 	
 	public int getApiMenuFindId(String url) throws ServiceException {
 		return adminMenuRepository.getApiMenuFindId(url);
+	}
+	
+	@CacheEvict(value = "adminMenuCode", allEntries = true)
+	public void resetAllEntriesInCash() throws Exception{
+		
 	}
 }
