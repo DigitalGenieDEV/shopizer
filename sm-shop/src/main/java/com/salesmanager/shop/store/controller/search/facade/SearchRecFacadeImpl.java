@@ -37,9 +37,9 @@ public class SearchRecFacadeImpl implements SearchRecFacade{
     @Override
     public List<ReadableProduct> searchRecGuessULike(SearchRecGuessULikeRequest request, Language language) throws ConversionException {
         GuessULikeRequest guessULikeRequest = new GuessULikeRequest();
-        guessULikeRequest.setDeviceid(request.getDeviceid());
+        guessULikeRequest.setDeviceid(request.getDeviceId());
         guessULikeRequest.setUid(request.getUid());
-        guessULikeRequest.setPageIdx(request.getPageIdx());
+        guessULikeRequest.setPageIdx(request.getNumber());
         guessULikeRequest.setSize(request.getSize());
 
         return convert2ReadableProduct(recProductService.guessULike(guessULikeRequest).getProductList(), language);
@@ -48,10 +48,10 @@ public class SearchRecFacadeImpl implements SearchRecFacade{
     @Override
     public List<ReadableProduct> searchRecRelateItem(SearchRecRelateItemRequest request, Language language) throws ConversionException {
         RelateItemRequest relateItemRequest = new RelateItemRequest();
-        relateItemRequest.setDeviceid(request.getDeviceid());
+        relateItemRequest.setDeviceid(request.getDeviceId());
         relateItemRequest.setUid(request.getUid());
         relateItemRequest.setProductId(request.getProductId());
-        relateItemRequest.setPageIdx(request.getPageIdx());
+        relateItemRequest.setPageIdx(request.getNumber());
         relateItemRequest.setSize(request.getSize());
 
         return convert2ReadableProduct(recProductService.relateItem(relateItemRequest).getProductList(), language);
@@ -60,7 +60,7 @@ public class SearchRecFacadeImpl implements SearchRecFacade{
     @Override
     public List<ReadableProduct> searchRecSelectionItem(SearchRecSelectionRequest request, Language language) throws ConversionException {
         SelectionItemRequest selectionItemRequest = new SelectionItemRequest();
-        selectionItemRequest.setDeviceid(request.getDeviceid());
+        selectionItemRequest.setDeviceid(request.getDeviceId());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
         selectionItemRequest.setTag(request.getTag());

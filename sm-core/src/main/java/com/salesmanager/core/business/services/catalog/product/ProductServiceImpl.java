@@ -400,7 +400,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 				throw new ServiceException("Cannot get product with sku [" + productCode + "]");
 			}
 			BigInteger id = (BigInteger) products.get(0);
-			return productRepository.getById(id.longValue(), merchant, language);
+			return productRepository.getById(id.longValue(), merchant);
 		} catch (Exception e) {
 			throw new ServiceException("Cannot get product with sku [" + productCode + "]", e);
 		}

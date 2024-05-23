@@ -38,7 +38,7 @@ public class ReadableSearchProductV2 extends Entity implements Serializable  {
 
     private ProductDescription description;
 
-    private List<String> productTag;
+    private List<String> productTags;
 
     private ReadableMerchantStore merchantStore;
 
@@ -70,12 +70,12 @@ public class ReadableSearchProductV2 extends Entity implements Serializable  {
         this.images = images;
     }
 
-    public List<String> getProductTag() {
-        return productTag;
+    public List<String> getProductTags() {
+        return productTags;
     }
 
-    public void setProductTag(List<String> productTag) {
-        this.productTag = productTag;
+    public void setProductTags(List<String> productTags) {
+        this.productTags = productTags;
     }
 
     public ReadableMerchantStore getMerchantStore() {

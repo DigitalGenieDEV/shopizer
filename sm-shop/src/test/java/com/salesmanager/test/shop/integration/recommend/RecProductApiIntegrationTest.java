@@ -2,7 +2,6 @@ package com.salesmanager.test.shop.integration.recommend;
 
 import com.salesmanager.core.business.constants.Constants;
 import com.salesmanager.shop.application.ShopApplication;
-import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.catalog.SearchRecGuessULikeRequest;
 import com.salesmanager.shop.model.catalog.SearchRecRelateItemRequest;
 import com.salesmanager.shop.model.catalog.SearchRecSelectionRequest;
@@ -20,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,10 +32,10 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchRecGuessULike() {
         SearchRecGuessULikeRequest request = new SearchRecGuessULikeRequest();
-        request.setDeviceid("111");
+        request.setDeviceId("111");
         request.setUid(123);
         request.setSize(20);
-        request.setPageIdx(0);
+        request.setNumber(0);
 
         final HttpEntity<SearchRecGuessULikeRequest> searchEntity = new HttpEntity<>(request, getHeader());
 
@@ -49,10 +47,10 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchRecRelateItem() {
         SearchRecRelateItemRequest request = new SearchRecRelateItemRequest();
-        request.setDeviceid("111");
+        request.setDeviceId("111");
         request.setUid(123);
         request.setSize(20);
-        request.setPageIdx(0);
+        request.setNumber(0);
         request.setProductId(122926);
 
         final HttpEntity<SearchRecRelateItemRequest> searchEntity = new HttpEntity<>(request, getHeader());
@@ -65,7 +63,7 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     @Test
     public void searchSelectionProduct() {
         SearchRecSelectionRequest request = new SearchRecSelectionRequest();
-        request.setDeviceid("111");
+        request.setDeviceId("111");
         request.setUid(123);
         request.setSize(20);
         request.setPageIdx(0);

@@ -59,7 +59,7 @@ public interface SearchFacade {
 
 
 
-	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException;
+	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore store, Language language) throws ConversionException;
 
 	ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language);
 }

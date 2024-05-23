@@ -70,9 +70,10 @@ public class SearchApi {
   public @ResponseBody
   ReadableSearchResult searchV2(
           @RequestBody SearchProductRequestV2 searchProductRequestV2,
+          @ApiIgnore MerchantStore store,
           @ApiIgnore Language language) throws Exception {
 
-    return searchFacade.searchV2(searchProductRequestV2, language);
+    return searchFacade.searchV2(searchProductRequestV2, store, language);
 //    return  searchFacade.searchV2(searchProductRequestV2, language);
   }
 
