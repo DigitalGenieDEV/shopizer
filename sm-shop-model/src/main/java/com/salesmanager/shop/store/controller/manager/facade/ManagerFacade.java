@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.controller.manager.facade;
 
+import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
 import com.salesmanager.shop.model.manager.ReadableManagerList;
@@ -99,4 +100,11 @@ public interface ManagerFacade {
  * @throws Exception 
    */
   String authorizedMenu(String authenticatedManager, String url) throws Exception;
+  
+  /**
+   * Method to be used in argument resolver.
+   * @param store
+   * @return
+   */
+  boolean authorizeStore(MerchantStore store, String path);
 }

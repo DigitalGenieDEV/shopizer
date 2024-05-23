@@ -6,10 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -21,6 +24,7 @@ import com.salesmanager.core.model.common.CredentialsReset;
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
@@ -50,6 +54,10 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	@NotEmpty
 	@Column(name = "ADMIN_PASSWORD", length = 60)
 	private String adminPassword;
+
+	@NotEmpty
+	@Column(name = "MERCHANT_ID", updatable = false)
+	private int merchantId;
 
 	@Column(name = "TEL_ID1")
 	private int telId1;
@@ -291,6 +299,14 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 
 	public void setAuditSection(AuditSection2 auditSection) {
 		this.auditSection = auditSection;
+	}
+
+	public int getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(int merchantId) {
+		this.merchantId = merchantId;
 	}
 
 }

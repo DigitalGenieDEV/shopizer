@@ -76,7 +76,7 @@ public interface ManagerCategoryAuthRepository extends JpaRepository<CategoryAut
 	List<ReadCategoryAuth> getCategoryAuthFullList(int grpId);
 	
 	
-	@Query( value ="SELECT * FROM CATEGORY_AUTH WHERE GRP_ID = ?1", nativeQuery=true)
+	@Query( value ="SELECT * FROM CATEGORY_AUTH WHERE GRP_ID = ?1 ORDER BY CATEGORY_ID ASC", nativeQuery=true)
 	List<CategoryAuth> getCategoryAuthList(int grpId);
 	
 	

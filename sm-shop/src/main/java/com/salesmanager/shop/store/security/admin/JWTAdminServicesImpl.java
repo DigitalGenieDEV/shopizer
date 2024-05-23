@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.manager.ManagerService;
-import com.salesmanager.core.model.manager.Manager;
+import com.salesmanager.core.model.manager.ReadableManager;
 import com.salesmanager.shop.admin.security.SecurityDataAccessException;
 import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.store.security.user.JWTUser;
@@ -36,7 +36,8 @@ public class JWTAdminServicesImpl implements UserDetailsService{
 	public final static String ROLE_PREFIX = "ROLE_";//Spring Security 4
 
 
-	private UserDetails userDetails(String userName, Manager user, Collection<GrantedAuthority> authorities) {
+	private UserDetails userDetails(String userName, ReadableManager user, Collection<GrantedAuthority> authorities) {
+		
 		Date lastModified = null;
 	
 		return new JWTUser(
@@ -55,7 +56,7 @@ public class JWTAdminServicesImpl implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		Manager user = null;
+		ReadableManager user = null;
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		try {
 			
@@ -76,7 +77,8 @@ public class JWTAdminServicesImpl implements UserDetailsService{
 		    		GrantedAuthority auth = new SimpleGrantedAuthority(user.getGrpName());
 		    		authorities.add(auth);
 			    }
-
+ 
+				
 
 		} catch (ServiceException e) {
 			LOGGER.error("Exception while querrying customer",e);
