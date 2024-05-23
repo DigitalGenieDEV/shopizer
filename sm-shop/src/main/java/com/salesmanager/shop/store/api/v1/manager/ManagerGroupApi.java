@@ -72,6 +72,7 @@ public class ManagerGroupApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		managerGroup.setUserId(authenticatedManager);
 		managerGroup.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerGroupFacade.create(managerGroup);
 	}
@@ -87,6 +88,7 @@ public class ManagerGroupApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		managerGroup.setUserId(authenticatedManager);
 		managerGroup.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerGroupFacade.update(managerGroup);
 	}

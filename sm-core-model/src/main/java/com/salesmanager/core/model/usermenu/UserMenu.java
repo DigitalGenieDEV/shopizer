@@ -72,20 +72,6 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
 
-	@NotEmpty
-	@Column(name = "REG_ID", length = 30, nullable = false, updatable = false)
-	private String reg_id;
-
-	@NotEmpty
-	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false)
-	private String reg_ip;
-
-	@Column(name = "MOD_ID", updatable = true)
-	private String mod_id;
-
-	@Column(name = "MOD_IP", updatable = true)
-	private String mod_ip;
-
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();
 
@@ -191,38 +177,6 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 
 	public void setVisible(Integer visible) {
 		this.visible = visible;
-	}
-
-	public String getReg_id() {
-		return reg_id;
-	}
-
-	public void setReg_id(String reg_id) {
-		this.reg_id = reg_id;
-	}
-
-	public String getReg_ip() {
-		return reg_ip;
-	}
-
-	public void setReg_ip(String reg_ip) {
-		this.reg_ip = reg_ip;
-	}
-
-	public String getMod_id() {
-		return mod_id;
-	}
-
-	public void setMod_id(String mod_id) {
-		this.mod_id = mod_id;
-	}
-
-	public String getMod_ip() {
-		return mod_ip;
-	}
-
-	public void setMod_ip(String mod_ip) {
-		this.mod_ip = mod_ip;
 	}
 
 	public AuditSection2 getAuditSection() {

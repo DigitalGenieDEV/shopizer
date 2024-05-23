@@ -62,13 +62,14 @@ public class ManagerMenuAuthFacadeImpl implements ManagerMenuAuthFacade {
 		
 	}
 
-	public PersistableManagerAuthList create(PersistableManagerAuthList menuAuthList, String userIp) throws Exception {
+	public PersistableManagerAuthList create(PersistableManagerAuthList menuAuthList, String userIp, String userId) throws Exception {
 		try {
 			if (menuAuthList.getData().size() > 0) {
 				managerMenuAuthService.deleteMenuAuth(menuAuthList.getData().get(0).getGrpId());
 
 				for (ManagerAuthEntity data : menuAuthList.getData()) {
 					data.setUserIp(userIp);
+					data.setUserId(userId);
 					int authId = data.getId();
 					MenuAuth target = Optional.ofNullable(authId).filter(id -> id > 0)
 							.map(managerMenuAuthService::getById).orElse(new MenuAuth());
@@ -83,6 +84,7 @@ public class ManagerMenuAuthFacadeImpl implements ManagerMenuAuthFacade {
 
 				for (ManagerAuthCategoryEntity data : menuAuthList.getCategoryData()) {
 					data.setUserIp(userIp);
+					data.setUserId(userId);
 					int authId = data.getId();
 					CategoryAuth target = Optional.ofNullable(authId).filter(id -> id > 0)
 							.map(managerCategoryAuthService::getById).orElse(new CategoryAuth());

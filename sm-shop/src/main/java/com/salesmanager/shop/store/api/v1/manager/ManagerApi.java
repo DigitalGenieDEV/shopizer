@@ -78,7 +78,7 @@ public class ManagerApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-
+		manager.setUserId(authenticatedManager);
 		manager.setId(id);
 		managerFacade.updateEnabled(manager);
 	}
@@ -116,6 +116,7 @@ public class ManagerApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		manager.setUserId(authenticatedManager);
 		manager.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerFacade.create(manager);
 	}
@@ -153,7 +154,7 @@ public class ManagerApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		
+		manager.setUserId(authenticatedManager);
 		manager.setUserIp(CommonUtils.getRemoteIp(request));
 		return managerFacade.update( manager);
 	}

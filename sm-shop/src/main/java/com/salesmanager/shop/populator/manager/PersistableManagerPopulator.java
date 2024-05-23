@@ -51,11 +51,10 @@ public class PersistableManagerPopulator extends AbstractDataPopulator<Persistab
 			target.setGrpId(source.getGrpId());
 			target.setGrpName(source.getGrpName());
 			target.setContent(source.getContent());
-			target.setRegId(source.getUserId());
-			target.setRegIp(source.getUserIp());
-			target.setModId(source.getUserId());
-			target.setModIp(source.getUserIp());
-			
+			target.getAuditSection().setRegId(source.getUserId());
+			target.getAuditSection().setRegIp(source.getUserIp());
+			target.getAuditSection().setModId(source.getUserId());
+			target.getAuditSection().setModIp(source.getUserIp());
 			return target;
 
 

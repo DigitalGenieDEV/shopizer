@@ -127,15 +127,15 @@ public class DeptFacadeImpl  implements DeptFacade {
 		return targetData;
 	}
 	
-	public void updateChangeOrd(PersistableChangeOrd dept, String ip) throws Exception{
+	public void updateChangeOrd(PersistableChangeOrd dept, String ip,String userId) throws Exception{
 		if(dept.getChangeOrdList().size() > 0) {
 			for(ChangeOrdEntity data : dept.getChangeOrdList()) {
 				Dept paramVO =  new Dept();
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());
 				paramVO.setOrd(data.getChangeOrd());
-				paramVO.setMod_id(data.getUserId());
-				paramVO.setMod_ip(ip);
+				paramVO.getAuditSection().setModId(userId);
+				paramVO.getAuditSection().setModIp(ip);
 				deptService.updateChangeOrd(paramVO);
 			}
 		}

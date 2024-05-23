@@ -76,6 +76,7 @@ public class CodeApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		code.setUserId(authenticatedManager);
 		code.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return codeFacde.saveCode(code);
@@ -100,6 +101,7 @@ public class CodeApi {
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		code.setId(id);
+		code.setUserId(authenticatedManager);
 		code.setUserIp(CommonUtils.getRemoteIp(request));
 		return codeFacde.saveCode(code);
 	}
@@ -125,7 +127,7 @@ public class CodeApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		codeFacde.updateChangeOrd(code, CommonUtils.getRemoteIp(request));
+		codeFacde.updateChangeOrd(code, CommonUtils.getRemoteIp(request), authenticatedManager);
 
 	}
 }

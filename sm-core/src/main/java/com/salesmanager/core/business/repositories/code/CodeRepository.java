@@ -101,8 +101,8 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 	@Query(value ="UPDATE COMMON_CODE SET "
 				+ "ORD = :#{#code.ord}, "
 				+ "PARENT_ID = :#{#code.parentId}, "
-				+ "MOD_ID = :#{#code.mod_id}, "
-				+ "MOD_IP = :#{#code.mod_ip}, "
+				+ "MOD_ID = :#{#code.auditSection.modId}, "
+				+ "MOD_IP = :#{#code.auditSection.modIp}, "
 				+ "MOD_DATE = NOW() "
 				+ "WHERE ID = :#{#code.id}"
 				, nativeQuery = true)

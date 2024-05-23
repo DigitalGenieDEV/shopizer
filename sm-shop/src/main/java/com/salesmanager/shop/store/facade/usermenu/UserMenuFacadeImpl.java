@@ -11,11 +11,8 @@ import org.springframework.stereotype.Service;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.usermenu.UserMenuService;
-import com.salesmanager.core.model.adminmenu.AdminMenu;
-import com.salesmanager.core.model.adminmenu.ReadAdminMenu;
 import com.salesmanager.core.model.usermenu.ReadUserMenu;
 import com.salesmanager.core.model.usermenu.UserMenu;
-import com.salesmanager.shop.model.adminmenu.ReadableAdminMenu;
 import com.salesmanager.shop.model.common.ChangeOrdEntity;
 import com.salesmanager.shop.model.common.PersistableChangeOrd;
 import com.salesmanager.shop.model.usermenu.PersistableUserMenu;
@@ -132,8 +129,8 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());
 				paramVO.setOrd(data.getChangeOrd());
-				paramVO.setMod_id(userId);
-				paramVO.setMod_ip(ip);
+				paramVO.getAuditSection().setModId(userId);
+				paramVO.getAuditSection().setModIp(ip);
 				userMenuService.updateChangeOrd(paramVO);
 			}
 		}

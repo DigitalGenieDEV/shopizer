@@ -116,15 +116,15 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 		adminMenuService.deleteAdminMenu(adminMenuId);
 	}
 	
-	public void updateChangeOrd(PersistableChangeOrd adminMenu, String ip) throws Exception{
+	public void updateChangeOrd(PersistableChangeOrd adminMenu, String ip, String userId) throws Exception{
 		if(adminMenu.getChangeOrdList().size() > 0) {
 			for(ChangeOrdEntity data : adminMenu.getChangeOrdList()) {
 				AdminMenu paramVO =  new AdminMenu();
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());
 				paramVO.setOrd(data.getChangeOrd());
-				paramVO.setMod_id(data.getUserId());
-				paramVO.setMod_ip(ip);
+				paramVO.getAuditSection().setModId(userId);
+				paramVO.getAuditSection().setModIp(ip);
 				adminMenuService.updateChangeOrd(paramVO);
 			}
 		}

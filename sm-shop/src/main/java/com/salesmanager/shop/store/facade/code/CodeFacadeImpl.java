@@ -147,15 +147,15 @@ public class CodeFacadeImpl implements CodeFacade {
 		codeService.deleteCode(codeId);
 	}
 	
-	public void updateChangeOrd(PersistableChangeOrd code, String ip) throws Exception{
+	public void updateChangeOrd(PersistableChangeOrd code, String ip, String userId) throws Exception{
 		if(code.getChangeOrdList().size() > 0) {
 			for(ChangeOrdEntity data : code.getChangeOrdList()) {
 				Code paramVO =  new Code();
 				paramVO.setId(data.getId());
 				paramVO.setParentId(data.getParentId());
 				paramVO.setOrd(data.getChangeOrd());
-				paramVO.setMod_id(data.getUserId());
-				paramVO.setMod_ip(ip);
+				paramVO.getAuditSection().setModId(userId);
+				paramVO.getAuditSection().setModIp(ip);
 				codeService.updateChangeOrd(paramVO);
 			}
 		}

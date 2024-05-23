@@ -23,11 +23,10 @@ public class PersistableManagerCategoryAuthPopulator   extends AbstractDataPopul
 			target.setId(source.getId());
 			target.setCategoryId(source.getCategoryId());
 			target.setGrpId(source.getGrpId());
-			target.setRegId(source.getUserId());
-			target.setRegIp(source.getUserIp());
-			target.setModId(source.getUserId());
-			target.setModIp(source.getUserIp());
-			
+			target.getAuditSection().setRegId(source.getUserId());
+			target.getAuditSection().setRegIp(source.getUserIp());
+			target.getAuditSection().setModId(source.getUserId());
+			target.getAuditSection().setModIp(source.getUserIp());
 			return target;
 
 

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.salesmanager.core.model.adminmenu.AdminMenu;
 import com.salesmanager.core.model.usermenu.ReadUserMenu;
 import com.salesmanager.core.model.usermenu.UserMenu;
 
@@ -85,8 +84,8 @@ public interface UserMenuRepository extends JpaRepository<UserMenu, Integer> {
 	
 	
 	@Modifying
-	@Query(value = "UPDATE USERMENU SET ORD = :#{#userMenu.ord}, PARENT_ID = :#{#userMenu.parentId}, MOD_ID = :#{#userMenu.mod_id}, "
-			+ "MOD_IP = :#{#userMenu.mod_ip}, " + "MOD_DATE = NOW() "
+	@Query(value = "UPDATE USERMENU SET ORD = :#{#userMenu.ord}, PARENT_ID = :#{#userMenu.parentId}, MOD_ID = :#{#userMenu.auditSection.modId}, "
+			+ "MOD_IP = :#{#userMenu.auditSection.modIp}, " + "MOD_DATE = NOW() "
 			+ "WHERE ID = :#{#userMenu.id}", nativeQuery = true)
 	void updateChangeOrd(@Param("userMenu") UserMenu userMenu);
 }

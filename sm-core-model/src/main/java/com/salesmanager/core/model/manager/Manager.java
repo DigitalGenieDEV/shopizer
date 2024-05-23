@@ -44,7 +44,7 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 
 	@NotEmpty
 	@Email
-	@Column(name = "ADMIN_EMAIL", nullable = false, length=100)
+	@Column(name = "ADMIN_EMAIL", nullable = false, length = 100)
 	private String adminEmail;
 
 	@NotEmpty
@@ -103,22 +103,8 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	@Column(name = "GRP_NAME", length = 100)
 	private String grpName;
 
-	@Column(name = "REG_ID", updatable = true)
-	private String regId;
-
-	@NotEmpty
-	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false)
-	private String regIp;
-
-	@Column(name = "MOD_ID", updatable = true)
-	private String modId;
-
-	@Column(name = "MOD_IP", updatable = true)
-	private String modIp;
-	
 	@Embedded
 	private CredentialsReset credentialsResetRequest = null;
-
 
 	public CredentialsReset getCredentialsResetRequest() {
 		return credentialsResetRequest;
@@ -127,7 +113,6 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	public void setCredentialsResetRequest(CredentialsReset credentialsResetRequest) {
 		this.credentialsResetRequest = credentialsResetRequest;
 	}
-	
 
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();
@@ -300,38 +285,6 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 		this.grpName = grpName;
 	}
 
-	public String getRegId() {
-		return regId;
-	}
-
-	public void setRegId(String regId) {
-		this.regId = regId;
-	}
-
-	public String getRegIp() {
-		return regIp;
-	}
-
-	public void setRegIp(String regIp) {
-		this.regIp = regIp;
-	}
-
-	public String getModId() {
-		return modId;
-	}
-
-	public void setModId(String modId) {
-		this.modId = modId;
-	}
-
-	public String getModIp() {
-		return modIp;
-	}
-
-	public void setModIp(String modIp) {
-		this.modIp = modIp;
-	}
-
 	public AuditSection2 getAuditSection() {
 		return auditSection;
 	}
@@ -340,5 +293,4 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 		this.auditSection = auditSection;
 	}
 
-	
 }

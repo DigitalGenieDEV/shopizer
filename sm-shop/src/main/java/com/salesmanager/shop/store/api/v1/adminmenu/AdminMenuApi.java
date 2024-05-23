@@ -68,6 +68,7 @@ public class AdminMenuApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		adminMenu.setUserId(authenticatedManager);
 		adminMenu.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return adminMenuFacde.saveAdminMenu(adminMenu);
@@ -89,6 +90,7 @@ public class AdminMenuApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		adminMenu.setUserId(authenticatedManager);
 		adminMenu.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return adminMenuFacde.saveAdminMenu(adminMenu);
@@ -116,7 +118,7 @@ public class AdminMenuApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		adminMenuFacde.updateChangeOrd(adminMenu, CommonUtils.getRemoteIp(request));
+		adminMenuFacde.updateChangeOrd(adminMenu, CommonUtils.getRemoteIp(request), authenticatedManager);
 
 	}
 
