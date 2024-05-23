@@ -2,20 +2,19 @@ package com.salesmanager.shop.populator.recommend;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
-import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
+import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
-import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.attribute.*;
@@ -26,15 +25,12 @@ import com.salesmanager.shop.model.catalog.product.type.ProductTypeDescription;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.recommend.ReadableRecProduct;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
-import com.salesmanager.shop.populator.catalog.ReadableCategoryPopulator;
 import com.salesmanager.shop.populator.manufacturer.ReadableManufacturerPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
-import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,6 +46,8 @@ public class ReadableRecProductPopulator  extends
 
 
     private ReadableProductVariantMapper readableProductVariantMapper;
+
+    private ProductFeatureService productFeatureService;
 
     private ImageFilePath imageUtils;
 
@@ -67,6 +65,14 @@ public class ReadableRecProductPopulator  extends
 
     public void setPricingService(PricingService pricingService) {
         this.pricingService = pricingService;
+    }
+
+    public ProductFeatureService getProductFeatureService() {
+        return productFeatureService;
+    }
+
+    public void setProductFeatureService(ProductFeatureService productFeatureService) {
+        this.productFeatureService = productFeatureService;
     }
 
     public ReadableMerchantStorePopulator getReadableMerchantStorePopulator() {
@@ -508,6 +514,12 @@ public class ReadableRecProductPopulator  extends
                         .map(i -> readableProductVariantMapper.convert(i, store, lang)).collect(Collectors.toList());
                 target.setVariants(instances);
 
+            }
+
+            List<ProductFeature> listByProductId = productFeatureService.findListByProductId(source.getId());
+            if (!CollectionUtils.isEmpty(listByProductId)){
+                List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
+                target.setProductTags(collect);
             }
 
 

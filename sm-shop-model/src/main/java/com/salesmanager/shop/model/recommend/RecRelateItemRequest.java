@@ -7,8 +7,8 @@ public class RecRelateItemRequest {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String deviceid;
-    private Integer pageIdx = 0;
+    private String deviceId;
+    private Integer number = 0;
     private Integer size = 20;
     private Integer productId;
     private String cacheid;
@@ -21,12 +21,12 @@ public class RecRelateItemRequest {
         this.uid = uid;
     }
 
-    public Integer getPageIdx() {
-        return pageIdx;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setPageIdx(Integer pageIdx) {
-        this.pageIdx = pageIdx;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Integer getSize() {
@@ -45,12 +45,12 @@ public class RecRelateItemRequest {
         this.productId = productId;
     }
 
-    public String getDeviceid() {
-        return deviceid;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDeviceid(String deviceid) {
-        this.deviceid = deviceid;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getCacheid() {

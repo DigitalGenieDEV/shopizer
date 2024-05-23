@@ -11,12 +11,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.business.services.amazonaws.LambdaInvokeService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.catalog.product.search.*;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -25,11 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service("searchProductService")
 public class SearchProductServiceImpl implements SearchProductService{
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchProductServiceImpl.class);
 
     @Inject
     private ProductService productService;
@@ -37,16 +43,20 @@ public class SearchProductServiceImpl implements SearchProductService{
     @Inject
     private LambdaInvokeService lambdaInvokeService;
 
-    private String LAMBDA_SR_SEARCH = "sr_search_api";
+    private static final String LAMBDA_SR_SEARCH = "sr_search_api";
 
-    private String LAMBDA_SR_SEARCH_AUTOCOMPLETE = "sr_search_autocomplete";
+    private static final String LAMBDA_SR_SEARCH_AUTOCOMPLETE = "sr_search_autocomplete";
+
+
 
     @Override
     public SearchProductResult search(SearchRequest request) {
         SearchResult searchResult = getProductSearchResult(request);
 
         List<ProductResult> productResults = searchResult.getProductList();
-//        ProductSearchResult.ProductResult productResult = new ProductSearchResult.ProductResult();
+
+//        List<ProductResult> productResults = new ArrayList<>();
+//        ProductResult productResult = new ProductResult();
 //        productResult.setProductId("350");
 //        productResults.add(productResult);
 
@@ -60,12 +70,23 @@ public class SearchProductServiceImpl implements SearchProductService{
             } catch (Exception e) {
             }
         }
+//        products.add(productResult);
         SearchProductResult searchProductResult = new SearchProductResult();
         searchProductResult.setProductList(products);
+
+//        Map<String, List<String>> attrForFilt = new HashMap<>();
+//        attrForFilt.put("cate", Arrays.asList("700", "650", "600"));
+//        attrForFilt.put("po", Arrays.asList("564", "563"));
+//        attrForFilt.put("price", Arrays.asList("18.6", "19.8"));
+//        attrForFilt.put("prod_type", Arrays.asList("GENERAL"));
+//        attrForFilt.put("attr_17", Arrays.asList("505", "506", "507"));
+//        attrForFilt.put("attr_16", Arrays.asList("550", "551", "552"));
         searchProductResult.setAttrForFilt(searchResult.getAttrForFilt());
 
         return searchProductResult;
     }
+
+
 
     @Override
     public AutocompleteResult autocomplete(AutocompleteRequest request) {
@@ -77,6 +98,7 @@ public class SearchProductServiceImpl implements SearchProductService{
             return objectMapper.readValue(response, AutocompleteResult.class);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            LOGGER.error("autocomplete exception", e);
         }
 
         return null;

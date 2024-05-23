@@ -2,6 +2,7 @@ package com.salesmanager.core.model.catalog.product.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Map;
 
 public class SearchRequest {
@@ -24,8 +25,11 @@ public class SearchRequest {
     @JsonProperty("page_idx")
     private Integer pageIdx = 0;
 
+    @JsonProperty("sort")
+    private String sort;
+
     @JsonProperty("attr_filt")
-    private Map<String, String> attrFilt;
+    private Map<String, List<String>> attrFilt;
 
     public String getLang() {
         return lang;
@@ -59,11 +63,11 @@ public class SearchRequest {
         this.pageIdx = pageIdx;
     }
 
-    public Map<String, String> getAttrFilt() {
+    public Map<String, List<String>> getAttrFilt() {
         return attrFilt;
     }
 
-    public void setAttrFilt(Map<String, String> attrFilt) {
+    public void setAttrFilt(Map<String, List<String>> attrFilt) {
         this.attrFilt = attrFilt;
     }
 
@@ -109,5 +113,13 @@ public class SearchRequest {
 
     public void setDeviceid(String deviceid) {
         this.deviceid = deviceid;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 }

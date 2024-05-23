@@ -4,6 +4,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
@@ -68,15 +69,15 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
     public void searchV2() {
         SearchProductRequestV2 searchRequest = new SearchProductRequestV2();
         searchRequest.setQ("bottle");
-        searchRequest.setLang("en");
+        searchRequest.setLang("ko");
         searchRequest.setSize(20);
         searchRequest.setUid(123);
-        searchRequest.setDeviceid("111");
+        searchRequest.setDeviceId("111");
         final HttpEntity<SearchProductRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 
-        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE + "&lang=ko", searchEntity, String.class);
         assertNotNull(searchResponse);
-        assertThat(searchResponse.getStatusCode(), is(CREATED));
+        assertThat(searchResponse.getStatusCode(), is(OK));
     }
 
     @Test
@@ -85,7 +86,7 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
         searchRequest.setQ("bottle");
         searchRequest.setLang("en");
         searchRequest.setUid(123);
-        searchRequest.setDeviceid("111");
+        searchRequest.setDeviceId("111");
 
         final HttpEntity<SearchProductAutocompleteRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 

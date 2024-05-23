@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.catalog;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public class SearchProductRequestV2 implements Serializable {
@@ -10,12 +11,13 @@ public class SearchProductRequestV2 implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String deviceid;
+    private String deviceId;
     private String lang;
     private String q;
     private Integer size = 20;
-    private Integer pageIdx = 1;
-    private Map<String, String> attrFilt;
+    private Integer number = 0;
+    private String sort;
+    private Map<String, List<String>> attrFilt;
 
     public String getLang() {
         return lang;
@@ -41,12 +43,12 @@ public class SearchProductRequestV2 implements Serializable {
         this.size = size;
     }
 
-    public Integer getPageIdx() {
-        return pageIdx;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setPageIdx(Integer pageIdx) {
-        this.pageIdx = pageIdx;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Integer getUid() {
@@ -57,19 +59,27 @@ public class SearchProductRequestV2 implements Serializable {
         this.uid = uid;
     }
 
-    public String getDeviceid() {
-        return deviceid;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDeviceid(String deviceid) {
-        this.deviceid = deviceid;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public Map<String, String> getAttrFilt() {
+    public Map<String, List<String>> getAttrFilt() {
         return attrFilt;
     }
 
-    public void setAttrFilt(Map<String, String> attrFilt) {
+    public void setAttrFilt(Map<String, List<String>> attrFilt) {
         this.attrFilt = attrFilt;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 }

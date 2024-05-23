@@ -15,15 +15,15 @@ public class ReadableSearchResult extends ReadableList implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private Map<String, List<String>> attrForFilt;
+    private ReadableAttrForFilt attrForFilt;
 
     private List<ReadableSearchProductV2> products = new ArrayList<>();
 
-    public Map<String, List<String>> getAttrForFilt() {
+    public ReadableAttrForFilt getAttrForFilt() {
         return attrForFilt;
     }
 
-    public void setAttrForFilt(Map<String, List<String>> attrForFilt) {
+    public void setAttrForFilt(ReadableAttrForFilt attrForFilt) {
         this.attrForFilt = attrForFilt;
     }
 

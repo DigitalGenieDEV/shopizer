@@ -38,7 +38,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 	@Override
 	public Product getById(Long productId, MerchantStore store) {
-		return get(productId, store);
+		Long current = System.currentTimeMillis();
+		Product product =  get(productId, store);
+
+		LOGGER.info("query product by id [" + productId + "] cost " + (System.currentTimeMillis() - current) + "ms" );
+		return product;
 	}
 
 	@Override
@@ -803,17 +807,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		 */
 		if(criteria.getOrigin().equals(ProductCriteria.ORIGIN_SHOP)) {
 			qs.append(" left join fetch p.variants pinst ");
-			qs.append(" left join fetch pinst.variation pv ");
+			qs.append(" left join fetch pinst.variations pv ");
 			qs.append( "left join fetch pv.productOption pvpo ");
 			qs.append(" left join fetch pv.productOptionValue pvpov ");
 			qs.append(" left join fetch pvpo.descriptions pvpod ");
 			qs.append(" left join fetch pvpov.descriptions pvpovd ");
 			
-			qs.append(" left join fetch pinst.variationValue pvv ");
-			qs.append(" left join fetch pvv.productOption pvvpo ");
-			qs.append(" left join fetch pvv.productOptionValue pvvpov ");
-			qs.append(" left join fetch pvvpo.descriptions povvpod ");
-			qs.append(" left join fetch pvpov.descriptions povvpovd ");	
+//			qs.append(" left join fetch pinst.variationValue pvv ");
+//			qs.append(" left join fetch pvv.productOption pvvpo ");
+//			qs.append(" left join fetch pvv.productOptionValue pvvpov ");
+//			qs.append(" left join fetch pvvpo.descriptions povvpod ");
+//			qs.append(" left join fetch pvpov.descriptions povvpovd ");
 			
 			//variant availability and price
 			qs.append(" left join fetch pinst.availabilities pinsta ");
@@ -1173,7 +1177,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			qs.append("left join fetch pvv.productOptionValue pvpov " );
 			qs.append("left join fetch pvpo.descriptions pvpod ");
 			qs.append("left join fetch pvpov.descriptions pvpovd ");
-			
+
 			//variant availability and price
 			qs.append("left join fetch pinst.availabilities pinsta ");
 			qs.append("left join fetch pinsta.prices pinstap ");

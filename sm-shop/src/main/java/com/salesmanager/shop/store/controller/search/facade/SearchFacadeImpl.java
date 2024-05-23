@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.search.SearchProductService;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteRequest;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteResult;
@@ -18,6 +19,7 @@ import com.salesmanager.shop.model.search.ReadableSearchProductV2;
 import com.salesmanager.shop.model.search.ReadableSearchResult;
 import com.salesmanager.shop.populator.search.ReadableSearchProductV2Populator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
+import com.salesmanager.shop.utils.SearchAttrFiltUtils;
 import org.jsoup.helper.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,12 +76,20 @@ public class SearchFacadeImpl implements SearchFacade {
 	private SearchProductService searchProductService;
 
 	@Inject
+	private SearchAttrFiltUtils searchAttrFiltUtils;
+
+	@Inject
+	private ProductFeatureService productFeatureService;
+
+	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
 
 	private final static String CATEGORY_FACET_NAME = "categories";
 	private final static String MANUFACTURER_FACET_NAME = "manufacturer";
 	private final static int AUTOCOMPLETE_ENTRIES_COUNT = 15;
+
+
 
 	/**
 	 * Index all products from the catalogue Better stop the system, remove ES
@@ -221,23 +231,24 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, Language language) throws ConversionException {
+	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore merchantStore, Language language) throws ConversionException {
 		SearchRequest searchProductRequest = new SearchRequest();
-		searchProductRequest.setLang(searchProductRequestV2.getLang());
+		searchProductRequest.setLang(language.getCode());
 		searchProductRequest.setSize(searchProductRequestV2.getSize());
 		searchProductRequest.setQ(searchProductRequestV2.getQ());
-		searchProductRequest.setPageIdx(searchProductRequestV2.getPageIdx());
+		searchProductRequest.setPageIdx(searchProductRequestV2.getNumber());
 		searchProductRequest.setAttrFilt(searchProductRequestV2.getAttrFilt());
 		searchProductRequest.setUid(searchProductRequestV2.getUid());
-		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceid());
+		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceId());
+		searchProductRequest.setSort(searchProductRequestV2.getSort());
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
 		ReadableSearchProductV2Populator populator = new ReadableSearchProductV2Populator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
 		populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+		populator.setProductFeatureService(productFeatureService);
 
-//		ReadableProductList productList = new ReadableProductList();
 		ReadableSearchResult result = new ReadableSearchResult();
 		for(Product product : searchProductResult.getProductList()) {
 			//create new proxy product
@@ -245,8 +256,8 @@ public class SearchFacadeImpl implements SearchFacade {
 			result.getProducts().add(readProduct);
 		}
 
-		result.setNumber(searchProductRequestV2.getPageIdx());
-		result.setAttrForFilt(searchProductResult.getAttrForFilt());
+		result.setNumber(searchProductRequestV2.getNumber());
+		result.setAttrForFilt(searchAttrFiltUtils.getAttrFilt(searchProductResult.getAttrForFilt(), merchantStore, language));
 
 		return result;
 	}
@@ -255,8 +266,8 @@ public class SearchFacadeImpl implements SearchFacade {
 	public ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language) {
 		AutocompleteRequest request = new AutocompleteRequest();
 		request.setQ(searchProductAutocompleteRequestV2.getQ());
-		request.setLang(searchProductAutocompleteRequestV2.getLang());
-		request.setDeviceid(searchProductAutocompleteRequestV2.getDeviceid());
+		request.setLang(language.getCode());
+		request.setDeviceid(searchProductAutocompleteRequestV2.getDeviceId());
 		request.setUid(searchProductAutocompleteRequestV2.getUid());
 
 		AutocompleteResult result = searchProductService.autocomplete(request);

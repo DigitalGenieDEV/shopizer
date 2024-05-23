@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.recommend.facade;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.search.RecProductService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.recommend.*;
@@ -33,6 +34,9 @@ public class RecProductFacadeImpl implements RecProductFacade{
     @Autowired
     private ReadableProductVariantMapper readableProductVariantMapper;
 
+    @Autowired
+    private ProductFeatureService productFeatureService;
+
     @Inject
     @Qualifier("img")
     private ImageFilePath imageUtils;
@@ -40,16 +44,16 @@ public class RecProductFacadeImpl implements RecProductFacade{
     @Override
     public ReadableRecProductList getRecGuessULike(RecGuessULikeRequest request, Language language) throws Exception {
         GuessULikeRequest guessULikeRequest = new GuessULikeRequest();
-        guessULikeRequest.setDeviceid(request.getDeviceid());
+        guessULikeRequest.setDeviceid(request.getDeviceId());
         guessULikeRequest.setUid(request.getUid());
-        guessULikeRequest.setPageIdx(request.getPageIdx());
+        guessULikeRequest.setPageIdx(request.getNumber());
         guessULikeRequest.setSize(request.getSize());
         guessULikeRequest.setCacheid(request.getCacheid());
 
         GuessULikeResult guessULikeResult = recProductService.guessULike(guessULikeRequest);
 
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(guessULikeResult.getProductList(), language);
-        readableRecProductList.setNumber(request.getPageIdx());
+        readableRecProductList.setNumber(request.getNumber());
         readableRecProductList.setCacheid(guessULikeResult.getCacheid());
 
         return readableRecProductList;
@@ -58,17 +62,17 @@ public class RecProductFacadeImpl implements RecProductFacade{
     @Override
     public ReadableRecProductList getRecRelateItem(RecRelateItemRequest request, Language language) throws Exception {
         RelateItemRequest relateItemRequest = new RelateItemRequest();
-        relateItemRequest.setDeviceid(request.getDeviceid());
+        relateItemRequest.setDeviceid(request.getDeviceId());
         relateItemRequest.setUid(request.getUid());
         relateItemRequest.setProductId(request.getProductId());
-        relateItemRequest.setPageIdx(request.getPageIdx());
+        relateItemRequest.setPageIdx(request.getNumber());
         relateItemRequest.setSize(request.getSize());
         relateItemRequest.setCacheid(request.getCacheid());
 
         RelateItemResult relateItemResult = recProductService.relateItem(relateItemRequest);
 
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(relateItemResult.getProductList(), language);
-        readableRecProductList.setNumber(request.getPageIdx());
+        readableRecProductList.setNumber(request.getNumber());
         readableRecProductList.setCacheid(relateItemResult.getCacheid());
 
         return readableRecProductList;
@@ -103,6 +107,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         populator.setimageUtils(imageUtils);
         populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
         populator.setReadableProductVariantMapper(readableProductVariantMapper);
+        populator.setProductFeatureService(productFeatureService);
 
         ReadableRecProductList productList = new ReadableRecProductList();
         for(Product product : products) {
