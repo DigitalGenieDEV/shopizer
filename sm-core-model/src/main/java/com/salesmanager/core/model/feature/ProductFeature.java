@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @EntityListeners(value = AuditListener.class)
 @Table(name = "PRODUCT_FEATURE",
-		indexes = { @Index(name="KEY_IDX", columnList = "KEY")})
+		indexes = { @Index(name="KEY_IDX", columnList = "KEY_NAME")})
 public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> implements Auditable {
 	private static final long serialVersionUID = 1L;
 
