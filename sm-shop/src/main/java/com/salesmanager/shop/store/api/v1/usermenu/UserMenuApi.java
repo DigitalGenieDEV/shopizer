@@ -64,7 +64,7 @@ public class UserMenuApi {
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		userMenu.setUserId(authenticatedManager);
 		userMenu.setUserIp(CommonUtils.getRemoteIp(request));
-
+		
 		return userMenuFacade.saveUserMenu(userMenu);
 	}
 	

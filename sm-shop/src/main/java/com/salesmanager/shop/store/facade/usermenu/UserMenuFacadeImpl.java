@@ -58,7 +58,7 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 	    		  tempList.add(sendData);
 	    	 }
 	    	
-	    	  ReadableUserMenu rootMenuVO = new ReadableUserMenu();
+	    	ReadableUserMenu rootMenuVO = new ReadableUserMenu();
 	    	rootMenuVO.setId(0);
 	  		this.settingUserMenu(tempList, 0, rootMenuVO);
 	    	  
@@ -82,7 +82,7 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 		
 			UserMenu dbUserMenu = populateUserMenu(userMenu, target);
 			userMenuService.saveOrUpdate(dbUserMenu);
-
+			userMenuService.resetAllEntriesInCash();
 		
 			if (userMenu.getId() > 0) {
 				userMenu.setId(userMenu.getId());
@@ -120,6 +120,7 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 	
 	public void deleteUserMenu(int id) throws Exception{
 		userMenuService.deleteUserMenu(id);
+		userMenuService.resetAllEntriesInCash();
 	}
 	
 	public void updateChangeOrd(PersistableChangeOrd userMenu, String ip, String userId) throws Exception{
@@ -133,6 +134,8 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 				paramVO.getAuditSection().setModIp(ip);
 				userMenuService.updateChangeOrd(paramVO);
 			}
+			
+			userMenuService.resetAllEntriesInCash();
 		}
 	}
 	

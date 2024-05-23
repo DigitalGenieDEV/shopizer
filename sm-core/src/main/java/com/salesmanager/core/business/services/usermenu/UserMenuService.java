@@ -24,4 +24,6 @@ public interface UserMenuService extends SalesManagerEntityService<Integer, User
 	void deleteUserMenu(int id) throws ServiceException;
 	
 	void updateChangeOrd(UserMenu userMenu) throws ServiceException;
+	
+	public void resetAllEntriesInCash() throws Exception;
 }
