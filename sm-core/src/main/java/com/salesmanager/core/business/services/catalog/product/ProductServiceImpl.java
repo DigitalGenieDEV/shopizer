@@ -308,6 +308,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 				}
 			}
 
+
 			// cleanup old and new images
 			if (originalProductImages != null) {
 				for (ProductImage image : originalProductImages) {

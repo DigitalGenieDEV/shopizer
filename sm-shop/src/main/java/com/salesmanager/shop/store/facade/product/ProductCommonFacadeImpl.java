@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
-import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
+import com.salesmanager.core.model.feature.ProductFeature;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -115,6 +115,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(target.getId());
 			processProductFeatureDiff(listByProductId, product.getProductTag(), target.getId());
 		}
+
 		return target.getId();
 	}
 

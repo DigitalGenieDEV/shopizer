@@ -1,33 +1,27 @@
-package com.salesmanager.core.model.catalog.product.feature;
+package com.salesmanager.core.model.feature;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.RentalStatus;
+import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.common.description.Description;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.order.Order;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PRODUCT_FEATURE",uniqueConstraints=
-@UniqueConstraint(columnNames = {"PRODUCT_ID"}))
+@EntityListeners(value = AuditListener.class)
+@Table(name = "PRODUCT_FEATURE",
+		indexes = { @Index(name="KEY_IDX", columnList = "KEY")})
 public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> implements Auditable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@Embedded
 	private AuditSection auditSection = new AuditSection();
 
 	@Id
 	@Column(name = "PRODUCT_FEATURE_ID", unique=true, nullable=false)
-	@TableGenerator(
-			name = "TABLE_GEN",
-			table = "SM_SEQUENCER",
-			pkColumnName = "SEQ_NAME",
-			valueColumnName = "SEQ_COUNT",
+	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT",
 			pkColumnValue = "PRODUCT_FEATURE_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
@@ -38,10 +32,11 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	@Column(name = "KEY_NAME", nullable = false)
 	private String key;
 
-	@Column(name = "VALUE", nullable = false)
+	@Column(name = "VALUE",length=256, nullable = false)
 	private String value;
 
 	@Column(name="STATUS", nullable = true)
+	@Enumerated(value = EnumType.STRING)
 	private ProductFeatureStatus productFeatureStatus;
 
 	public ProductFeatureStatus getProductFeatureStatus() {
@@ -52,8 +47,6 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 		this.productFeatureStatus = productFeatureStatus;
 	}
 
-	public ProductFeature() {
-	}
 
 	public String getKey() {
 		return key;
@@ -81,22 +74,21 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	}
 
 	@Override
-	public Long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(Long id) {
-
-	}
-
-	@Override
 	public AuditSection getAuditSection() {
 		return auditSection;
 	}
 
 	@Override
-	public void setAuditSection(AuditSection audit) {
+	public void setAuditSection(AuditSection auditSection) {
+		this.auditSection = auditSection;
+	}
 
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

@@ -1,6 +1,6 @@
 package com.salesmanager.shop.model.catalog.product.feature;
 
-import com.salesmanager.core.model.catalog.product.feature.ProductFeatureStatus;
+import com.salesmanager.core.model.feature.ProductFeatureStatus;
 
 import java.io.Serializable;
 

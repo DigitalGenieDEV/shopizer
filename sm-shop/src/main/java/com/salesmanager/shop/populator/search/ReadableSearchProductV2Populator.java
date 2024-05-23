@@ -7,11 +7,11 @@ import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
-import com.salesmanager.core.model.catalog.product.feature.ProductFeature;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
+import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
@@ -527,8 +527,6 @@ public class ReadableSearchProductV2Populator  extends
                 List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
                 target.setProductTags(collect);
             }
-
-
 
 
             FinalPrice price = pricingService.calculateProductPrice(source);

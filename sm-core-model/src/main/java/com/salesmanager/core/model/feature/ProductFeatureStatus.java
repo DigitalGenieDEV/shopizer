@@ -1,4 +1,4 @@
-package com.salesmanager.core.model.catalog.product.feature;
+package com.salesmanager.core.model.feature;
 
 public enum ProductFeatureStatus {
 
