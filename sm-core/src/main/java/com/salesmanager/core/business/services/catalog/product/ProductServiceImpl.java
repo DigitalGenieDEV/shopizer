@@ -439,7 +439,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		try {
 			List<Object> products = productRepository.findBySku(productCode, merchant.getId());
 			if(products.isEmpty()) {
-				throw new ServiceException("Cannot get product with sku [" + productCode + "]");
+				return null;
 			}
 			BigInteger id = (BigInteger) products.get(0);
 			return this.findOne(id.longValue(), merchant);
