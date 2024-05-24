@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,9 +28,13 @@ import com.salesmanager.core.business.services.manager.ManagerService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.model.manager.Manager;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.user.User;
+import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
 import com.salesmanager.shop.model.manager.ReadableManagerList;
+import com.salesmanager.shop.model.security.ReadableGroup;
+import com.salesmanager.shop.model.user.ReadableUser;
 import com.salesmanager.shop.populator.manager.PersistableManagerPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
@@ -300,7 +306,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 	
 	
 	@Override
-	public boolean authorizeStore(MerchantStore store, String path) {
+	public boolean authorizeStore(MerchantStore store, String path)  throws Exception{
 		
 		if(store == null) {
 			throw new ResourceNotFoundException("MerchantStore is not found");
@@ -375,6 +381,59 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		}
 
 		return true;
+	}
+	
+	@Override
+	public boolean userInRoles(String userName) throws Exception{
+		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<String> roles = authentication.getAuthorities().stream().filter(x -> manager.getGrpName().contains(x.getAuthority()))
+				.map(r -> r.getAuthority()).collect(Collectors.toList());
+
+		return roles.size() > 0;
+
+  }
+	
+	@Override
+	public boolean authorizedStore(String userName, String merchantStoreCode) {
+
+		try {
+
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+					.collect(Collectors.toSet());
+
+			com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
+
+			// is superadmin
+			if(manager.getGrpId() == 1) {
+				return true;
+			}
+
+			boolean authorized = false;
+			
+			if (manager != null) {
+				authorized = true;
+			}
+
+			if (manager != null && !authorized) {
+
+				// get parent
+				MerchantStore store = merchantStoreService.getParent(merchantStoreCode);
+
+				// user can be in parent
+				if (store != null && store.getCode().equals(merchantStoreCode)) {
+					authorized = true;
+				}
+
+			}
+
+			return authorized;
+		} catch (Exception e) {
+			throw new ServiceRuntimeException("Cannot authorize user " + userName + " for store " + merchantStoreCode,
+					e.getMessage());
+		}
 	}
 	
 }

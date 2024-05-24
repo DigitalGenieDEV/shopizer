@@ -1,5 +1,7 @@
 package com.salesmanager.shop.store.controller.manager.facade;
 
+import java.util.List;
+
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
@@ -106,5 +108,23 @@ public interface ManagerFacade {
    * @param store
    * @return
    */
-  boolean authorizeStore(MerchantStore store, String path);
+  boolean authorizeStore(MerchantStore store, String path)  throws Exception;
+  
+  /**
+   * Check if user is in specific list of roles
+   * @param userName
+   * @param groupNames
+   * @return
+   */
+  boolean userInRoles(String userName)  throws Exception;
+  
+  /**
+   * Determines if a user is authorized to perform an action on a specific store
+   * 
+   * @param userName
+   * @param merchantStoreCode
+   * @return
+   * @throws Exception
+   */
+  boolean authorizedStore(String userName, String merchantStoreCode);
 }

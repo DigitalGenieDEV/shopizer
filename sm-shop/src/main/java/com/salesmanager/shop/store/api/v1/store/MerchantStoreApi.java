@@ -46,6 +46,7 @@ import com.salesmanager.shop.model.store.ReadableMerchantStore;
 import com.salesmanager.shop.model.store.ReadableMerchantStoreList;
 import com.salesmanager.shop.store.api.exception.RestApiException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
 import com.salesmanager.shop.utils.ServiceRequestCriteriaBuilderUtils;
@@ -73,8 +74,9 @@ public class MerchantStoreApi {
 	@Inject
 	private StoreFacade storeFacade;
 
+	
 	@Inject
-	private UserFacade userFacade;
+	private ManagerFacade managerFacade;
 
 	@GetMapping(value = { "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get merchant store", notes = "", response = ReadableMerchantStore.class)
@@ -90,14 +92,15 @@ public class MerchantStoreApi {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public ReadableMerchantStore storeFull(
 			@PathVariable String code,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception{
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of("SUPERADMIN", "ADMIN_RETAILER").collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		return storeFacade.getFullByCode(code, language);
 	}
 
@@ -106,14 +109,14 @@ public class MerchantStoreApi {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public ReadableMerchantStoreList list(@PathVariable String code, @ApiIgnore Language language,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count) {
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of("SUPERADMIN", "ADMIN_RETAILER").collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		//ADMIN_RETAILER only see pertaining stores
 		
@@ -130,21 +133,19 @@ public class MerchantStoreApi {
 			@ApiIgnore Language language,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
-			HttpServletRequest request) {
+			HttpServletRequest request)  throws Exception{
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		// requires superadmin, admin and admin retail to see all
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL)
-						.collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		MerchantStoreCriteria criteria = createMerchantStoreCriteria(request);
 		
-		if (userFacade.userInRoles(authenticatedUser, Arrays.asList(Constants.GROUP_SUPERADMIN))) {
+		
+		if (managerFacade.userInRoles(authenticatedManager)) {
 			criteria.setStoreCode(null);
 		} else {
 			criteria.setStoreCode(merchantStore.getCode());
@@ -172,21 +173,19 @@ public class MerchantStoreApi {
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
 			HttpServletRequest request
-			) {
+			)  throws Exception {
 		
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		// requires superadmin, admin and admin retail to see all
-		userFacade.authorizedGroup(authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL)
-						.collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		MerchantStoreCriteria criteria = createMerchantStoreCriteria(request);
 		
-		if (userFacade.userInRoles(authenticatedUser, Arrays.asList(Constants.GROUP_SUPERADMIN))) {
+		
+		if (managerFacade.userInRoles(authenticatedManager)) {
 			criteria.setStoreCode(null);
 		} else {
 			criteria.setStoreCode(merchantStore.getCode());
@@ -210,15 +209,16 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = { "/private/store" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Creates a new store", notes = "", response = ReadableMerchantStore.class)
-	public void create(@Valid @RequestBody PersistableMerchantStore store) {
+	public void create(@Valid @RequestBody PersistableMerchantStore store, HttpServletRequest request) throws Exception  {
 		
 		
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
+
 		
-		userFacade.authorizedGroup(authenticatedUser, Stream.of("SUPERADMIN", "ADMIN_RETAILER").collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		
 		storeFacade.create(store);
@@ -228,7 +228,7 @@ public class MerchantStoreApi {
 	@PutMapping(value = { "/private/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
 	public void update(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
@@ -242,9 +242,9 @@ public class MerchantStoreApi {
 		return principal.getName();
 	}
 
-	private void validateUserPermission(String userName, String code) {
+	private void validateUserPermission(String userName, String code) throws Exception {
 		// TODO reviewed Spring Security should be used
-		if (!userFacade.authorizedStore(userName, code)) {
+		if (!managerFacade.authorizedStore(userName, code)) {
 			throw new UnauthorizedException("User " + userName + " not authorized");
 		}
 	}
@@ -252,7 +252,7 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/store/{code}/marketing" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get store branding and marketing details", notes = "", response = ReadableBrand.class)
-	public ReadableBrand getStoreMarketing(@PathVariable String code, HttpServletRequest request) {
+	public ReadableBrand getStoreMarketing(@PathVariable String code, HttpServletRequest request) throws Exception {
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
 		return storeFacade.getBrand(code);
@@ -272,7 +272,7 @@ public class MerchantStoreApi {
 	public ReadableMerchantStoreList children(@PathVariable String code, @ApiIgnore Language language,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception{
 
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
@@ -285,7 +285,7 @@ public class MerchantStoreApi {
 	@PostMapping(value = { "/private/store/{code}/marketing" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Create or save store branding and marketing details", notes = "", response = ReadableBrand.class)
 	public void saveStoreMarketing(@PathVariable String code, @RequestBody PersistableBrand brand,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
 		storeFacade.createBrand(code, brand);
@@ -295,7 +295,7 @@ public class MerchantStoreApi {
 	@PostMapping(value = { "/private/store/{code}/marketing/logo" })
 	@ApiOperation(httpMethod = "POST", value = "Add store logo", notes = "")
 	public void addLogo(@PathVariable String code, @RequestParam("file") MultipartFile uploadfile,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 
 		// user doing action must be attached to the store being modified
 		String userName = getUserFromRequest(request);
@@ -333,7 +333,7 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = { "/private/store/{code}/marketing/logo" })
 	@ApiOperation(httpMethod = "DELETE", value = "Delete store logo", notes = "", response = Void.class)
-	public void deleteStoreLogo(@PathVariable String code, HttpServletRequest request) {
+	public void deleteStoreLogo(@PathVariable String code, HttpServletRequest request) throws Exception {
 
 		// user doing action must be attached to the store being modified
 		String userName = getUserFromRequest(request);
@@ -356,7 +356,7 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = { "/private/store/{code}" })
 	@ApiOperation(httpMethod = "DELETE", value = "Deletes a store", notes = "", response = Void.class)
-	public void delete(@PathVariable String code, HttpServletRequest request) {
+	public void delete(@PathVariable String code, HttpServletRequest request) throws Exception{
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
 		storeFacade.delete(code);
