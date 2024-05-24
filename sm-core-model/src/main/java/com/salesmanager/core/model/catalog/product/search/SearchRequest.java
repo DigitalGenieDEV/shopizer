@@ -29,7 +29,7 @@ public class SearchRequest {
     private String sort;
 
     @JsonProperty("filter_options")
-    private Map<String, List<String>> filterOptions;
+    private Map<String, List<Object>> filterOptions;
 
     public String getLang() {
         return lang;
@@ -63,11 +63,11 @@ public class SearchRequest {
         this.pageIdx = pageIdx;
     }
 
-    public Map<String, List<String>> getFilterOptions() {
+    public Map<String, List<Object>> getFilterOptions() {
         return filterOptions;
     }
 
-    public void setFilterOptions(Map<String, List<String>> filterOptions) {
+    public void setFilterOptions(Map<String, List<Object>> filterOptions) {
         this.filterOptions = filterOptions;
     }
 

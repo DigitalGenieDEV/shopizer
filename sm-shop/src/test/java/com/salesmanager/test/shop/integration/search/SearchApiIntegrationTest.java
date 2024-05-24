@@ -27,6 +27,11 @@ import com.salesmanager.shop.model.catalog.SearchProductRequest;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.test.shop.common.ServicesTestSupport;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @ActiveProfiles(value = "local")
@@ -73,6 +78,9 @@ public class SearchApiIntegrationTest extends ServicesTestSupport {
         searchRequest.setSize(20);
         searchRequest.setUid(123);
         searchRequest.setDeviceId("111");
+        Map<String, List<Object>> filterOptions = new HashMap<>();
+        filterOptions.put("category", Arrays.asList(1,2));
+        searchRequest.setFilterOptions(filterOptions);
         final HttpEntity<SearchProductRequestV2> searchEntity = new HttpEntity<>(searchRequest, getHeader());
 
         final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/search?store=" + Constants.DEFAULT_STORE + "&lang=ko", searchEntity, String.class);
