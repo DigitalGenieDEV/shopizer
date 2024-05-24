@@ -17,7 +17,7 @@ public class SearchProductRequestV2 implements Serializable {
     private Integer size = 20;
     private Integer number = 0;
     private String sort;
-    private Map<String, List<String>> attrFilt;
+    private Map<String, List<String>> filterOptions;
 
     public String getLang() {
         return lang;
@@ -67,12 +67,12 @@ public class SearchProductRequestV2 implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Map<String, List<String>> getAttrFilt() {
-        return attrFilt;
+    public Map<String, List<String>> getFilterOptions() {
+        return filterOptions;
     }
 
-    public void setAttrFilt(Map<String, List<String>> attrFilt) {
-        this.attrFilt = attrFilt;
+    public void setFilterOptions(Map<String, List<String>> filterOptions) {
+        this.filterOptions = filterOptions;
     }
 
     public String getSort() {

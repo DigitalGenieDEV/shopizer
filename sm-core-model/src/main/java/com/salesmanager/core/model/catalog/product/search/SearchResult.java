@@ -15,8 +15,8 @@ public class SearchResult {
     @JsonProperty("product_list")
     private List<ProductResult> productList;
 
-    @JsonProperty("attr_for_filt")
-    private Map<String, List<String>> attrForFilt;
+    @JsonProperty("filter_options")
+    private Map<String, List<String>> filterOptions;
 
     public Integer getTookTime() {
         return tookTime;
@@ -34,12 +34,12 @@ public class SearchResult {
         this.productList = productList;
     }
 
-    public Map<String, List<String>> getAttrForFilt() {
-        return attrForFilt;
+    public Map<String, List<String>> getFilterOptions() {
+        return filterOptions;
     }
 
-    public void setAttrForFilt(Map<String, List<String>> attrForFilt) {
-        this.attrForFilt = attrForFilt;
+    public void setFilterOptions(Map<String, List<String>> filterOptions) {
+        this.filterOptions = filterOptions;
     }
 
     //    public static class ProductResult {

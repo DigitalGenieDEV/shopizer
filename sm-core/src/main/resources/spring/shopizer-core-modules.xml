@@ -59,6 +59,7 @@
 			  key-type="java.lang.String"
 			  value-type="com.salesmanager.core.business.modules.integration.payment.model.CombinePaymentModule">
 		<beans:entry key="PayPal" value-ref="paypal-ck" />
+		<beans:entry key="Kcp" value-ref="kcp" />
 	</util:map>
 
 
@@ -99,6 +100,8 @@
 	<!-- Combine Payment -->
 	<beans:bean id="paypal-ck"
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.PayPalCheckoutPayment" />
+	<beans:bean id="kcp"
+				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.KcpPayment" />
 
 	<!--Encryption -->
 	<beans:bean id="encryption"

@@ -41,6 +41,8 @@ public interface CombinePaymentService {
 
     CombineTransaction processAuthorizeAndCapturePayment(CustomerOrder customerOrder, Customer customer, MerchantStore store) throws ServiceException;
 
+    CombineTransaction processPostPayment(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException;
+
     CombineTransaction initTransaction(CustomerOrder customerOrder, Customer customer, Payment payment, MerchantStore store ) throws ServiceException;
 
 //    CombineTransaction initTransaction(Customer customer, Payment payment, MerchantStore store) throws ServiceException;

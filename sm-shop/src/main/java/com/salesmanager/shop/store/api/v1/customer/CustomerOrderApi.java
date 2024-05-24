@@ -5,6 +5,7 @@ import com.salesmanager.core.business.services.customer.order.CustomerOrderServi
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
@@ -151,7 +152,7 @@ public class CustomerOrderApi {
         return customerOrder;
     }
 
-    @RequestMapping(value = { "/auth/customer_orders/{id}/capture" }, method = RequestMethod.POST)
+    @RequestMapping(value = { "/auth/customer_orders/{id}/capture2" }, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ReadableCombineTransaction captureCustomerOrder(@PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
@@ -180,7 +181,8 @@ public class CustomerOrderApi {
     @RequestMapping(value = { "/auth/customer_orders/{id}/authorize_capture" }, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ReadableCombineTransaction authorizeAndCaptureCustomerOrder(@PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+    public ReadableCombineTransaction authorizeAndCaptureCustomerOrder(@PathVariable final Long id,
+                                                                       @ApiIgnore MerchantStore merchantStore,
                                                                        @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Principal principal = request.getUserPrincipal();
         String userName = principal.getName();
@@ -200,6 +202,35 @@ public class CustomerOrderApi {
         }
 
         ReadableCombineTransaction transaction = customerOrderFacade.authorizeCaptureCustomerOrder(merchantStore, customerOrder, customer, language);
+        return transaction;
+    }
+
+    @RequestMapping(value = { "/auth/customer_orders/{id}/post_payment" }, method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ReadableCombineTransaction capture(@PathVariable final Long id,
+                                              @RequestBody Payment payment,
+                                              @ApiIgnore MerchantStore merchantStore,
+                                              @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            response.sendError(401, "Error while performing checkout customer not authorized");
+            return null;
+        }
+
+        CustomerOrder customerOrder = customerOrderService.getById(id);
+
+        if (customerOrder == null) {
+            response.sendError(404, "Customer Order id " + id + " does not exists");
+            return null;
+        }
+
+        ReadableCombineTransaction transaction = customerOrderFacade.processPostPayment(merchantStore, customerOrder, customer, payment, language);
         return transaction;
     }
 }

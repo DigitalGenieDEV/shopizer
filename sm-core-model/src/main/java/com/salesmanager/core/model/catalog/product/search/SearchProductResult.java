@@ -9,7 +9,7 @@ public class SearchProductResult {
 
     private List<Product> productList;
 
-    private Map<String, List<String>> attrForFilt;
+    private Map<String, List<String>> filterOptions;
 
     public List<Product> getProductList() {
         return productList;
@@ -19,11 +19,11 @@ public class SearchProductResult {
         this.productList = productList;
     }
 
-    public Map<String, List<String>> getAttrForFilt() {
-        return attrForFilt;
+    public Map<String, List<String>> getFilterOptions() {
+        return filterOptions;
     }
 
-    public void setAttrForFilt(Map<String, List<String>> attrForFilt) {
-        this.attrForFilt = attrForFilt;
+    public void setFilterOptions(Map<String, List<String>> filterOptions) {
+        this.filterOptions = filterOptions;
     }
 }

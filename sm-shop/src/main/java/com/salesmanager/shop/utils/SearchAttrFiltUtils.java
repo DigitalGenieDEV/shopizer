@@ -1,6 +1,5 @@
 package com.salesmanager.shop.utils;
 
-import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionValueService;
@@ -12,7 +11,6 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.search.ReadableAttrFiltAttrKv;
 import com.salesmanager.shop.model.search.ReadableAttrFiltKv;
 import com.salesmanager.shop.model.search.ReadableAttrForFilt;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -46,12 +44,12 @@ public class SearchAttrFiltUtils {
 
         List<ReadableAttrFiltKv> categorys = getAttrFiltCategorys(attrForFilt, merchantStore, language);
         if (categorys != null) {
-            readableAttrForFilt.setCate(categorys);
+            readableAttrForFilt.setCategory(categorys);
         }
 
         List<ReadableAttrFiltKv> productOrigin = getAttrFiltOps(attrForFilt, merchantStore, language);
         if (productOrigin != null) {
-            readableAttrForFilt.setProdOrigin(productOrigin);
+            readableAttrForFilt.setProductOrigin(productOrigin);
         }
 
         List<ReadableAttrFiltKv> price = getAttrFiltPrice(attrForFilt);
@@ -61,7 +59,7 @@ public class SearchAttrFiltUtils {
 
         List<ReadableAttrFiltKv> prodType = getAttrFiltProdType(attrForFilt);
         if (prodType != null) {
-            readableAttrForFilt.setProdType(prodType);
+            readableAttrForFilt.setProductType(prodType);
         }
 
         List<ReadableAttrFiltAttrKv> attrs = getAttrFiltAttrs(attrForFilt, merchantStore, language);

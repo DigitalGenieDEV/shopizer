@@ -97,6 +97,20 @@ public class RecProductFacadeImpl implements RecProductFacade{
         return readableRecProductList;
     }
 
+    @Override
+    public ReadableRecProductList getFootPrint(RecFootPrintRequest request, Language language) throws Exception {
+        FootPrintRequest footPrintRequest = new FootPrintRequest();
+        footPrintRequest.setUid(request.getUid());
+        footPrintRequest.setSize(request.getSize());
+
+        FootPrintResult footPrintResult = recProductService.footPrint(footPrintRequest);
+
+        ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(footPrintResult.getProductList(), language);
+        readableRecProductList.setProducts(readableRecProductList.getProducts());
+
+        return readableRecProductList;
+    }
+
     private ReadableRecProductList convert2ReadableRecProduct(List<Product> products, Language language) throws ConversionException {
         if (products == null) {
             return null;

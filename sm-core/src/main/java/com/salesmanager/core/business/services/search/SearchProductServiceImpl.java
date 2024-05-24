@@ -11,9 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.business.services.amazonaws.LambdaInvokeService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
-import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.catalog.product.search.*;
 import org.apache.commons.httpclient.HttpClient;
@@ -81,7 +79,7 @@ public class SearchProductServiceImpl implements SearchProductService{
 //        attrForFilt.put("prod_type", Arrays.asList("GENERAL"));
 //        attrForFilt.put("attr_17", Arrays.asList("505", "506", "507"));
 //        attrForFilt.put("attr_16", Arrays.asList("550", "551", "552"));
-        searchProductResult.setAttrForFilt(searchResult.getAttrForFilt());
+        searchProductResult.setFilterOptions(searchResult.getFilterOptions());
 
         return searchProductResult;
     }

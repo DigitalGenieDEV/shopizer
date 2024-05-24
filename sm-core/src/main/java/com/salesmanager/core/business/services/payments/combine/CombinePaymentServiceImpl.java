@@ -439,6 +439,86 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
     }
 
     @Override
+    public CombineTransaction processPostPayment(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException {
+        Validate.notNull(customer);
+        Validate.notNull(store);
+        Validate.notNull(customerOrder);
+
+        //must have a shipping module configured
+        Map<String, IntegrationConfiguration> modules = this.getCombinePaymentModulesConfigured(store);
+        if(modules==null){
+            throw new ServiceException("No payment module configured");
+        }
+
+        IntegrationConfiguration configuration = modules.get(customerOrder.getPaymentModuleCode());
+
+        if(configuration==null) {
+            throw new ServiceException("Payment module " + customerOrder.getPaymentModuleCode() + " is not configured");
+        }
+
+        if(!configuration.isActive()) {
+            throw new ServiceException("Payment module " + customerOrder.getPaymentModuleCode() + " is not active");
+        }
+
+
+        CombinePaymentModule module = this.combinePaymentModules.get(payment.getModuleName());
+
+        if(module==null) {
+            throw new ServiceException("Payment module " + payment.getModuleName() + " does not exist");
+        }
+
+//        String sTransactionType = configuration.getIntegrationKeys().get("transaction");
+//        if(sTransactionType==null) {
+//            sTransactionType = TransactionType.INIT.name();
+//        }
+//
+//        try {
+//            TransactionType.valueOf(sTransactionType);
+//        } catch(IllegalArgumentException ie) {
+//            LOGGER.warn("Transaction type " + sTransactionType + " does noe exist, using default INIT");
+//            sTransactionType = "INIT";
+//        }
+
+//        TransactionType transactionType = payment.getTransactionType();
+//
+//
+//        if(sTransactionType.equals(TransactionType.AUTHORIZE.name())) {
+//            payment.setTransactionType(TransactionType.AUTHORIZE);
+//        } else {
+//            payment.setTransactionType(TransactionType.AUTHORIZECAPTURE);
+//        }
+
+//        CombinePaymentModule module = this.combinePaymentModules.get(payment.getModuleName());
+
+//        if (module == null) {
+//            throw new ServiceException("Payment module " + payment.getModuleName() + " does not exist");
+//        }
+
+        IntegrationModule integrationModule = getPaymentMethodByCode(store,payment.getModuleName());
+        TransactionType transactionType = payment.getTransactionType();
+        if(transactionType==null) {
+            transactionType = payment.getTransactionType();
+            if(transactionType.equals(TransactionType.CAPTURE.name())) {
+                throw new ServiceException("This method does not allow to process capture transaction. Use processCapturePayment");
+            }
+        }
+
+        CombineTransaction transaction = null;
+        if(transactionType == TransactionType.AUTHORIZE)  {
+            transaction = module.authorize(store, customer, customerOrder, customerOrder.getTotal(), payment, configuration, integrationModule);
+        } else if(transactionType == TransactionType.AUTHORIZECAPTURE)  {
+            transaction = module.authorizeAndCapture(store, customer, customerOrder, customerOrder.getTotal(), payment, configuration, integrationModule);
+        } else if(transactionType == TransactionType.CAPTURE)  {
+            CombineTransaction lastCombineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
+            transaction = module.capture(store, customer, customerOrder, lastCombineTransaction, configuration, integrationModule);
+        }
+
+        combineTransactionService.create(transaction);
+
+        return transaction;
+    }
+
+    @Override
     public CombineTransaction initTransaction(CustomerOrder customerOrder, Customer customer, Payment payment, MerchantStore store) throws ServiceException {
 
         Validate.notNull(store);

@@ -11,4 +11,6 @@ public interface RecProductFacade {
     ReadableRecProductList getRecRelateItem(RecRelateItemRequest request, Language language) throws Exception;
 
     ReadableRecProductList getRecSelectionProduct(RecSelectionProductRequest request, Language language) throws Exception;
+
+    ReadableRecProductList getFootPrint(RecFootPrintRequest request, Language language) throws Exception;
 }

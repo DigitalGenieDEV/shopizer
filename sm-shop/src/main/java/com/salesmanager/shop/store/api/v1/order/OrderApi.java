@@ -98,7 +98,7 @@ public class OrderApi {
 	@Inject
 	private CredentialsService credentialsService;
 
-	private static final String DEFAULT_ORDER_LIST_COUNT = "25";
+	private static final String DEFAULT_ORDER_LIST_COUNT = "10";
 
 	/**
 	 * Get a list of orders for a given customer accept request parameter

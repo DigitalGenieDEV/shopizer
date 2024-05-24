@@ -237,7 +237,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setSize(searchProductRequestV2.getSize());
 		searchProductRequest.setQ(searchProductRequestV2.getQ());
 		searchProductRequest.setPageIdx(searchProductRequestV2.getNumber());
-		searchProductRequest.setAttrFilt(searchProductRequestV2.getAttrFilt());
+		searchProductRequest.setFilterOptions(searchProductRequestV2.getFilterOptions());
 		searchProductRequest.setUid(searchProductRequestV2.getUid());
 		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceId());
 		searchProductRequest.setSort(searchProductRequestV2.getSort());
@@ -257,7 +257,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		}
 
 		result.setNumber(searchProductRequestV2.getNumber());
-		result.setAttrForFilt(searchAttrFiltUtils.getAttrFilt(searchProductResult.getAttrForFilt(), merchantStore, language));
+		result.setFilterOptions(searchAttrFiltUtils.getAttrFilt(searchProductResult.getFilterOptions(), merchantStore, language));
 
 		return result;
 	}

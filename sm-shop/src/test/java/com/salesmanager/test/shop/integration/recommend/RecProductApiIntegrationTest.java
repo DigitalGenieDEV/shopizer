@@ -5,6 +5,7 @@ import com.salesmanager.shop.application.ShopApplication;
 import com.salesmanager.shop.model.catalog.SearchRecGuessULikeRequest;
 import com.salesmanager.shop.model.catalog.SearchRecRelateItemRequest;
 import com.salesmanager.shop.model.catalog.SearchRecSelectionRequest;
+import com.salesmanager.shop.model.recommend.RecFootPrintRequest;
 import com.salesmanager.test.shop.common.ServicesTestSupport;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
     public void searchRecGuessULike() {
         SearchRecGuessULikeRequest request = new SearchRecGuessULikeRequest();
         request.setDeviceId("111");
-        request.setUid(123);
+//        request.setUid(123);
         request.setSize(20);
         request.setNumber(0);
 
@@ -72,6 +73,21 @@ public class RecProductApiIntegrationTest extends ServicesTestSupport {
         final HttpEntity<SearchRecSelectionRequest> searchEntity = new HttpEntity<>(request, getHeader());
 
         final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/rec/selection_product?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
+        assertNotNull(searchResponse);
+        assertThat(searchResponse.getStatusCode(), is(OK));
+
+    }
+
+
+    @Test
+    public void searchFootPrint() {
+        RecFootPrintRequest request = new RecFootPrintRequest();
+        request.setUid(2);
+        request.setSize(20);
+
+        final HttpEntity<RecFootPrintRequest> searchEntity = new HttpEntity<>(request, getHeader());
+
+        final ResponseEntity<String> searchResponse = testRestTemplate.postForEntity("/api/v1/rec/foot_print?store=" + Constants.DEFAULT_STORE, searchEntity, String.class);
         assertNotNull(searchResponse);
         assertThat(searchResponse.getStatusCode(), is(OK));
 

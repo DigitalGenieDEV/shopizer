@@ -32,6 +32,8 @@ public class RecProductServiceImpl implements RecProductService {
 
     private String LAMBDA_REC_SELECTION_PROD = "sr_rec_selection_prod_api";
 
+    private String LAMBDA_REC_FOOT_PRINT = "sr_footprint_api";
+
     private  static  ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     static {
@@ -108,6 +110,23 @@ public class RecProductServiceImpl implements RecProductService {
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("selection item exception", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public FootPrintResult footPrint(FootPrintRequest request) {
+        try {
+            String response = lambdaInvokeService.invoke(LAMBDA_REC_FOOT_PRINT, objectMapper.writeValueAsString(request));
+            FootPrintInvokeResult result = objectMapper.readValue(response, FootPrintInvokeResult.class);
+
+            FootPrintResult footPrintResult = new FootPrintResult();
+            footPrintResult.setProductList(getProductList(result.getProductList()));
+            return footPrintResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("guess u like exception", e);
         }
 
         return null;

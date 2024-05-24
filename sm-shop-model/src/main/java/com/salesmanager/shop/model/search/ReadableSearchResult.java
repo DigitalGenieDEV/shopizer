@@ -1,12 +1,10 @@
 package com.salesmanager.shop.model.search;
 
-import com.salesmanager.shop.model.common.ReadablePaginationResult;
 import com.salesmanager.shop.model.entity.ReadableList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReadableSearchResult extends ReadableList implements Serializable {
 
@@ -15,16 +13,16 @@ public class ReadableSearchResult extends ReadableList implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private ReadableAttrForFilt attrForFilt;
+    private ReadableAttrForFilt filterOptions;
 
     private List<ReadableSearchProductV2> products = new ArrayList<>();
 
-    public ReadableAttrForFilt getAttrForFilt() {
-        return attrForFilt;
+    public ReadableAttrForFilt getFilterOptions() {
+        return filterOptions;
     }
 
-    public void setAttrForFilt(ReadableAttrForFilt attrForFilt) {
-        this.attrForFilt = attrForFilt;
+    public void setFilterOptions(ReadableAttrForFilt filterOptions) {
+        this.filterOptions = filterOptions;
     }
 
     public List<ReadableSearchProductV2> getProducts() {

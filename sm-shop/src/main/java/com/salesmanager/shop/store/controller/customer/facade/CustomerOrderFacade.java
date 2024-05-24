@@ -5,6 +5,7 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
@@ -28,4 +29,6 @@ public interface CustomerOrderFacade {
     ReadableCombineTransaction captureCustomerOrder(MerchantStore store, CustomerOrder customerOrder, Customer customer, Language language) throws Exception;
 
     ReadableCombineTransaction authorizeCaptureCustomerOrder(MerchantStore store, CustomerOrder customerOrder, Customer customer, Language language) throws Exception;
+
+    ReadableCombineTransaction processPostPayment(MerchantStore store, CustomerOrder customerOrder, Customer customer, Payment payment, Language language) throws Exception;
 }

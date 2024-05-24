@@ -56,7 +56,7 @@ public class ServicesTestSupport {
 	}
 
 	protected HttpHeaders getHeader(final String userName, final String password) {
-		final ResponseEntity<AuthenticationResponse> response = testRestTemplate.postForEntity("/api/v1/private/login",
+		final ResponseEntity<AuthenticationResponse> response = testRestTemplate.postForEntity("/api/v1/customer/login",
 				new HttpEntity<>(new AuthenticationRequest(userName, password)), AuthenticationResponse.class);
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));

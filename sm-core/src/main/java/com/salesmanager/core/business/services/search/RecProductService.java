@@ -12,4 +12,8 @@ public interface RecProductService {
     RelateItemResult relateItem(RelateItemRequest request);
 
     SelectionItemResult selectionItem(SelectionItemRequest request);
+
+    FootPrintResult footPrint(FootPrintRequest request);
+
+
 }

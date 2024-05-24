@@ -12,32 +12,32 @@ public class ReadableAttrForFilt implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private List<ReadableAttrFiltKv> cate;
+    private List<ReadableAttrFiltKv> category;
 
-    @JsonProperty("prod_origin")
-    private List<ReadableAttrFiltKv> prodOrigin;
+    @JsonProperty("product_origin")
+    private List<ReadableAttrFiltKv> productOrigin;
 
     private List<ReadableAttrFiltKv> price;
 
-    @JsonProperty("prod_type")
-    private List<ReadableAttrFiltKv> prodType;
+    @JsonProperty("product_type")
+    private List<ReadableAttrFiltKv> productType;
 
     private List<ReadableAttrFiltAttrKv> attrs;
 
-    public List<ReadableAttrFiltKv> getCate() {
-        return cate;
+    public List<ReadableAttrFiltKv> getCategory() {
+        return category;
     }
 
-    public void setCate(List<ReadableAttrFiltKv> cate) {
-        this.cate = cate;
+    public void setCategory(List<ReadableAttrFiltKv> category) {
+        this.category = category;
     }
 
-    public List<ReadableAttrFiltKv> getProdOrigin() {
-        return prodOrigin;
+    public List<ReadableAttrFiltKv> getProductOrigin() {
+        return productOrigin;
     }
 
-    public void setProdOrigin(List<ReadableAttrFiltKv> prodOrigin) {
-        this.prodOrigin = prodOrigin;
+    public void setProductOrigin(List<ReadableAttrFiltKv> productOrigin) {
+        this.productOrigin = productOrigin;
     }
 
     public List<ReadableAttrFiltKv> getPrice() {
@@ -48,12 +48,12 @@ public class ReadableAttrForFilt implements Serializable {
         this.price = price;
     }
 
-    public List<ReadableAttrFiltKv> getProdType() {
-        return prodType;
+    public List<ReadableAttrFiltKv> getProductType() {
+        return productType;
     }
 
-    public void setProdType(List<ReadableAttrFiltKv> prodType) {
-        this.prodType = prodType;
+    public void setProductType(List<ReadableAttrFiltKv> productType) {
+        this.productType = productType;
     }
 
     public List<ReadableAttrFiltAttrKv> getAttrs() {

@@ -216,13 +216,13 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             }
 
             // 移除购物车项
-            Set<CustomerShoppingCartItem> existsItems = cart.getCheckedLineItems();
-            List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
-            for (CustomerShoppingCartItem item: existsItems) {
-                if (skus.contains(item.getSku())) {
-                    customerShoppingCartService.deleteCustomerShoppingCartItem(item.getId());
-                }
-            }
+//            Set<CustomerShoppingCartItem> existsItems = cart.getCheckedLineItems();
+//            List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
+//            for (CustomerShoppingCartItem item: existsItems) {
+//                if (skus.contains(item.getSku())) {
+//                    customerShoppingCartService.deleteCustomerShoppingCartItem(item.getId());
+//                }
+//            }
 
             return  modelCustomerOrder;
         } catch (Exception e) {
@@ -263,6 +263,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 .sorted(Comparator.comparingInt(OrderTotal::getSortOrder))
                 .map(tot -> convertOrderTotal(tot, merchantStore, language))
                 .collect(Collectors.toList());
+
+//        BigDecimal grandTotal = orderTotals.stream().sorted(Comparator.comparingInt(OrderTotal::getSortOrder))
+//                .map(tot -> )
 
         readableTotal.setTotals(readableTotals);
         orderConfirmation.setTotal(readableTotal);
@@ -374,6 +377,21 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         return transaction;
     }
 
+    @Override
+    public ReadableCombineTransaction processPostPayment(MerchantStore store, CustomerOrder customerOrder, Customer customer, Payment payment, Language language) throws Exception {
+        CombineTransaction combineTransaction = combinePaymentService.processPostPayment(customerOrder, customer, store, payment);
+
+        ReadableCombineTransaction transaction = new ReadableCombineTransaction();
+        ReadableCombineTransactionPopulator trxPopulator = new ReadableCombineTransactionPopulator();
+        trxPopulator.setPricingService(pricingService);
+
+        trxPopulator.populate(combineTransaction, transaction, store, language);
+
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PROCESSED);
+
+        return transaction;
+    }
+
     private ReadableOrderTotal convertOrderTotal(OrderTotal total, MerchantStore store, Language language) {
 
         return readableOrderTotalMapper.convert(total, store, language);
@@ -387,7 +405,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     }
 
     private List<PersistableShoppingCartItem> getPersistableShoppingCartItemsOfStore(MerchantStore store, List<CustomerShoppingCartItem> lineItems) {
-        return new ArrayList<>(lineItems.stream().filter(i -> i.getMerchantStore().getId() == store.getId())
+        return new ArrayList<>(lineItems.stream().filter(i -> i.getMerchantStore().getId() == store.getId()).filter(i -> i.isChecked())
                 .map(s -> this.getPersistableShoppingCartItem(s)).collect(Collectors.toList()));
     }
 
