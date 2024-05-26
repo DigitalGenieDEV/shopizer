@@ -87,6 +87,6 @@ public class ProductVariationServiceImpl extends
 
 	public ProductVariation findByOptionAndValue(Integer storeId, Long optionId, Long optionValueId){
 		Optional<ProductVariation> byOptionAndValue = productVariationRepository.findByOptionAndValue(storeId, optionId, optionValueId);
-		return byOptionAndValue.orElseGet(null);
+		return byOptionAndValue.orElse(null);
 	}
 }

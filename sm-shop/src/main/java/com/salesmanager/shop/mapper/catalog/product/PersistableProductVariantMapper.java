@@ -82,11 +82,17 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 					if (byOptionAndValue != null){
 						variations.add(byOptionAndValue);
 					}else {
-						throw new ServiceRuntimeException("findByOptionAndValue is null  [" + persistableVariation.getOptionValueId() + "],[" + persistableVariation.getOptionId() + "]");
+						try {
+							ProductVariation productVariation = createProductVariationIds(persistableVariation, store);
+							variations.add(productVariation);
+						} catch (ServiceException e) {
+							throw new RuntimeException(e);
+						}
 					}
 				}else {
 					try {
-						createProductVariationIds(persistableVariation, store.getId());
+						ProductVariation productVariation = createProductVariationIds(persistableVariation, store);
+						variations.add(productVariation);
 					} catch (ServiceException e) {
 						throw new ServiceRuntimeException("createProductVariationIds error [" + JSON.toJSONString(persistableVariation) + "]");
 					}
@@ -132,16 +138,18 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 
 	}
 
-	void createProductVariationIds(PersistableVariation persistableVariation, Integer storeId) throws ServiceException {
+	ProductVariation createProductVariationIds(PersistableVariation persistableVariation, MerchantStore store) throws ServiceException {
 		Long optionId = persistableVariation.getOptionId();
-		ProductOption productOption = productOptionRepository.findOne(storeId, optionId);
+		ProductOption productOption = productOptionRepository.findOne(optionId);
 		Long optionValueId = persistableVariation.getOptionValueId();
-		ProductOptionValue productOptionValue = productOptionValueRepository.findOne(storeId, optionValueId);
+		ProductOptionValue productOptionValue = productOptionValueRepository.findOne(optionValueId);
 		ProductVariation productVariation = new ProductVariation();
 		productVariation.setProductOption(productOption);
 		productVariation.setProductOptionValue(productOptionValue);
 		productVariation.setCode(productOption+":"+productOptionValue);
+		productVariation.setMerchantStore(store);
 		productVariationService.saveOrUpdate(productVariation);
+		return productVariation;
 	}
 
 }
