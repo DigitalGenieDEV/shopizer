@@ -146,7 +146,7 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 		ProductVariation productVariation = new ProductVariation();
 		productVariation.setProductOption(productOption);
 		productVariation.setProductOptionValue(productOptionValue);
-		productVariation.setCode(productOption+":"+productOptionValue);
+		productVariation.setCode(productOption.getCode()+":"+productOptionValue.getCode());
 		productVariation.setMerchantStore(store);
 		productVariationService.saveOrUpdate(productVariation);
 		return productVariation;
