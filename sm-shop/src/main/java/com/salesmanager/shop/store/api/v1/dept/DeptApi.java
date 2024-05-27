@@ -63,6 +63,7 @@ public class DeptApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		dept.setUserId(authenticatedManager);
 		dept.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return deptFacde.saveDept(dept);
@@ -86,6 +87,7 @@ public class DeptApi {
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		dept.setId(id);
+		dept.setUserId(authenticatedManager);
 		dept.setUserIp(CommonUtils.getRemoteIp(request));
 		return deptFacde.saveDept(dept);
 	}
@@ -111,7 +113,7 @@ public class DeptApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		deptFacde.updateChangeOrd(dept, CommonUtils.getRemoteIp(request));
+		deptFacde.updateChangeOrd(dept, CommonUtils.getRemoteIp(request),authenticatedManager);
 
 	}
 }

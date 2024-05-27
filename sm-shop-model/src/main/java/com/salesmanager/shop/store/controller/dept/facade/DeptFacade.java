@@ -44,5 +44,5 @@ public interface DeptFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	void updateChangeOrd(PersistableChangeOrd dept, String ip) throws Exception;
+	void updateChangeOrd(PersistableChangeOrd dept, String ip, String userId) throws Exception;
 }

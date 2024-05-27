@@ -4,10 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +25,9 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.adminmenu.AdminMenuService;
 import com.salesmanager.core.business.services.manager.ManagerMenuAuthService;
 import com.salesmanager.core.business.services.manager.ManagerService;
+import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.model.manager.Manager;
+import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
 import com.salesmanager.shop.model.manager.ReadableManagerList;
@@ -33,10 +40,14 @@ import com.salesmanager.shop.store.controller.security.facade.SecurityFacade;
 
 @Service
 public class ManagerFacadeImpl  implements ManagerFacade {
+	
+	private static final String PRIVATE_PATH = "/private/";
 
 	@Inject
 	private ManagerService managerService;
 	
+	@Inject
+	private MerchantStoreService merchantStoreService;
 
 	@Inject
 	private SecurityFacade securityFacade;
@@ -54,6 +65,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 	@Inject
 	private PersistableManagerPopulator persistableManagerPopulator;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ManagerFacadeImpl.class);
 	
 	@Override
 	public ReadableManagerList getManagerList(String keyword, String gbn,int deptId, int page, int count) throws Exception{
@@ -264,7 +276,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 	}
 	
 	public String authorizedMenu(String userName, String url) throws Exception{
-		Manager manager = managerService.getByUserName(userName);
+		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
 		boolean authFlag = false;
 		if(manager.getGrpId() == 1) {
 			authFlag = true;
@@ -286,6 +298,138 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		}
 		
 		return "";
+	}
+	
+	
+	@Override
+	public boolean authorizeStore(MerchantStore store, String path)  throws Exception{
+		
+		if(store == null) {
+			throw new ResourceNotFoundException("MerchantStore is not found");
+		}
+
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+
+		if (!StringUtils.isBlank(path) && path.contains(PRIVATE_PATH)) {
+			
+			Validate.notNull(authentication, "Don't call ths method if a user is not authenticated");
+
+			try {
+				
+
+				String currentPrincipalName = authentication.getName();
+
+				LOGGER.info("Principal " + currentPrincipalName);
+
+				com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(currentPrincipalName);
+				//ReadableUser readableUser =	  findByUserName(currentPrincipalName, store.getCode(), store.getDefaultLanguage());
+				if (manager == null) {
+					return false;
+				}
+
+				// current user match;
+				String merchant = manager.getCode();
+
+				//user store is store request param
+				if (store.getCode().equalsIgnoreCase(merchant)) {
+					return true;
+				}
+				
+
+				//Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+				//		.collect(Collectors.toSet());
+
+				// is superadmin
+				if(manager.getGrpId() == 1) {
+					return true;
+				}
+//				for (ReadableGroup group : readableUser.getGroups()) {
+//					if (Constants.GROUP_SUPERADMIN.equals(group.getName())) {
+//						return true;
+//					}
+//				}
+
+				boolean authorized = false;
+
+				// user store can be parent and requested store is child
+				// get parent
+				// TODO CACHE
+				MerchantStore parent = null;
+						
+				if(store.getParent()!=null) {
+					parent=merchantStoreService.getParent(merchant);
+				}
+
+				// user can be in parent
+				if (parent != null && parent.getCode().equals(store.getCode())) {
+					authorized = true;
+				}
+
+				// else false
+				return authorized;
+			} catch (Exception e) {
+				throw new UnauthorizedException("Cannot authorize user " + authentication.getPrincipal().toString()
+						+ " for store " + store.getCode(), e.getMessage());
+			}
+
+		}
+
+		return true;
+	}
+	
+	@Override
+	public boolean userInRoles(String userName) throws Exception{
+		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<String> roles = authentication.getAuthorities().stream().filter(x -> manager.getGrpName().contains(x.getAuthority()))
+				.map(r -> r.getAuthority()).collect(Collectors.toList());
+
+		return roles.size() > 0;
+
+  }
+	
+	@Override
+	public boolean authorizedStore(String userName, String merchantStoreCode) {
+
+		try {
+
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+					.collect(Collectors.toSet());
+
+			com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
+
+			// is superadmin
+			if(manager.getGrpId() == 1) {
+				return true;
+			}
+
+			boolean authorized = false;
+			
+			if (manager != null) {
+				authorized = true;
+			}
+
+			if (manager != null && !authorized) {
+
+				// get parent
+				MerchantStore store = merchantStoreService.getParent(merchantStoreCode);
+
+				// user can be in parent
+				if (store != null && store.getCode().equals(merchantStoreCode)) {
+					authorized = true;
+				}
+
+			}
+
+			return authorized;
+		} catch (Exception e) {
+			throw new ServiceRuntimeException("Cannot authorize user " + userName + " for store " + merchantStoreCode,
+					e.getMessage());
+		}
 	}
 	
 }

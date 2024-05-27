@@ -38,6 +38,12 @@
     	
      <cache name="languageByCode" maxElementsInMemory="50" eternal="false"
     	overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />
+    	
+    <cache name="userMenuCode" maxElementsInMemory="300" eternal="false"
+    	overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />	
+    	
+    <cache name="adminMenuCode" maxElementsInMemory="100" eternal="false"
+    	overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />		
 
 
 </ehcache>

@@ -11,8 +11,8 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.manager.ManagerRepository;
 import com.salesmanager.core.business.repositories.manager.PageableManagerRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.salesmanager.core.model.dept.Dept;
 import com.salesmanager.core.model.manager.Manager;
+import com.salesmanager.core.model.manager.ReadableManager;
 
 @Service("managerService")
 public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Manager> implements ManagerService {
@@ -38,7 +38,7 @@ public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Man
 		return managerRepository.getById(id);
 	}
 	
-	public Manager getByUserName(String userName) throws ServiceException{
+	public ReadableManager getByUserName(String userName) throws ServiceException{
 		return managerRepository.getByUserName(userName);
 	}
 	

@@ -26,4 +26,6 @@ public interface AdminMenuService extends SalesManagerEntityService<Integer, Adm
 	void updateChangeOrd(AdminMenu adminMenu) throws ServiceException;
 	
 	int getApiMenuFindId(String url) throws ServiceException;
+	
+	public void resetAllEntriesInCash() throws Exception;
 }

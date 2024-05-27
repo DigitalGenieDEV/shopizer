@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class ReadableManagerCategoryAuth {
 
-	private int grpId = 0;
 	private int id = 0;
 	private int parentId = 0;
 	private int depth = 0;
@@ -16,14 +15,6 @@ public class ReadableManagerCategoryAuth {
 	private String categoryNamePath = "";
 	private String lineage = "";
 	private ArrayList<ReadableManagerCategoryAuth> children = null;
-
-	public int getGrpId() {
-		return grpId;
-	}
-
-	public void setGrpId(int grpId) {
-		this.grpId = grpId;
-	}
 
 	public int getId() {
 		return id;

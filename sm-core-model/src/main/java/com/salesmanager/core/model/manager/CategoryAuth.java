@@ -40,18 +40,6 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 	@Column(name = "GRP_ID", nullable = false, updatable = false)
 	private Integer grpId;
 
-	@Column(name = "REG_ID", updatable = true)
-	private String regId;
-
-	@NotEmpty
-	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false)
-	private String regIp;
-
-	@Column(name = "MOD_ID", updatable = true)
-	private String modId;
-
-	@Column(name = "MOD_IP", updatable = true)
-	private String modIp;
 
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();
@@ -78,38 +66,6 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 
 	public void setGrpId(Integer grpId) {
 		this.grpId = grpId;
-	}
-
-	public String getRegId() {
-		return regId;
-	}
-
-	public void setRegId(String regId) {
-		this.regId = regId;
-	}
-
-	public String getRegIp() {
-		return regIp;
-	}
-
-	public void setRegIp(String regIp) {
-		this.regIp = regIp;
-	}
-
-	public String getModId() {
-		return modId;
-	}
-
-	public void setModId(String modId) {
-		this.modId = modId;
-	}
-
-	public String getModIp() {
-		return modIp;
-	}
-
-	public void setModIp(String modIp) {
-		this.modIp = modIp;
 	}
 
 	public AuditSection2 getAuditSection() {

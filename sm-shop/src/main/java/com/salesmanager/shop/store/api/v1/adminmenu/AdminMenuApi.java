@@ -41,17 +41,17 @@ public class AdminMenuApi {
 
 	@Inject
 	private AdminMenuFacade adminMenuFacde;
-	
+
 	@Inject
 	private ManagerFacade managerFacade;
-
 
 	@GetMapping(value = "/private/admin/menu")
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(httpMethod = "GET", value = "Get admin by menu", notes = "")
 	public ReadableAdminMenu getListAdminMenu(
 			@RequestParam(value = "visible", required = false, defaultValue = "0") int visible,
-			@RequestParam(value = "grpId", required = false, defaultValue = "1") int grpId , HttpServletRequest request) throws Exception {
+			@RequestParam(value = "grpId", required = false, defaultValue = "1") int grpId, HttpServletRequest request)
+			throws Exception {
 		return adminMenuFacde.getListAdminMenu(visible, grpId);
 
 	}
@@ -61,13 +61,13 @@ public class AdminMenuApi {
 	public PersistableAdminMenu create(@Valid @RequestBody PersistableAdminMenu adminMenu, HttpServletRequest request)
 			throws Exception {
 
-	
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-	
+
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		adminMenu.setUserId(authenticatedManager);
 		adminMenu.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return adminMenuFacde.saveAdminMenu(adminMenu);
@@ -82,13 +82,14 @@ public class AdminMenuApi {
 	@PutMapping(value = "/private/admin/menu/{id}", produces = { APPLICATION_JSON_VALUE })
 	public PersistableAdminMenu update(@Valid @RequestBody PersistableAdminMenu adminMenu, HttpServletRequest request)
 			throws Exception {
-		
+
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-	
+
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		adminMenu.setUserId(authenticatedManager);
 		adminMenu.setUserIp(CommonUtils.getRemoteIp(request));
 
 		return adminMenuFacde.saveAdminMenu(adminMenu);
@@ -101,7 +102,7 @@ public class AdminMenuApi {
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-	
+
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		adminMenuFacde.deleteAdminMenu(id);
 	}
@@ -114,9 +115,9 @@ public class AdminMenuApi {
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-	
+
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		adminMenuFacde.updateChangeOrd(adminMenu, CommonUtils.getRemoteIp(request));
+		adminMenuFacde.updateChangeOrd(adminMenu, CommonUtils.getRemoteIp(request), authenticatedManager);
 
 	}
 

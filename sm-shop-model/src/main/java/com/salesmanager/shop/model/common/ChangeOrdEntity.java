@@ -4,7 +4,6 @@ public class ChangeOrdEntity {
 	private int id = 0;
 	private int parentId = 0;
 	private int changeOrd = 0;
-	private String userId = "";
 
 	public int getId() {
 		return id;
@@ -30,11 +29,4 @@ public class ChangeOrdEntity {
 		this.changeOrd = changeOrd;
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
 }

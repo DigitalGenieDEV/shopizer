@@ -1,7 +1,5 @@
 package com.salesmanager.shop.populator.dept;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.Validate;
@@ -39,12 +37,11 @@ public class PersistableDeptPopulator extends AbstractDataPopulator<PersistableD
 			}
 			target.setContent(source.getContent());
 			target.setVisible(source.getVisible());
-			target.setReg_id(source.getUserId());
-			target.setReg_ip(source.getUserIp());
-			target.setReg_date(new Date());
-			target.setMod_id(source.getUserId());
-			target.setMod_ip(source.getUserIp());
-			target.setMod_date(new Date());
+			target.getAuditSection().setRegId(source.getUserId());
+			target.getAuditSection().setRegIp(source.getUserIp());
+			target.getAuditSection().setModId(source.getUserId());
+			target.getAuditSection().setModIp(source.getUserIp());
+		
 			return target;
 
 

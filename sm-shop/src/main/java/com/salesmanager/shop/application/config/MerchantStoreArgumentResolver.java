@@ -19,8 +19,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
-import com.salesmanager.shop.store.controller.user.facade.UserFacade;
 
 @Component
 public class MerchantStoreArgumentResolver implements HandlerMethodArgumentResolver {
@@ -31,8 +31,9 @@ public class MerchantStoreArgumentResolver implements HandlerMethodArgumentResol
 	@Autowired
 	private StoreFacade storeFacade;
 
+	
 	@Autowired
-	private UserFacade userFacade;
+	private ManagerFacade managerFacade;
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -51,7 +52,7 @@ public class MerchantStoreArgumentResolver implements HandlerMethodArgumentResol
 
 		// TODO Move to an api filter
 		// authorize request
-		boolean authorized = userFacade.authorizeStore(storeModel, httpServletRequest.getRequestURI());
+		boolean authorized = managerFacade.authorizeStore(storeModel, httpServletRequest.getRequestURI());
 		LOGGER.debug("is request authorized {} for {} and store {}", authorized, httpServletRequest.getRequestURI(),
 				storeModel.getCode());
 		if(!authorized){

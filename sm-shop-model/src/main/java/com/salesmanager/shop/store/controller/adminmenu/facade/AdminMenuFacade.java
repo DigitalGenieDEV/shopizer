@@ -41,6 +41,6 @@ public interface AdminMenuFacade {
 	 * @param ip
 	 * @return
 	 */
-	void updateChangeOrd(PersistableChangeOrd adminMenu, String ip) throws Exception;
+	void updateChangeOrd(PersistableChangeOrd adminMenu, String ip, String userId) throws Exception;
 
 }

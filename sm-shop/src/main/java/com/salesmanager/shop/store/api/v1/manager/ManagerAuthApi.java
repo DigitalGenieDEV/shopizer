@@ -69,7 +69,7 @@ public class ManagerAuthApi {
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		String userIp = CommonUtils.getRemoteIp(request);
-		return managerMenuAuthFacade.create(menuAuthList, userIp);
+		return managerMenuAuthFacade.create(menuAuthList, userIp,authenticatedManager);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

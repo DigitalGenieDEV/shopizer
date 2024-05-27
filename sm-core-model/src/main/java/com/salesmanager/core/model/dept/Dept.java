@@ -1,25 +1,27 @@
 package com.salesmanager.core.model.dept;
 
-import java.util.Date;
-
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
+import com.salesmanager.core.model.common.audit2.AuditSection2;
+import com.salesmanager.core.model.common.audit2.Auditable2;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
-@Table(name = "DEPT", indexes = @Index(columnList = "DEPT_CODE, DEPT_NAME, VISIBLE"), uniqueConstraints = @UniqueConstraint(columnNames = {"ID" }))
-public class Dept extends SalesManagerEntity<Integer, Dept> {
+@EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
+@Table(name = "DEPT", indexes = @Index(columnList = "DEPT_CODE, DEPT_NAME, VISIBLE"), uniqueConstraints = @UniqueConstraint(columnNames = {
+		"ID" }))
+public class Dept extends SalesManagerEntity<Integer, Dept> implements Auditable2 {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -30,7 +32,7 @@ public class Dept extends SalesManagerEntity<Integer, Dept> {
 	private Integer id;
 
 	@NotEmpty
-	@Column(name = "PARENT_ID",  nullable = false, updatable = false)
+	@Column(name = "PARENT_ID", nullable = false, updatable = false)
 	private Integer parentId;
 
 	@NotEmpty
@@ -56,27 +58,9 @@ public class Dept extends SalesManagerEntity<Integer, Dept> {
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
 
-	@NotEmpty
-	@Column(name = "REG_ID", length = 30, nullable = false, updatable = false)
-	private String reg_id;
 
-	@NotEmpty
-	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false)
-	private String reg_ip;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "REG_DATE", nullable = false, updatable = false)
-	private Date reg_date;
-
-	@Column(name = "MOD_ID", updatable = true)
-	private String mod_id;
-
-	@Column(name = "MOD_IP", updatable = true)
-	private String mod_ip;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MOD_DATE", updatable = true)
-	private Date mod_date;
+	@Embedded
+	private AuditSection2 auditSection = new AuditSection2();
 
 	public Integer getId() {
 		return id;
@@ -142,62 +126,12 @@ public class Dept extends SalesManagerEntity<Integer, Dept> {
 		this.visible = visible;
 	}
 
-	public String getReg_id() {
-		return reg_id;
+	public AuditSection2 getAuditSection() {
+		return auditSection;
 	}
 
-	public void setReg_id(String reg_id) {
-		this.reg_id = reg_id;
+	public void setAuditSection(AuditSection2 auditSection) {
+		this.auditSection = auditSection;
 	}
-
-	public String getReg_ip() {
-		return reg_ip;
-	}
-
-	public void setReg_ip(String reg_ip) {
-		this.reg_ip = reg_ip;
-	}
-
-	public Date getReg_date() {
-		return reg_date;
-	}
-
-	public void setReg_date(Date reg_date) {
-		this.reg_date = reg_date;
-	}
-
-	public String getMod_id() {
-		return mod_id;
-	}
-
-	public void setMod_id(String mod_id) {
-		this.mod_id = mod_id;
-	}
-
-	public String getMod_ip() {
-		return mod_ip;
-	}
-
-	public void setMod_ip(String mod_ip) {
-		this.mod_ip = mod_ip;
-	}
-
-	public Date getMod_date() {
-		return mod_date;
-	}
-
-	public void setMod_date(Date mod_date) {
-		this.mod_date = mod_date;
-	}
-
-	@Override
-	public String toString() {
-		return "Dept [id=" + id + ", parentId=" + parentId + ", deptCode=" + deptCode + ", deptName=" + deptName
-				+ ", tel=" + tel + ", content=" + content + ", ord=" + ord + ", visible=" + visible + ", reg_id="
-				+ reg_id + ", reg_ip=" + reg_ip + ", reg_date=" + reg_date + ", mod_id=" + mod_id + ", mod_ip=" + mod_ip
-				+ ", mod_date=" + mod_date + "]";
-	}
-	
-	
 
 }

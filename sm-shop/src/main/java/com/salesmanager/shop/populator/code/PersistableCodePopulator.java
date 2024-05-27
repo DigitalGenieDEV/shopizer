@@ -1,7 +1,5 @@
 package com.salesmanager.shop.populator.code;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.Validate;
@@ -17,12 +15,11 @@ import com.salesmanager.shop.model.code.PersistableCode;
 
 @Component
 public class PersistableCodePopulator extends AbstractDataPopulator<PersistableCode, Code> {
-	
+
 	@Inject
 	private CodeService codeService;
-	
-	public Code populate(PersistableCode source, Code target)
-			throws ConversionException {
+
+	public Code populate(PersistableCode source, Code target) throws ConversionException {
 
 		try {
 
@@ -37,22 +34,19 @@ public class PersistableCodePopulator extends AbstractDataPopulator<PersistableC
 			target.setCodeDesc(source.getCodeDesc());
 			target.setValue(source.getValue());
 			target.setVisible(source.getVisible());
-			if(source.getOrd() == 0) {
+			if (source.getOrd() == 0) {
 				target.setOrd(codeService.getOrder(source.getParentId()));
-			}else {
+			} else {
 				target.setOrd(source.getOrd());
 			}
-			
-			target.setReg_id(source.getUserId());
-			target.setReg_ip(source.getUserIp());
-			target.setReg_date(new Date());
-			target.setMod_id(source.getUserId());
-			target.setMod_ip(source.getUserIp());
-			target.setMod_date(new Date());
+
+			target.getAuditSection().setRegId(source.getUserId());
+			target.getAuditSection().setRegIp(source.getUserIp());
+			target.getAuditSection().setModId(source.getUserId());
+			target.getAuditSection().setModIp(source.getUserIp());
 			return target;
 
-
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new ConversionException(e);
 		}
 
@@ -63,7 +57,6 @@ public class PersistableCodePopulator extends AbstractDataPopulator<PersistableC
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	protected Code createTarget() {
 		// TODO Auto-generated method stub

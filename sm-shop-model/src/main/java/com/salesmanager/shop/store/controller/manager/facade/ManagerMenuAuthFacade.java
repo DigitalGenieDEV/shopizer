@@ -6,5 +6,5 @@ public interface ManagerMenuAuthFacade {
 
 	PersistableManagerAuthList getManagerAdminMenuAuthList(int grpId) throws Exception;
 	 
-	PersistableManagerAuthList create(PersistableManagerAuthList menuAuthList, String userIp) throws Exception;
+	PersistableManagerAuthList create(PersistableManagerAuthList menuAuthList, String userIp, String userId) throws Exception;
 }

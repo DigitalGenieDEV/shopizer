@@ -32,9 +32,9 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 	
 	@Query(value = "SELECT \r\n"
 			+ "	ID, CODE_NAME_KR, CODE_NAME_CN, CODE_NAME_EN, CODE_NAME_JP, VALUE, PARENT_ID \r\n"
-			+ "FROM common_code WHERE PARENT_ID IN (\r\n"
+			+ "FROM COMMON_CODE WHERE PARENT_ID IN (\r\n"
 			+ "	SELECT  ID  FROM common_code WHERE CODE = CONCAT('CODE_',?1) \r\n"
-			+ ")", nativeQuery = true)
+			+ ")  ORDER BY ORD ASC", nativeQuery = true)
 	List<ReadCode> getListCodeDetail(String code);
 	
 	@Query( value ="SELECT CONCAT('CODE_', LPAD(IFNULL(CAST(MAX(REPLACE(CODE, 'CODE_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM COMMON_CODE AS A", nativeQuery=true)
@@ -101,8 +101,8 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 	@Query(value ="UPDATE COMMON_CODE SET "
 				+ "ORD = :#{#code.ord}, "
 				+ "PARENT_ID = :#{#code.parentId}, "
-				+ "MOD_ID = :#{#code.mod_id}, "
-				+ "MOD_IP = :#{#code.mod_ip}, "
+				+ "MOD_ID = :#{#code.auditSection.modId}, "
+				+ "MOD_IP = :#{#code.auditSection.modIp}, "
 				+ "MOD_DATE = NOW() "
 				+ "WHERE ID = :#{#code.id}"
 				, nativeQuery = true)

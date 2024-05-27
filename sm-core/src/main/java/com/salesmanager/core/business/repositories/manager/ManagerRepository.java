@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.manager.Manager;
+import com.salesmanager.core.model.manager.ReadableManager;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
 	
@@ -33,8 +34,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 	Manager getId(Long id);
 	
 	
-	@Query( value ="SELECT B.* FROM MANAGER B WHERE ACTIVE = 1 AND  B.EMPL_ID = ?1", nativeQuery=true)
-	Manager getByUserName(String userName);
+	@Query( value ="SELECT  USER_ID AS ID, ADMIN_EMAIL AS ADMINEMAIL, ADMIN_NAME AS ADMINNAME, ADMIN_PASSWORD AS ADMINPASSWORD, EMPL_ID AS EMPLID, GRP_ID AS GRPID, GRP_NAME AS GRPNAME, STORE_CODE AS CODE, DEPT_ID AS DEPTID, DEPT_NAME AS DEPTNAME, POSITION_ID AS POSITIONID, POSITION  from Manager as u INNER join merchant_Store um  ON u.MERCHANT_ID = um.MERCHANT_ID  WHERE u.ACTIVE = 1 AND  u.EMPL_ID = ?1 ", nativeQuery=true)
+	ReadableManager getByUserName(String userName);
 	
 	@Query( value ="SELECT COUNT(USER_ID) FROM MANAGER B WHERE B.EMPL_ID = ?1", nativeQuery=true)
 	int getDupEmplIdCount(String userId);
