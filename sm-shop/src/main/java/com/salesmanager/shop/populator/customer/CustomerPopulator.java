@@ -239,6 +239,20 @@ public class CustomerPopulator extends
 				}
 			}
 			
+			if(StringUtils.isBlank(target.getCompany())) { //added by BE 2024.05.23
+				target.setCompany(source.getCompany());
+			}
+			
+			
+			if(StringUtils.isBlank(target.getBusinessNumber())) { //added by BE 2024.05.23
+				target.setBusinessNumber(source.getBusinessNumber());
+			}
+			
+			
+			if(StringUtils.isBlank(target.getBusinessRegistration())) { //added by BE 2024.05.23
+				target.setBusinessRegistration(source.getBusinessRegistration());
+			}
+			
 			if(target.getDefaultLanguage()==null) {
 				
 				Language lang = source.getLanguage() == null ?

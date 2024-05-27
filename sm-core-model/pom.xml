@@ -91,6 +91,11 @@
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
