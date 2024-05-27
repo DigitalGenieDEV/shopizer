@@ -314,7 +314,7 @@ public class MerchantStoreApi {
 	@PostMapping(value = { "/auth/store/{storeCode}/marketing/logo" })
 	@ApiOperation(httpMethod = "POST", value = "Add store logo", notes = "")
 	public void addLogoBySeller(@PathVariable String storeCode, @RequestParam("file") MultipartFile uploadfile,
-						HttpServletRequest request) {
+						HttpServletRequest request) throws Exception {
 
 		// user doing action must be attached to the store being modified
 		String userName = getUserFromRequest(request);
