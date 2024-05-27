@@ -34,7 +34,7 @@ public interface CodeRepository  extends JpaRepository<Code, Integer> {
 			+ "	ID, CODE_NAME_KR, CODE_NAME_CN, CODE_NAME_EN, CODE_NAME_JP, VALUE, PARENT_ID \r\n"
 			+ "FROM COMMON_CODE WHERE PARENT_ID IN (\r\n"
 			+ "	SELECT  ID  FROM common_code WHERE CODE = CONCAT('CODE_',?1) \r\n"
-			+ ")  ORDER BY ORD ASC", nativeQuery = true)
+			+ ") AND VISIBLE=0 ORDER BY ORD ASC", nativeQuery = true)
 	List<ReadCode> getListCodeDetail(String code);
 	
 	@Query( value ="SELECT CONCAT('CODE_', LPAD(IFNULL(CAST(MAX(REPLACE(CODE, 'CODE_', '')) AS SIGNED INTEGER)+1, 1), 3, '0')) AS CODE FROM COMMON_CODE AS A", nativeQuery=true)
