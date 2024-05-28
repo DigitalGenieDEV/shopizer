@@ -108,6 +108,7 @@ public class ManagerCategoryAuthFacadeImpl implements ManagerCategoryAuthFacade 
 		sendData.setCategoryNamePath(category.getCategoryPathName());
 		sendData.setLineage(category.getLineage());
 		sendData.setDepth(category.getDepth());
+		sendData.setCode(category.getCode());
 		tempList.add(sendData);
 		return tempList;
 	}

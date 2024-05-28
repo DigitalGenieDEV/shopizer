@@ -11,7 +11,7 @@ public interface UserMenuFacade {
 	 * @param visible
 	 * @return ReadableUserMenu
 	 */
-	ReadableUserMenu getListUserMenu(int visible) throws Exception;
+	ReadableUserMenu getListUserMenu(int visible, int parentId) throws Exception;
 	
 	/**
 	 *

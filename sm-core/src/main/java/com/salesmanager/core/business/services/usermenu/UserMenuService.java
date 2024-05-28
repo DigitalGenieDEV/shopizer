@@ -9,7 +9,7 @@ import com.salesmanager.core.model.usermenu.UserMenu;
 
 public interface UserMenuService extends SalesManagerEntityService<Integer, UserMenu> {
 	
-	List<ReadUserMenu> getListUserMenu(int visible) throws ServiceException;
+	List<ReadUserMenu> getListUserMenu(int visible, int parentId) throws ServiceException;
 	
 	int getOrder(int parentId) throws ServiceException;
 	

@@ -23,6 +23,7 @@ public interface UserMenuRepository extends JpaRepository<UserMenu, Integer> {
 			+ "	FROM USERMENU AS A    			\r\n"
 			+ "	WHERE A.PARENT_ID = '0'    \r\n"
 			+ " 	AND  ((?1 = 0 AND A.VISIBLE = 0) OR (?1 = 1 AND A.VISIBLE IN (0, 1)))        \r\n"
+			+ "   	AND  (CASE WHEN  ?2 > 0 THEN A.ID = ?2 ELSE  TRUE END)        "
 			+ "	UNION ALL    			    			SELECT    \r\n"
 			+ "		  B.ID, B.PARENT_ID, B.MENU_NAME, B.URL, B.MENU_DESC, B.ORD, B.VISIBLE, B.MEMBER_TARGET, B.LINK_TARGET\r\n"
 			+ "		, B.TOP, B.SIDE, B.NAVI, B.TAB    \r\n"
@@ -33,7 +34,7 @@ public interface UserMenuRepository extends JpaRepository<UserMenu, Integer> {
 			+ "	WHERE B.PARENT_ID = C.ID     )    		    \r\n"
 			+ "SELECT 	ID, PARENT_ID, MENU_NAME, URL, MENU_DESC, ORD, VISIBLE, MEMBER_TARGET, LINK_TARGET, TOP,SIDE, NAVI, TAB, DEPTH, MENU_NAME_PATH FROM MENU_CTE WHERE 1=1    \r\n"
 			+ "ORDER BY AMENU_SORT ASC" , nativeQuery = true)
-	List<ReadUserMenu> getListUserMenu(int visible);
+	List<ReadUserMenu> getListUserMenu(int visible, int parentId);
 	
 	@Query(value = "SELECT IFNULL(MAX(ORD) + 1,1) FROM USERMENU B WHERE B.PARENT_ID = ?1", nativeQuery = true)
 	int getOrder(int parentId);

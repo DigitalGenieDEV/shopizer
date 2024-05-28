@@ -7,5 +7,6 @@ public interface ReadCategoryAuth {
 	String getCategoryName();
 	String getCategoryPathName();
 	String getLineage();
+	String getCode();
 
 }

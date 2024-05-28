@@ -17,6 +17,7 @@ public interface ManagerCategoryAuthRepository extends JpaRepository<CategoryAut
 			+ "		A.CATEGORY_ID, IFNULL(A.PARENT_ID, 0) AS PARENT_ID , A.LINEAGE, B.NAME,\r\n"
 			+ "		B.NAME AS CATEGORY_PATH_NAME,\r\n"
 			+ " 	CAST(IFNULL(REPLACE(A.DEPTH,'3', ''),1) AS SIGNED INTEGER) + 1 AS DEPTH,"
+			+ "   	A.CODE,"
 			+ "		CAST(CONCAT(LPAD(CAST(IFNULL(REPLACE(@LEVEL,'3', ''),1) AS CHAR), 5, '0'), '', LPAD(CAST(A.CATEGORY_ID AS CHAR), 5, '0')) AS CHAR(255)) AS AMENU_SORT\r\n"
 			+ "	FROM CATEGORY A, CATEGORY_DESCRIPTION B\r\n"
 			+ "	WHERE  A.CATEGORY_ID = B.CATEGORY_ID \r\n"
@@ -28,6 +29,7 @@ public interface ManagerCategoryAuthRepository extends JpaRepository<CategoryAut
 			+ "		A.CATEGORY_ID, A.PARENT_ID, A.LINEAGE, B.NAME,\r\n"
 			+ "		CONCAT(C.CATEGORY_PATH_NAME, '&GT;', B.NAME) AS CATEGORY_PATH_NAME,\r\n"
 			+ "  	CAST(IFNULL(REPLACE(A.DEPTH,'3', ''),1) AS SIGNED INTEGER) + 1 AS DEPTH,"
+			+ "     A.CODE,"
 			+ "		CAST(CONCAT(CONCAT (C.AMENU_SORT, LPAD(CAST(A.DEPTH + 1 AS CHAR), 5, '0')), '', LPAD(CAST(A.CATEGORY_ID AS CHAR), 5, '0')) AS CHAR(255)) AS AMENU_SORT \r\n"
 			+ "	FROM CATEGORY A, CATEGORY_DESCRIPTION B, MENU_CTE C\r\n"
 			+ "	WHERE   A.CATEGORY_ID = B.CATEGORY_ID \r\n"
@@ -37,8 +39,8 @@ public interface ManagerCategoryAuthRepository extends JpaRepository<CategoryAut
 			+ "		AND A.MERCHANT_ID = 1\r\n"
 			+ ")\r\n"
 			+ "SELECT  \r\n"
-			+ "		CATEGORY_ID AS ID, PARENT_ID AS PARENTID,  LINEAGE AS LINEAGE, NAME AS CATEGORYNAME,  MIN(CATEGORY_PATH_NAME)  AS CATEGORYPATHNAME, DEPTH FROM MENU_CTE \r\n"
-			+ "	GROUP BY  CATEGORY_ID, PARENT_ID, LINEAGE,NAME, DEPTH", nativeQuery=true)
+			+ "		CATEGORY_ID AS ID, PARENT_ID AS PARENTID,  LINEAGE AS LINEAGE, NAME AS CATEGORYNAME,  MIN(CATEGORY_PATH_NAME)  AS CATEGORYPATHNAME, CODE, DEPTH FROM MENU_CTE \r\n"
+			+ "	GROUP BY  CATEGORY_ID, PARENT_ID, LINEAGE,NAME, DEPTH,CODE", nativeQuery=true)
 	List<ReadCategoryAuth> getCategoryList();
 	
 	

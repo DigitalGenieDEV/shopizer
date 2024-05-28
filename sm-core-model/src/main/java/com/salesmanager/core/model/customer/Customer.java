@@ -35,7 +35,6 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.CredentialsReset;
@@ -106,6 +105,11 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	@Column(name="PROVIDER")
 	private String provider;
 	
+	@Column(name="BUSINESS_NUMBER")
+	private String businessNumber;
+	
+	@Column(name="BUSINESS_REGISTRATION")
+	private String businessRegistration;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "LANGUAGE_ID", nullable=false)
@@ -354,5 +358,23 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	public void setCredentialsResetRequest(CredentialsReset credentialsResetRequest) {
 		this.credentialsResetRequest = credentialsResetRequest;
 	}
+
+	public String getBusinessNumber() {
+		return businessNumber;
+	}
+
+	public void setBusinessNumber(String businessNumber) {
+		this.businessNumber = businessNumber;
+	}
+
+	public String getBusinessRegistration() {
+		return businessRegistration;
+	}
+
+	public void setBusinessRegistration(String businessRegistration) {
+		this.businessRegistration = businessRegistration;
+	}
+	
+	
 	
 }

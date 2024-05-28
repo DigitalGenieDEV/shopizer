@@ -30,9 +30,9 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 	private PersistableUserMenuPopulator persistableUserMenuPopulator;
 	
 	@Override
-	public ReadableUserMenu getListUserMenu(int visible) throws Exception{
+	public ReadableUserMenu getListUserMenu(int visible, int parentId) throws Exception{
 		try{
-		  List<ReadUserMenu> dataList = userMenuService.getListUserMenu(visible);
+		  List<ReadUserMenu> dataList = userMenuService.getListUserMenu(visible, parentId);
 		  List<ReadableUserMenu> tempList = new ArrayList<>();
 	      if (dataList.isEmpty()) {
 	    	  ReadableUserMenu rootDept = new ReadableUserMenu();

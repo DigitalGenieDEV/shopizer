@@ -36,7 +36,7 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 	private Integer parentId;
 
 	@NotEmpty
-	@Column(name = "MENU_NAME", nullable = false, length = 30)
+	@Column(name = "MENU_NAME", nullable = false, length = 100)
 	private String menuName;
 
 	@Column(name = "TOP", length = 1, updatable = true)
