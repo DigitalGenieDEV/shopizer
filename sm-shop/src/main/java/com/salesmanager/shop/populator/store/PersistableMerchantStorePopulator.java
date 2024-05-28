@@ -154,6 +154,26 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 		if (StringUtils.isNotEmpty(source.getTemplate()))
 			target.setStoreTemplate(source.getTemplate());
 		
+		// added by BE 2024.05.28
+		if(source.getCategories() != null) {
+			target.setCategories(source.getCategories());
+		}
+		
+		if(source.getTypes() != null) { 
+			target.setTypes(source.getTypes());
+		}
+		
+		if(source.getHeadcount() != null) {
+			target.setHeadcount(source.getHeadcount());
+		}
+		
+		if(StringUtils.isNotEmpty(source.getDescription())) {
+			target.setDescription(source.getDescription());
+		}
+		// end
+		
+		
+		
 		return target;
 	}
 

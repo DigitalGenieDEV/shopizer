@@ -8,8 +8,11 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.constants.MeasureUnit;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.customer.CustomerGender;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.currency.Currency;
@@ -40,6 +44,13 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.reference.zone.Zone;
 import com.salesmanager.core.utils.CloneUtils;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "MERCHANT_STORE",
 	indexes = @Index(columnList = "LINEAGE"))
@@ -182,246 +193,23 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 
 	@Column(name = "CURRENCY_FORMAT_NATIONAL")
 	private boolean currencyFormatNational;
-
-	public MerchantStore() {
-	}
-
-	public boolean isUseCache() {
-		return useCache;
-	}
-
-	public void setUseCache(boolean useCache) {
-		this.useCache = useCache;
-	}
-
-	@Override
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	@Override
-	public Integer getId() {
-		return this.id;
-	}
-
-	public String getStorename() {
-		return storename;
-	}
-
-	public void setStorename(String storename) {
-		this.storename = storename;
-	}
-
-	public String getStorephone() {
-		return storephone;
-	}
-
-	public void setStorephone(String storephone) {
-		this.storephone = storephone;
-	}
-
-	public String getStoreaddress() {
-		return storeaddress;
-	}
-
-	public void setStoreaddress(String storeaddress) {
-		this.storeaddress = storeaddress;
-	}
-
-	public String getStorecity() {
-		return storecity;
-	}
-
-	public void setStorecity(String storecity) {
-		this.storecity = storecity;
-	}
-
-	public String getStorepostalcode() {
-		return storepostalcode;
-	}
-
-	public void setStorepostalcode(String storepostalcode) {
-		this.storepostalcode = storepostalcode;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
-	}
-
-	public Zone getZone() {
-		return zone;
-	}
-
-	public void setZone(Zone zone) {
-		this.zone = zone;
-	}
-
-	public String getStorestateprovince() {
-		return storestateprovince;
-	}
-
-	public void setStorestateprovince(String storestateprovince) {
-		this.storestateprovince = storestateprovince;
-	}
-
-	public Currency getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
-	}
-
-	public String getWeightunitcode() {
-		return weightunitcode;
-	}
-
-	public void setWeightunitcode(String weightunitcode) {
-		this.weightunitcode = weightunitcode;
-	}
-
-	public String getSeizeunitcode() {
-		return seizeunitcode;
-	}
-
-	public void setSeizeunitcode(String seizeunitcode) {
-		this.seizeunitcode = seizeunitcode;
-	}
-
-	public Date getInBusinessSince() {
-		return CloneUtils.clone(inBusinessSince);
-	}
-
-	public void setInBusinessSince(Date inBusinessSince) {
-		this.inBusinessSince = CloneUtils.clone(inBusinessSince);
-	}
-
-	public Language getDefaultLanguage() {
-		return defaultLanguage;
-	}
-
-	public void setDefaultLanguage(Language defaultLanguage) {
-		this.defaultLanguage = defaultLanguage;
-	}
-
-	public List<Language> getLanguages() {
-		return languages;
-	}
-
-	public void setLanguages(List<Language> languages) {
-		this.languages = languages;
-	}
-
-	public String getStoreLogo() {
-		return storeLogo;
-	}
-
-	public void setStoreLogo(String storeLogo) {
-		this.storeLogo = storeLogo;
-	}
-
-	public String getStoreTemplate() {
-		return storeTemplate;
-	}
-
-	public void setStoreTemplate(String storeTemplate) {
-		this.storeTemplate = storeTemplate;
-	}
-
-	public String getInvoiceTemplate() {
-		return invoiceTemplate;
-	}
-
-	public void setInvoiceTemplate(String invoiceTemplate) {
-		this.invoiceTemplate = invoiceTemplate;
-	}
-
-	public String getDomainName() {
-		return domainName;
-	}
-
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
-	}
-
-	public String getContinueshoppingurl() {
-		return continueshoppingurl;
-	}
-
-	public void setContinueshoppingurl(String continueshoppingurl) {
-		this.continueshoppingurl = continueshoppingurl;
-	}
-
-	public String getStoreEmailAddress() {
-		return storeEmailAddress;
-	}
-
-	public void setStoreEmailAddress(String storeEmailAddress) {
-		this.storeEmailAddress = storeEmailAddress;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public void setDateBusinessSince(String dateBusinessSince) {
-		this.dateBusinessSince = dateBusinessSince;
-	}
-
-	public String getDateBusinessSince() {
-		return dateBusinessSince;
-	}
-
-	public void setCurrencyFormatNational(boolean currencyFormatNational) {
-		this.currencyFormatNational = currencyFormatNational;
-	}
-
-	public boolean isCurrencyFormatNational() {
-		return currencyFormatNational;
-	}
-
-	@Override
-	public AuditSection getAuditSection() {
-		return this.auditSection;
-	}
-
-	@Override
-	public void setAuditSection(AuditSection audit) {
-		this.auditSection = audit;
-
-	}
-
-	public MerchantStore getParent() {
-		return parent;
-	}
-
-	public void setParent(MerchantStore parent) {
-		this.parent = parent;
-	}
-
-	public Set<MerchantStore> getStores() {
-		return stores;
-	}
-
-	public void setStores(Set<MerchantStore> stores) {
-		this.stores = stores;
-	}
-
+	
+	@Column(name="BUSINESS_TYPES", length=30, nullable=true)
+	@ElementCollection(fetch = FetchType.LAZY)
+	private List<BusinessType> types;
+	
+	@Column(name="CATEGORIES", length = 255, nullable=true)
+	@ElementCollection(fetch = FetchType.LAZY)
+	private List<String> categories;
+	
+	@Column(name="HEADCOUNT", nullable=true)
+	private Integer headcount;
+	
+	@Column(name="DESCRIPTION", length = 255, nullable=true)
+	private String description;
+	
 	public Boolean isRetailer() {
 		return retailer;
 	}
-
-
-	public void setRetailer(Boolean retailer) {
-		this.retailer = retailer;
-	}
-
+	
 }

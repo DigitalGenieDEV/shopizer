@@ -1,5 +1,9 @@
 package com.salesmanager.shop.model.manager;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class ManagerEntity {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;

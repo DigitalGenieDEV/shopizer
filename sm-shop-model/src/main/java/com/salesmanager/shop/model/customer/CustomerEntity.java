@@ -39,6 +39,10 @@ public class CustomerEntity extends Customer implements Serializable {
 
 	
 	private String storeCode;
+
+	private String company;
+	private String businessNumber;
+	private String businessRegistration;
 	
 	//@ApiModelProperty(notes = "Username (use email address)")
 	//@NotEmpty(message="{NotEmpty.customer.userName}")
@@ -149,7 +153,31 @@ public class CustomerEntity extends Customer implements Serializable {
 		this.provider = provider;
 	}
 
+	public String getCompany() {
+		return company;
+	}
 
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getBusinessNumber() {
+		return businessNumber;
+	}
+
+	public void setBusinessNumber(String businessNumber) {
+		this.businessNumber = businessNumber;
+	}
+
+	public String getBusinessRegistration() {
+		return businessRegistration;
+	}
+
+	public void setBusinessRegistration(String businessRegistration) {
+		this.businessRegistration = businessRegistration;
+	}
+	
+	
 
     
 
