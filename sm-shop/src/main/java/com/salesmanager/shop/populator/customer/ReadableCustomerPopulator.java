@@ -148,6 +148,19 @@ public class ReadableCustomerPopulator extends
 						);
 					}
 				}
+				
+				if(StringUtils.isNotEmpty(source.getBusinessNumber())) {
+					target.setBusinessNumber(source.getBusinessNumber());
+				}
+				
+				if(StringUtils.isNotEmpty(source.getBusinessRegistration())) {
+					target.setBusinessRegistration(source.getBusinessRegistration());
+				}
+
+				
+				if(StringUtils.isNotEmpty(source.getCompany())) {
+					target.setCompany(source.getCompany());
+				}
 			}
 		
 		} catch (Exception e) {

@@ -1,12 +1,19 @@
 package com.salesmanager.shop.model.store;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.salesmanager.core.model.merchant.BusinessType;
 import com.salesmanager.shop.model.references.MeasureUnit;
 import com.salesmanager.shop.model.references.WeightUnit;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MerchantStoreEntity implements Serializable {
 	
 
@@ -35,118 +42,8 @@ public class MerchantStoreEntity implements Serializable {
 	private MeasureUnit dimension;
 	private WeightUnit weight;
 	
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getDefaultLanguage() {
-		return defaultLanguage;
-	}
-
-	public void setDefaultLanguage(String defaultLanguage) {
-		this.defaultLanguage = defaultLanguage;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public String getInBusinessSince() {
-		return inBusinessSince;
-	}
-
-	public void setInBusinessSince(String inBusinessSince) {
-		this.inBusinessSince = inBusinessSince;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
-	public boolean isCurrencyFormatNational() {
-		return currencyFormatNational;
-	}
-
-	public void setCurrencyFormatNational(boolean currencyFormatNational) {
-		this.currencyFormatNational = currencyFormatNational;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public boolean isUseCache() {
-		return useCache;
-	}
-
-	public void setUseCache(boolean useCache) {
-		this.useCache = useCache;
-	}
-
-	public MeasureUnit getDimension() {
-		return dimension;
-	}
-
-	public void setDimension(MeasureUnit dimension) {
-		this.dimension = dimension;
-	}
-
-	public WeightUnit getWeight() {
-		return weight;
-	}
-
-	public void setWeight(WeightUnit weight) {
-		this.weight = weight;
-	}
-
-	public boolean isRetailer() {
-		return retailer;
-	}
-
-	public void setRetailer(boolean retailer) {
-		this.retailer = retailer;
-	}
-
-
+	private List<BusinessType> types;
+	private List<String> categories;
+	private Integer headcount;
+	private String description;
 }

@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.reference.country.CountryRepository;
+import com.salesmanager.core.business.repositories.reference.country.CountryRepositoryCustom;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.business.utils.CacheUtils;
 import com.salesmanager.core.model.reference.country.Country;
@@ -28,15 +29,17 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 	private static final Logger LOGGER = LoggerFactory.getLogger(CountryServiceImpl.class);
 	
 	private CountryRepository countryRepository;
+	private CountryRepositoryCustom countryRepositoryCustom;
 	
 	@Inject
 	private CacheUtils cache;
 
 	
 	@Inject
-	public CountryServiceImpl(CountryRepository countryRepository) {
+	public CountryServiceImpl(CountryRepository countryRepository, CountryRepositoryCustom countryRepositoryCustom) {
 		super(countryRepository);
 		this.countryRepository = countryRepository;
+		this.countryRepositoryCustom = countryRepositoryCustom;
 	}
 	
 	@Cacheable("countrByCode")
@@ -123,6 +126,16 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 			throw new ServiceException(e);
 		}
 
+	}
+	
+	@Override
+	public List<Country> listCountryZoneByLanguageAndSupported(Language language) throws ServiceException {
+		try {
+			return countryRepositoryCustom.listCountryZoneByLanguageAndSupported(language.getId());
+		} catch(Exception e) {
+			LOGGER.error("listCountryZoneByLanguageAndSupported", e);
+			throw new ServiceException(e);
+		}
 	}
 
 

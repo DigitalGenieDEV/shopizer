@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CountryFacade {
   List<ReadableCountry> getListCountryZones(Language language, MerchantStore merchantStore);
+  List<ReadableCountry> listCountryZoneByLanguageAndSupported(Language language, MerchantStore merchantStore);
 }
