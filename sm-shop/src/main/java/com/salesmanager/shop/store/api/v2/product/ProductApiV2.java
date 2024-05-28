@@ -729,7 +729,7 @@ public class ProductApiV2 {
 
 
 		try {
-			return productFacadeV2.getProductListsByCriterias(merchantStore, language, criteria);
+			return productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
 
 		} catch (Exception e) {
 
