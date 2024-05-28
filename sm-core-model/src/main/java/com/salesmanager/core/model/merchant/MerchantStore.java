@@ -194,9 +194,9 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	@Column(name = "CURRENCY_FORMAT_NATIONAL")
 	private boolean currencyFormatNational;
 	
-	@Column(name="BUSINESS_TYPE", length=30, nullable=true)
-	@Enumerated(value = EnumType.STRING)
-	private BusinessType type;
+	@Column(name="BUSINESS_TYPES", length=30, nullable=true)
+	@ElementCollection(fetch = FetchType.LAZY)
+	private List<BusinessType> types;
 	
 	@Column(name="CATEGORIES", length = 255, nullable=true)
 	@ElementCollection(fetch = FetchType.LAZY)
