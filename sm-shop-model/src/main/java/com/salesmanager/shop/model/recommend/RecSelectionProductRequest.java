@@ -7,7 +7,8 @@ public class RecSelectionProductRequest {
      */
     private static final long serialVersionUID = 1L;
     private Integer uid;
-    private String deviceid;
+    private String deviceId;
+    private Integer categoryId;
     private Integer pageIdx = 0;
     private Integer size = 20;
     private String tag;
@@ -45,12 +46,12 @@ public class RecSelectionProductRequest {
         this.tag = tag;
     }
 
-    public String getDeviceid() {
-        return deviceid;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDeviceid(String deviceid) {
-        this.deviceid = deviceid;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getCacheid() {
@@ -59,5 +60,13 @@ public class RecSelectionProductRequest {
 
     public void setCacheid(String cacheid) {
         this.cacheid = cacheid;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }

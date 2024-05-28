@@ -81,7 +81,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
     @Override
     public ReadableRecProductList getRecSelectionProduct(RecSelectionProductRequest request, Language language) throws Exception {
         SelectionItemRequest selectionItemRequest = new SelectionItemRequest();
-        selectionItemRequest.setDeviceid(request.getDeviceid());
+        selectionItemRequest.setDeviceid(request.getDeviceId());
+        selectionItemRequest.setCategoryId(request.getCategoryId());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
         selectionItemRequest.setTag(request.getTag());
@@ -102,6 +103,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
         FootPrintRequest footPrintRequest = new FootPrintRequest();
         footPrintRequest.setUid(request.getUid());
         footPrintRequest.setSize(request.getSize());
+        footPrintRequest.setPageIdx(request.getNumber());
+        footPrintRequest.setCacheid(request.getCacheid());
 
         FootPrintResult footPrintResult = recProductService.footPrint(footPrintRequest);
 

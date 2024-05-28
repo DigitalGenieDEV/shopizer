@@ -16,6 +16,9 @@ public class SelectionItemRequest {
     @JsonProperty("page_idx")
     private Integer pageIdx = 0;
 
+    @JsonProperty("category_id")
+    private Integer categoryId;
+
     @JsonProperty("tag")
     private String tag;
 
@@ -68,5 +71,13 @@ public class SelectionItemRequest {
 
     public void setCacheid(String cacheid) {
         this.cacheid = cacheid;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }
