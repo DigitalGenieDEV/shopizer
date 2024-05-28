@@ -126,7 +126,7 @@ public class RecProductServiceImpl implements RecProductService {
             return footPrintResult;
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("guess u like exception", e);
+            LOGGER.error("foot print exception", e);
         }
 
         return null;

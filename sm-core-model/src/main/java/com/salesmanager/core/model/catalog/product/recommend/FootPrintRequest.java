@@ -11,6 +11,12 @@ public class FootPrintRequest {
     @JsonProperty("size")
     private Integer size = 20;
 
+    @JsonProperty("page_idx")
+    private Integer pageIdx = 0;
+
+    @JsonProperty("cacheid")
+    private String cacheid;
+
     public Integer getUid() {
         return uid;
     }
@@ -25,5 +31,21 @@ public class FootPrintRequest {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Integer getPageIdx() {
+        return pageIdx;
+    }
+
+    public void setPageIdx(Integer pageIdx) {
+        this.pageIdx = pageIdx;
+    }
+
+    public String getCacheid() {
+        return cacheid;
+    }
+
+    public void setCacheid(String cacheid) {
+        this.cacheid = cacheid;
     }
 }
