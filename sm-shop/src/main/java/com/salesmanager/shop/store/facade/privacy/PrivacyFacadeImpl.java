@@ -39,24 +39,28 @@ public class PrivacyFacadeImpl implements PrivacyFacade {
 	public ReadableUserPrivacy getListUserPrivacy(String division, int id) throws Exception{
 		ReadableUserPrivacy targetData =  new ReadableUserPrivacy();
 		ReadPrivacy data = privacyService.getUserPrivacy(division, id);
-		targetData.setId(data.getId());
-		targetData.setTitle(data.getTitle());
-		targetData.setContent(data.getContent());
-		List<PrivacyUserEntity> list =  new  ArrayList<PrivacyUserEntity>();
-		List<Privacy> dataList =  privacyService.getListUserPrivacy(division);
-		if(dataList.size() > 0 ) {
-			for(Privacy listData : dataList) {
-				PrivacyUserEntity sendData = new PrivacyUserEntity();
-				sendData.setId(listData.getId());
-				sendData.setTitle(listData.getTitle());
-				list.add(sendData);
+		if(data.getTitle() != null) {
+			targetData.setId(data.getId());
+			targetData.setTitle(data.getTitle());
+			targetData.setContent(data.getContent());
+			List<PrivacyUserEntity> list =  new  ArrayList<PrivacyUserEntity>();
+			List<Privacy> dataList =  privacyService.getListUserPrivacy(division);
+			if(dataList.size() > 0 ) {
+				for(Privacy listData : dataList) {
+					PrivacyUserEntity sendData = new PrivacyUserEntity();
+					sendData.setId(listData.getId());
+					sendData.setTitle(listData.getTitle());
+					list.add(sendData);
+				}
+				targetData.setData(list);
+			}else {
+				targetData.setData(new  ArrayList<PrivacyUserEntity>());
 			}
-			targetData.setData(list);
+			return targetData;
 		}else {
-			targetData.setData(new  ArrayList<PrivacyUserEntity>());
+			return new ReadableUserPrivacy();
 		}
 		
-		return targetData;
 	}
 	
 	public ReadablePrivacy getListPrivacy(int visible, String division, String keyword, int  page, int count) throws Exception{
