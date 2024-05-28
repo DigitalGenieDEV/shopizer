@@ -45,4 +45,19 @@ public class CountryFacadeImpl implements CountryFacade {
       throw new ServiceRuntimeException(e);
     }
   }
+  
+  @Override
+	public List<ReadableCountry> listCountryZoneByLanguageAndSupported(
+			Language language,
+			MerchantStore merchantStore
+	) {
+	  try{
+	      return countryService.listCountryZoneByLanguageAndSupported(language)
+	    	        .stream()
+	    	        .map(country -> convertToReadableCountry(country, language, merchantStore))
+	    	        .collect(Collectors.toList());
+	    } catch (ServiceException e) {
+	      throw new ServiceRuntimeException(e);
+	    }
+	}
 }
