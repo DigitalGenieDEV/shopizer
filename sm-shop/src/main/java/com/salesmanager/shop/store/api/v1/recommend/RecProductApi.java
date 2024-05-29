@@ -51,6 +51,10 @@ public class RecProductApi {
     ) throws Exception {
         String token = request.getHeader(tokenHeader);
 
+        if(token != null && token.contains("Bearer")) {
+            token = token.substring("Bearer ".length(),token.length());
+        }
+
         if (!StringUtils.isBlank(token)) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             Customer customer = customerService.getByNick(username);
@@ -74,6 +78,21 @@ public class RecProductApi {
             HttpServletRequest request
     ) throws Exception {
 //        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String token = request.getHeader(tokenHeader);
+
+        if(token != null && token.contains("Bearer")) {
+            token = token.substring("Bearer ".length(),token.length());
+        }
+
+        if (!StringUtils.isBlank(token)) {
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Customer customer = customerService.getByNick(username);
+
+            if (customer != null) {
+                recRelateItemRequest.setUid(customer.getId().intValue());
+            }
+        }
+
 
         return recProductFacade.getRecRelateItem(recRelateItemRequest, language);
     }
@@ -84,10 +103,26 @@ public class RecProductApi {
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
     })
     public ReadableRecProductList getRecSelection(
-            @RequestBody RecSelectionProductRequest request,
-            @ApiIgnore Language language
+            @RequestBody RecSelectionProductRequest recSelectionProductRequest,
+            @ApiIgnore Language language,
+            HttpServletRequest request
     ) throws Exception {
-        return recProductFacade.getRecSelectionProduct(request, language);
+        String token = request.getHeader(tokenHeader);
+
+        if(token != null && token.contains("Bearer")) {
+            token = token.substring("Bearer ".length(),token.length());
+        }
+
+        if (!StringUtils.isBlank(token)) {
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            Customer customer = customerService.getByNick(username);
+
+            if (customer != null) {
+                recSelectionProductRequest.setUid(customer.getId().intValue());
+            }
+        }
+
+        return recProductFacade.getRecSelectionProduct(recSelectionProductRequest, language);
     }
 
     @PostMapping("/rec/foot_print")

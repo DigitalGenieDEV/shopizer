@@ -7,13 +7,18 @@ import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
 import com.amazonaws.services.lambda.model.InvokeRequest;
 import com.amazonaws.services.lambda.model.InvokeResult;
+import com.salesmanager.core.business.services.search.RecProductServiceImpl;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 
 @Service("lambdaInvokeService")
 public class LambdaInvokeServiceImpl implements LambdaInvokeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LambdaInvokeServiceImpl.class);
 
     @Override
     public String invoke(String functionName, String payload) throws Exception {
@@ -36,7 +41,7 @@ public class LambdaInvokeServiceImpl implements LambdaInvokeService {
 
     private String getResponse(String responseString) throws Exception {
         JSONObject responseJson = new JSONObject(responseString);
-        System.out.println(responseString);
+        LOGGER.info("lambda response: " + responseString);
         // 检查 statusCode
         int statusCode = responseJson.getInt("statusCode");
         if (statusCode != 200) {

@@ -30,7 +30,7 @@ public class SelectionItemRequest {
     }
 
     public void setUid(Integer uid) {
-        this.uid = uid;
+        this.uid = uid == null ? 0 : uid;
     }
 
     public Integer getSize() {
@@ -62,7 +62,7 @@ public class SelectionItemRequest {
     }
 
     public void setDeviceid(String deviceid) {
-        this.deviceid = deviceid;
+        this.deviceid = deviceid == null ? "" : deviceid;
     }
 
     public String getCacheid() {

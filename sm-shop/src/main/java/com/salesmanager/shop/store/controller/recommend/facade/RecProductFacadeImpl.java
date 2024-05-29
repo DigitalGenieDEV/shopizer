@@ -9,7 +9,7 @@ import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.recommend.*;
-import com.salesmanager.shop.populator.recommend.ReadableRecProductPopulator;
+import com.salesmanager.shop.populator.recommend.ReadableDisplayProductPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +86,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setPageIdx(request.getPageIdx());
         selectionItemRequest.setTag(request.getTag());
-        selectionItemRequest.setUid(request.getSize());
+        selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setCacheid(request.getCacheid());
 
         SelectionItemResult selectionItemResult = recProductService.selectionItem(selectionItemRequest);
@@ -119,7 +119,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
             return null;
         }
 
-        ReadableRecProductPopulator populator = new ReadableRecProductPopulator();
+        ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
         populator.setPricingService(pricingService);
         populator.setimageUtils(imageUtils);
         populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
@@ -129,7 +129,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         ReadableRecProductList productList = new ReadableRecProductList();
         for(Product product : products) {
             //create new proxy product
-            ReadableRecProduct readProduct = populator.populate(product, new ReadableRecProduct(), product.getMerchantStore(), language);
+            ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
             productList.getProducts().add(readProduct);
         }
 

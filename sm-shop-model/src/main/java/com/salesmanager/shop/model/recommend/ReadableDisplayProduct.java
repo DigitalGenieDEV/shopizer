@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadableRecProduct extends Entity implements Serializable {
+public class ReadableDisplayProduct extends Entity implements Serializable {
 
 
     /**
@@ -23,7 +23,7 @@ public class ReadableRecProduct extends Entity implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private ReadableProductPrice productPrice;
+//    private ReadableProductPrice productPrice;
     private ReadableImage image;
     private List<ReadableImage> images;
     private String sku;
@@ -37,7 +37,7 @@ public class ReadableRecProduct extends Entity implements Serializable {
      */
     private Integer quoteType = 2;
 
-    private List<PriceRange> priceSupplyRangeList;
+//    private List<PriceRange> priceSupplyRangeList;
 
     private ProductDescription description;
 
@@ -99,29 +99,14 @@ public class ReadableRecProduct extends Entity implements Serializable {
         this.productVirtual = productVirtual;
     }
 
-    public int getQuantityOrderMaximum() {
-        return quantityOrderMaximum;
-    }
 
-    public void setQuantityOrderMaximum(int quantityOrderMaximum) {
-        this.quantityOrderMaximum = quantityOrderMaximum;
-    }
-
-    public int getQuantityOrderMinimum() {
-        return quantityOrderMinimum;
-    }
-
-    public void setQuantityOrderMinimum(int quantityOrderMinimum) {
-        this.quantityOrderMinimum = quantityOrderMinimum;
-    }
-
-    public ReadableProductPrice getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(ReadableProductPrice productPrice) {
-        this.productPrice = productPrice;
-    }
+//    public ReadableProductPrice getProductPrice() {
+//        return productPrice;
+//    }
+//
+//    public void setProductPrice(ReadableProductPrice productPrice) {
+//        this.productPrice = productPrice;
+//    }
 
     public ReadableImage getImage() {
         return image;
@@ -145,22 +130,6 @@ public class ReadableRecProduct extends Entity implements Serializable {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Integer getQuoteType() {
-        return quoteType;
-    }
-
-    public void setQuoteType(Integer quoteType) {
-        this.quoteType = quoteType;
-    }
-
-    public List<PriceRange> getPriceSupplyRangeList() {
-        return priceSupplyRangeList;
-    }
-
-    public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
-        this.priceSupplyRangeList = priceSupplyRangeList;
     }
 
     public ProductDescription getDescription() {

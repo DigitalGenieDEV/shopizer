@@ -22,7 +22,7 @@ public class FootPrintRequest {
     }
 
     public void setUid(Integer uid) {
-        this.uid = uid;
+        this.uid = uid == null ? 0 : uid;
     }
 
     public Integer getSize() {

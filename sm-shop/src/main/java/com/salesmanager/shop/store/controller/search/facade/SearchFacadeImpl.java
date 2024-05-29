@@ -13,10 +13,13 @@ import com.salesmanager.core.model.catalog.product.search.AutocompleteRequest;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteResult;
 import com.salesmanager.core.model.catalog.product.search.SearchProductResult;
 import com.salesmanager.core.model.catalog.product.search.SearchRequest;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
+import com.salesmanager.shop.model.recommend.ReadableDisplayProduct;
 import com.salesmanager.shop.model.search.ReadableSearchProductV2;
 import com.salesmanager.shop.model.search.ReadableSearchResult;
+import com.salesmanager.shop.populator.recommend.ReadableDisplayProductPopulator;
 import com.salesmanager.shop.populator.search.ReadableSearchProductV2Populator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.utils.SearchAttrFiltUtils;
@@ -68,6 +71,9 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	@Inject
 	private PricingService pricingService;
+
+	@Autowired
+	private ReadableProductVariantMapper readableProductVariantMapper;
 
 	@Autowired
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
@@ -243,16 +249,17 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setSort(searchProductRequestV2.getSort());
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
-		ReadableSearchProductV2Populator populator = new ReadableSearchProductV2Populator();
+		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
 		populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+		populator.setReadableProductVariantMapper(readableProductVariantMapper);
 		populator.setProductFeatureService(productFeatureService);
 
 		ReadableSearchResult result = new ReadableSearchResult();
 		for(Product product : searchProductResult.getProductList()) {
 			//create new proxy product
-			ReadableSearchProductV2 readProduct = populator.populate(product, new ReadableSearchProductV2(), product.getMerchantStore(), language);
+			ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
 			result.getProducts().add(readProduct);
 		}
 
