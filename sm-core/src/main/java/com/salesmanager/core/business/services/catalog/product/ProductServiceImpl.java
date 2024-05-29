@@ -396,7 +396,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		criteria.setPageSize(count);
 		criteria.setLegacyPagination(false);
 
-		ProductList productList = productRepository.listByStore(store, language, criteria);
+		ProductList productList = productRepository.listByStoreForList(store, language, criteria);
 
 		PageRequest pageRequest = PageRequest.of(page, count);
 

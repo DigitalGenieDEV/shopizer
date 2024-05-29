@@ -67,7 +67,7 @@ public class MyScheduledTask {
             System.out.println("Processed " + processedRecords + " out of " + totalRecords + " records.");
 
             // Check if there are more pages
-            if (pageInfo.getTotalPage() > currentPage + 1) {
+            if (pageInfo.getTotalPage() > currentPage + 110) {
                 currentPage++;
             } else {
                 hasMorePages = false;
