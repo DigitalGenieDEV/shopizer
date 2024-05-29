@@ -29,13 +29,13 @@ public class SearchAttrFiltUtils {
     @Inject
     private ProductOptionValueService productOptionValueService;
 
-    private static final String FILT_KEY_CATEGORY = "cate";
+    private static final String FILT_KEY_CATEGORY = "category";
 
-    private static final String FILT_KEY_PLACE = "po";
+    private static final String FILT_KEY_PLACE = "product_origin";
 
     private static final String FILT_KEY_PRICE = "price";
 
-    private static final String FILT_KEY_PROD_TYPE= "prod_type";
+    private static final String FILT_KEY_PROD_TYPE= "product_type";
 
     private static final String FILT_KEY_ATTR_PREFIX = "attr_";
 

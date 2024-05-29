@@ -567,6 +567,7 @@ public class ReadableProductPopulator extends
 						readableProductPrice.setDiscounted(target.isDiscounted());
 						readableProductPrice.setFinalPrice(target.getFinalPrice());
 						readableProductPrice.setOriginalPrice(target.getOriginalPrice());
+						readableProductPrice.setPriceSupplyRangeList(target.getPriceSupplyRangeList());
 
 						Optional<ProductPrice> pr = prices.stream().filter(p -> p.getCode().equals(ProductPrice.DEFAULT_PRICE_CODE))
 								.findFirst();

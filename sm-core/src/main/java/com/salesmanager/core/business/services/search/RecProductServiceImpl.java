@@ -42,11 +42,11 @@ public class RecProductServiceImpl implements RecProductService {
 
     @Override
     public GuessULikeResult guessULike(GuessULikeRequest request) {
+        GuessULikeResult guessULikeResult = new GuessULikeResult();
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_GUESS_LIKE, objectMapper.writeValueAsString(request));
             GuessULikeInvokeResult result = objectMapper.readValue(response, GuessULikeInvokeResult.class);
 
-            GuessULikeResult guessULikeResult = new GuessULikeResult();
             guessULikeResult.setProductList(getProductList(result.getProductList()));
             guessULikeResult.setCacheid(result.getCacheid());
             return guessULikeResult;
@@ -55,17 +55,20 @@ public class RecProductServiceImpl implements RecProductService {
             LOGGER.error("guess u like exception", e);
         }
 
-        return null;
+        return guessULikeResult;
     }
 
     private List<Product> getProductList(List<ProductResult> productResults) {
         List<Product> products = new ArrayList<>();
         for (ProductResult p : productResults) {
             try {
+                long start = System.currentTimeMillis();
+                LOGGER.info("get product id [" + p.getProductId() + "]");
                 Product product = productService.getById(Long.valueOf(p.getProductId()));
                 if(product != null && product.getId() != null && product.getId() > 0) {
                     products.add(product);
                 }
+                LOGGER.info("get product id [" + p.getProductId() + "] cost " + (System.currentTimeMillis() - start)+"ms");
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error("get product id [" + p.getProductId() + "] exception", e);
@@ -79,11 +82,12 @@ public class RecProductServiceImpl implements RecProductService {
 
     @Override
     public RelateItemResult relateItem(RelateItemRequest request) {
+        RelateItemResult relateItemResult = new RelateItemResult();
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_DETAILPAGE_RIR, objectMapper.writeValueAsString(request));
             RelateItemInvokeResult result = objectMapper.readValue(response, RelateItemInvokeResult.class);
 
-            RelateItemResult relateItemResult = new RelateItemResult();
+
             relateItemResult.setCacheid(result.getCacheid());
             relateItemResult.setProductList(getProductList(result.getProductList()));
 
@@ -93,17 +97,16 @@ public class RecProductServiceImpl implements RecProductService {
             LOGGER.error("relate item exception", e);
         }
 
-        return null;
+        return relateItemResult;
     }
 
     @Override
     public SelectionItemResult selectionItem(SelectionItemRequest request) {
+        SelectionItemResult selectionItemResult = new SelectionItemResult();
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_SELECTION_PROD, objectMapper.writeValueAsString(request));
             SelectionItemInvokeResult result = objectMapper.readValue(response, SelectionItemInvokeResult.class);
 
-
-            SelectionItemResult selectionItemResult = new SelectionItemResult();
             selectionItemResult.setCacheid(result.getCacheid());
             selectionItemResult.setProductList(getProductList(result.getProductList()));
             return selectionItemResult;
@@ -112,16 +115,16 @@ public class RecProductServiceImpl implements RecProductService {
             LOGGER.error("selection item exception", e);
         }
 
-        return null;
+        return selectionItemResult;
     }
 
     @Override
     public FootPrintResult footPrint(FootPrintRequest request) {
+        FootPrintResult footPrintResult = new FootPrintResult();
         try {
             String response = lambdaInvokeService.invoke(LAMBDA_REC_FOOT_PRINT, objectMapper.writeValueAsString(request));
             FootPrintInvokeResult result = objectMapper.readValue(response, FootPrintInvokeResult.class);
 
-            FootPrintResult footPrintResult = new FootPrintResult();
             footPrintResult.setProductList(getProductList(result.getProductList()));
             return footPrintResult;
         } catch (Exception e) {
@@ -129,6 +132,6 @@ public class RecProductServiceImpl implements RecProductService {
             LOGGER.error("foot print exception", e);
         }
 
-        return null;
+        return footPrintResult;
     }
 }

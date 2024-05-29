@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.search;
 
 import com.salesmanager.shop.model.entity.ReadableList;
+import com.salesmanager.shop.model.recommend.ReadableDisplayProduct;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class ReadableSearchResult extends ReadableList implements Serializable {
 
     private ReadableAttrForFilt filterOptions;
 
-    private List<ReadableSearchProductV2> products = new ArrayList<>();
+    private List<ReadableDisplayProduct> products = new ArrayList<>();
 
     public ReadableAttrForFilt getFilterOptions() {
         return filterOptions;
@@ -25,11 +26,11 @@ public class ReadableSearchResult extends ReadableList implements Serializable {
         this.filterOptions = filterOptions;
     }
 
-    public List<ReadableSearchProductV2> getProducts() {
+    public List<ReadableDisplayProduct> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ReadableSearchProductV2> products) {
+    public void setProducts(List<ReadableDisplayProduct> products) {
         this.products = products;
     }
 }

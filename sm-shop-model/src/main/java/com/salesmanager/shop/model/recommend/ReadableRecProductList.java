@@ -12,15 +12,15 @@ public class ReadableRecProductList extends ReadableList {
      */
     private static final long serialVersionUID = 1L;
 
-    private List<ReadableRecProduct> products = new ArrayList<>();
+    private List<ReadableDisplayProduct> products = new ArrayList<>();
 
     private String cacheid;
 
-    public List<ReadableRecProduct> getProducts() {
+    public List<ReadableDisplayProduct> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ReadableRecProduct> products) {
+    public void setProducts(List<ReadableDisplayProduct> products) {
         this.products = products;
     }
 

@@ -2,11 +2,12 @@ package com.salesmanager.core.model.catalog.product.recommend;
 
 import com.salesmanager.core.model.catalog.product.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuessULikeResult {
 
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
 
     private String cacheid;
 
