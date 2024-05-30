@@ -4,10 +4,7 @@ import com.salesmanager.shop.application.ShopApplication;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
-import com.salesmanager.shop.model.shoppingcart.PersistableShoppingCartItem;
-import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.test.shop.common.ServicesTestSupport;
-import com.salesmanager.test.shop.integration.cart.CartTestBean;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -51,7 +48,7 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
     public void addToCart() {
 
         PersistableCustomerShoppingCartItem cartItem = new PersistableCustomerShoppingCartItem();
-        cartItem.setProduct(skus[0]);
+        cartItem.setSku(skus[0]);
         cartItem.setQuantity(1);
 //        cartItem.setMerchantId(1);
         cartItem.setChecked(true);
@@ -68,7 +65,7 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
     @Order(2)
     public void modifyCart() {
         PersistableCustomerShoppingCartItem cartItem = new PersistableCustomerShoppingCartItem();
-        cartItem.setProduct(skus[1]);
+        cartItem.setSku(skus[1]);
         cartItem.setQuantity(1);
 //        cartItem.setMerchantId(1);
         cartItem.setChecked(true);
@@ -84,18 +81,18 @@ public class CustomerShoppingCartAPIIntegrationTest extends ServicesTestSupport 
     @Order(3)
     public void modifyCartMulti() {
         PersistableCustomerShoppingCartItem cartItem1 = new PersistableCustomerShoppingCartItem();
-        cartItem1.setProduct(skus[2]);
+        cartItem1.setSku(skus[2]);
         cartItem1.setQuantity(1);
 //        cartItem1.setMerchantId(1);
         cartItem1.setChecked(true);
 
         PersistableCustomerShoppingCartItem cartItem2 = new PersistableCustomerShoppingCartItem();
-        cartItem2.setProduct(skus[3]);
+        cartItem2.setSku(skus[3]);
         cartItem2.setQuantity(2);
 //        cartItem2.setMerchantId(1);
 
         PersistableCustomerShoppingCartItem cartItem3 = new PersistableCustomerShoppingCartItem();
-        cartItem3.setProduct(skus[4]);
+        cartItem3.setSku(skus[4]);
         cartItem3.setQuantity(2);
 //        cartItem3.setMerchantId(2);
         cartItem3.setChecked(true);

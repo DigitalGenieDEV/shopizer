@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -43,8 +42,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.salesmanager.core.business.constants.Constants.DEFAULT_STORE;
 
 @Service(value = "customerShoppingCartFacade")
 public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacade {
@@ -172,18 +169,18 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         // USE Product sku
         Product product = null;
 
-        product = productService.getBySku(customerShoppingCartItem.getProduct(), store, store.getDefaultLanguage());// todo use
+        product = productService.getBySku(customerShoppingCartItem.getSku(), store, store.getDefaultLanguage());// todo use
         // language
         // from api
         // request
         if (product == null) {
             throw new ResourceNotFoundException(
-                    "Product with sku " + customerShoppingCartItem.getProduct() + " does not exist");
+                    "Product with sku " + customerShoppingCartItem.getSku() + " does not exist");
         }
 
         if (product.getMerchantStore().getId().intValue() != store.getId().intValue()) {
             throw new ResourceNotFoundException(
-                    "Item with id " + customerShoppingCartItem.getProduct() + " does not belong to merchant " + store.getId());
+                    "Item with id " + customerShoppingCartItem.getSku() + " does not belong to merchant " + store.getId());
         }
 
         if (!product.isAvailable()) {
@@ -229,7 +226,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         item.setQuantity(customerShoppingCartItem.getQuantity());
         item.setCustomerShoppingCart(cartModel);
-        item.setSku(customerShoppingCartItem.getProduct());
+        item.setSku(customerShoppingCartItem.getSku());
 //        item.setSku(product.getSku());
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
@@ -254,13 +251,13 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         // USE Product sku
         Product product = null;
 
-        product = productService.getBySku(customerShoppingCartItem.getProduct());// todo use
+        product = productService.getBySku(customerShoppingCartItem.getSku());// todo use
         // language
         // from api
         // request
         if (product == null) {
             throw new ResourceNotFoundException(
-                    "Product with sku " + customerShoppingCartItem.getProduct() + " does not exist");
+                    "Product with sku " + customerShoppingCartItem.getSku() + " does not exist");
         }
 
 //        if (product.getMerchantStore().getId().intValue() != store.getId().intValue()) {
@@ -311,7 +308,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         item.setQuantity(customerShoppingCartItem.getQuantity());
         item.setCustomerShoppingCart(cartModel);
-        item.setSku(customerShoppingCartItem.getProduct());
+        item.setSku(customerShoppingCartItem.getSku());
 //        item.setSku(product.getSku());
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
@@ -579,8 +576,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         List<Product> products = customerShoppingCartItems.stream().map(p -> {
 //            MerchantStore store = merchantStoreService.getById(p.getMerchantId());
 
-            Product product = this.fetchProduct(p.getProduct());
-            product.setSku(p.getProduct());
+            Product product = this.fetchProduct(p.getSku());
+            product.setSku(p.getSku());
             return product;
         }).collect(Collectors.toList());
 
@@ -593,7 +590,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         for (Product p: products) {
             com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem item = customerShoppingCartService.populateCustomerShoppingCartItem(p, p.getMerchantStore());
-            Optional<PersistableCustomerShoppingCartItem> oCustomerShoppingCartItem = customerShoppingCartItems.stream().filter(i -> i.getProduct().equals(p.getSku())).findFirst();
+            Optional<PersistableCustomerShoppingCartItem> oCustomerShoppingCartItem = customerShoppingCartItems.stream().filter(i -> i.getSku().equals(p.getSku())).findFirst();
 
             if (!oCustomerShoppingCartItem.isPresent()) {
                 LOG.warn("Missing customerShoppingCartItem for product " + p.getSku() + " ( " + p.getId() + " )");
@@ -739,10 +736,10 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         // need to check if the item is already in the cart
         boolean duplicateFound = false;
-        if (CollectionUtils.isEmpty(item.getAttributes())) {
+//        if (CollectionUtils.isEmpty(item.getAttributes())) {
             Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> cartModelItems = cartModel.getLineItems();
             for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem cartItem : cartModelItems) {
-                if (cartItem.getSku().equals(item.getProduct())) {
+                if (cartItem.getSku().equals(item.getSku())) {
                     if (!duplicateFound) {
                         cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
                         duplicateFound = true;
@@ -750,7 +747,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                     }
                 }
             }
-        }
+//        }
 
         if (!duplicateFound) {
             cartModel.getLineItems().add(itemModel);
@@ -811,7 +808,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             throw new ResourceNotFoundException("Customer Cart [ " + customer.getId() + " ] not found");
         }
 
-        List<String> skusToDelete = items.stream().map(i -> i.getProduct()).collect(Collectors.toList());
+        List<String> skusToDelete = items.stream().map(i -> i.getSku()).collect(Collectors.toList());
         Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> itemsToExist = new HashSet<>();
         List<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> itemsToDelete = new ArrayList<>();
         for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem customerShoppingCartItem : cart.getLineItems()) {

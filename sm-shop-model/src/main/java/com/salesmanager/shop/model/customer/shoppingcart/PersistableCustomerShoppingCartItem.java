@@ -11,18 +11,18 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-    private String product;// or product sku (instance or product)
+    private String sku;// or product sku (instance or product)
     private int quantity;
     private String promoCode;
-    private List<ProductAttribute> attributes;
+//    private List<ProductAttribute> attributes;
     private boolean checked;
 
-    public String getProduct() {
-        return product;
+    public String getSku() {
+        return sku;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public int getQuantity() {
@@ -41,13 +41,13 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
         this.promoCode = promoCode;
     }
 
-    public List<ProductAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<ProductAttribute> attributes) {
-        this.attributes = attributes;
-    }
+//    public List<ProductAttribute> getAttributes() {
+//        return attributes;
+//    }
+//
+//    public void setAttributes(List<ProductAttribute> attributes) {
+//        this.attributes = attributes;
+//    }
 
 
     public boolean isChecked() {
