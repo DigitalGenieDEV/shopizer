@@ -443,7 +443,7 @@ public class ReadableDisplayProductPopulator extends
                 target.setProductTags(collect);
             }
 
-            target.setSku(source.getSku());
+//            target.setSku(source.getSku());
 
             LOGGER.info("populate display product [" + source.getId() + "] price");
 
