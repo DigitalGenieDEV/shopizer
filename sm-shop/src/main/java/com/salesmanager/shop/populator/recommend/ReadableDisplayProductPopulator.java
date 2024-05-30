@@ -10,6 +10,7 @@ import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
@@ -419,19 +420,23 @@ public class ReadableDisplayProductPopulator extends
 
             }
 
-
-            LOGGER.info("populate display product [" + source.getId() + "] feature");
+            LOGGER.info("populate display product [" + source.getId() + "] variant sku");
             // variants
-//            if (!CollectionUtils.isEmpty(source.getVariants()))
-//
-//            {
+            if (!CollectionUtils.isEmpty(source.getVariants()))
+
+            {
 //                List<ReadableProductVariant> instances = source
 //                        .getVariants().stream()
 //                        .map(i -> readableProductVariantMapper.convert(i, store, lang)).collect(Collectors.toList());
 //                target.setVariants(instances);
-//
-//            }
+                Optional<ProductVariant> productVariantOptional = source.getVariants().stream().findFirst();
+                if (productVariantOptional.isPresent()) {
+                    target.setSku(productVariantOptional.get().getSku());
+                }
+            }
 
+
+            LOGGER.info("populate display product [" + source.getId() + "] feature");
             List<ProductFeature> listByProductId = productFeatureService.findListByProductId(source.getId());
             if (!CollectionUtils.isEmpty(listByProductId)){
                 List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());

@@ -17,7 +17,6 @@ import com.salesmanager.shop.mapper.catalog.ReadableProductVariationMapper;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
-import com.salesmanager.shop.model.order.total.ReadableTotal;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCartItem;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
@@ -28,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -137,10 +135,10 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             BigDecimal total = readableCheckedItemsShoppingCarts.stream().map(s -> s.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
             destination.setSubtotal(subTotal);
-            destination.setDisplaySubTotal(pricingService.getDisplayAmount(subTotal, store));
-
             destination.setTotal(total);
-            destination.setDisplayTotal(pricingService.getDisplayAmount(total, store));
+
+//            destination.setDisplaySubTotal(pricingService.getDisplayAmount(subTotal, store));
+//            destination.setDisplayTotal(pricingService.getDisplayAmount(total, store));
 
 
             // order.total.shipping
@@ -186,8 +184,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
                 }
             }
 
-            destination.setProducts(readableCustomerShoppingCartItems);
+            destination.setCartItems(readableCustomerShoppingCartItems);
             destination.setTotals(totals);
+            destination.setLanguage(language.getCode());
         } catch (Exception e) {
             throw new ConversionRuntimeException("An error occured while converting ReadableCustomerShoppingCart", e);
         }
