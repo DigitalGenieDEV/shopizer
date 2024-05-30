@@ -440,10 +440,10 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		target.setModifiedBy(source.getAuditSection().getModifiedBy());
 		target.setName(source.getName());
 		target.setKey(source.getKey());
-		target.setActive(source.getActive());
-		target.setDefaultShipping(source.getDefaultShipping());
+		target.setActive(source.getShippingOrigin().isActive());
+		target.setDefaultShipping(source.getShippingOrigin().isActive());
 		target.setValue(source.getValue());
-		target.setShippingType(source.getShippingType());
+		target.setShippingTypeList(source.getShippingType());
 		target.setShippingBasisType(source.getShippingBasisType());
 		target.setShippingPackageType(source.getShippingPackageType());
 		target.setTransportationMethods(source.getTransportationMethod());
@@ -476,8 +476,8 @@ public class ShippingFacadeImpl implements ShippingFacade {
 
 	public MerchantShippingConfiguration convertToPersistable(PersistableMerchantShippingConfiguration source) {
 		MerchantShippingConfiguration convert = ObjectConvert.convert(source, MerchantShippingConfiguration.class);
-		if (source.getShippingType() != null) {
-			convert.setShippingType(ShippingType.valueOf(source.getShippingType()));
+		if (CollectionUtils.isNotEmpty(source.getShippingTypeList())) {
+			convert.setShippingType(ShippingType.convertStringsToShippingTypes(source.getShippingTypeList()));
 		}
 
 		if (source.getShippingBasisType() != null) {
@@ -488,8 +488,8 @@ public class ShippingFacadeImpl implements ShippingFacade {
 			convert.setShippingPackageType(ShippingPackageType.valueOf(source.getShippingPackageType()));
 		}
 
-		if (source.getTransportationMethods() != null) {
-			convert.setTransportationMethod(TransportationMethod.valueOf(source.getTransportationMethods()));
+		if (CollectionUtils.isNotEmpty(source.getTransportationMethods())) {
+			convert.setTransportationMethod(TransportationMethod.convertStringsToTransportationMethods(source.getTransportationMethods()));
 		}
 
 		if (source.getShippingOptionPriceType() != null) {

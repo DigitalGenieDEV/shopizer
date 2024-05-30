@@ -7,6 +7,7 @@ import com.salesmanager.shop.model.references.ReadableAddress;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class PersistableMerchantShippingConfiguration implements Serializable {
 
@@ -32,13 +33,13 @@ public class PersistableMerchantShippingConfiguration implements Serializable {
 
     private String value;
 
-    private String shippingType;
+    private List<String> shippingTypeList;
 
     private String shippingBasisType;
 
     private String shippingPackageType;
 
-    private String transportationMethods;
+    private List<String> transportationMethods;
 
     private String shippingOptionPriceType;
 
@@ -132,13 +133,6 @@ public class PersistableMerchantShippingConfiguration implements Serializable {
         this.value = value;
     }
 
-    public String getShippingType() {
-        return shippingType;
-    }
-
-    public void setShippingType(String shippingType) {
-        this.shippingType = shippingType;
-    }
 
     public String getShippingBasisType() {
         return shippingBasisType;
@@ -156,11 +150,19 @@ public class PersistableMerchantShippingConfiguration implements Serializable {
         this.shippingPackageType = shippingPackageType;
     }
 
-    public String getTransportationMethods() {
+    public List<String> getShippingTypeList() {
+        return shippingTypeList;
+    }
+
+    public void setShippingTypeList(List<String> shippingTypeList) {
+        this.shippingTypeList = shippingTypeList;
+    }
+
+    public List<String> getTransportationMethods() {
         return transportationMethods;
     }
 
-    public void setTransportationMethods(String transportationMethods) {
+    public void setTransportationMethods(List<String> transportationMethods) {
         this.transportationMethods = transportationMethods;
     }
 

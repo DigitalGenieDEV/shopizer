@@ -6,32 +6,27 @@ import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.shipping.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Merchant configuration information
- * 
- * @author Carl Samson
  *
  */
 @Entity
-@EntityListeners(value = AuditListener.class)
+@EntityListeners(AuditListener.class)
 @Table(name = "MERCHANT_SHIPPING_CONFIGURATION")
 public class MerchantShippingConfiguration extends SalesManagerEntity<Long, MerchantShippingConfiguration>
-    implements Serializable, Auditable {
+        implements Serializable, Auditable {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = 4246917986731953459L;
 
   @Id
   @Column(name = "MERCHANT_SHIPPING_CONFIG_ID")
   @TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME",
-      valueColumnName = "SEQ_COUNT", pkColumnValue = "MERCH_SHIP_CONF_SEQ_NEXT_VAL")
+          valueColumnName = "SEQ_COUNT", pkColumnValue = "MERCH_SHIP_CONF_SEQ_NEXT_VAL")
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
   private Long id;
 
@@ -51,38 +46,36 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   /**
    * activate and deactivate configuration
    */
-  @Column(name = "ACTIVE", nullable = true)
-  private Boolean active = new Boolean(false);
+  @Column(name = "ACTIVE")
+  private boolean active;
 
-
-  @Column(name = "DEFAULT_SHIPPING", nullable = true)
-  private Boolean defaultShipping = new Boolean(false);
-
+  @Column(name = "DEFAULT_SHIPPING")
+  private boolean defaultShipping;
 
   @Column(name = "VALUE")
-  @Type(type = "org.hibernate.type.TextType")
+  @Lob
   private String value;
 
+  @ElementCollection(targetClass = ShippingType.class)
+  @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_TYPE")
-  @Enumerated(value = EnumType.STRING)
-  private ShippingType shippingType =
-          ShippingType.NATIONAL;
+  private List<ShippingType> shippingType;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_BASIS_TYPE")
-  @Enumerated(value = EnumType.STRING)
-  private ShippingBasisType shippingBasisType;
+  private ShippingBasisType shippingBasisType = ShippingBasisType.SHIPPING;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_PACKAGE_TYPE")
-  @Enumerated(value = EnumType.STRING)
   private ShippingPackageType shippingPackageType;
 
-
+  @ElementCollection(targetClass = TransportationMethod.class)
+  @Enumerated(EnumType.STRING)
   @Column(name = "TRANSPORTATION_METHOD")
-  @Enumerated(value = EnumType.STRING)
-  private TransportationMethod transportationMethod;
+  private List<TransportationMethod> transportationMethod;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_OPTION_PRICE_TYPE")
-  @Enumerated(value = EnumType.STRING)
   private ShippingOptionPriceType shippingOptionPriceType;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -94,8 +87,7 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   private ShippingOrigin returnShippingOrigin;
 
   @Column(name = "FREE_SHIPPING_ENABLED")
-  private boolean freeShippingEnabled = false;
-
+  private boolean freeShippingEnabled;
 
   @Column(name = "ORDER_TOTAL_FREE_SHIPPING")
   private String orderTotalFreeShipping;
@@ -137,31 +129,12 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.id = id;
   }
 
-
-
   public MerchantStore getMerchantStore() {
     return merchantStore;
   }
 
   public void setMerchantStore(MerchantStore merchantStore) {
     this.merchantStore = merchantStore;
-  }
-
-
-  public ShippingType getShippingType() {
-    return shippingType;
-  }
-
-  public void setShippingType(ShippingType shippingType) {
-    this.shippingType = shippingType;
-  }
-
-  public ShippingBasisType getShippingBasisType() {
-    return shippingBasisType;
-  }
-
-  public void setShippingBasisType(ShippingBasisType shippingBasisType) {
-    this.shippingBasisType = shippingBasisType;
   }
 
   public ShippingPackageType getShippingPackageType() {
@@ -220,14 +193,13 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.returnShippingPrice = returnShippingPrice;
   }
 
-  public Boolean getActive() {
+  public boolean isActive() {
     return active;
   }
 
-  public void setActive(Boolean active) {
+  public void setActive(boolean active) {
     this.active = active;
   }
-
 
   public String getName() {
     return name;
@@ -237,19 +209,35 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.name = name;
   }
 
-  public Boolean getDefaultShipping() {
+  public boolean isDefaultShipping() {
     return defaultShipping;
   }
 
-  public void setDefaultShipping(Boolean defaultShipping) {
+  public void setDefaultShipping(boolean defaultShipping) {
     this.defaultShipping = defaultShipping;
   }
 
-  public TransportationMethod getTransportationMethod() {
+  public List<ShippingType> getShippingType() {
+    return shippingType;
+  }
+
+  public void setShippingType(List<ShippingType> shippingType) {
+    this.shippingType = shippingType;
+  }
+
+  public ShippingBasisType getShippingBasisType() {
+    return shippingBasisType;
+  }
+
+  public void setShippingBasisType(ShippingBasisType shippingBasisType) {
+    this.shippingBasisType = shippingBasisType;
+  }
+
+  public List<TransportationMethod> getTransportationMethod() {
     return transportationMethod;
   }
 
-  public void setTransportationMethod(TransportationMethod transportationMethod) {
+  public void setTransportationMethod(List<TransportationMethod> transportationMethod) {
     this.transportationMethod = transportationMethod;
   }
 }

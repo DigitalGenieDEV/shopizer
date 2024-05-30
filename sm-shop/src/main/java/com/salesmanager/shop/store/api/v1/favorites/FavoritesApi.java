@@ -1,4 +1,4 @@
-package com.salesmanager.shop.store.api.favorites;
+package com.salesmanager.shop.store.api.v1.favorites;
 
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.model.customer.Customer;

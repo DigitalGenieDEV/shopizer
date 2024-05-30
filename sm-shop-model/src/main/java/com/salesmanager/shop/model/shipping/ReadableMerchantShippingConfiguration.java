@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class ReadableMerchantShippingConfiguration implements Serializable {
 
@@ -36,14 +37,14 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
 
     private String value;
 
-    private ShippingType shippingType;
+    private List<ShippingType> shippingTypeList;
 
     private ShippingBasisType shippingBasisType;
 
     private ShippingPackageType shippingPackageType;
 
 
-    private TransportationMethod transportationMethods;
+    private List<TransportationMethod> transportationMethods;
 
     private ShippingOptionPriceType shippingOptionPriceType;
 
@@ -137,13 +138,7 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
         this.value = value;
     }
 
-    public ShippingType getShippingType() {
-        return shippingType;
-    }
 
-    public void setShippingType(ShippingType shippingType) {
-        this.shippingType = shippingType;
-    }
 
     public ShippingBasisType getShippingBasisType() {
         return shippingBasisType;
@@ -161,11 +156,20 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
         this.shippingPackageType = shippingPackageType;
     }
 
-    public TransportationMethod getTransportationMethods() {
+
+    public List<ShippingType> getShippingTypeList() {
+        return shippingTypeList;
+    }
+
+    public void setShippingTypeList(List<ShippingType> shippingTypeList) {
+        this.shippingTypeList = shippingTypeList;
+    }
+
+    public List<TransportationMethod> getTransportationMethods() {
         return transportationMethods;
     }
 
-    public void setTransportationMethods(TransportationMethod transportationMethods) {
+    public void setTransportationMethods(List<TransportationMethod> transportationMethods) {
         this.transportationMethods = transportationMethods;
     }
 

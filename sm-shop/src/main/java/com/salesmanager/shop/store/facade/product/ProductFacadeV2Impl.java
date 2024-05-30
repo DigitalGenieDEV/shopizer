@@ -268,7 +268,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
 			List<Long> shippingTemplateId = new ArrayList<>();
 			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
-				if (merchantShippingConfiguration.getShippingType() == ShippingType.valueOf(criterias.getShippingType())){
+				if (CollectionUtils.isNotEmpty(merchantShippingConfiguration.getShippingType()) &&  ShippingType.valueOf(criterias.getShippingType()) != null){
 					shippingTemplateId.add(merchantShippingConfiguration.getId());
 				}
 			});
@@ -335,7 +335,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
 			List<Long> shippingTemplateId = new ArrayList<>();
 			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
-				if (merchantShippingConfiguration.getShippingType() == ShippingType.valueOf(criterias.getShippingType())){
+				if (CollectionUtils.isNotEmpty(merchantShippingConfiguration.getShippingType()) &&  ShippingType.valueOf(criterias.getShippingType()) != null){
 					shippingTemplateId.add(merchantShippingConfiguration.getId());
 				}
 			});
