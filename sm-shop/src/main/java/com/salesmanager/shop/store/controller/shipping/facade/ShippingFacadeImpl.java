@@ -443,10 +443,10 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		target.setActive(source.getShippingOrigin().isActive());
 		target.setDefaultShipping(source.getShippingOrigin().isActive());
 		target.setValue(source.getValue());
-		target.setShippingTypeList(source.getShippingType());
+		target.setShippingTypeList(ShippingType.convertStringToShippingTypes(source.getShippingType()));
 		target.setShippingBasisType(source.getShippingBasisType());
 		target.setShippingPackageType(source.getShippingPackageType());
-		target.setTransportationMethods(source.getTransportationMethod());
+		target.setTransportationMethods(TransportationMethod.convertStringToTransportationMethods(source.getTransportationMethod()));
 		target.setShippingOptionPriceType(source.getShippingOptionPriceType());
 		if (source.getShippingOrigin() != null) {
 			target.setShippingOrigin(buildReadableAddress(source.getShippingOrigin()));
@@ -477,7 +477,7 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	public MerchantShippingConfiguration convertToPersistable(PersistableMerchantShippingConfiguration source) {
 		MerchantShippingConfiguration convert = ObjectConvert.convert(source, MerchantShippingConfiguration.class);
 		if (CollectionUtils.isNotEmpty(source.getShippingTypeList())) {
-			convert.setShippingType(ShippingType.convertStringsToShippingTypes(source.getShippingTypeList()));
+			convert.setShippingType(ShippingType.convertShippingTypesToString(source.getShippingTypeList()));
 		}
 
 		if (source.getShippingBasisType() != null) {
@@ -489,7 +489,8 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		}
 
 		if (CollectionUtils.isNotEmpty(source.getTransportationMethods())) {
-			convert.setTransportationMethod(TransportationMethod.convertStringsToTransportationMethods(source.getTransportationMethods()));
+			convert.setTransportationMethod(
+					TransportationMethod.convertTransportationMethodsToString(source.getTransportationMethods()));
 		}
 
 		if (source.getShippingOptionPriceType() != null) {

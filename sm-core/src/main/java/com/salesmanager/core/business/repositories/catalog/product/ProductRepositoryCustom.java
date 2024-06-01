@@ -31,6 +31,9 @@ public interface ProductRepositoryCustom {
 	List<Product> getProductsListByCategories(Set<Long> categoryIds,
 											  Language language);
 
+
+	Product getProductById(Long productId, Language language);
+
 	List<Product> getProductsListByIds(Set<Long> productIds);
 
 	List<Product> listByTaxClass(TaxClass taxClass);

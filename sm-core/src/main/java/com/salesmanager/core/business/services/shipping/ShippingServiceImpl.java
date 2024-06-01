@@ -113,6 +113,8 @@ public class ShippingServiceImpl implements ShippingService {
 	@Inject
 	@Resource(name="shippingModulePostProcessors")
 	private List<ShippingQuotePrePostProcessModule> shippingModulePostProcessors;
+
+
 	
 	@Override
 	public ShippingConfiguration getShippingConfiguration(MerchantStore store) throws ServiceException {
