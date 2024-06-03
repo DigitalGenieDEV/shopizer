@@ -74,7 +74,7 @@ public interface StoreFacade {
 	 * @throws Exception
 	 */
 	//ReadableMerchantStore create(PersistableMerchantStore store);
-	void create(PersistableMerchantStore store);
+	void create(PersistableMerchantStore store, String userName);
 
 	/**
 	 * Updates an existing store

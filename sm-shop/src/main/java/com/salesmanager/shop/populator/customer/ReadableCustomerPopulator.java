@@ -15,24 +15,30 @@ import com.salesmanager.shop.model.customer.attribute.ReadableCustomerAttribute;
 import com.salesmanager.shop.model.customer.attribute.ReadableCustomerOption;
 import com.salesmanager.shop.model.customer.attribute.ReadableCustomerOptionValue;
 import com.salesmanager.shop.model.security.ReadableGroup;
+import com.salesmanager.shop.model.term.ReadableCustomerTerms;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 
-public class ReadableCustomerPopulator extends
-		AbstractDataPopulator<Customer, ReadableCustomer> {
-
-	
+public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, ReadableCustomer> {
 
 	@Override
-	public ReadableCustomer populate(Customer source, ReadableCustomer target,
-			MerchantStore store, Language language) throws ConversionException {
+	public ReadableCustomer populate(
+			Customer source,
+			ReadableCustomer target,
+			MerchantStore store,
+			Language language
+	) throws ConversionException {
 
 		try {
-			
-			if(target == null) {
+
+			if (target == null) {
 				target = new ReadableCustomer();
 			}
-			
-			if(source.getId()!=null && source.getId()>0) {
+
+			if (source.getId() != null && source.getId() > 0) {
 				target.setId(source.getId());
 			}
 			target.setEmailAddress(source.getEmailAddress());
@@ -41,11 +47,11 @@ public class ReadableCustomerPopulator extends
 				target.setUserName(source.getNick());
 			}
 
-			if (source.getDefaultLanguage()!= null) {
+			if (source.getDefaultLanguage() != null) {
 				target.setLanguage(source.getDefaultLanguage().getCode());
 			}
 
-			if (source.getGender()!= null) {
+			if (source.getGender() != null) {
 				target.setGender(source.getGender().name());
 			}
 
@@ -53,7 +59,7 @@ public class ReadableCustomerPopulator extends
 				target.setProvider(source.getProvider());
 			}
 
-			if(source.getBilling()!=null) {
+			if (source.getBilling() != null) {
 				Address address = new Address();
 				address.setAddress(source.getBilling().getAddress());
 				address.setCity(source.getBilling().getCity());
@@ -62,13 +68,13 @@ public class ReadableCustomerPopulator extends
 				address.setLastName(source.getBilling().getLastName());
 				address.setPostalCode(source.getBilling().getPostalCode());
 				address.setPhone(source.getBilling().getTelephone());
-				if(source.getBilling().getCountry()!=null) {
+				if (source.getBilling().getCountry() != null) {
 					address.setCountry(source.getBilling().getCountry().getIsoCode());
 				}
-				if(source.getBilling().getZone()!=null) {
+				if (source.getBilling().getZone() != null) {
 					address.setZone(source.getBilling().getZone().getCode());
 				}
-				if(source.getBilling().getState()!=null) {
+				if (source.getBilling().getState() != null) {
 					address.setStateProvince(source.getBilling().getState());
 				}
 
@@ -78,15 +84,15 @@ public class ReadableCustomerPopulator extends
 				target.setBilling(address);
 			}
 
-			if(source.getCustomerReviewAvg() != null) {
+			if (source.getCustomerReviewAvg() != null) {
 				target.setRating(source.getCustomerReviewAvg().doubleValue());
 			}
 
-			if(source.getCustomerReviewCount() != null) {
+			if (source.getCustomerReviewCount() != null) {
 				target.setRatingCount(source.getCustomerReviewCount().intValue());
 			}
 
-			if(source.getDelivery()!=null) {
+			if (source.getDelivery() != null) {
 				Address address = new Address();
 				address.setCity(source.getDelivery().getCity());
 				address.setAddress(source.getDelivery().getAddress());
@@ -95,21 +101,21 @@ public class ReadableCustomerPopulator extends
 				address.setLastName(source.getDelivery().getLastName());
 				address.setPostalCode(source.getDelivery().getPostalCode());
 				address.setPhone(source.getDelivery().getTelephone());
-				if(source.getDelivery().getCountry()!=null) {
+				if (source.getDelivery().getCountry() != null) {
 					address.setCountry(source.getDelivery().getCountry().getIsoCode());
 				}
-				if(source.getDelivery().getZone()!=null) {
+				if (source.getDelivery().getZone() != null) {
 					address.setZone(source.getDelivery().getZone().getCode());
 				}
-				if(source.getDelivery().getState()!=null) {
+				if (source.getDelivery().getState() != null) {
 					address.setStateProvince(source.getDelivery().getState());
 				}
 
 				target.setDelivery(address);
 			}
 
-			if(source.getAttributes()!=null) {
-				for(CustomerAttribute attribute : source.getAttributes()) {
+			if (source.getAttributes() != null) {
+				for (CustomerAttribute attribute : source.getAttributes()) {
 					ReadableCustomerAttribute readableAttribute = new ReadableCustomerAttribute();
 					readableAttribute.setId(attribute.getId());
 					readableAttribute.setTextValue(attribute.getTextValue());
@@ -127,46 +133,58 @@ public class ReadableCustomerPopulator extends
 					ReadableCustomerOptionValue optionValue = new ReadableCustomerOptionValue();
 					optionValue.setId(attribute.getCustomerOptionValue().getId());
 					CustomerOptionValueDescription vd = new CustomerOptionValueDescription();
-					vd.setDescription(attribute.getCustomerOptionValue().getDescriptionsSettoList().get(0).getDescription());
+					vd.setDescription(
+							attribute.getCustomerOptionValue().getDescriptionsSettoList().get(0).getDescription()
+					);
 					vd.setName(attribute.getCustomerOptionValue().getDescriptionsSettoList().get(0).getName());
 					optionValue.setCode(attribute.getCustomerOptionValue().getCode());
 					optionValue.setDescription(vd);
-
 
 					readableAttribute.setCustomerOptionValue(optionValue);
 					target.getAttributes().add(readableAttribute);
 				}
 
-				if(source.getGroups() != null) {
-					for(Group group : source.getGroups()) {
+				if (source.getGroups() != null) {
+					for (Group group : source.getGroups()) {
 						ReadableGroup readableGroup = new ReadableGroup();
 						readableGroup.setId(group.getId().longValue());
 						readableGroup.setName(group.getGroupName());
 						readableGroup.setType(group.getGroupType().name());
-						target.getGroups().add(
-								readableGroup
-						);
+						target.getGroups().add(readableGroup);
 					}
 				}
-				
-				if(StringUtils.isNotEmpty(source.getBusinessNumber())) {
+				target.setStoreCode(source.getMerchantStore().getCode());
+
+				if (StringUtils.isNotEmpty(source.getBusinessNumber())) {
 					target.setBusinessNumber(source.getBusinessNumber());
 				}
-				
-				if(StringUtils.isNotEmpty(source.getBusinessRegistration())) {
+
+				if (StringUtils.isNotEmpty(source.getBusinessRegistration())) {
 					target.setBusinessRegistration(source.getBusinessRegistration());
 				}
 
-				
-				if(StringUtils.isNotEmpty(source.getCompany())) {
+				if (StringUtils.isNotEmpty(source.getCompany())) {
 					target.setCompany(source.getCompany());
 				}
+
+				List<ReadableCustomerTerms> customerTerms =  source.getCustomerTerms().stream().map(
+						it -> new ReadableCustomerTerms(
+								it.getId(),
+								it.isConsented(),
+								it.getModifiedDate(),
+								it.getExpiredDate(),
+								it.getPrivacyCode(),
+								it.getPrivacyValue()
+						)
+				).collect(Collectors.toList());
+				
+				target.setTerms(customerTerms);
 			}
-		
+
 		} catch (Exception e) {
 			throw new ConversionException(e);
 		}
-		
+
 		return target;
 	}
 

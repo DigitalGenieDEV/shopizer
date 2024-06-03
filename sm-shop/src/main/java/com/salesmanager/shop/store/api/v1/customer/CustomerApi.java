@@ -1,6 +1,7 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,17 +31,23 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
+import com.salesmanager.shop.model.dept.ReadableDept;
+import com.salesmanager.shop.model.term.ReadableCustomerTerms;
 import com.salesmanager.shop.populator.customer.ReadableCustomerList;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
+import com.salesmanager.shop.store.controller.term.facade.CustomerTermsFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import springfox.documentation.annotations.ApiIgnore;
@@ -57,6 +65,12 @@ public class CustomerApi {
 
 	@Autowired
 	private UserFacade userFacade;
+	
+	@Inject
+	private ManagerFacade managerFacade;
+	
+	@Inject
+	private CustomerTermsFacade customerTermsFacade;
 
 	/** Create new customer for a given MerchantStore */
 	@PostMapping("/private/customer")
@@ -108,19 +122,27 @@ public class CustomerApi {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
 	public void delete(
 			@PathVariable Long id,
-			@ApiIgnore MerchantStore merchantStore
-	) {
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore HttpServletRequest request
+	) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		// superadmin, admin and admin_catalogue
+		/*
+		 * String authenticatedUser = userFacade.authenticatedUser(); if
+		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
+		 * 
+		 * userFacade.authorizedGroup(authenticatedUser,
+		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+		 * Constants.GROUP_ADMIN_CATALOGUE,
+		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		 */
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(
-				authenticatedUser,
-				Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL)
-						.collect(Collectors.toList())
-		);
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		customerFacade.deleteById(id);
 	}
@@ -254,6 +276,18 @@ public class CustomerApi {
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("An error occured while deleting customer [" + userName + "]");
 		}
+	}
+	
+	@GetMapping(value = { "/auth/customer/{id}/terms", "/customer/{id}/terms" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get Customer Terms", notes = "", response = ReadableCustomerTerms.class, responseContainer = "List")
+	public List<ReadableCustomerTerms> customerTerms(
+			@PathVariable Long id,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language
+			) {
+		
+		List<ReadableCustomerTerms> values =  customerTermsFacade.findByCustomerId(id, merchantStore, language);
+		return values;
 	}
 
 }

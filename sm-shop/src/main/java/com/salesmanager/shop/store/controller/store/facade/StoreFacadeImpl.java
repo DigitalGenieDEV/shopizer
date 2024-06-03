@@ -22,12 +22,14 @@ import org.springframework.stereotype.Service;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.content.ContentService;
+import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.services.system.MerchantConfigurationService;
 import com.salesmanager.core.constants.MeasureUnit;
 import com.salesmanager.core.model.common.GenericEntityList;
 import com.salesmanager.core.model.content.InputContentFile;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.merchant.MerchantStoreCriteria;
 import com.salesmanager.core.model.reference.language.Language;
@@ -62,6 +64,9 @@ public class StoreFacadeImpl implements StoreFacade {
 
 	@Inject
 	private ContentService contentService;
+	
+	@Inject
+	private CustomerService customerService;
 
 	@Inject
 	private PersistableMerchantStorePopulator persistableMerchantStorePopulator;
@@ -171,7 +176,7 @@ public class StoreFacadeImpl implements StoreFacade {
 	}
 
 	@Override
-	public void create(PersistableMerchantStore store) {
+	public void create(PersistableMerchantStore store, String userName) {
 
 		Validate.notNull(store, "PersistableMerchantStore must not be null");
 		Validate.notNull(store.getCode(), "PersistableMerchantStore.code must not be null");
@@ -183,7 +188,22 @@ public class StoreFacadeImpl implements StoreFacade {
 		}
 
 		MerchantStore mStore = convertPersistableMerchantStoreToMerchantStore(store, languageService.defaultLanguage());
+		
+		if(mStore.getId() != null) {
+			if(mStore.getId() == 1)
+				mStore.setId(null);
+		}
+		
 		createMerchantStore(mStore);
+		
+		Customer c = customerService.getByNick(userName);
+		c.setMerchantStore(mStore);
+		
+		try {
+			customerService.save(c);
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
 
 	}
 
