@@ -1,7 +1,7 @@
 package com.salesmanager.core.model.merchant;
 
 public enum BusinessType {
-	MANUFACTURING,
-	WHOLESALE,
-	OEM
+	MANUFACTURING, // 제조
+	WHOLESALE, // 도매
+	OEM // OEM
 }

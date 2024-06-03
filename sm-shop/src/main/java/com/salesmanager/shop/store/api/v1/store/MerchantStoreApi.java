@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,7 @@ import com.salesmanager.shop.model.store.ReadableMerchantStore;
 import com.salesmanager.shop.model.store.ReadableMerchantStoreList;
 import com.salesmanager.shop.store.api.exception.RestApiException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
@@ -74,9 +76,14 @@ public class MerchantStoreApi {
 	@Inject
 	private StoreFacade storeFacade;
 
-	
+	@Inject
+	private UserFacade userFacade;
+
 	@Inject
 	private ManagerFacade managerFacade;
+	
+	@Inject
+	private CustomerFacade customerFacade;
 
 	@GetMapping(value = { "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get merchant store", notes = "", response = ReadableMerchantStore.class)
@@ -207,9 +214,9 @@ public class MerchantStoreApi {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = { "/private/store" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = {"/private/store"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Creates a new store", notes = "", response = ReadableMerchantStore.class)
-	public void create(@Valid @RequestBody PersistableMerchantStore store, HttpServletRequest request) throws Exception  {
+	public void createByPrivate(@Valid @RequestBody PersistableMerchantStore store, HttpServletRequest request) throws Exception  {
 		
 		
 		String authenticatedManager = managerFacade.authenticatedManager();
@@ -221,7 +228,19 @@ public class MerchantStoreApi {
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		
-		storeFacade.create(store);
+		storeFacade.create(store, authenticatedManager);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = {"/auth/store", "/store"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Creates a new store", notes = "", response = ReadableMerchantStore.class)
+	public void create(@Valid @RequestBody PersistableMerchantStore store, HttpServletRequest request) throws Exception  {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+		
+		storeFacade.create(store, authenticatedManager);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
@@ -232,6 +251,22 @@ public class MerchantStoreApi {
 
 		String userName = getUserFromRequest(request);
 		validateUserPermission(userName, code);
+		store.setCode(code);
+		storeFacade.update(store);
+	}
+	
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = { "/auth/store/{code}", "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
+	public void updateByAuth(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
+			HttpServletRequest request) throws Exception {
+		
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
 		store.setCode(code);
 		storeFacade.update(store);
 	}

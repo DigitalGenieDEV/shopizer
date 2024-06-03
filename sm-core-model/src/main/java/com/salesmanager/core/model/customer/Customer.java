@@ -45,13 +45,19 @@ import com.salesmanager.core.model.customer.attribute.CustomerAttribute;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.term.CustomerTerms;
 import com.salesmanager.core.model.user.Group;
 import com.salesmanager.core.utils.CloneUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "CUSTOMER", 
 	 uniqueConstraints=
 			@UniqueConstraint(columnNames = {"MERCHANT_ID", "CUSTOMER_NICK"}))
+@Getter
+@Setter
 public class Customer extends SalesManagerEntity<Long, Customer> implements Auditable {
 	private static final long serialVersionUID = 1L;
 	
@@ -110,12 +116,14 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	
 	@Column(name="BUSINESS_REGISTRATION")
 	private String businessRegistration;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", targetEntity = CustomerTerms.class)
+	private List<CustomerTerms> customerTerms = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "LANGUAGE_ID", nullable=false)
 	private Language defaultLanguage;
 	
-
 	@OneToMany(mappedBy = "customer", targetEntity = ProductReview.class)
 	private List<ProductReview> reviews = new ArrayList<ProductReview>();
 	
@@ -124,7 +132,6 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
 	private MerchantStore merchantStore;
 	
-
 	@Embedded
 	private Delivery delivery = null;
 	
@@ -166,215 +173,4 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 
 	public Customer() {
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-
-	public Date getDateOfBirth() {
-		return CloneUtils.clone(dateOfBirth);
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = CloneUtils.clone(dateOfBirth);
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-
-	public boolean isAnonymous() {
-		return anonymous;
-	}
-
-	public void setAnonymous(boolean anonymous) {
-		this.anonymous = anonymous;
-	}
-
-
-	public List<ProductReview> getReviews() {
-		return reviews;
-	}
-
-	public void setReviews(List<ProductReview> reviews) {
-		this.reviews = reviews;
-	}
-
-	public void setMerchantStore(MerchantStore merchantStore) {
-		this.merchantStore = merchantStore;
-	}
-
-	public MerchantStore getMerchantStore() {
-		return merchantStore;
-	}
-
-	public void setDelivery(Delivery delivery) {
-		this.delivery = delivery;
-	}
-
-	public Delivery getDelivery() {
-		return delivery;
-	}
-
-	public void setBilling(Billing billing) {
-		this.billing = billing;
-	}
-
-	public Billing getBilling() {
-		return billing;
-	}
-
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
-	}
-
-	public List<Group> getGroups() {
-		return groups;
-	}
-	public String getShowCustomerStateList() {
-		return showCustomerStateList;
-	}
-
-	public void setShowCustomerStateList(String showCustomerStateList) {
-		this.showCustomerStateList = showCustomerStateList;
-	}
-
-	public String getShowBillingStateList() {
-		return showBillingStateList;
-	}
-
-	public void setShowBillingStateList(String showBillingStateList) {
-		this.showBillingStateList = showBillingStateList;
-	}
-
-	public String getShowDeliveryStateList() {
-		return showDeliveryStateList;
-	}
-
-	public void setShowDeliveryStateList(String showDeliveryStateList) {
-		this.showDeliveryStateList = showDeliveryStateList;
-	}
-	
-	public Language getDefaultLanguage() {
-		return defaultLanguage;
-	}
-
-	public void setDefaultLanguage(Language defaultLanguage) {
-		this.defaultLanguage = defaultLanguage;
-	}
-
-	public void setAttributes(Set<CustomerAttribute> attributes) {
-		this.attributes = attributes;
-	}
-
-	public Set<CustomerAttribute> getAttributes() {
-		return attributes;
-	}
-
-	public void setGender(CustomerGender gender) {
-		this.gender = gender;
-	}
-
-	public CustomerGender getGender() {
-		return gender;
-	}
-
-	public BigDecimal getCustomerReviewAvg() {
-		return customerReviewAvg;
-	}
-
-	public void setCustomerReviewAvg(BigDecimal customerReviewAvg) {
-		this.customerReviewAvg = customerReviewAvg;
-	}
-
-	public Integer getCustomerReviewCount() {
-		return customerReviewCount;
-	}
-
-	public void setCustomerReviewCount(Integer customerReviewCount) {
-		this.customerReviewCount = customerReviewCount;
-	}
-
-	@Override
-	public AuditSection getAuditSection() {
-		return auditSection;
-	}
-
-	@Override
-	public void setAuditSection(AuditSection auditSection) {
-		this.auditSection = auditSection;
-	}
-	
-	public String getProvider() {
-		return provider;
-	}
-
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-
-	public CredentialsReset getCredentialsResetRequest() {
-		return credentialsResetRequest;
-	}
-
-	public void setCredentialsResetRequest(CredentialsReset credentialsResetRequest) {
-		this.credentialsResetRequest = credentialsResetRequest;
-	}
-
-	public String getBusinessNumber() {
-		return businessNumber;
-	}
-
-	public void setBusinessNumber(String businessNumber) {
-		this.businessNumber = businessNumber;
-	}
-
-	public String getBusinessRegistration() {
-		return businessRegistration;
-	}
-
-	public void setBusinessRegistration(String businessRegistration) {
-		this.businessRegistration = businessRegistration;
-	}
-	
-	
-	
 }

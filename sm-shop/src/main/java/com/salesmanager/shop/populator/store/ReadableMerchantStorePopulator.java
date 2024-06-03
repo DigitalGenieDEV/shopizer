@@ -187,6 +187,10 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 		if (StringUtils.isNotEmpty(source.getDescription())) {
 			target.setDescription(source.getDescription());
 		}
+
+		if (StringUtils.isNotEmpty(source.getContinueshoppingurl())) {
+			target.setContinueShoppingUrl(source.getContinueshoppingurl());
+		}
 		// end
 
 		return target;

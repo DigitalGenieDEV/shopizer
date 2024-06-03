@@ -93,8 +93,6 @@ public class PersistableCustomerPopulator extends
 				target.setLanguage(store.getDefaultLanguage().getCode());
 			}
 			
-			
-			
 		} catch (Exception e) {
 			throw new ConversionException(e);
 		}

@@ -170,6 +170,10 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 		if(StringUtils.isNotEmpty(source.getDescription())) {
 			target.setDescription(source.getDescription());
 		}
+		
+		if(StringUtils.isNotEmpty(source.getContinueShoppingUrl())) {
+			target.setContinueshoppingurl(source.getContinueShoppingUrl());
+		}
 		// end
 		
 		
