@@ -38,8 +38,8 @@ public class OrderCriteriaAPIIntegrationTest  extends ServicesTestSupport {
     @Order(1)
     public void orderCriteria() {
         OrderCriteria orderCriteria = new OrderCriteria();
-        orderCriteria.setBeginDate("2024-04-21");
-        orderCriteria.setEndDate("2024-04-25");
+//        orderCriteria.setBeginDate("2024-04-21");
+//        orderCriteria.setEndDate("2024-04-25");
 
         final HttpEntity<OrderCriteria> cartEntity = new HttpEntity<>(orderCriteria, getHeader());
         final ResponseEntity<String> response = testRestTemplate.exchange(String.format("/api/v1/auth/orders?count=100&" + toQueryParam(orderCriteria)), HttpMethod.GET, cartEntity, String.class);
