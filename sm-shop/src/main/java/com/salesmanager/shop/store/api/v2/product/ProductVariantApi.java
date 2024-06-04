@@ -4,8 +4,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,9 @@ public class ProductVariantApi {
 	@Inject
 	private UserFacade userFacade;
 
+	@Inject
+	private ManagerFacade managerFacade;
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/private/product/{productId}/variant" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
@@ -77,15 +82,22 @@ public class ProductVariantApi {
 			@Valid @RequestBody PersistableProductVariant variant, 
 			@PathVariable Long productId,
 			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		Long id = productVariantFacade.create(variant, productId, merchantStore, language);
 		return new Entity(id);
@@ -98,15 +110,22 @@ public class ProductVariantApi {
 	@ApiOperation(httpMethod = "PUT", value = "Update product variant", notes = "", produces = "application/json", response = Void.class)
 	public @ResponseBody void update(@PathVariable Long id, @PathVariable Long variantId,
 			@Valid @RequestBody PersistableProductVariant variant, @ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		productVariantFacade.update(variantId, variant, id, merchantStore, language);
 	}
@@ -120,15 +139,23 @@ public class ProductVariantApi {
 			@PathVariable Long id, 
 			@PathVariable String sku,
 			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		boolean exist = productVariantFacade.exists(sku, merchantStore, id, language);
 		return new ResponseEntity<EntityExists>(new EntityExists(exist), HttpStatus.OK);

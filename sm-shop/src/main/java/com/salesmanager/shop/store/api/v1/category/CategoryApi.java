@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.CategoryType;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +65,9 @@ public class CategoryApi {
 
 	@Inject
 	private UserFacade userFacade;
+
+	@Inject
+	private ManagerFacade managerFacade;
 
 	@GetMapping(value = "/private/category/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get category list for an given Category id", notes = "List current Category and child category")
@@ -191,15 +196,24 @@ public class CategoryApi {
 	public PersistableCategory createUser(
 			@Valid @RequestBody PersistableCategory category,
 			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception {
 
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+
 		category.setCategoryType(CategoryType.USER.name());
 		return categoryFacade.saveCategory(merchantStore, category);
 	}
@@ -212,15 +226,23 @@ public class CategoryApi {
 	public PersistableCategory create(
 			@Valid @RequestBody PersistableCategory category,
 			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception {
 
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		return categoryFacade.saveCategory(merchantStore, category);
 	}
@@ -228,16 +250,22 @@ public class CategoryApi {
 	@PutMapping(value = "/private/category/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
 	public PersistableCategory update(@PathVariable Long id, @Valid @RequestBody PersistableCategory category,
-			@ApiIgnore MerchantStore merchantStore) {
+			@ApiIgnore MerchantStore merchantStore,HttpServletRequest request) throws Exception {
 
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		category.setId(id);
 		return categoryFacade.saveCategory(merchantStore, category);
@@ -246,17 +274,22 @@ public class CategoryApi {
 	@PatchMapping(value = "/private/category/{id}/visible", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
 	public void updateVisible(@PathVariable Long id, @Valid @RequestBody PersistableCategory category,
-			@ApiIgnore MerchantStore merchantStore
-			) {
+			@ApiIgnore MerchantStore merchantStore,HttpServletRequest request
+			) throws Exception {
 
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		category.setId(id);
 		categoryFacade.setVisible(category, merchantStore);
 	}
@@ -267,15 +300,21 @@ public class CategoryApi {
 	public void move(
 			@PathVariable Long id,
 			@PathVariable Long parent,
-			@ApiIgnore MerchantStore merchantStore) {
+			@ApiIgnore MerchantStore merchantStore,
+			HttpServletRequest request) throws Exception {
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		categoryFacade.move(id, parent, merchantStore);
 		return;
@@ -283,16 +322,21 @@ public class CategoryApi {
 
 	@DeleteMapping(value = "/private/category/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
-	public void delete(@PathVariable("id") Long categoryId, @ApiIgnore MerchantStore merchantStore) {
+	public void delete(@PathVariable("id") Long categoryId, @ApiIgnore MerchantStore merchantStore,HttpServletRequest request) throws Exception {
 
 		// superadmin, admin and admin_catalogue
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		categoryFacade.deleteCategory(categoryId, merchantStore);
 	}
