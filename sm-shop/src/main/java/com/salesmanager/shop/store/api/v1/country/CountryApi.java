@@ -43,7 +43,7 @@ public class CountryApi {
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/countries")
-	@ApiOperation(httpMethod = "GET", value = "Get Countries", notes = "", response = List.class)
+	@ApiOperation(httpMethod = "GET", value = "Get Countries", notes = "", response = ReadableCountry.class, responseContainer = "List")
 	public List<ReadableCountry> countries(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,

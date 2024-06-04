@@ -41,6 +41,7 @@ import com.salesmanager.core.business.services.reference.zone.ZoneService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.business.services.system.EmailService;
 import com.salesmanager.core.business.services.system.optin.OptinService;
+import com.salesmanager.core.business.services.terms.CustomerTermsService;
 import com.salesmanager.core.business.services.user.GroupService;
 import com.salesmanager.core.business.services.user.PermissionService;
 import com.salesmanager.core.business.utils.CoreConfiguration;
@@ -139,6 +140,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Inject
 	private ZoneService zoneService;
+	
+	@Inject
+	private CustomerTermsService customerTermsService;
 
 	@Inject
 	private PasswordEncoder passwordEncoder;
@@ -572,6 +576,14 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 		saveCustomer(customerToPopulate);
 		customer.setId(customerToPopulate.getId());
+		
+		try {
+			customerTermsService.saveAll(customerToPopulate.getCustomerTerms());
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			throw new ServiceRuntimeException("Customer Terms are required", e);
+		}
+		
 
 		notifyNewCustomer(customer, store, customerToPopulate.getDefaultLanguage());
 		// convert to readable

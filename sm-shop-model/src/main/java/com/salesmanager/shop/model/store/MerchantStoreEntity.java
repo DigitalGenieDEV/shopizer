@@ -35,7 +35,6 @@ public class MerchantStoreEntity implements Serializable {
 	@NotNull
 	private String phone;
 	private String template;
-	
 	private boolean useCache;
 	private boolean currencyFormatNational;
 	private boolean retailer;
@@ -46,4 +45,5 @@ public class MerchantStoreEntity implements Serializable {
 	private List<String> categories;
 	private Integer headcount;
 	private String description;
+	private String continueShoppingUrl;
 }

@@ -56,10 +56,8 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   @Lob
   private String value;
 
-  @ElementCollection(targetClass = ShippingType.class)
-  @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_TYPE")
-  private List<ShippingType> shippingType;
+  private String shippingType;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_BASIS_TYPE")
@@ -69,10 +67,8 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   @Column(name = "SHIPPING_PACKAGE_TYPE")
   private ShippingPackageType shippingPackageType;
 
-  @ElementCollection(targetClass = TransportationMethod.class)
-  @Enumerated(EnumType.STRING)
   @Column(name = "TRANSPORTATION_METHOD")
-  private List<TransportationMethod> transportationMethod;
+  private String transportationMethod;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_OPTION_PRICE_TYPE")
@@ -217,13 +213,6 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.defaultShipping = defaultShipping;
   }
 
-  public List<ShippingType> getShippingType() {
-    return shippingType;
-  }
-
-  public void setShippingType(List<ShippingType> shippingType) {
-    this.shippingType = shippingType;
-  }
 
   public ShippingBasisType getShippingBasisType() {
     return shippingBasisType;
@@ -233,11 +222,19 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.shippingBasisType = shippingBasisType;
   }
 
-  public List<TransportationMethod> getTransportationMethod() {
+  public String getShippingType() {
+    return shippingType;
+  }
+
+  public void setShippingType(String shippingType) {
+    this.shippingType = shippingType;
+  }
+
+  public String getTransportationMethod() {
     return transportationMethod;
   }
 
-  public void setTransportationMethod(List<TransportationMethod> transportationMethod) {
+  public void setTransportationMethod(String transportationMethod) {
     this.transportationMethod = transportationMethod;
   }
 }

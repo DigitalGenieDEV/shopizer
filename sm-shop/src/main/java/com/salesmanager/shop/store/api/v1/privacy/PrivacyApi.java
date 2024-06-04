@@ -45,7 +45,7 @@ public class PrivacyApi {
 	
 	@GetMapping(value = "/privacy")
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(httpMethod = "GET", value = "Get Privacy by list", notes = "")
+	@ApiOperation(httpMethod = "GET", value = "Get Privacy by user list", notes = "")
 	public ReadableUserPrivacy getUserPrivacy( 
 					@RequestParam(value = "division", required = false, defaultValue = "0") String division,
 					@RequestParam(value = "id", required = false, defaultValue = "0") Integer id

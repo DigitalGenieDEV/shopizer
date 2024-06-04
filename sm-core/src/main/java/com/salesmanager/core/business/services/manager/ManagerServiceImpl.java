@@ -15,37 +15,38 @@ import com.salesmanager.core.model.manager.Manager;
 import com.salesmanager.core.model.manager.ReadableManager;
 
 @Service("managerService")
-public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Manager> implements ManagerService {
-	
+public class ManagerServiceImpl extends SalesManagerEntityServiceImpl<Long, Manager> implements ManagerService {
+
 	@Inject
-	private ManagerRepository managerRepository; 
+	private ManagerRepository managerRepository;
 
 	@Inject
 	private PageableManagerRepository pageableManagerRepository;
-	
+
 	@Inject
 	public ManagerServiceImpl(ManagerRepository managerRepository) {
 		super(managerRepository);
 		this.managerRepository = managerRepository;
 	}
-	
-	public Page<Manager> getManagerList(String keyword, String gbn, int deptId, int page, int count)throws ServiceException{
+
+	public Page<Manager> getManagerList(String keyword, String gbn, int deptId, int page, int count)
+			throws ServiceException {
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableManagerRepository.getManagerList(keyword,gbn,deptId, pageRequest);
+		return pageableManagerRepository.getManagerList(keyword, gbn, deptId, pageRequest);
 	}
-	
-	public Manager getId(Long id) throws ServiceException{
+
+	public Manager getId(Long id) throws ServiceException {
 		return managerRepository.getById(id);
 	}
-	
-	public ReadableManager getByUserName(String userName) throws ServiceException{
+
+	public ReadableManager getByUserName(String userName) throws ServiceException {
 		return managerRepository.getByUserName(userName);
 	}
-	
-	public int getDupEmplIdCount(String userId) throws ServiceException{
+
+	public int getDupEmplIdCount(String userId) throws ServiceException {
 		return managerRepository.getDupEmplIdCount(userId);
 	}
-	
+
 	@Override
 	public void saveOrUpdate(Manager manger) throws ServiceException {
 		// save or update (persist and attach entities
@@ -55,18 +56,17 @@ public class ManagerServiceImpl  extends SalesManagerEntityServiceImpl<Long, Man
 			this.create(manger);
 		}
 	}
-	
-	public void deleteManager(int grpId) throws ServiceException{
+
+	public void deleteManager(int grpId) throws ServiceException {
 		managerRepository.deleteManager(grpId);
 	}
-	
-	public void updateLoginFailCount(String emplId) throws ServiceException{
+
+	public void updateLoginFailCount(String emplId) throws ServiceException {
 		managerRepository.updateLoginFailCount(emplId);
 	}
-	
-	public void updateLoginDate(String emplId)throws ServiceException{
+
+	public void updateLoginDate(String emplId) throws ServiceException {
 		managerRepository.updateLoginDate(emplId);
 	}
 
-	
 }

@@ -35,12 +35,11 @@ public enum TransportationMethod {
 				.collect(Collectors.toList());
 	}
 
-	public static String convertTransportationMethodsToString(List<TransportationMethod> methods) {
+	public static String convertTransportationMethodsToString(List<String> methods) {
 		if (methods == null || methods.isEmpty()) {
 			return null;
 		}
 		return methods.stream()
-				.map(TransportationMethod::name)
 				.collect(Collectors.joining(","));
 	}
 }

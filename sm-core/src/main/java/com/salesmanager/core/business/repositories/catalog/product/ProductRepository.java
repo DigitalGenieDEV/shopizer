@@ -59,6 +59,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
 
 	@Query(value="SELECT " +
+			"p.id " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.outProductId is not null ")
+	List<Long> findListByOutId();
+
+	@Query(value="SELECT " +
 			"p " +
 			"FROM " +
 			"Product p " +

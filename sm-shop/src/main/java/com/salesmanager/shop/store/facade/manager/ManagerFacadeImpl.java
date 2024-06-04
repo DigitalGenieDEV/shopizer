@@ -39,60 +39,61 @@ import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.security.facade.SecurityFacade;
 
 @Service
-public class ManagerFacadeImpl  implements ManagerFacade {
-	
+public class ManagerFacadeImpl implements ManagerFacade {
+
 	private static final String PRIVATE_PATH = "/private/";
 
 	@Inject
 	private ManagerService managerService;
-	
+
 	@Inject
 	private MerchantStoreService merchantStoreService;
 
 	@Inject
 	private SecurityFacade securityFacade;
-	
+
 	@Inject
 	private ManagerMenuAuthService managerMenuAuthService;
-	
+
 	@Inject
 	private AdminMenuService adminMenuService;
-	
-	
+
 	@Inject
 	private ObjectMapper objectMapper;
-	
+
 	@Inject
 	private PersistableManagerPopulator persistableManagerPopulator;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ManagerFacadeImpl.class);
-	
+
 	@Override
-	public ReadableManagerList getManagerList(String keyword, String gbn,int deptId, int page, int count) throws Exception{
-		try{
+	public ReadableManagerList getManagerList(String keyword, String gbn, int deptId, int page, int count)
+			throws Exception {
+		try {
 			List<Manager> manager = null;
 			List<ReadableManager> targetList = new ArrayList<ReadableManager>();
 			ReadableManagerList returnList = new ReadableManagerList();
-			org.springframework.data.domain.Page<Manager> pageable =  managerService.getManagerList(keyword, gbn, deptId, page,count);
+			org.springframework.data.domain.Page<Manager> pageable = managerService.getManagerList(keyword, gbn, deptId,
+					page, count);
 			manager = pageable.getContent();
 			returnList.setRecordsTotal(pageable.getTotalElements());
 			returnList.setTotalPages(pageable.getTotalPages());
 			returnList.setNumber(manager.size());
-			if(manager.size() > 0) {
-				for(Manager data : manager) {
+			if (manager.size() > 0) {
+				for (Manager data : manager) {
 					ReadableManager targetData = objectMapper.convertValue(data, ReadableManager.class);
 					targetList.add(targetData);
-					
+
 				}
 			}
 			returnList.setData(targetList);
 			return returnList;
-		} catch (ServiceException e){
+		} catch (ServiceException e) {
 			throw new ServiceRuntimeException(e);
 		}
 	}
-	
-	public void updateEnabled(PersistableManager manager) throws Exception{
+
+	public void updateEnabled(PersistableManager manager) throws Exception {
 		Validate.notNull(manager, "Manager cannot be null");
 		try {
 			Manager modelManager = managerService.getId(manager.getId());
@@ -100,8 +101,7 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			if (modelManager == null) {
 				throw new ResourceNotFoundException("Manager with id [" + manager.getId() + "] not found ");
 			}
-	
-			
+
 			modelManager.setActive(manager.isActive());
 			managerService.saveOrUpdate(modelManager);
 
@@ -109,27 +109,27 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			throw new ServiceRuntimeException("Error while updating user enable flag", e);
 		}
 	}
-	
-	public boolean isManagerExist(String userId) throws Exception{
+
+	public boolean isManagerExist(String userId) throws Exception {
 		return managerService.getDupEmplIdCount(userId) > 0 ? true : false;
-		
+
 	}
-	
-	public PersistableManager create(PersistableManager manager) throws Exception{
+
+	public PersistableManager create(PersistableManager manager) throws Exception {
 		try {
-			
+
 			// check if user exists
 			int dupCnt = managerService.getDupEmplIdCount(manager.getEmplId());
 			if (dupCnt > 0) {
-				throw new ServiceRuntimeException(
-						"Manager [" + manager.getEmplId() + "] already exists ");
+				throw new ServiceRuntimeException("Manager [" + manager.getEmplId() + "] already exists ");
 			}
-			
+
 			/**
 			 * validate password
 			 */
 			if (!securityFacade.matchRawPasswords(manager.getPassword(), manager.getRepeatPassword())) {
-				throw new ServiceRuntimeException("Passwords dos not match, make sure password and repeat password are equals");
+				throw new ServiceRuntimeException(
+						"Passwords dos not match, make sure password and repeat password are equals");
 			}
 
 			/**
@@ -138,29 +138,26 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			if (!securityFacade.validateUserPassword(manager.getPassword())) {
 				throw new ServiceRuntimeException("New password does not apply to format policy");
 			}
-			
+
 			String newPasswordEncoded = securityFacade.encodePassword(manager.getPassword());
-			
+
 			Long managerId = manager.getId();
-			Manager target = Optional.ofNullable(managerId)
-					.filter(id -> id > 0)
-					.map(managerService::getById)
+			Manager target = Optional.ofNullable(managerId).filter(id -> id > 0).map(managerService::getById)
 					.orElse(new Manager());
-			
-		
+
 			Manager dbManager = populateManager(manager, target);
 			manager.setPassword(newPasswordEncoded);
 			managerService.saveOrUpdate(dbManager);
 
 			// set category id
 			manager.setId(manager.getId());
-			
+
 			return manager;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating Manager", e);
 		}
 	}
-	
+
 	public ReadableManager getById(Long id) throws Exception {
 		Manager manager = managerService.getById(id);
 
@@ -171,97 +168,93 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		ReadableManager readableManager = objectMapper.convertValue(manager, ReadableManager.class);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if(manager.getAuditSection().getModDate() != null) {
+		if (manager.getAuditSection().getModDate() != null) {
 			String modDate = dateFormat.format(manager.getAuditSection().getModDate());
 			readableManager.setModDate(modDate);
 		}
-		if(manager.getLoginDate() != null) {
+		if (manager.getLoginDate() != null) {
 			String loginDate = dateFormat.format(manager.getLoginDate());
 			readableManager.setLoginDate(loginDate);
 		}
 		return readableManager;
 	}
-	
-	public PersistableManager update(PersistableManager persistableManager) throws Exception{
+
+	public PersistableManager update(PersistableManager persistableManager) throws Exception {
 		Validate.notNull(persistableManager, "Manager cannot be null");
 		try {
-			
-			String newPasswordEncoded =  "";
+
+			String newPasswordEncoded = "";
 			Manager data = managerService.getById(persistableManager.getId());
-			if(data != null) {
-			
-				if(!persistableManager.getPassword().equals("") || !persistableManager.getPassword().isEmpty()) {
+			if (data != null) {
+
+				if (!persistableManager.getPassword().equals("") || !persistableManager.getPassword().isEmpty()) {
 					/**
 					 * validate password
 					 */
-					if (!securityFacade.matchRawPasswords(persistableManager.getPassword(), persistableManager.getRepeatPassword())) {
-						throw new ServiceRuntimeException("Passwords dos not match, make sure password and repeat password are equals");
+					if (!securityFacade.matchRawPasswords(persistableManager.getPassword(),
+							persistableManager.getRepeatPassword())) {
+						throw new ServiceRuntimeException(
+								"Passwords dos not match, make sure password and repeat password are equals");
 					}
-	
+
 					/**
 					 * Validate new password
 					 */
 					if (!securityFacade.validateUserPassword(persistableManager.getPassword())) {
 						throw new ServiceRuntimeException("New password does not apply to format policy");
 					}
-					
+
 					newPasswordEncoded = securityFacade.encodePassword(persistableManager.getPassword());
 					persistableManager.setPassword(newPasswordEncoded);
-				}else {
+				} else {
 					persistableManager.setPassword(data.getAdminPassword());
 				}
-				
+
 				Long managerId = persistableManager.getId();
-				Manager target = Optional.ofNullable(managerId)
-						.filter(id -> id > 0)
-						.map(managerService::getById)
+				Manager target = Optional.ofNullable(managerId).filter(id -> id > 0).map(managerService::getById)
 						.orElse(new Manager());
-				
-			
+
 				Manager dbManager = populateManager(persistableManager, target);
 				dbManager.setAdminPassword(persistableManager.getPassword());
 				managerService.saveOrUpdate(dbManager);
-	
+
 				// set category id
 				persistableManager.setId(persistableManager.getId());
-				
+
 			}
-			
+
 			return persistableManager;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating Manager", e);
 		}
 	}
-	
-	
-	public void delete(Long id) throws Exception{
+
+	public void delete(Long id) throws Exception {
 		Manager manager = managerService.getById(id);
 		if (manager == null) {
 			throw new ResourceNotFoundException("Manager [" + id + "] not found");
 		}
 		managerService.delete(manager);
 	}
-	
-	public void updateLoginFailCount(String emplId) throws Exception{
+
+	public void updateLoginFailCount(String emplId) throws Exception {
 		managerService.updateLoginFailCount(emplId);
 	}
-	
-	public void updateLoginDate(String emplId) throws Exception{
+
+	public void updateLoginDate(String emplId) throws Exception {
 		managerService.updateLoginDate(emplId);
 	}
-	
-	
-	private Manager populateManager( PersistableManager manager, Manager target) {
+
+	private Manager populateManager(PersistableManager manager, Manager target) {
 		try {
 			return persistableManagerPopulator.populate(manager, target);
 		} catch (ConversionException e) {
 			throw new ServiceRuntimeException(e);
 		}
 	}
-	
-	
+
 	@Override
-	public String authenticatedManager() throws Exception{
+	public String authenticatedManager() throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null) {
@@ -274,57 +267,55 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 		}
 		return null;
 	}
-	
-	public String authorizedMenu(String userName, String url) throws Exception{
+
+	public String authorizedMenu(String userName, String url) throws Exception {
 		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
 		boolean authFlag = false;
-		if(manager.getGrpId() == 1) {
+		if (manager.getGrpId() == 1) {
 			authFlag = true;
-		}else {
+		} else {
 			int menuId = adminMenuService.getApiMenuFindId(url);
-			if(menuId > 0) {
+			if (menuId > 0) {
 				int authCnt = managerMenuAuthService.getMenuAuthCnt(manager.getGrpId(), menuId);
-				if(authCnt > 0) {
+				if (authCnt > 0) {
 					authFlag = true;
-				}else {
+				} else {
 					authFlag = false;
 				}
-			}else {
+			} else {
 				authFlag = true;
 			}
 		}
-		if(!authFlag) {
+		if (!authFlag) {
 			throw new UnauthorizedException("User " + userName + " not authorized");
 		}
-		
+
 		return "";
 	}
-	
-	
+
 	@Override
-	public boolean authorizeStore(MerchantStore store, String path)  throws Exception{
-		
-		if(store == null) {
+	public boolean authorizeStore(MerchantStore store, String path) throws Exception {
+
+		if (store == null) {
 			throw new ResourceNotFoundException("MerchantStore is not found");
 		}
 
-
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
 
 		if (!StringUtils.isBlank(path) && path.contains(PRIVATE_PATH)) {
-			
+
 			Validate.notNull(authentication, "Don't call ths method if a user is not authenticated");
 
 			try {
-				
 
 				String currentPrincipalName = authentication.getName();
 
 				LOGGER.info("Principal " + currentPrincipalName);
 
-				com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(currentPrincipalName);
-				//ReadableUser readableUser =	  findByUserName(currentPrincipalName, store.getCode(), store.getDefaultLanguage());
+				com.salesmanager.core.model.manager.ReadableManager manager = managerService
+						.getByUserName(currentPrincipalName);
+				// ReadableUser readableUser = findByUserName(currentPrincipalName,
+				// store.getCode(), store.getDefaultLanguage());
 				if (manager == null) {
 					return false;
 				}
@@ -332,17 +323,17 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 				// current user match;
 				String merchant = manager.getCode();
 
-				//user store is store request param
+				// user store is store request param
 				if (store.getCode().equalsIgnoreCase(merchant)) {
 					return true;
 				}
-				
 
-				//Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
-				//		.collect(Collectors.toSet());
+				// Set<String> roles = authentication.getAuthorities().stream().map(r ->
+				// r.getAuthority())
+				// .collect(Collectors.toSet());
 
 				// is superadmin
-				if(manager.getGrpId() == 1) {
+				if (manager.getGrpId() == 1) {
 					return true;
 				}
 //				for (ReadableGroup group : readableUser.getGroups()) {
@@ -357,9 +348,9 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 				// get parent
 				// TODO CACHE
 				MerchantStore parent = null;
-						
-				if(store.getParent()!=null) {
-					parent=merchantStoreService.getParent(merchant);
+
+				if (store.getParent() != null) {
+					parent = merchantStoreService.getParent(merchant);
 				}
 
 				// user can be in parent
@@ -378,18 +369,19 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 
 		return true;
 	}
-	
+
 	@Override
-	public boolean userInRoles(String userName) throws Exception{
+	public boolean userInRoles(String userName) throws Exception {
 		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<String> roles = authentication.getAuthorities().stream().filter(x -> manager.getGrpName().contains(x.getAuthority()))
-				.map(r -> r.getAuthority()).collect(Collectors.toList());
+		List<String> roles = authentication.getAuthorities().stream()
+				.filter(x -> manager.getGrpName().contains(x.getAuthority())).map(r -> r.getAuthority())
+				.collect(Collectors.toList());
 
 		return roles.size() > 0;
 
-  }
-	
+	}
+
 	@Override
 	public boolean authorizedStore(String userName, String merchantStoreCode) {
 
@@ -403,12 +395,12 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 			com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
 
 			// is superadmin
-			if(manager.getGrpId() == 1) {
+			if (manager.getGrpId() == 1) {
 				return true;
 			}
 
 			boolean authorized = false;
-			
+
 			if (manager != null) {
 				authorized = true;
 			}
@@ -431,5 +423,5 @@ public class ManagerFacadeImpl  implements ManagerFacade {
 					e.getMessage());
 		}
 	}
-	
+
 }

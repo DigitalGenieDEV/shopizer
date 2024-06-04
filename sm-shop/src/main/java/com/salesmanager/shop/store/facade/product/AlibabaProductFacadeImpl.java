@@ -197,6 +197,10 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 com.salesmanager.shop.model.catalog.category.Category category2 = new com.salesmanager.shop.model.catalog.category.Category();
                 category2.setId(category1.getId());
                 categoryList.add(category2);
+            }else{
+                com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(category, com.salesmanager.shop.model.catalog.category.Category.class);
+                convertCategory.setDescription(ObjectConvert.convert(category.getDescription(), CategoryDescription.class));
+                categoryList.add(convertCategory);
             }
 
         }
@@ -279,7 +283,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableProduct.setMixAmount(productDetailModel.getSellerMixSetting().getMixAmount());
         }
         persistableProduct.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
-        createProductVariant(productSearchQueryProductDetailModelProductDetailModelForEn, ko, en, store, productDetailModel, persistableProduct);
+        createProductVariant(ko, store, productDetailModel, persistableProduct);
 
         String jsonString = JSON.toJSONString(persistableProduct);
 
@@ -291,6 +295,15 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
 
     private void createAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttributeForEn,Language en ,Language language, MerchantStore store, ProductSearchQueryProductDetailModelProductAttribute[] productAttribute, PersistableProductDefinition product) throws Exception {
+
+        Map<String, ProductSearchQueryProductDetailModelProductAttribute> attributeEnMap = Arrays.stream(productAttributeForEn)
+                .collect(Collectors.toMap(
+                        attribute -> attribute.getAttributeId() + attribute.getValue(),  // 使用 attributeId 和 value 组合成键
+                        attribute -> attribute,
+                        (existing, replacement) -> existing  // 在遇到重复键时选择保留现有值
+                ));
+
+
 
         List<PersistableProductAttribute> attributes = new ArrayList<PersistableProductAttribute>();
 
@@ -317,7 +330,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getAttributeNameTrans());
                 sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getAttributeNameTrans());
                 sizeDescription.setProductOption(option);
+                ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
+                sizeDescriptionForEn.setLanguage(en);
+                sizeDescriptionForEn.setName(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getAttributeNameTrans());
+                sizeDescriptionForEn.setDescription(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getAttributeNameTrans());
+                sizeDescriptionForEn.setProductOption(option);
 
+                option.getDescriptions().add(sizeDescriptionForEn);
                 option.getDescriptions().add(sizeDescription);
 
                 //create option
@@ -345,6 +364,12 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 nineDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
                 nineDescription.setProductOptionValue(productOptionValue);
 
+                ProductOptionValueDescription nineDescriptionForEn = new ProductOptionValueDescription();
+                nineDescriptionForEn.setLanguage(en);
+                nineDescriptionForEn.setName(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getValueTrans());
+                nineDescriptionForEn.setDescription(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getValueTrans());
+                nineDescriptionForEn.setProductOptionValue(productOptionValue);
+                productOptionValue.getDescriptions().add(nineDescriptionForEn);
                 productOptionValue.getDescriptions().add(nineDescription);
 
                 //create an option value
@@ -366,7 +391,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
 
 
-    private void createProductVariant(ProductSearchQueryProductDetailModelProductDetailModel productDetailModelForEn ,Language language,Language en, MerchantStore store,ProductSearchQueryProductDetailModelProductDetailModel productDetailModel, PersistableProduct product) throws Exception {
+    private void createProductVariant(Language language, MerchantStore store,
+                                      ProductSearchQueryProductDetailModelProductDetailModel productDetailModel, PersistableProduct product) throws Exception {
 
         List<PersistableProductVariant> variants = new ArrayList<PersistableProductVariant>();
 

@@ -36,12 +36,11 @@ public enum ShippingType {
 				.collect(Collectors.toList());
 	}
 
-	public static String convertShippingTypesToString(List<ShippingType> shippingTypes) {
+	public static String convertShippingTypesToString(List<String> shippingTypes) {
 		if (shippingTypes == null || shippingTypes.isEmpty()) {
 			return null;
 		}
 		return shippingTypes.stream()
-				.map(ShippingType::name)
 				.collect(Collectors.joining(","));
 	}
 
