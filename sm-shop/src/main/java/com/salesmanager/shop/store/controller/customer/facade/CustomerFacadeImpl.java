@@ -576,14 +576,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 		saveCustomer(customerToPopulate);
 		customer.setId(customerToPopulate.getId());
-		
-		try {
-			customerTermsService.saveAll(customerToPopulate.getCustomerTerms());
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			throw new ServiceRuntimeException("Customer Terms are required", e);
-		}
-		
 
 		notifyNewCustomer(customer, store, customerToPopulate.getDefaultLanguage());
 		// convert to readable
