@@ -10,6 +10,7 @@ import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartIte
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.Mapper;
 import com.salesmanager.shop.mapper.cart.ReadableShoppingCartMapper;
 import com.salesmanager.shop.mapper.catalog.ReadableMinimalProductMapper;
@@ -85,7 +86,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
 
         destination.setCode(source.getCustomerShoppingCartCode());
         destination.setCustomer(source.getCustomerId());
-
+        long start = LogPermUtil.start("ReadableCustomerShoppingCartMapper/merge, customer id:" + source.getCustomerId());
         try {
             if (!StringUtils.isBlank(source.getPromoCode())) {
                 Date promoDateAdded = source.getPromoAdded();// promo valid 1 day
@@ -103,6 +104,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             }
 
             // 将未选中商品 拆分为 商户购物车进行 购物车项价格计算
+            LOG.debug("[ReadableCustomerShoppingCartMapper/merge] split unchecked items to stores");
             List<ShoppingCart> uncheckedItemsShoppingCarts = customerShoppingCartSplitterService.splitUncheckedItemsToShoppingCart(source);
             Map<String, ReadableCustomerShoppingCartItem> readableUncheckedCustomerShoppingCartItems = new HashMap<>();
             for (ShoppingCart shoppingCart : uncheckedItemsShoppingCarts) {
@@ -115,6 +117,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             }
 
             // 将选中商品 拆分为 商户购物车进行总价计算
+            LOG.debug("[ReadableCustomerShoppingCartMapper/merge] split checked items to stores");
             List<ShoppingCart> checkedItemsShoppingCarts = customerShoppingCartSplitterService.splitCheckedItemsToShoppingCart(source);
             List<ReadableShoppingCart> readableCheckedItemsShoppingCarts = new ArrayList<>();
             Map<String, ReadableCustomerShoppingCartItem> readableCheckedCustomerShoppingCartItems = new HashMap<>();
@@ -131,6 +134,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
 
 
             // 选中商品计算总价
+            LOG.debug("[ReadableCustomerShoppingCartMapper/merge] calculate checked order total");
             BigDecimal subTotal = readableCheckedItemsShoppingCarts.stream().map(s -> s.getSubtotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal total = readableCheckedItemsShoppingCarts.stream().map(s -> s.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -171,6 +175,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             List<ReadableOrderTotal> totals = orderTotalMaps.values().stream().collect(Collectors.toList());
 
             // 计算后的购车项合并
+            LOG.debug("[ReadableCustomerShoppingCartMapper/merge] merge cart items");
             List<ReadableCustomerShoppingCartItem> readableCustomerShoppingCartItems = new ArrayList<>();
             for (CustomerShoppingCartItem customerShoppingCartItem : source.getLineItems()) {
                 ReadableCustomerShoppingCartItem readableCustomerShoppingCartItem = readableCheckedCustomerShoppingCartItems.get(customerShoppingCartItem.getSku());
@@ -190,6 +195,8 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         } catch (Exception e) {
             throw new ConversionRuntimeException("An error occured while converting ReadableCustomerShoppingCart", e);
         }
+
+        LogPermUtil.end("ReadableCustomerShoppingCartMapper/merge, customer id:" + source.getCustomerId(), start);
 
         return destination;
     }

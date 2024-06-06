@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -1202,6 +1203,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		Validate.notNull(language, "Language cannot be null");
 		Validate.notNull(locale, "Locale cannot be null");
 
+		long start = LogPermUtil.start("processOrder");
 		try {
 
 
@@ -1217,8 +1219,8 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			Set<ShoppingCartItem> shoppingCartItems = cart.getLineItems();
 
+			LOGGER.debug("[processOrder] process order shopping cart, [items size:" + shoppingCartItems.size() + "]");
 			List<ShoppingCartItem> items = new ArrayList<ShoppingCartItem>(shoppingCartItems);
-
 			Set<OrderProduct> orderProducts = new LinkedHashSet<OrderProduct>();
 
 			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
@@ -1250,6 +1252,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			// requires Shipping information (need a quote id calculated)
 			ShippingSummary shippingSummary = null;
 
+			LOGGER.debug("[processOrder] process order shopping cart shipping quote");
 			// get shipping quote if asked for
 			if (order.getShippingQuote() != null && order.getShippingQuote().longValue() > 0) {
 				shippingSummary = shippingQuoteService.getShippingSummary(order.getShippingQuote(), store);
@@ -1263,6 +1266,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			// of process order request. If totals does not match, an error
 			// should be thrown.
 
+			LOGGER.debug("[processOrder] process order shopping cart calculate order total");
 			OrderTotalSummary orderTotalSummary = null;
 
 			OrderSummary orderSummary = new OrderSummary();
@@ -1305,6 +1309,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 			modelOrder.setOrderTotal(set);
 
+			LOGGER.debug("[processOrder] process order shopping cart payment");
 			PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
 			paymentPopulator.setPricingService(pricingService);
 			Payment paymentModel = new Payment();
@@ -1324,11 +1329,13 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 
+			LOGGER.debug("[processOrder] process order shopping cart process order");
 			//order service
 			modelOrder = orderService.processOrder(modelOrder, customer, items, orderTotalSummary, paymentModel, store);
 
 			// update cart
 			try {
+				LOGGER.info("[processOrder] process order shopping cart save update");
 				cart.setOrderId(modelOrder.getId());
 				shoppingCartFacade.saveOrUpdateShoppingCart(cart);
 			} catch (Exception e) {
@@ -1347,7 +1354,7 @@ public class OrderFacadeImpl implements OrderFacade {
 					LOGGER.error("Cannot send order confirmation email", e);
 				}
 			}
-
+			LogPermUtil.end("processOrder", start);
 			return modelOrder;
 
 		} catch (Exception e) {

@@ -103,7 +103,8 @@ public class ReadableOrderProductMapper implements Mapper<OrderProduct, Readable
 		if (!StringUtils.isBlank(productSku)) {
 			Product product = null;
 			try {
-				product = productService.getBySku(productSku, store, language);
+//				product = productService.getBySku(productSku, store, language);
+				product = productService.getBySku(productSku);
 			} catch (ServiceException e) {
 				throw new ServiceRuntimeException(e);
 			}
@@ -111,6 +112,9 @@ public class ReadableOrderProductMapper implements Mapper<OrderProduct, Readable
 				
 				
 				ReadableProduct productProxy = readableProductMapper.convert(product, store, language);
+
+				// 去除 variants
+				productProxy.setVariants(null);
 				target.setProduct(productProxy);
 				
 				/**

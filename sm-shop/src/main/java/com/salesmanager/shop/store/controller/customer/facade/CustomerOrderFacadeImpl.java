@@ -28,6 +28,7 @@ import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.customer.ReadableCustomerMapper;
 import com.salesmanager.shop.mapper.order.ReadableOrderProductMapper;
 import com.salesmanager.shop.mapper.order.ReadableOrderTotalMapper;
@@ -132,11 +133,17 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         Validate.notNull(language, "Language cannot be null");
         Validate.notNull(locale, "Locale cannot be null");
 
+        LogPermUtil.start("processCustomerOrder");
+
+        LOGGER.debug("[processCustomerOrder] start process customer order, [customer id: " + customer.getId() + "]");
+        long start = System.currentTimeMillis();
+
         try {
             CustomerOrder modelCustomerOrder = new CustomerOrder();
+
+            LOGGER.info("[processCustomerOrder] populate customer order model");
             persistableCustomerOrderApiPopulator.populate(customerOrder, modelCustomerOrder, null, language);
 
-//            Long customerShoppingCartId = customerOrder.getCustomerShoppingCartId();
             CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
 
             if (cart == null) {
@@ -144,6 +151,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             }
 
             // 将选中商品 按商户拆分
+            LOGGER.info("[processCustomerOrder] split checked items to uniq stores");
             List<MerchantStore> stores = cart.getCheckedLineItems().stream().map(i -> i.getMerchantStore()).collect(Collectors.toList());
             Set<MerchantStore> uniqStores = new TreeSet<>(Comparator.comparing(MerchantStore::getId));
             uniqStores.addAll(stores);
@@ -152,6 +160,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             List<CustomerShoppingCartItem> lineItems = new ArrayList(cart.getLineItems());
             for (MerchantStore store: uniqStores) {
                 // 创建商户购物车
+                LOGGER.debug("[processCustomerOrder] create shopping cart, [store id: " + store.getId() + "]");
                 ShoppingCart shoppingCart = shoppingCartFacade.getShoppingCartModel(customer, store); // 直接创建一个新的购物车
 
                 if(shoppingCart==null){
@@ -167,7 +176,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 }
 
                 // 商品加入商户购物车
-                shoppingCartFacade.modifyCartMulti(shoppingCart.getShoppingCartCode(), getPersistableShoppingCartItemsOfStore(store, lineItems), store, language);
+                LOGGER.debug("[processCustomerOrder] modify shopping cart multi, [store id: " + store.getId() + "]");
+                List<PersistableShoppingCartItem> persistableShoppingCartItems = getPersistableShoppingCartItemsOfStore(store, lineItems);
+                shoppingCartFacade.modifyCartMulti(shoppingCart.getShoppingCartCode(), persistableShoppingCartItems, store, language);
 
                 PersistableOrder persistableOrder = new PersistableOrder();
                 persistableOrder.setCustomerId(customer.getId());
@@ -175,7 +186,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
                 persistableOrder.setCurrency(customerOrder.getCurrency());
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
+                persistableOrder.setAddress(customerOrder.getAddress());
 
+                LOGGER.debug("[processCustomerOrder] calculate order total summary, [store id: " + store.getId() + "]");
                 OrderTotalSummary orderTotalSummary = shoppingCartCalculationService.calculate(shoppingCart, customer, store, language);
 
                 PersistablePayment persistablePayment = new PersistablePayment();
@@ -187,8 +200,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setPayment(persistablePayment);
 
 
-                persistableOrder.setAddress(customerOrder.getAddress());
                 // 创建商户订单
+                LOGGER.info("[processCustomerOrder] create order, [store id: " + store.getId() + "]");
                 Order order = orderFacade.processOrder(persistableOrder, customer, store, language, locale);
                 orders.add(order);
             }
@@ -199,7 +212,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             modelCustomerOrder.setTotal(total);
             modelCustomerOrder.setOrders(orders);
 
-//            Payment paymentModule = new Payment();
+
+            LOGGER.info("[processCustomerOrder] process customer order payment");
             PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
             paymentPopulator.setPricingService(pricingService);
             Payment paymentModel = new Payment();
@@ -210,6 +224,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
 
             try {
+                LOGGER.info("[processCustomerOrder] save update customer cart");
                 customerShoppingCartService.saveOrUpdate(cart);
             } catch (Exception e) {
                 LOGGER.error("Cannot save cart " + cart.getId(), e);
@@ -224,6 +239,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 //                }
 //            }
 
+            LogPermUtil.end("processCustomerOrder", start);
             return  modelCustomerOrder;
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -240,12 +256,14 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         Validate.notNull(customerOrder, "CustomerOrder cannot be null");
         Validate.notNull(customer, "Customer cannot be null");
 
+        long start = LogPermUtil.start("CustomerOrderFacade/orderConfirmation, customer order id:" + customerOrder.getId());
         ReadableCustomerOrderConfirmation orderConfirmation = new ReadableCustomerOrderConfirmation();
 
         ReadableCustomer readableCustomer = readableCustomerMapper.convert(customer, null, language);
         orderConfirmation.setBilling(readableCustomer.getBilling());
         orderConfirmation.setDelivery(readableCustomer.getDelivery());
 
+        LOGGER.debug("[CustomerOrderFacade/orderConfirmation] set order total");
         ReadableTotal readableTotal = new ReadableTotal();
 
         List<Order> orders = customerOrder.getOrders();
@@ -258,18 +276,16 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         MerchantStore merchantStore = merchantStoreService.getById(1);
 
-
         List<ReadableOrderTotal> readableTotals = orderTotals.stream()
                 .sorted(Comparator.comparingInt(OrderTotal::getSortOrder))
                 .map(tot -> convertOrderTotal(tot, merchantStore, language))
                 .collect(Collectors.toList());
 
-//        BigDecimal grandTotal = orderTotals.stream().sorted(Comparator.comparingInt(OrderTotal::getSortOrder))
-//                .map(tot -> )
 
         readableTotal.setTotals(readableTotals);
         orderConfirmation.setTotal(readableTotal);
 
+        LOGGER.debug("[CustomerOrderFacade/orderConfirmation] set order product");
         List<ReadableOrderProduct> products = orderProducts.stream().map(pr -> convertOrderProduct(pr, merchantStore, language)).collect(Collectors.toList());
         orderConfirmation.setProducts(products);
 
@@ -279,6 +295,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         orderConfirmation.setId(customerOrder.getId());
 
+        LOGGER.debug("[CustomerOrderFacade/orderConfirmation] set order transaction");
         CombineTransaction combineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
         ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
         ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
@@ -286,6 +303,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
 
         orderConfirmation.setTransaction(readableCombineTransaction);
+
+        LogPermUtil.end("CustomerOrderFacade/orderConfirmation, customer order id:" + customerOrder.getId(), start);
         return orderConfirmation;
     }
 

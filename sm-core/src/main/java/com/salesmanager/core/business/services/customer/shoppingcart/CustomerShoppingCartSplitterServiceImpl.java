@@ -115,6 +115,7 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setShoppingCart(shoppingCart);
         shoppingCartItem.setProductId(customerShoppingCartItem.getProductId());
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
+        shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
         shoppingCartItem.setProductVirtual(customerShoppingCartItem.isProductVirtual());
         shoppingCartItem.setQuantity(customerShoppingCartItem.getQuantity());
 //        shoppingCartItem.setAttributes();
@@ -126,6 +127,7 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setObsolete(customerShoppingCartItem.isObsolete());
         shoppingCartItem.setProduct(customerShoppingCartItem.getProduct());
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
+        shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
         return shoppingCartItem;
     }
 

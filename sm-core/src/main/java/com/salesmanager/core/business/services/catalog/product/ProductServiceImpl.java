@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.model.catalog.product.*;
+import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -459,7 +460,9 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	@Override
 	public Product getBySku(String productCode) throws ServiceException {
 		try {
+			long start = LogPermUtil.start("getBySku, sku:" + productCode);
 			List<Object> products = productRepository.findBySku(productCode);
+			LogPermUtil.end("getBySku, sku:" + productCode, start);
 			if(products.isEmpty()) {
 				throw new ServiceException("Cannot get product with sku [" + productCode + "]");
 			}

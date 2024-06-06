@@ -60,6 +60,7 @@
 			  value-type="com.salesmanager.core.business.modules.integration.payment.model.CombinePaymentModule">
 		<beans:entry key="PayPal" value-ref="paypal-ck" />
 		<beans:entry key="Kcp" value-ref="kcp" />
+		<beans:entry key="Nicepay" value-ref="nicepay" />
 	</util:map>
 
 
@@ -102,6 +103,8 @@
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.PayPalCheckoutPayment" />
 	<beans:bean id="kcp"
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.KcpPayment" />
+	<beans:bean id="nicepay"
+				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.NicepayPayment" />
 
 	<!--Encryption -->
 	<beans:bean id="encryption"

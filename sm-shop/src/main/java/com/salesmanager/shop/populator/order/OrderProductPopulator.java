@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.store.controller.order.facade.OrderFacadeImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -26,9 +28,13 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartAttributeItem;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.shop.constants.ApplicationConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderProductPopulator extends
 		AbstractDataPopulator<ShoppingCartItem, OrderProduct> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderProductPopulator.class);
 	
 	private ProductService productService;
 	private DigitalProductService digitalProductService;
@@ -64,9 +70,10 @@ public class OrderProductPopulator extends
 		Validate.notNull(digitalProductService,"digitalProductService must be set");
 		Validate.notNull(productAttributeService,"productAttributeService must be set");
 
+		long start = LogPermUtil.start("OrderProductPopulator/populate, sku:" + source.getSku());
 		
 		try {
-			Product modelProduct = productService.getBySku(source.getSku(), store, language);
+			Product modelProduct = productService.getBySku(source.getSku());
 			if(modelProduct==null) {
 				throw new ConversionException("Cannot get product with sku " + source.getSku());
 			}
@@ -89,7 +96,7 @@ public class OrderProductPopulator extends
 			target.setOneTimeCharge(source.getItemPrice());	
 			target.setProductName(source.getProduct().getDescriptions().iterator().next().getName());
 			target.setProductQuantity(source.getQuantity());
-			target.setSku(source.getProduct().getSku());
+			target.setSku(source.getSku());
 			
 			FinalPrice finalPrice = source.getFinalPrice();
 			if(finalPrice==null) {
@@ -148,7 +155,7 @@ public class OrderProductPopulator extends
 			throw new ConversionException(e);
 		}
 		
-		
+		LogPermUtil.end("OrderProductPopulator/populate", start);
 		return target;
 	}
 
