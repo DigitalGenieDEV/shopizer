@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,9 @@ public class UserApi {
 	@Inject
 	private UserFacade userFacade;
 
+	@Inject
+	private ManagerFacade managerFacade;
+
 	/**
 	 * Get userName by merchant code and userName
 	 *
@@ -84,15 +88,21 @@ public class UserApi {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	public ReadableUser get(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, @PathVariable Long id,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
+//
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//		// only admin and superadmin allowed
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-		// only admin and superadmin allowed
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
 
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 		return userFacade.findById(id, merchantStore, language);
 	}
 
@@ -120,6 +130,7 @@ public class UserApi {
 		// only admin and superadmin allowed
 		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
 
+
 		/** if user is admin, user must be in that store */
 		if (!userFacade.userInRoles(authenticatedUser, Arrays.asList(Constants.GROUP_SUPERADMIN))) {
 			if (!userFacade.authorizedStore(authenticatedUser, merchantStore.getCode())) {
@@ -139,7 +150,7 @@ public class UserApi {
 	public ReadableUser update(@Valid @RequestBody PersistableUser user, @PathVariable Long id,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language
 
-	) {
+	) throws Exception {
 
 		String authenticatedUser = userFacade.authenticatedUser();// requires
 																	// user
@@ -147,6 +158,13 @@ public class UserApi {
 																	// action
 
 		userFacade.authorizedGroups(authenticatedUser, user);
+
+//		String authenticatedManager = managerFacade.authenticatedManager();
+//		if (authenticatedManager == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		return userFacade.update(id, authenticatedUser, merchantStore, user);
 	}
@@ -160,6 +178,8 @@ public class UserApi {
 		if (authenticatedUser == null) {
 			throw new UnauthorizedException();
 		}
+
+
 		userFacade.changePassword(id, authenticatedUser, password);
 	}
 
@@ -204,16 +224,23 @@ public class UserApi {
 	public void updateEnabled(
 			@PathVariable Long id, 
 			@Valid @RequestBody PersistableUser user,
-			@ApiIgnore MerchantStore merchantStore
-			) {
+			@ApiIgnore MerchantStore merchantStore,
+			HttpServletRequest request
+			) throws Exception {
 		
 		// superadmin, admin and retail_admin
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		user.setId(id);
 		userFacade.updateEnabled(merchantStore, user);

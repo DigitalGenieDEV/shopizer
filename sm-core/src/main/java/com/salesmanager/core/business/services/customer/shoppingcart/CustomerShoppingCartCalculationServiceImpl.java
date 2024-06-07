@@ -105,6 +105,7 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
         shoppingCartItem.setShoppingCart(shoppingCart);
         shoppingCartItem.setProductId(customerShoppingCartItem.getProductId());
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
+        shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
         shoppingCartItem.setProductVirtual(customerShoppingCartItem.isProductVirtual());
         shoppingCartItem.setQuantity(customerShoppingCartItem.getQuantity());
 //        shoppingCartItem.setAttributes();

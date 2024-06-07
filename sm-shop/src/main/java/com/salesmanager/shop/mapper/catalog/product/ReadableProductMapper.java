@@ -291,8 +291,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 								}
 							}
 						}
-						valueDescription.setName(podescription.getName());
-						valueDescription.setDescription(podescription.getDescription());
+						if (podescription != null) {
+							valueDescription.setName(podescription.getName());
+							valueDescription.setDescription(podescription.getDescription());
+						}
 						optValue.setDescription(valueDescription);
 
 						if (opt != null) {
@@ -617,8 +619,9 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 		for (ProductVariation variation : instance.getVariations()) {
 			ReadableProductOption option = this.option(selectableOptions, variation.getProductOption(), language);
-			option.setVariant(true);
-
+			if (option != null) {
+				option.setVariant(true);
+			}
 			Optional<ReadableProductOptionValue> optionValueOpt = this.optionValue(variation.getProductOptionValue(), store, language);
 			if (optionValueOpt.isPresent()) {
 				ReadableProductOptionValue optionValue = optionValueOpt.get();
@@ -634,7 +637,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 	}
 	
 	private void addOptionValue(ReadableProductOption option, ReadableProductOptionValue optionValue) {
-		
+		if (option == null) {
+			return;
+		}
+
 		ReadableProductOptionValue find = option.getOptionValues().stream()
 				  .filter(optValue -> optValue.getCode()==optionValue.getCode())
 				  .findAny()
@@ -651,7 +657,9 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		}
 
 		ReadableProductOption readable = this.createOption(option, language);
-		selectableOptions.put(readable.getId(), readable);
+		if (readable != null) {
+			selectableOptions.put(readable.getId(), readable);
+		}
 		return readable;
 	}
 

@@ -4,7 +4,7 @@ public enum PaymentType {
 
 
 
-	CREDITCARD("creditcard"), FREE("free"), COD("cod"), MONEYORDER("moneyorder"), PAYPAL("paypal"),KCP("kcp"),
+	CREDITCARD("creditcard"), FREE("free"), COD("cod"), MONEYORDER("moneyorder"), PAYPAL("paypal"),KCP("kcp"), NICEPAY("nicepay"),
 	INVOICE("invoice"), DIRECTBANK("directbank"), PAYMENTPLAN("paymentplan"), ACCOUNTCREDIT("accountcredit");
 
 

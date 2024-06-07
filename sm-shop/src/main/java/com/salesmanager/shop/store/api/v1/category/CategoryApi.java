@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.CategoryType;
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -244,6 +245,7 @@ public class CategoryApi {
 		}
 
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+
 		category.setCategoryType(CategoryType.USER.name());
 		return categoryFacade.saveCategory(merchantStore, category);
 	}
@@ -260,17 +262,6 @@ public class CategoryApi {
 			@ApiIgnore Language language,
 			@ApiIgnore HttpServletRequest request
 	) throws Exception {
-
-		// superadmin, admin and admin_catalogue
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_CATALOGUE,
-		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-		 */
 
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
@@ -291,17 +282,6 @@ public class CategoryApi {
 			@ApiIgnore HttpServletRequest request
 	) throws Exception {
 
-		// superadmin, admin and admin_catalogue
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_CATALOGUE,
-		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-		 */
-
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
@@ -321,17 +301,6 @@ public class CategoryApi {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore HttpServletRequest request
 	) throws Exception {
-
-		// superadmin, admin and admin_catalogue
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_CATALOGUE,
-		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-		 */
 
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
@@ -356,17 +325,6 @@ public class CategoryApi {
 			@ApiIgnore HttpServletRequest request
 	) throws Exception {
 
-		// superadmin, admin and admin_catalogue
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_CATALOGUE,
-		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-		 */
-
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
@@ -385,18 +343,6 @@ public class CategoryApi {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore HttpServletRequest request
 	) throws Exception {
-
-		// superadmin, admin and admin_catalogue
-		/*
-		 * String authenticatedUser = userFacade.authenticatedUser(); if
-		 * (authenticatedUser == null) { throw new UnauthorizedException(); }
-		 * 
-		 * userFacade.authorizedGroup(authenticatedUser,
-		 * Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-		 * Constants.GROUP_ADMIN_CATALOGUE,
-		 * Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
-		 */
-
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();

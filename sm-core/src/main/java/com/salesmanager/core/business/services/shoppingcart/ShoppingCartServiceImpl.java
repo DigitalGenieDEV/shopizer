@@ -287,7 +287,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 		Validate.notNull(store, "MerchantStore should not be null");
 
 		ShoppingCartItem item = new ShoppingCartItem(product);
-		item.setSku(product.getSku());//already in the constructor
+//		item.setSku(product.getSku());//already in the constructor
 
 		// set item price
 		FinalPrice price = pricingService.calculateProductPrice(product);
@@ -299,15 +299,15 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 	@Transactional
 	private void getPopulatedItem(final ShoppingCartItem item, MerchantStore store) throws Exception {
 
-		Product product = productService.getBySku(item.getSku(), store, store.getDefaultLanguage());
-
+//		Product product = productService.getBySku(item.getSku(), store, store.getDefaultLanguage());
+		Product product = productService.getBySku(item.getSku());
 		if (product == null) {
 			item.setObsolete(true);
 			return;
 		}
 
 		item.setProduct(product);
-		item.setSku(product.getSku());
+//		item.setSku(product.getSku());
 
 		if (product.isProductVirtual()) {
 			item.setProductVirtual(true);

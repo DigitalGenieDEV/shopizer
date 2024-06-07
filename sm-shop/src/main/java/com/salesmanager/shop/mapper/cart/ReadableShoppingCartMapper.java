@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.entity.ReadableDescription;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +106,7 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(language, "Language cannot be null");
 
+		long start = LogPermUtil.start("ReadableShoppingCartMapper/merge");
 		destination.setCode(source.getShoppingCartCode());
 		int cartQuantity = 0;
 
@@ -133,8 +135,10 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 				for (com.salesmanager.core.model.shoppingcart.ShoppingCartItem item : items) {
 					ReadableShoppingCartItem shoppingCartItem = new ReadableShoppingCartItem();
+					LOG.debug("[ReadableShoppingCartMapper/merge] minimal product mapper, [sku:" + item.getSku() + "]");
 					readableMinimalProductMapper.merge(item.getProduct(), shoppingCartItem, store, language);
-					
+
+					LOG.debug("[ReadableShoppingCartMapper/merge] calculate variant, [sku:" + shoppingCartItem.getSku() + "]");
 					//variation
 					if(item.getVariant() != null) {
 						Optional<ProductVariant> productVariant = productVariantService.getById(item.getVariant(), store);
@@ -159,8 +163,9 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 					if (shoppingCartItem.getImage() == null && shoppingCartItem.getImages() != null && shoppingCartItem.getImages().size() > 0) {
 						shoppingCartItem.setImage(shoppingCartItem.getImages().get(0));
 					}
-					
 
+
+					LOG.debug("[ReadableShoppingCartMapper/merge] calculate price");
 					shoppingCartItem.setPrice(item.getItemPrice());
 					shoppingCartItem.setFinalPrice(pricingService.getDisplayAmount(item.getItemPrice(), store));
 
@@ -179,6 +184,7 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 					Set<com.salesmanager.core.model.shoppingcart.ShoppingCartAttributeItem> attributes = item
 							.getAttributes();
+					LOG.debug("[ReadableShoppingCartMapper/merge] process attributes");
 					if (attributes != null) {
 						for (com.salesmanager.core.model.shoppingcart.ShoppingCartAttributeItem attribute : attributes) {
 
@@ -261,6 +267,7 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 			// OrdetTotalSummary contains all calculations
 
+			LOG.debug("[ReadableShoppingCartMapper/merge] calculate order total");
 			OrderTotalSummary orderSummary = shoppingCartCalculationService.calculate(source, store, language);
 
 			if (CollectionUtils.isNotEmpty(orderSummary.getTotals())) {
@@ -296,10 +303,11 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 				destination.setOrder(source.getOrderId());
 			}
 
+
 		} catch (Exception e) {
 			throw new ConversionRuntimeException("An error occured while converting ReadableShoppingCart", e);
 		}
-
+		LogPermUtil.end("ReadableShoppingCartMapper/merge", start);
 		return destination;
 	}
 

@@ -9,6 +9,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
@@ -81,9 +82,11 @@ public class CustomerShoppingCartApi {
             @ApiIgnore Language language,
             HttpServletRequest request
     ) throws Exception {
+        long start = LogPermUtil.start("CustomerShoppingCartApi/addToCart");
         Principal userPrincipal = request.getUserPrincipal();
         Customer customer = customerService.getByNick(userPrincipal.getName());
         ReadableCustomerShoppingCart cart = customerShoppingCartFacade.addToCart(customer, customerShoppingCartItem, store, language);
+        LogPermUtil.end("CustomerShoppingCartApi/addToCart", start);
         return cart;
     }
 
@@ -97,6 +100,7 @@ public class CustomerShoppingCartApi {
             @ApiIgnore MerchantStore store,
             HttpServletRequest request
     ) {
+        long start = LogPermUtil.start("CustomerShoppingCartApi/modifyCart");
         try {
             Principal userPrincipal = request.getUserPrincipal();
             Customer customer = customerService.getByNick(userPrincipal.getName());
@@ -106,6 +110,7 @@ public class CustomerShoppingCartApi {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
+            LogPermUtil.end("CustomerShoppingCartApi/modifyCart", start);
             return new ResponseEntity<>(cart, HttpStatus.CREATED);
 
         } catch (Exception e) {
@@ -222,6 +227,7 @@ public class CustomerShoppingCartApi {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
+        long start = LogPermUtil.start("CustomerShoppingCartApi/getByCustomer");
         try {
             Principal principal = request.getUserPrincipal();
             Customer customer = customerService.getByNick(principal.getName());
@@ -231,9 +237,8 @@ public class CustomerShoppingCartApi {
                 response.sendError(404, "No ShoppingCart found for customer : " + principal.getName());
                 return null;
             }
-
+           LogPermUtil.end("CustomerShoppingCartApi/getByCustomer", start);
             return cart;
-
         } catch (Exception e) {
             if(e instanceof ResourceNotFoundException) {
                 throw (ResourceNotFoundException)e;
@@ -355,7 +360,7 @@ public class CustomerShoppingCartApi {
             HttpServletRequest request,
             HttpServletResponse response, Locale locale
     ) {
-
+        long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
         try {
             Principal principal = request.getUserPrincipal();
             String userName = principal.getName();
@@ -379,7 +384,10 @@ public class CustomerShoppingCartApi {
             Long customerOrderId = modelCustomerOrder.getId();
             modelCustomerOrder.setId(customerOrderId);
 
-            return customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+            ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+
+            LogPermUtil.end("CustomerShoppingCartApi/checkout", start);
+            return readableCustomerOrderConfirmation;
         } catch (Exception e) {
             LOGGER.error("Error while processing checkout", e);
             try {

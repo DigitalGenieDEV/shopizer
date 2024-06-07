@@ -31,6 +31,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerShoppingCartServiceImpl.class);
 
+    @Inject
     private CustomerShoppingCartRepository customerShoppingCartRepository;
 
     @Inject
@@ -52,15 +53,19 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
     @Override
     public CustomerShoppingCart getCustomerShoppingCart(Customer customer) throws ServiceException {
+        LOGGER.info("get customer shopping cart [customer:" + customer.getId() +"]");
         CustomerShoppingCart cartModel = this.customerShoppingCartRepository.findByCustomer(customer.getId());
 
+        LOGGER.info("get customer shopping cart [customer:" + customer.getId() +"], cartModel=" + cartModel);
         if (cartModel == null) {
             cartModel = new CustomerShoppingCart();
             cartModel.setCustomerId(customer.getId());
             cartModel.setCustomerShoppingCartCode(uniqueShoppingCartCode());
 
             this.customerShoppingCartRepository.save(cartModel);
-        } else {
+        }
+        else {
+            LOGGER.info("get customer shopping cart populate [customer:" + customer.getId() +"]");
             getPopulatedCustomerShoppingCart(cartModel);
         }
 
@@ -123,15 +128,15 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
             if (customerShoppingCart != null) {
                 Set<CustomerShoppingCartItem> items = customerShoppingCart.getLineItems();
 
-                // TODO
-                if (items == null || items.size() == 0) {
-                    customerShoppingCart.setObsolete(true);
-                }
+//                // TODO
+//                if (items == null || items.size() == 0) {
+//                    customerShoppingCart.setObsolete(true);
+//                }
 
                 for (CustomerShoppingCartItem item: items) {
-                    LOGGER.debug("Populate item " + item.getId());
+                    LOGGER.info("Populate item " + item.getId());
                     getPopulatedItem(item);
-                    LOGGER.debug("Obsolete item ? " + item.isObsolete());
+                    LOGGER.info("Obsolete item ? " + item.isObsolete());
                     if (item.isObsolete()) {
                         cartIsObsolete = true;
                     }
@@ -139,7 +144,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
                 Set<CustomerShoppingCartItem> refreshedItems = new HashSet<>(items);
                 customerShoppingCart.setLineItems(refreshedItems);
-                update(customerShoppingCart);
+//                update(customerShoppingCart);
 
                 if (cartIsObsolete) {
                     customerShoppingCart.setObsolete(true);
@@ -157,7 +162,9 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
 //    @Transactional
     private void getPopulatedItem(final CustomerShoppingCartItem item) throws Exception {
-        Product product = productService.getBySku(item.getSku(), item.getMerchantStore(), item.getMerchantStore().getDefaultLanguage());
+        long start = System.currentTimeMillis();
+        Product product = productService.getBySku(item.getSku());
+//        Product product = productService.getBySku(item.getSku(), item.getMerchantStore(), item.getMerchantStore().getDefaultLanguage());
         if (product == null) {
             item.setObsolete(true);
             return;

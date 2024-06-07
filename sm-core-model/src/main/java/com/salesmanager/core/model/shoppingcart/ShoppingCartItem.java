@@ -105,7 +105,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	public ShoppingCartItem(Product product) {
 		this.product = product;
 		this.productId = product.getId();
-		this.setSku(product.getSku());
+//		this.setSku(product.getSku());
 		this.quantity = 1;
 		this.productVirtual = product.isProductVirtual();
 	}

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -129,10 +130,10 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         Validate.notNull(order, "Order cannot be null");
         Validate.notNull(customer, "Customer cannot be null (even if anonymous order)");
-        Validate.notEmpty(items, "ShoppingCart items cannot be null");
-        Validate.notNull(payment, "Payment cannot be null");
+//        Validate.notEmpty(items, "ShoppingCart items cannot be null");
+//        Validate.notNull(payment, "Payment cannot be null");
         Validate.notNull(store, "MerchantStore cannot be null");
-        Validate.notNull(summary, "Order total Summary cannot be null");
+//        Validate.notNull(summary, "Order total Summary cannot be null");
 
         UserContext context = UserContext.getCurrentInstance();
         if(context != null) {
@@ -195,7 +196,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         for(OrderProduct orderProduct : products) {
 //            orderProduct.getProductQuantity();
 //            Product p = productService.getById(orderProduct.getId());
-            Product p = productService.getBySku(orderProduct.getSku(), store);
+            Product p = productService.getBySku(orderProduct.getSku());
             if(p == null)
                 throw new ServiceException(ServiceException.EXCEPTION_INVENTORY_MISMATCH);
             for(ProductAvailability availability : p.getAvailabilities()) {
@@ -216,7 +217,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
     public OrderTotalSummary caculateOrder(OrderSummary summary, Customer customer, final MerchantStore store, final Language language) throws Exception {
-
+        long start = LogPermUtil.start("OrderService/caculateOrder");
         OrderTotalSummary totalSummary = new OrderTotalSummary();
         List<OrderTotal> orderTotals = new ArrayList<OrderTotal>();
         Map<String,OrderTotal> otherPricesTotals = new HashMap<String,OrderTotal>();
@@ -226,6 +227,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         BigDecimal grandTotal = new BigDecimal(0);
         grandTotal.setScale(2, RoundingMode.HALF_UP);
 
+        LOGGER.debug("[caculateOrder] calculate order qty price");
         //price by item
         /**
          * qty * price
@@ -274,6 +276,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             }
         }
 
+        LOGGER.debug("[caculateOrder] calculate order total");
         //only in order page, otherwise invokes too many processing
         if(
                 OrderSummaryType.ORDERTOTAL.name().equals(summary.getOrderSummaryType().name()) ||
@@ -312,6 +315,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         orderTotals.add(orderTotalSubTotal);
 
 
+        LOGGER.debug("[caculateOrder] calculate order shipping");
         //shipping
         if(summary.getShippingSummary()!=null) {
 
@@ -351,6 +355,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             }
         }
 
+        LOGGER.info("[caculateOrder] calculate order tax");
         //tax
         List<TaxItem> taxes = taxService.calculateTax(summary, customer, store, language);
         if(taxes!=null && taxes.size()>0) {
@@ -392,6 +397,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         totalSummary.setTotal(grandTotal);
         totalSummary.setTotals(orderTotals);
+
+        LogPermUtil.end("OrderService/caculateOrder", start);
         return totalSummary;
 
     }
@@ -430,7 +437,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
     private OrderTotalSummary caculateShoppingCart( ShoppingCart shoppingCart, final Customer customer, final MerchantStore store, final Language language) throws Exception {
 
-
+        long start = LogPermUtil.start("OrderService/caculateShoppingCart");
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setOrderSummaryType(OrderSummaryType.SHOPPINGCART);
 
@@ -460,7 +467,9 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         orderSummary.setProducts(itemList);
 
 
-        return caculateOrder(orderSummary, customer, store, language);
+        OrderTotalSummary orderTotalSummary = caculateOrder(orderSummary, customer, store, language);
+        LogPermUtil.end("OrderService/caculateShoppingCart", start);
+        return orderTotalSummary;
 
     }
 

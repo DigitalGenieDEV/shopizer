@@ -44,7 +44,7 @@ public class MyScheduledTask {
     @Autowired
     private ProductRepository productRepository;
 
-    @Scheduled(cron = "0/5 * * * * *")
+//    @Scheduled(cron = "0/5 * * * * *")
     void execute1688ProductImportTask() throws ServiceException {
         deleteProductsInParallel();
 

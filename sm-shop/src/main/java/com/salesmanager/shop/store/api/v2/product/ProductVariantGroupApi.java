@@ -3,8 +3,10 @@ package com.salesmanager.shop.store.api.v2.product;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,21 +56,31 @@ public class ProductVariantGroupApi {
 	@Autowired
 	private UserFacade userFacade;
 
+	@Autowired
+	private ManagerFacade managerFacade;
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/private/product/productVariantGroup" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	public @ResponseBody Entity create(
 			@Valid @RequestBody PersistableProductVariantGroup instanceGroup,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
+			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		Long id = productVariantGroupFacade.create(instanceGroup, merchantStore, language);
 
@@ -82,15 +94,22 @@ public class ProductVariantGroupApi {
 	public @ResponseBody void update(@PathVariable Long id,
 			@Valid @RequestBody PersistableProductVariantGroup instance, 
 			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		productVariantGroupFacade.update(id, instance, merchantStore, language);
 	}
@@ -100,15 +119,22 @@ public class ProductVariantGroupApi {
 	@ApiOperation(httpMethod = "GET", value = "Get product instance group", notes = "", produces = "application/json", response = Void.class)
 	public @ResponseBody ReadableProductVariantGroup get(
 			@PathVariable Long id, @ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		return productVariantGroupFacade.get(id, merchantStore, language);
 	}
@@ -119,15 +145,22 @@ public class ProductVariantGroupApi {
 	@DeleteMapping(value = { "/private/product/productVariantGroup/{id}" })
 	@ApiOperation(httpMethod = "DELETE", value = "Delete product instance group", notes = "", produces = "application/json", response = Void.class)
 	public @ResponseBody void delete(@PathVariable Long id, @ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		productVariantGroupFacade.delete(id, id, merchantStore);
 	}
@@ -141,15 +174,22 @@ public class ProductVariantGroupApi {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-	@RequestParam(value = "count", required = false, defaultValue = "10") Integer count) {
+	@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		return productVariantGroupFacade.list(id, merchantStore, language, page, count);
 	}
@@ -165,15 +205,22 @@ public class ProductVariantGroupApi {
 			@RequestParam(value = "file", required = true) MultipartFile file,
 			@RequestParam(value = "order", required = false, defaultValue = "0") Integer position,
 			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		productVariantGroupFacade.addImage(file, id, merchantStore, language);
 
@@ -184,15 +231,22 @@ public class ProductVariantGroupApi {
 	@RequestMapping(value = {
 			"/private/product/productVariantGroup/{id}/image/{imageId}" }, method = RequestMethod.DELETE)
 	public void removeImage(@PathVariable Long id, @PathVariable Long imageId, @ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
+			@ApiIgnore Language language, HttpServletRequest request) throws Exception {
 
-		String authenticatedUser = userFacade.authenticatedUser();
-		if (authenticatedUser == null) {
+//		String authenticatedUser = userFacade.authenticatedUser();
+//		if (authenticatedUser == null) {
+//			throw new UnauthorizedException();
+//		}
+//
+//		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
+//				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 
-		userFacade.authorizedGroup(authenticatedUser, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_CATALOGUE, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()));
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
 
 		productVariantGroupFacade.removeImage(imageId, id, merchantStore);
 

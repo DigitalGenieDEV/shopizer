@@ -6,7 +6,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.services.order.OrderServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,10 @@ import com.salesmanager.core.modules.order.total.OrderTotalPostProcessorModule;
 
 @Service("OrderTotalService")
 public class OrderTotalServiceImpl implements OrderTotalService {
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderTotalServiceImpl.class);
+
+
 	@Autowired
 	@Resource(name="orderTotalsPostProcessors")
 	List<OrderTotalPostProcessorModule> orderTotalPostProcessors;
@@ -48,7 +54,8 @@ public class OrderTotalServiceImpl implements OrderTotalService {
 				List<ShoppingCartItem> items = summary.getProducts();
 				for(ShoppingCartItem item : items) {
 
-					Product product = productService.getBySku(item.getSku(), store, language);
+//					Product product = productService.getBySku(item.getSku(), store, language);
+					Product product = productService.getBySku(item.getSku());
 					//Product product = productService.getProductForLocale(productId, language, languageService.toLocale(language, store));
 					
 					OrderTotal orderTotal = module.caculateProductPiceVariation(summary, item, product, customer, store);

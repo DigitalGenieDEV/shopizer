@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.salesmanager.core.business.services.reference.country.CountryService;
+import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacadeImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +38,8 @@ import com.salesmanager.shop.utils.LocaleUtils;
 
 @Component
 public class PersistableOrderApiPopulator extends AbstractDataPopulator<PersistableOrder, Order> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PersistableOrderApiPopulator.class);
 
 	@Autowired
 	private CurrencyService currencyService;
@@ -120,7 +125,10 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			
 //			Delivery delivery = customer.getDelivery();
 //			target.setDelivery(delivery);
-			Delivery delivery = customer.getDelivery();
+//			Delivery delivery = customer.getDelivery();
+			LOGGER.info("order populate get address:" + source.getAddress() + ", delivery" + customer.getDelivery());
+
+			Delivery delivery = new Delivery();
 			delivery.setAddress(source.getAddress().getAddress());
 			delivery.setCity(source.getAddress().getCity());
 			delivery.setCompany(source.getAddress().getCompany());
