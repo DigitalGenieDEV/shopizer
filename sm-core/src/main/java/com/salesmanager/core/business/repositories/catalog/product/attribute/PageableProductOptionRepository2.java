@@ -14,13 +14,13 @@ public interface PageableProductOptionRepository2  extends PagingAndSortingRepos
 			+ "LEFT JOIN PRODUCT_OPTION_DESC C ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID LEFT JOIN PRODUCT_OPTION_SET D\r\n"
 			+ "ON A.PRODUCT_OPTION_ID = D.PRODUCT_OPTION_ID AND A.MERCHANT_ID = D.MERCHANT_ID\r\n"
 			+ "WHERE B.MERCHANT_ID = ?1 \r\n"
-			+ "AND  (?2 IS NULL OR C.NAME LIKE %?2%)\r\n"
+			+ "	AND (CASE WHEN ?2 <> '' THEN C.NAME LIKE %?2%  ELSE TRUE  END ) \r\n"
 			+ "AND D.CATEGORY_ID= ?3 ",
 		    countQuery =  "SELECT COUNT(*) FROM PRODUCT_OPTION A INNER JOIN MERCHANT_STORE B ON A.MERCHANT_ID = B.MERCHANT_ID\r\n"
 					+ "LEFT JOIN PRODUCT_OPTION_DESC C ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID LEFT JOIN PRODUCT_OPTION_SET D\r\n"
 					+ "ON A.PRODUCT_OPTION_ID = D.PRODUCT_OPTION_ID AND A.MERCHANT_ID = D.MERCHANT_ID\r\n"
 					+ "WHERE B.MERCHANT_ID = ?1 \r\n"
-					+ "AND  (?2 IS NULL OR C.NAME LIKE %?2%)\r\n"
+					+ "AND (CASE WHEN ?2 <> '' THEN C.NAME LIKE %?2%  ELSE TRUE  END ) \r\n"
 					+ "AND D.CATEGORY_ID= ?3 " , nativeQuery=true)
 		Page<ReadProductOption> listOptions(int merchantStoreId, String name, int categoryId, Pageable pageable);
 
