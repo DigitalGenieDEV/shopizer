@@ -581,18 +581,20 @@ public class ProductPriceUtils {
 					FinalPrice p = finalPrice(price);
 					if (product.getQuoteType() == 2){
 						String priceRangeList = price.getPriceRangeList();
-						List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
-						p.setPriceRanges(priceRanges);
-						Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
-								.min(Comparator.comparing(PriceRange::getStartQuantity));
+						if(StringUtils.isNotEmpty(priceRangeList)){
+							List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
+							p.setPriceRanges(priceRanges);
+							Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
+									.min(Comparator.comparing(PriceRange::getStartQuantity));
 
-						if (minStartQuantityPriceRange.isPresent()) {
-							PriceRange priceRange = minStartQuantityPriceRange.get();
-							p.setDefaultPrice(true);
-							p.setStringPrice(priceRange.getPrice());
+							if (minStartQuantityPriceRange.isPresent()) {
+								PriceRange priceRange = minStartQuantityPriceRange.get();
+								p.setDefaultPrice(true);
+								p.setStringPrice(priceRange.getPrice());
+							}
+							finalPrice = p;
+							break;
 						}
-						finalPrice = p;
-						break;
 					}
 
 					if (price.isDefaultPrice()) {
