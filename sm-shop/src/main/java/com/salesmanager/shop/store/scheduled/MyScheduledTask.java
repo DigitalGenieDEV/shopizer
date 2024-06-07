@@ -46,7 +46,7 @@ public class MyScheduledTask {
 
 //    @Scheduled(cron = "0/5 * * * * *")
     void execute1688ProductImportTask() throws ServiceException {
-        deleteProductsInParallel();
+//        deleteProductsInParallel();
 
         ProductSearchKeywordQueryParamOfferQueryParam productSearchKeywordQueryParamOfferQueryParam = new ProductSearchKeywordQueryParamOfferQueryParam();
         productSearchKeywordQueryParamOfferQueryParam.setPageSize(10);
@@ -82,7 +82,7 @@ public class MyScheduledTask {
             System.out.println("Processed " + processedRecords + " out of " + totalRecords + " records.");
 
             // Check if there are more pages
-            if (pageInfo.getTotalPage() > currentPage + 90) {
+            if (pageInfo.getTotalPage() > currentPage) {
                 currentPage++;
             } else {
                 hasMorePages = false;

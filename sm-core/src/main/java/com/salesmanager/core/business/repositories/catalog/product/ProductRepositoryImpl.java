@@ -1191,6 +1191,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			countBuilderWhere.append(" and p.id in (:pId)");
 		}
 
+		if (criteria.getSellerCountryCode() !=null ) {
+			countBuilderWhere.append(" and p.merchantStore.country=:mcoid");
+		}
+
 		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
 			countBuilderWhere.append(" and p.shippingTemplateId in (:pstId)");
 		}
@@ -1239,6 +1243,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (criteria.getOrigin().equals(ProductCriteria.ORIGIN_SHOP)
 				&& !CollectionUtils.isEmpty(criteria.getCategoryIds())) {
 			countQ.setParameter("cid", criteria.getCategoryIds());
+		}
+
+
+		if (criteria.getSellerCountryCode() !=null ) {
+			countQ.setParameter("mcoid", criteria.getSellerCountryCode());
 		}
 
 
@@ -1327,6 +1336,16 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 
 		qs.append(" where merch.id=:mId");
+
+		if (criteria.getSellerCountryCode() !=null ) {
+			qs.append(" and p.merchantStore.country=:mcoid");
+		}
+
+
+		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
+			qs.append(" and pd.language.code=:lang");
+		}
+
 		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
 			qs.append(" and pd.language.code=:lang");
 		}
@@ -1377,6 +1396,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
 			q.setParameter("cid", criteria.getCategoryIds());
+		}
+
+		if (criteria.getSellerCountryCode() !=null ) {
+			q.setParameter("mcoid", criteria.getSellerCountryCode());
 		}
 
 		/**/

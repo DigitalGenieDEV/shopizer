@@ -10,6 +10,8 @@ public class ProductCriteria extends Criteria {
 	public static final String ORIGIN_SHOP = "shop";
 	public static final String ORIGIN_ADMIN = "admin";
 
+	private Integer sellerCountryCode;
+
 	private String productName;
 	private List<AttributeCriteria> attributeCriteria;
 	private String origin = ORIGIN_SHOP;
@@ -193,5 +195,13 @@ public class ProductCriteria extends Criteria {
 
 	public void setShippingTemplateIds(List<Long> shippingTemplateIds) {
 		this.shippingTemplateIds = shippingTemplateIds;
+	}
+
+	public Integer getSellerCountryCode() {
+		return sellerCountryCode;
+	}
+
+	public void setSellerCountryCode(Integer sellerCountryCode) {
+		this.sellerCountryCode = sellerCountryCode;
 	}
 }
