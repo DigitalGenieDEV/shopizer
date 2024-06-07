@@ -26,6 +26,8 @@ public class FinalPrice implements Serializable {
 	private String stringDiscountedPrice;
 	
 	private Date discountEndDate = null;
+
+	private List<PriceRange> priceRanges;
 	
 	private boolean defaultPrice;
 	private ProductPrice productPrice;
@@ -122,4 +124,11 @@ public class FinalPrice implements Serializable {
 		this.stringDiscountedPrice = stringDiscountedPrice;
 	}
 
+	public List<PriceRange> getPriceRanges() {
+		return priceRanges;
+	}
+
+	public void setPriceRanges(List<PriceRange> priceRanges) {
+		this.priceRanges = priceRanges;
+	}
 }
