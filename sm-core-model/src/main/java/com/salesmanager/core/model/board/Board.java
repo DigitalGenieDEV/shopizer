@@ -16,7 +16,6 @@ import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
-import com.salesmanager.core.model.dept.Dept;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
