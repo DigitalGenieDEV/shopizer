@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1")
 @Api(tags = {
         "user favorites" })
@@ -42,26 +42,38 @@ public class FavoritesApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(httpMethod = "GET", value = "get favorite products by userId", notes = "",
             response = ReadableEntityList.class)
-    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")})
     public ReadableEntityList<ReadableFavorites> getListFavoriteProducts(
             @RequestParam(value = "userId", required = true) Long userId,
-            @RequestParam(value = "page", required = false, defaultValue="0") Integer page,
-            @RequestParam(value = "count", required = false, defaultValue="10") Integer count,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
             @ApiIgnore Language language,
             HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
 
+        // Fetch customer
         Customer customer = customerService.getById(userId);
-
         if (customer == null) {
             throw new ResourceNotFoundException("No Customer found for id [" + userId + "]");
         }
 
-        customerFacadev1.authorize(customer, principal);
+        // Authorize customer
+        try {
+            customerFacadev1.authorize(customer, principal);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Unauthorized access for customer id [" + userId + "]");
+        }
 
-        return favoritesFacade.getListFavoriteProducts(userId, page, count, language);
+        // Fetch favorite products
+        ReadableEntityList<ReadableFavorites> listFavoriteProducts;
+        try {
+            listFavoriteProducts = favoritesFacade.getListFavoriteProducts(userId, page, count, language);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching favorite products for customer id [" + userId + "]", e);
+        }
+
+        return listFavoriteProducts;
     }
-
 
     @PostMapping(value = "/auth/favorite/product")
     @ResponseStatus(HttpStatus.CREATED)

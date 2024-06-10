@@ -485,19 +485,31 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		// images
 		qs.append("left join fetch p.images images ");
 
-//		// options (do not need attributes for listings)
-//		qs.append("left join fetch p.attributes pattr ");
-//		qs.append("left join fetch pattr.productOption po ");
-//		qs.append("left join fetch po.descriptions pod ");
-//		qs.append("left join fetch pattr.productOptionValue pov ");
-//		qs.append("left join fetch pov.descriptions povd ");
+		// options (do not need attributes for listings)
+		qs.append("left join fetch p.attributes pattr ");
+		qs.append("left join fetch pattr.productOption po ");
+		qs.append("left join fetch po.descriptions pod ");
+		qs.append("left join fetch pattr.productOptionValue pov ");
+		qs.append("left join fetch pov.descriptions povd ");
+
+		qs.append(" left join fetch p.variants pinst ");
+		qs.append(" left join fetch pinst.variations pv ");
+		qs.append( "left join fetch pv.productOption pvpo ");
+		qs.append(" left join fetch pv.productOptionValue pvpov ");
+		qs.append(" left join fetch pvpo.descriptions pvpod ");
+		qs.append(" left join fetch pvpov.descriptions pvpovd ");
+		//variant availability and price
+		qs.append(" left join fetch pinst.availabilities pinsta ");
+		qs.append(" left join fetch pinsta.prices pinstap ");
+		qs.append(" left join fetch pinstap.descriptions pinstapdesc ");
+		qs.append(" left join fetch pinst.productVariantGroup pinstg ");
+		qs.append(" left join fetch pinstg.images pinstgimg ");
+		qs.append(" left join fetch pinstgimg.descriptions ");
+		//end variants
 
 		// other lefts
 		qs.append("left join fetch p.manufacturer manuf ");
 		qs.append("left join fetch manuf.descriptions manufd ");
-		qs.append("left join fetch p.type type ");
-		qs.append("left join fetch p.taxClass tx ");
-
 
 		qs.append("where p.id = (:pid) ");
 		// qs.append("and pd.language.id=:lang and papd.language.id=:lang and

@@ -579,7 +579,7 @@ public class ProductPriceUtils {
 				Set<ProductPrice> prices = availability.getPrices();
 				for (ProductPrice price : prices) {
 					FinalPrice p = finalPrice(price);
-					if (product.getQuoteType() == 2){
+					if (product.getQuoteType() !=null && product.getQuoteType() == 2){
 						String priceRangeList = price.getPriceRangeList();
 						if(StringUtils.isNotEmpty(priceRangeList)){
 							List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
