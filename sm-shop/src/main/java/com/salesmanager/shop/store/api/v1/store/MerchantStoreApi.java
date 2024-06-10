@@ -248,27 +248,24 @@ public class MerchantStoreApi {
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
 	public void update(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
 			HttpServletRequest request) throws Exception {
-
-		String userName = getUserFromRequest(request);
-		validateUserPermission(userName, code);
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+		
 		store.setCode(code);
 		storeFacade.update(store);
 	}
 	
-
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = { "/auth/store/{code}", "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
 	public void updateByAuth(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
 			HttpServletRequest request) throws Exception {
-		
-		String authenticatedManager = managerFacade.authenticatedManager();
-		if (authenticatedManager == null) {
-			throw new UnauthorizedException();
-		}
 		store.setCode(code);
 		storeFacade.update(store);
+		
 	}
 
 	private String getUserFromRequest(HttpServletRequest request) {

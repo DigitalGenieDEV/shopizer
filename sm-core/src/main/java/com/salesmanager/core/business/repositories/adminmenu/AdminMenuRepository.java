@@ -27,7 +27,7 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 			+ "			FROM    \r\n" + "				ADMINMENU AS B    \r\n" + "				, MENU_CTE AS C    \r\n"
 			+ "			WHERE B.PARENT_ID = C.ID    \r\n" + " )    \r\n" + "		    \r\n"
 			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE WHERE 1=1    \r\n"
-			+ "  	AND (CASE WHEN ?2 > 1 THEN  ID IN (SELECT MENU_ID FROM manager_menu_auth WHERE GRP_ID = ?2) ELSE TRUE END )   "
+			+ "  	AND (CASE WHEN ?2 > 1 THEN  ID IN (SELECT MENU_ID FROM MANAGER_MENU_AUTH WHERE GRP_ID = ?2) ELSE TRUE END )   "
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
 	List<ReadAdminMenu> getListAdminMenu(int visible, int grpId);
 

@@ -63,7 +63,7 @@ public class BoardApi {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/board" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Get list of manager", notes = "", response = ReadableManagerList.class)
+	@ApiOperation(httpMethod = "GET", value = "Get list of board", notes = "", response = ReadableBoardList.class)
 	public ReadableBoardList list(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
 			@RequestParam(value = "gbn", required = false) String gbn,

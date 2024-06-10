@@ -180,6 +180,11 @@ public class StoreFacadeImpl implements StoreFacade {
 
 		Validate.notNull(store, "PersistableMerchantStore must not be null");
 		Validate.notNull(store.getCode(), "PersistableMerchantStore.code must not be null");
+		
+		Customer c = customerService.getByNick(userName);
+		if(c.getMerchantStore().getCode() != null && !c.getMerchantStore().getCode().equals("DEFAULT")) {
+			throw new ServiceRuntimeException("Customer" + c.getNick() + " already have store information.");
+		}
 
 		// check if store code exists
 		MerchantStore storeForCheck = get(store.getCode());
@@ -195,8 +200,6 @@ public class StoreFacadeImpl implements StoreFacade {
 		}
 		
 		createMerchantStore(mStore);
-		
-		Customer c = customerService.getByNick(userName);
 		c.setMerchantStore(mStore);
 		
 		try {

@@ -1,6 +1,5 @@
 package com.salesmanager.core.business.repositories.reference.country;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;

@@ -19,7 +19,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
-@Table(name = "UserMenu", indexes = @Index(columnList = "VISIBLE, MENU_NAME"), uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "USERMENU", indexes = @Index(columnList = "VISIBLE, MENU_NAME"), uniqueConstraints = @UniqueConstraint(columnNames = {
 		"ID" }))
 public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements Auditable2 {
 	private static final long serialVersionUID = 1L;
