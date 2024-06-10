@@ -490,8 +490,10 @@ public class ReadableProductPopulator extends
 										}
 									}
 								}
-								valueDescription.setName(podescription.getName());
-								valueDescription.setDescription(podescription.getDescription());
+								if (podescription != null) {
+									valueDescription.setName(podescription.getName());
+									valueDescription.setDescription(podescription.getDescription());
+								}
 								optValue.setDescription(valueDescription);
 
 								if(opt!=null) {

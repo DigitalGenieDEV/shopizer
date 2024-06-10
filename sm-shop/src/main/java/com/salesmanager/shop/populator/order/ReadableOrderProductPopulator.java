@@ -12,6 +12,8 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.customer.ReadableBilling;
+import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
@@ -94,13 +96,56 @@ public class ReadableOrderProductPopulator extends
 			}
 			target.setAttributes(attributes);
 		}
-		
+
+		if(source.getOrder().getDelivery()!=null) {
+			ReadableDelivery address = new ReadableDelivery();
+			address.setCity(source.getOrder().getDelivery().getCity());
+			address.setAddress(source.getOrder().getDelivery().getAddress());
+			address.setCompany(source.getOrder().getDelivery().getCompany());
+			address.setFirstName(source.getOrder().getDelivery().getFirstName());
+			address.setLastName(source.getOrder().getDelivery().getLastName());
+			address.setPostalCode(source.getOrder().getDelivery().getPostalCode());
+			address.setPhone(source.getOrder().getDelivery().getTelephone());
+			if(source.getOrder().getDelivery().getCountry()!=null) {
+				address.setCountry(source.getOrder().getDelivery().getCountry().getIsoCode());
+			}
+			if(source.getOrder().getDelivery().getZone()!=null) {
+				address.setZone(source.getOrder().getDelivery().getZone().getCode());
+			}
+
+			target.setDelivery(address);
+		}
+
+		if(source.getOrder().getBilling()!=null) {
+			ReadableBilling address = new ReadableBilling();
+			address.setEmail(source.getOrder().getCustomerEmailAddress());
+			address.setCity(source.getOrder().getBilling().getCity());
+			address.setAddress(source.getOrder().getBilling().getAddress());
+			address.setCompany(source.getOrder().getBilling().getCompany());
+			address.setFirstName(source.getOrder().getBilling().getFirstName());
+			address.setLastName(source.getOrder().getBilling().getLastName());
+			address.setPostalCode(source.getOrder().getBilling().getPostalCode());
+			address.setPhone(source.getOrder().getBilling().getTelephone());
+			if(source.getOrder().getBilling().getCountry()!=null) {
+				address.setCountry(source.getOrder().getBilling().getCountry().getIsoCode());
+			}
+			if(source.getOrder().getBilling().getZone()!=null) {
+				address.setZone(source.getOrder().getBilling().getZone().getCode());
+			}
+
+			target.setBilling(address);
+		}
+
+		target.setPaymentType(source.getOrder().getPaymentType());
+		target.setPaymentModule(source.getOrder().getPaymentModuleCode());
+
 
 			String productSku = source.getSku();
 			if(!StringUtils.isBlank(productSku)) {
 				Product product = null;
 				try {
-					product = productService.getBySku(productSku, store, language);
+					product = productService.getBySku(productSku);
+//					product = productService.getBySku(productSku, store, language);
 				} catch (ServiceException e) {
 					throw new ServiceRuntimeException(e);
 				}
