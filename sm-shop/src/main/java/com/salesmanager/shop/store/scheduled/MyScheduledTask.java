@@ -82,7 +82,7 @@ public class MyScheduledTask {
             System.out.println("Processed " + processedRecords + " out of " + totalRecords + " records.");
 
             // Check if there are more pages
-            if (pageInfo.getTotalPage() > currentPage + 110) {
+            if (pageInfo.getTotalPage() > currentPage) {
                 currentPage++;
             } else {
                 hasMorePages = false;
@@ -95,39 +95,14 @@ public class MyScheduledTask {
     }
 
 
-
-    public void deleteProductsInParallel() {
+    public void deleteProductsInParallel() throws ServiceException {
         List<Long> listByOutId = productRepository.findListByOutId();
-
-        // Define the number of threads to use
-        int numberOfThreads = Runtime.getRuntime().availableProcessors();
-        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-
         for (Long id : listByOutId) {
-            executorService.submit(() -> {
-                try {
-                    Optional<Product> byId = productRepository.findById(id);
-                    if (byId.isPresent()) {
-                        Product product = byId.get();
-                        productService.delete(product);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace(); // or use a logger
-                }
-            });
-        }
-
-        executorService.shutdown();
-        try {
-            // Wait for all tasks to complete
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-                if (!executorService.awaitTermination(60, TimeUnit.SECONDS))
-                    System.err.println("ExecutorService did not terminate");
+            Optional<Product> byId = productRepository.findById(id);
+            if (byId.isPresent()) {
+                Product product = byId.get();
+                productService.delete(product);
             }
-        } catch (InterruptedException ie) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
         }
     }
 

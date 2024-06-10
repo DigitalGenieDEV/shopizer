@@ -663,6 +663,7 @@ public class ProductApiV2 {
 			@RequestParam(value = "count", required = false, defaultValue = "100") Integer count, // count
 			@RequestParam(value = "slug", required = false) String slug, // category slug
 			@RequestParam(value = "available", required = false) Boolean available,
+			@RequestParam(value = "sellerCountryCode", required = false) Integer sellerCountryCode,
 			// per
 			// page
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
@@ -681,6 +682,7 @@ public class ProductApiV2 {
 		if (!StringUtils.isBlank(status)) {
 			criteria.setStatus(status);
 		}
+		criteria.setSellerCountryCode(sellerCountryCode);
 		// Start Category handling
 		List<Long> categoryIds = new ArrayList<Long>();
 		if (slug != null) {

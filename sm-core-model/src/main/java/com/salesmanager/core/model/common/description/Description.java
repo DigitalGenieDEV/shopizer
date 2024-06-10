@@ -43,10 +43,10 @@ public class Description implements Auditable, Serializable {
 	private Language language;
 	
 	@NotEmpty
-	@Column(name="NAME", nullable = false, length=120)
+	@Column(name="NAME", nullable = false, length=1266)
 	private String name;
 	
-	@Column(name="TITLE", length=100)
+	@Column(name="TITLE", length=1266)
 	private String title;
 	
 	@Column(name="DESCRIPTION")

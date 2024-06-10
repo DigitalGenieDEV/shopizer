@@ -14,6 +14,9 @@ public class ReadableFavorites extends FavoritesEntity{
 
     private String manufacturer;
 
+    private String price;
+
+
     public String getImage() {
         return image;
     }
@@ -44,5 +47,13 @@ public class ReadableFavorites extends FavoritesEntity{
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }

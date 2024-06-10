@@ -2,18 +2,14 @@ package com.salesmanager.core.business.utils;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.validator.routines.BigDecimalValidator;
@@ -93,9 +89,6 @@ public class ProductPriceUtils {
 
 		FinalPrice finalPrice = calculateFinalPrice(product);
 
-		if (product.getQuoteType() != null && (product.getQuoteType() == 0 || product.getQuoteType()== 2)){
-
-		}
 
 		// attributes
 		BigDecimal attributePrice = null;
@@ -585,8 +578,25 @@ public class ProductPriceUtils {
 					&& availability.getRegion().equals(Constants.ALL_REGIONS)) {// TODO REL 2.1 accept a region
 				Set<ProductPrice> prices = availability.getPrices();
 				for (ProductPrice price : prices) {
-
 					FinalPrice p = finalPrice(price);
+					if (product.getQuoteType() !=null && product.getQuoteType() == 2){
+						String priceRangeList = price.getPriceRangeList();
+						if(StringUtils.isNotEmpty(priceRangeList)){
+							List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
+							p.setPriceRanges(priceRanges);
+							Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
+									.min(Comparator.comparing(PriceRange::getStartQuantity));
+
+							if (minStartQuantityPriceRange.isPresent()) {
+								PriceRange priceRange = minStartQuantityPriceRange.get();
+								p.setDefaultPrice(true);
+								p.setStringPrice(priceRange.getPrice());
+							}
+							finalPrice = p;
+							break;
+						}
+					}
+
 					if (price.isDefaultPrice()) {
 						finalPrice = p;
 					} else {
