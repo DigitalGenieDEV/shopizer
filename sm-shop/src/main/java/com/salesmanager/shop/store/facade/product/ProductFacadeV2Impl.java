@@ -144,12 +144,13 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Override
 	public ReadableProduct getProductById(Long id, MerchantStore store, Language language){
+		Product product = null;
 		if (store == null){
-			Product productWithOnlyMerchantStoreById = productService.getProductWithOnlyMerchantStoreById(id);
-			store = productWithOnlyMerchantStoreById.getMerchantStore();
+			product = productService.getProductWithOnlyMerchantStoreById(id);
+			store = product.getMerchantStore();
+		}else {
+			product = productService.findOne(id, store);
 		}
-
-		Product	product = productService.findOne(id, store);
 		if (product == null) {
 			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
 		}
