@@ -3,6 +3,13 @@ package com.salesmanager.shop.model.catalog.product.product.alibaba;
 public class AlibabaProductSearchQueryModelProduct {
 
 
+    private Long topCategoryId;
+
+    private Long secondCategoryId;
+
+    private Long thirdCategoryId;
+
+
     private String imageUrl;
 
     /**
@@ -201,4 +208,28 @@ public class AlibabaProductSearchQueryModelProduct {
         this.sellerIdentities = sellerIdentities;
     }
 
+
+    public Long getTopCategoryId() {
+        return topCategoryId;
+    }
+
+    public void setTopCategoryId(Long topCategoryId) {
+        this.topCategoryId = topCategoryId;
+    }
+
+    public Long getSecondCategoryId() {
+        return secondCategoryId;
+    }
+
+    public void setSecondCategoryId(Long secondCategoryId) {
+        this.secondCategoryId = secondCategoryId;
+    }
+
+    public Long getThirdCategoryId() {
+        return thirdCategoryId;
+    }
+
+    public void setThirdCategoryId(Long thirdCategoryId) {
+        this.thirdCategoryId = thirdCategoryId;
+    }
 }

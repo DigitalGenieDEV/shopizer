@@ -34,6 +34,7 @@ import com.salesmanager.shop.model.catalog.product.attribute.ReadableSelectedPro
 import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchKeywordQueryParam;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProductPageInfo;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
@@ -293,64 +294,6 @@ public class ProductApiV2 {
 //	}
 	
 
-
-
-	
-
-	/**
-	 * List products
-	 * Filtering product lists based on product option and option value ?category=1
-	 * &manufacturer=2 &type=... &lang=en|fr NOT REQUIRED, will use request language
-	 * &start=0 NOT REQUIRED, can be used for pagination &count=10 NOT REQUIRED, can
-	 * be used to limit item count
-	 *
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/products", method = RequestMethod.GET)
-	@ResponseBody
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public ReadableProductList list(
-			@RequestParam(value = "lang", required = false) String lang,
-			ProductCriteria searchCriterias,
-
-			// page
-			// 0
-			// ..
-			// n
-			// allowing
-			// navigation
-			@RequestParam(value = "count", required = false, defaultValue = "100") Integer count, // count
-			// per
-			// page
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
-
-		
-		if (!StringUtils.isBlank(searchCriterias.getSku())) {
-			searchCriterias.setCode(searchCriterias.getSku());
-		}
-		
-		if (!StringUtils.isBlank(searchCriterias.getName())) {
-			searchCriterias.setProductName(searchCriterias.getName());
-		}
-		
-		searchCriterias.setMaxCount(count);
-		searchCriterias.setLanguage(language.getCode());
-
-		try {
-			return productFacadeV2.getProductListsByCriterias(merchantStore, language, searchCriterias);
-
-		} catch (Exception e) {
-			LOGGER.error("Error while filtering products product", e);
-			throw new ServiceRuntimeException(e);
-
-		}
-	}
-
-
 	/**
 	 * query Product Count By Category
 	 * @param lang
@@ -594,7 +537,6 @@ public class ProductApiV2 {
 	public ReadableProductPageInfo searchProductByKeywords(
 			@Valid @RequestBody
 			AlibabaProductSearchKeywordQueryParam queryParam) {
-
 		return alibabaProductFacade.searchProductByKeywords(queryParam);
 	}
 
@@ -605,12 +547,17 @@ public class ProductApiV2 {
 	@ApiOperation(httpMethod = "POST", value = "import product", notes = "import product", produces = "application/json", response = List.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
-	public List<Long> importAlibabaProduct(
+	public CommonResultDTO<List<Long>> importAlibabaProduct(
 			@RequestParam(value = "productIds") List<Long> productIds,
 			@RequestParam(value = "leftCategoryId") Long leftCategoryId,
 			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) throws ServiceException {
-		return alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null? null : Lists.newArrayList(leftCategoryId));
+			@ApiIgnore Language language){
+		try {
+			List<Long> longs = alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null ? null : Lists.newArrayList(leftCategoryId));
+			return CommonResultDTO.ofSuccess(longs);
+		}catch (Exception e){
+			return CommonResultDTO.ofFailed("20001", "importAlibabaProduct error");
+		}
 	}
 
 
@@ -660,7 +607,7 @@ public class ProductApiV2 {
 			@RequestParam(value = "owner", required = false) Long owner,
 			@RequestParam(value = "productType", required = false) String productType,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
-			@RequestParam(value = "count", required = false, defaultValue = "100") Integer count, // count
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, // count
 			@RequestParam(value = "slug", required = false) String slug, // category slug
 			@RequestParam(value = "available", required = false) Boolean available,
 			@RequestParam(value = "sellerCountryCode", required = false) Integer sellerCountryCode,
