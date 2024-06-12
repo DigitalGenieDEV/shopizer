@@ -20,6 +20,9 @@ public interface ProductAttributeService extends
 	List<ProductAttribute> getByOptionId(MerchantStore store,
 			Long id) throws ServiceException;
 
+
+	List<ProductAttribute> getByIdList(List<Long> idList);
+
 	List<ProductAttribute> getByOptionValueId(MerchantStore store,
 			Long id) throws ServiceException;
 

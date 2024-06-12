@@ -236,19 +236,19 @@ public class ProductApiV2 {
 	}
 
 
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = { "/private/product/{id}" })
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public @ResponseBody ReadableProductDefinition getV2(
-			@PathVariable Long id, 
-			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
-
-		ReadableProductDefinition def = productDefinitionFacade.getProduct(merchantStore, id, language);
-		return def;
-
-	}
+//	@ResponseStatus(HttpStatus.OK)
+//	@GetMapping(value = { "/private/product/{id}" })
+//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//	public @ResponseBody ReadableProductDefinition getV2(
+//			@PathVariable Long id,
+//			@ApiIgnore MerchantStore merchantStore,
+//			@ApiIgnore Language language) {
+//
+//		ReadableProductDefinition def = productDefinitionFacade.getProduct(merchantStore, id, language);
+//		return def;
+//
+//	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/{id}" }, method = RequestMethod.DELETE)
