@@ -1,4 +1,4 @@
-package com.salesmanager.shop.model.banner;
+package com.salesmanager.shop.model.popup;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
-public class ReadableBanner extends BannerEntity {
+public class ReadablePopup  extends PopupEntity {
 	private String regId;
 	private String regDate;
 	private String regIp;

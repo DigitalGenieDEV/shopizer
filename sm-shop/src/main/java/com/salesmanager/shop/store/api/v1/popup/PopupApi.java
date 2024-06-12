@@ -1,4 +1,4 @@
-package com.salesmanager.shop.store.api.v1.banner;
+package com.salesmanager.shop.store.api.v1.popup;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salesmanager.shop.model.banner.PersistableBanner;
-import com.salesmanager.shop.model.banner.ReadableBanner;
-import com.salesmanager.shop.model.banner.ReadableBannerList;
+import com.salesmanager.shop.model.popup.PersistablePopup;
+import com.salesmanager.shop.model.popup.ReadablePopup;
+import com.salesmanager.shop.model.popup.ReadablePopupList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
-import com.salesmanager.shop.store.controller.banner.facade.BannerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
+import com.salesmanager.shop.store.controller.popup.facade.PopupFacade;
 import com.salesmanager.shop.utils.CommonUtils;
 
 import io.swagger.annotations.Api;
@@ -37,32 +37,33 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/api/v1")
-@Api(tags = { "Banner management resource (Banner Management Api)" })
-public class BannerApi {
+@Api(tags = { "Popup management resource (Popup Management Api)" })
+public class PopupApi {
+	
 	@Inject
-	private BannerFacade bannerFacade;
+	private PopupFacade popupFacade;
 	
 	@Inject
 	private ManagerFacade managerFacade;
 	
 	
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = { "/private/banner" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Get list of Banner", notes = "", response = ReadableBannerList.class)
-	public ReadableBannerList list(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+	@GetMapping(value = { "/private/popup" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of Banner", notes = "", response = ReadablePopupList.class)
+	public ReadablePopupList list(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
 			@RequestParam(value = "site", required = false) String site,
 			@RequestParam(value = "keyword", required = false) String keyword,
 			HttpServletRequest request) throws Exception {
 
-		return bannerFacade.getBannerList(site, keyword, page, count);
+		return popupFacade.getPopupList(site, keyword, page, count);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(value = "/private/banner", produces = { APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/private/popup", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public PersistableBanner create(@Valid @RequestBody PersistableBanner banner, HttpServletRequest request)
+	public PersistablePopup create(@Valid @RequestBody PersistablePopup popup, HttpServletRequest request)
 			throws Exception {
 
 		String authenticatedManager = managerFacade.authenticatedManager();
@@ -71,36 +72,36 @@ public class BannerApi {
 		}
 		
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		banner.setUserId(authenticatedManager);
-		banner.setUserIp(CommonUtils.getRemoteIp(request));
+		popup.setUserId(authenticatedManager);
+		popup.setUserIp(CommonUtils.getRemoteIp(request));
 
-		return bannerFacade.saveBanner(banner);
+		return popupFacade.savePopup(popup);
 	}
 	
 	
-	@GetMapping(value = "/private/banner/{id}", produces = { APPLICATION_JSON_VALUE })
-	@ApiOperation(httpMethod = "GET", value = "Get Banner list for an given Banner id", notes = "List current Banner and child access")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Board found", response = ReadableBanner.class) })
-	public ReadableBanner get(@PathVariable(name = "id") int id) throws Exception {
-		ReadableBanner data = bannerFacade.getById(id);
+	@GetMapping(value = "/private/popup/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get Popup id list for an given Popup id", notes = "List current Popup id and child access")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Board found", response = ReadablePopup.class) })
+	public ReadablePopup get(@PathVariable(name = "id") int id) throws Exception {
+		ReadablePopup data = popupFacade.getById(id);
 		return data;
 	}
 	
-	@PutMapping(value = "/private/banner/{id}", produces = { APPLICATION_JSON_VALUE })
-	public PersistableBanner update(@PathVariable int id, @Valid @RequestBody PersistableBanner banner, HttpServletRequest request) throws Exception {
+	@PutMapping(value = "/private/popup/{id}", produces = { APPLICATION_JSON_VALUE })
+	public PersistablePopup update(@PathVariable int id, @Valid @RequestBody PersistablePopup popup, HttpServletRequest request) throws Exception {
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		banner.setId(id);
-		banner.setUserId(authenticatedManager);
-		banner.setUserIp(CommonUtils.getRemoteIp(request));
-		return bannerFacade.saveBanner(banner);
+		popup.setId(id);
+		popup.setUserId(authenticatedManager);
+		popup.setUserIp(CommonUtils.getRemoteIp(request));
+		return popupFacade.savePopup(popup);
 	}
 	
-	@DeleteMapping(value = "/private/banner/{id}", produces = { APPLICATION_JSON_VALUE })
+	@DeleteMapping(value = "/private/popup/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
 	public void delete(@PathVariable int id,HttpServletRequest request) throws Exception {
 		
@@ -110,7 +111,6 @@ public class BannerApi {
 		}
 	
 		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-		bannerFacade.deleteBanner(id);
+		popupFacade.deletePopup(id);
 	}
-	
 }
