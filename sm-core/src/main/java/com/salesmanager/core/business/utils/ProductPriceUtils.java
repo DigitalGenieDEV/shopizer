@@ -591,6 +591,7 @@ public class ProductPriceUtils {
 								PriceRange priceRange = minStartQuantityPriceRange.get();
 								p.setDefaultPrice(true);
 								p.setStringPrice(priceRange.getPrice());
+								p.setFinalPrice(new BigDecimal(priceRange.getPrice()));
 							}
 							finalPrice = p;
 							break;

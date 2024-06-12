@@ -20,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -132,6 +133,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	@Cacheable(value = "productByIdCache", key = "#productId")
 	public Product getProductWithOnlyMerchantStoreById(Long productId) {
 		return productRepository.getProductWithOnlyMerchantStoreById(productId);
 	}
@@ -395,6 +397,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+//	@Cacheable(value = "productListCache", key = "#store.id + '-' + #language.code + '-' + #criteria.toString() + '-' + #page + '-' + #count")
 	public Page<Product> simpleListByStore(MerchantStore store, Language language, ProductCriteria criteria, int page,
 									 int count) {
 
