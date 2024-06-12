@@ -117,7 +117,7 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	@Column(name="BUSINESS_REGISTRATION")
 	private String businessRegistration;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", targetEntity = CustomerTerms.class)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", targetEntity = CustomerTerms.class, cascade = CascadeType.ALL)
 	private List<CustomerTerms> customerTerms = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)

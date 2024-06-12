@@ -56,7 +56,7 @@ public class CodeApi {
 		return codeFacde.getListCode(visible);
 	}
 	
-	@GetMapping(value = "/private/code/detail")
+	@GetMapping(value = {"/private/code/detail", "/code/detail"})
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(httpMethod = "GET", value = "Get Code by Detail list", notes = "")
 	public List<ReadableCode> getListCodeDetail(
@@ -82,7 +82,7 @@ public class CodeApi {
 		return codeFacde.saveCode(code);
 	}
 
-	@GetMapping(value = "/private/code/{id}", produces = { APPLICATION_JSON_VALUE })
+	@GetMapping(value = {"/private/code/{id}", "/code/{id}"}, produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get code list for an given Code id", notes = "List current Code and child code")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of code found", response = ReadableCode.class) })
 	public ReadableCode get(@PathVariable(name = "id") int codeId) throws Exception {

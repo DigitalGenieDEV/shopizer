@@ -1,5 +1,11 @@
 package com.salesmanager.shop.model.order;
 
+import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.model.customer.ReadableBilling;
+import com.salesmanager.shop.model.customer.ReadableDelivery;
+import com.salesmanager.shop.model.order.transaction.ReadablePayment;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,8 +19,16 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	private String productName;
 	private String price;
 	private String subTotal;
+	private PaymentType paymentType;
+	private String paymentModule;
 	
 	private List<ReadableOrderProductAttribute> attributes = null;
+
+
+	private ReadableBilling billing;
+	private ReadableDelivery delivery;
+//	private ShippingOption shippingOption;
+	private ReadablePayment payment;
 	
 	private String sku;
 	private String image;
@@ -55,5 +69,43 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 		this.attributes = attributes;
 	}
 
+	public ReadableBilling getBilling() {
+		return billing;
+	}
 
+	public void setBilling(ReadableBilling billing) {
+		this.billing = billing;
+	}
+
+	public ReadableDelivery getDelivery() {
+		return delivery;
+	}
+
+	public void setDelivery(ReadableDelivery delivery) {
+		this.delivery = delivery;
+	}
+
+	public ReadablePayment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(ReadablePayment payment) {
+		this.payment = payment;
+	}
+
+	public PaymentType getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	public String getPaymentModule() {
+		return paymentModule;
+	}
+
+	public void setPaymentModule(String paymentModule) {
+		this.paymentModule = paymentModule;
+	}
 }

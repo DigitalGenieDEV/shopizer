@@ -24,7 +24,7 @@ public class ReadableCustomerTermsPopulator extends AbstractDataPopulator<Custom
 				source,
 				"CustomerTerms cannot be null"
 		);
-		
+
 		return new ReadableCustomerTerms(
 				source.getId(),
 				source.isConsented(),

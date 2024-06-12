@@ -16,12 +16,11 @@ import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
-import com.salesmanager.core.model.dept.Dept;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
-@Table(name = "Board", indexes = @Index(columnList = "TITLE, TYPE, STATE, SDATE, EDATE, WRITER"), uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "BOARD", indexes = @Index(columnList = "TITLE, TYPE, STATE, SDATE, EDATE, WRITER"), uniqueConstraints = @UniqueConstraint(columnNames = {
 		"ID" }))
 public class Board extends SalesManagerEntity<Integer, Board> implements Auditable2 {
 	private static final long serialVersionUID = 1L;

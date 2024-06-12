@@ -90,7 +90,7 @@ public class ImagesController {
 		OutputContentFile image =contentService.getContentFile(storeCode, imgType, new StringBuilder().append(imageName).append(".").append(extension).toString());
 		
 		
-		if(image!=null) {
+		if(image != null && image.getFile() != null) {
 			return image.getFile().toByteArray();
 		} else {
 			return tempImage;
