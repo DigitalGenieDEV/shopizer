@@ -353,7 +353,7 @@ public class CategoryApi {
 		categoryFacade.deleteCategory(categoryId, merchantStore);
 	}
 
-	@GetMapping(value = "/category/{id}", produces = { APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/category/id/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(
 			httpMethod = "GET", value = "Get user category list for an given Category id", notes = "List current Category and child category"
 	)
