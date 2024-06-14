@@ -1,5 +1,7 @@
 package com.salesmanager.core.business.services.banner;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import com.salesmanager.core.business.repositories.banner.PageableBannerReposito
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.banner.Banner;
 import com.salesmanager.core.model.banner.ReadBanner;
+import com.salesmanager.core.model.banner.ReadUserBanner;
 
 @Service("bannerService")
 public class BannerServiceImpl extends SalesManagerEntityServiceImpl<Integer, Banner> implements BannerService {
@@ -27,6 +30,10 @@ public class BannerServiceImpl extends SalesManagerEntityServiceImpl<Integer, Ba
 	public BannerServiceImpl(BannerRepository bannerRepository) {
 		super(bannerRepository);
 		this.bannerRepository = bannerRepository;
+	}
+	
+	public List<ReadUserBanner> getBannerUserList(String site) throws ServiceException {
+		return bannerRepository.getBannerUserList(site);
 	}
 	
 	public Page<ReadBanner> getBannerList(String site, String keyword, int page, int count)

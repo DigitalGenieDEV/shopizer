@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.salesmanager.shop.model.banner.PersistableBanner;
 import com.salesmanager.shop.model.banner.ReadableBanner;
 import com.salesmanager.shop.model.banner.ReadableBannerList;
+import com.salesmanager.shop.model.banner.ReadableUserBannerList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.banner.facade.BannerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
@@ -44,6 +45,14 @@ public class BannerApi {
 	
 	@Inject
 	private ManagerFacade managerFacade;
+	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/banner" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of Banner", notes = "", response = ReadableBannerList.class)
+	public ReadableUserBannerList userList(@RequestParam(value = "site", required = false, defaultValue = "2") String site,HttpServletRequest request) throws Exception {
+		return bannerFacade.getBannerUserList(site);
+	}
 	
 	
 	@ResponseStatus(HttpStatus.OK)
