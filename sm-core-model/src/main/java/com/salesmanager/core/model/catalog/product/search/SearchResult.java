@@ -12,6 +12,9 @@ public class SearchResult {
     @JsonProperty("took_time")
     private Integer tookTime;
 
+    @JsonProperty("hit_number")
+    private Integer hitNumber;
+
     @JsonProperty("product_list")
     private List<ProductResult> productList;
 
@@ -40,6 +43,14 @@ public class SearchResult {
 
     public void setFilterOptions(Map<String, List<String>> filterOptions) {
         this.filterOptions = filterOptions;
+    }
+
+    public Integer getHitNumber() {
+        return hitNumber;
+    }
+
+    public void setHitNumber(Integer hitNumber) {
+        this.hitNumber = hitNumber;
     }
 
     //    public static class ProductResult {

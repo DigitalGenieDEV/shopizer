@@ -54,7 +54,7 @@ public class OrderProductApi {
             @RequestParam(value = "statuses", required = false) String statuses,
             @RequestParam(value = "beginDate", required = false) String beginDate,
             @RequestParam(value = "endDate", required = false) String endDate,
-            @RequestParam(value = "paymentType", required = false) String paymentType,
+            @RequestParam(value = "paymentMethod", required = false) String paymentMethod,
             @RequestParam(value = "id", required = false) Long id,
             @RequestParam(value = "receiver", required = false) String receiver,
             @ApiIgnore MerchantStore merchantStore,
@@ -67,6 +67,11 @@ public class OrderProductApi {
         orderProductCriteria.setStartPage(page);
 
         orderProductCriteria.setId(id);
+        orderProductCriteria.setReceiver(receiver);
+        orderProductCriteria.setPaymentMethod(paymentMethod);
+        orderProductCriteria.setBeginDate(beginDate);
+        orderProductCriteria.setEndDate(endDate);
+        orderProductCriteria.setStatuses(statuses);
 
         ReadableOrderProductList readableOrderProductList = orderProductFacade.getReadableOrderProductList(orderProductCriteria, merchantStore, language);
 

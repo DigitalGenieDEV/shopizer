@@ -11,6 +11,8 @@ public class SearchProductResult {
 
     private Map<String, List<String>> filterOptions;
 
+    private Integer hitNumber;
+
     public List<Product> getProductList() {
         return productList;
     }
@@ -25,5 +27,13 @@ public class SearchProductResult {
 
     public void setFilterOptions(Map<String, List<String>> filterOptions) {
         this.filterOptions = filterOptions;
+    }
+
+    public Integer getHitNumber() {
+        return hitNumber;
+    }
+
+    public void setHitNumber(Integer hitNumber) {
+        this.hitNumber = hitNumber;
     }
 }

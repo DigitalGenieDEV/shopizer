@@ -264,6 +264,8 @@ public class SearchFacadeImpl implements SearchFacade {
 		}
 
 		result.setNumber(searchProductRequestV2.getNumber());
+		result.setRecordsTotal(searchProductResult.getHitNumber());
+		result.setTotalPages((int) Math.ceil(searchProductResult.getHitNumber() / searchProductRequestV2.getSize()));
 		result.setFilterOptions(searchAttrFiltUtils.getAttrFilt(searchProductResult.getFilterOptions(), merchantStore, language));
 
 		return result;

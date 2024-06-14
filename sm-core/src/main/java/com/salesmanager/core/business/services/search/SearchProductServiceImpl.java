@@ -71,6 +71,7 @@ public class SearchProductServiceImpl implements SearchProductService{
 //        products.add(productResult);
         SearchProductResult searchProductResult = new SearchProductResult();
         searchProductResult.setProductList(products);
+        searchProductResult.setHitNumber(searchResult.getHitNumber());
 
 //        Map<String, List<String>> attrForFilt = new HashMap<>();
 //        attrForFilt.put("cate", Arrays.asList("700", "650", "600"));
