@@ -204,4 +204,30 @@ public class ProductCriteria extends Criteria {
 	public void setSellerCountryCode(Integer sellerCountryCode) {
 		this.sellerCountryCode = sellerCountryCode;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductCriteria{" +
+				"sellerCountryCode=" + sellerCountryCode +
+				", productName='" + productName + '\'' +
+				", attributeCriteria=" + attributeCriteria +
+				", origin='" + origin + '\'' +
+				", shippingType='" + shippingType + '\'' +
+				", startTime=" + startTime +
+				", endTime=" + endTime +
+				", auditStatus='" + auditStatus + '\'' +
+				", shippingTemplateIds=" + shippingTemplateIds +
+				", available=" + available +
+				", categoryIds=" + categoryIds +
+				", availabilities=" + availabilities +
+				", productIds=" + productIds +
+				", optionValueIds=" + optionValueIds +
+				", sku='" + sku + '\'' +
+				", optionValueCodes=" + optionValueCodes +
+				", option='" + option + '\'' +
+				", status='" + status + '\'' +
+				", manufacturerId=" + manufacturerId +
+				", ownerId=" + ownerId +
+				'}';
+	}
 }

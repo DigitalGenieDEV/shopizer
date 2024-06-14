@@ -135,7 +135,8 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	@Override
 	@Cacheable(value = "productByIdCache", key = "#productId")
 	public Product getProductWithOnlyMerchantStoreById(Long productId) {
-		return productRepository.getProductWithOnlyMerchantStoreById(productId);
+		Product product = productRepository.getProductWithOnlyMerchantStoreById(productId);
+		return product;
 	}
 
 	@Override

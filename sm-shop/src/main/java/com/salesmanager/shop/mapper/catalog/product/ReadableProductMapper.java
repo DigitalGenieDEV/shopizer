@@ -164,7 +164,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		Set<ProductImage> images = source.getImages();
 		if (CollectionUtils.isNotEmpty(images)) {
 
-			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, store))
+			List<ReadableImage> imageList = images.parallelStream().map(i -> this.convertImage(source, i, store))
 					.collect(Collectors.toList());
 			destination.setImages(imageList);
 			imageList.forEach(image->{
@@ -173,6 +173,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				}});
 		}
 
+		long startTime = System.currentTimeMillis();
 		if (!CollectionUtils.isEmpty(source.getAttributes())) {
 
 			Set<ProductAttribute> attributes = source.getAttributes();
@@ -304,16 +305,27 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				}
 			}
 		}
-		
+
+		long endTime = System.currentTimeMillis();
+
+		System.out.println("convert方法执行时长: " + (endTime - startTime) + " 毫秒");
+
+
 		ReadableProductVariant defaultInstance = null;
 
 		// variants
 		if (!CollectionUtils.isEmpty(source.getVariants()))
 
 		{
+			long startTime1 = System.currentTimeMillis();
+
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
 					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
+			long endTime1 = System.currentTimeMillis();
+
+			System.out.println("convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
+
 			destination.setVariants(instances);
 			
 			/**

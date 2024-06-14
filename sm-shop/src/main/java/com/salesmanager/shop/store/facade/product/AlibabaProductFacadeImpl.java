@@ -265,7 +265,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         com.salesmanager.shop.model.catalog.product.ProductDescription description = new ProductDescription();
         description.setLanguage("ko");
-        description.setName(productDetailModel.getSubject());
+        description.setName(productDetailModel.getSubjectTrans());
         description.setTitle(productDetailModel.getSubjectTrans());
         description.setDescription(productDetailModel.getDescription());
         com.salesmanager.shop.model.catalog.product.ProductDescription descriptionForEn = new ProductDescription();

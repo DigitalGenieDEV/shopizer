@@ -353,4 +353,23 @@ public class CategoryApi {
 		categoryFacade.deleteCategory(categoryId, merchantStore);
 	}
 
+	@GetMapping(value = "/category/id/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(
+			httpMethod = "GET", value = "Get user category list for an given Category id", notes = "List current Category and child category"
+	)
+	@ApiResponses(
+			value = { @ApiResponse(code = 200, message = "List of category found", response = ReadableCategory.class) }
+	)
+	@ApiImplicitParams(
+			{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+					@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+	)
+	public ReadableCategory getByUser(
+			@PathVariable(name = "id") Long categoryId,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language
+	) {
+		ReadableCategory category = categoryFacade.getById(merchantStore, categoryId, language);
+		return category;
+	}
 }

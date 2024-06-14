@@ -35,10 +35,17 @@ public class ProductAttributeServiceImpl extends SalesManagerEntityServiceImpl<L
 
 	@Override
 	public ProductAttribute getById(Long id) {
-
-		return productAttributeRepository.findOne(id);
+		ProductAttribute productAttribute = productAttributeRepository.findOne(id);
+		return productAttribute;
 
 	}
+
+	@Override
+	public List<ProductAttribute> getByIdList(List<Long> idList) {
+		List<ProductAttribute> productAttribute = productAttributeRepository.findByIds(idList);
+		return productAttribute;
+	}
+
 
 	@Override
 	public List<ProductAttribute> getByOptionId(MerchantStore store, Long id) throws ServiceException {

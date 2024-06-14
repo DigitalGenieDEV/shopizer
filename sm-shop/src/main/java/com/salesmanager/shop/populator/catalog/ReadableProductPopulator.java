@@ -295,7 +295,7 @@ public class ReadableProductPopulator extends
 				for(Category category : source.getCategories()) {
 
 					ReadableCategory readableCategory = new ReadableCategory();
-					categoryPopulator.populate(category, readableCategory, store, language);
+					categoryPopulator.populate(category, readableCategory, store, lang);
 					categoryList.add(readableCategory);
 
 				}
