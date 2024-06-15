@@ -19,6 +19,8 @@ public interface ReadBanner {
 	String getTarget();
 
 	String getImage();
+	
+	String getAlt();
 
 	int getOrd();
 

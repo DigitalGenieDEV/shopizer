@@ -23,6 +23,7 @@ public class PersistablePopupPopulator extends AbstractDataPopulator<Persistable
 			target.setType(source.getType());
 			target.setName(source.getName());
 			target.setImage(source.getImage());
+			target.setAlt(source.getAlt());
 			target.setSite(source.getSite());
 			target.setSdate(source.getSdate());
 			target.setEdate(source.getEdate());

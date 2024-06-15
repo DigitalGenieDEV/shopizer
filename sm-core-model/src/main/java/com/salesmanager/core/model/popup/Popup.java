@@ -77,6 +77,9 @@ public class Popup extends SalesManagerEntity<Integer, Popup> implements Auditab
 	@Column(name = "VISIBLE", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '사용여부'")
 	private int visible = 0;
 
+	@Column(name = "ALT", length = 100, nullable = true, updatable = true, columnDefinition = "varchar(100)  null comment '이미지 대체텍스트'")
+	private String alt;
+
 	@Embedded
 	private AuditSection2 auditSection = new AuditSection2();
 
@@ -198,6 +201,14 @@ public class Popup extends SalesManagerEntity<Integer, Popup> implements Auditab
 
 	public void setVisible(int visible) {
 		this.visible = visible;
+	}
+
+	public String getAlt() {
+		return alt;
+	}
+
+	public void setAlt(String alt) {
+		this.alt = alt;
 	}
 
 	public AuditSection2 getAuditSection() {

@@ -19,6 +19,7 @@ public class BannerEntity {
 	private String url="";
 	private String target="";
 	private String image="";
+	private String alt="";
 	private int ord = 0;
 	private int visible =0;
 

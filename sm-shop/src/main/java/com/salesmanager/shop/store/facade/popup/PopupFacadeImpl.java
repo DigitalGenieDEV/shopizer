@@ -16,10 +16,13 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.popup.PopupService;
 import com.salesmanager.core.model.popup.Popup;
 import com.salesmanager.core.model.popup.ReadPopup;
+import com.salesmanager.core.model.popup.ReadUserPopup;
 import com.salesmanager.shop.model.popup.PersistablePopup;
 import com.salesmanager.shop.model.popup.PopupEntity;
+import com.salesmanager.shop.model.popup.PopupUserEntity;
 import com.salesmanager.shop.model.popup.ReadablePopup;
 import com.salesmanager.shop.model.popup.ReadablePopupList;
+import com.salesmanager.shop.model.popup.ReadableUserPopupList;
 import com.salesmanager.shop.populator.popup.PersistablePopupPopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
@@ -39,6 +42,25 @@ public class PopupFacadeImpl  implements PopupFacade {
 	
 	@Inject
 	private ObjectMapper objectMapper;
+	
+	public ReadableUserPopupList getPopupUserList(String site) throws Exception {
+		try {
+			ReadableUserPopupList returnList = new ReadableUserPopupList();
+			List<PopupUserEntity> targetList = new ArrayList<PopupUserEntity>();
+			List<ReadUserPopup> dataList = popupService.getPopupUserList(site);
+
+			if (dataList.size() > 0) {
+				for (ReadUserPopup data : dataList) {
+					PopupUserEntity targetData = objectMapper.convertValue(data, PopupUserEntity.class);
+					targetList.add(targetData);
+				}
+			}
+			returnList.setData(targetList);
+			return returnList;
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
+	}
 	
 	public ReadablePopupList getPopupList(String site, String keyword, int page, int count) throws Exception {
 		try {
@@ -94,6 +116,7 @@ public class PopupFacadeImpl  implements PopupFacade {
 	
 	public ReadablePopup getById(int id) throws Exception {
 		Popup data = popupService.getById(id);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		ReadablePopup targetData = objectMapper.convertValue(data, ReadablePopup.class);
 		return targetData;
 	}

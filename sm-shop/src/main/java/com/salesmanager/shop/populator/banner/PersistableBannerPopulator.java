@@ -22,6 +22,7 @@ public class PersistableBannerPopulator extends AbstractDataPopulator<Persistabl
 			target.setId(source.getId());
 			target.setName(source.getName());
 			target.setImage(source.getImage());
+			target.setAlt(source.getAlt());
 			target.setSite(source.getSite());
 			target.setPosition(source.getPosition());
 			target.setSdate(source.getSdate());

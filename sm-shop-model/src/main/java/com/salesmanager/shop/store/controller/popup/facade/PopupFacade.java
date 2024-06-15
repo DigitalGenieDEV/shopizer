@@ -3,8 +3,11 @@ package com.salesmanager.shop.store.controller.popup.facade;
 import com.salesmanager.shop.model.popup.PersistablePopup;
 import com.salesmanager.shop.model.popup.ReadablePopup;
 import com.salesmanager.shop.model.popup.ReadablePopupList;
+import com.salesmanager.shop.model.popup.ReadableUserPopupList;
 
 public interface PopupFacade {
+	
+	ReadableUserPopupList getPopupUserList(String site) throws Exception;
 	
 	ReadablePopupList getPopupList(String site, String keyword, int page, int count) throws Exception;
 

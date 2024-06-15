@@ -29,26 +29,26 @@ import com.salesmanager.shop.store.controller.banner.facade.BannerFacade;
 import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 
 @Service
-public class BannerFacadeImpl  implements BannerFacade {
-	
+public class BannerFacadeImpl implements BannerFacade {
+
 	@Inject
 	private ContentFacade contentFacade;
 
 	@Inject
 	private BannerService bannerService;
-	
+
 	@Inject
 	private PersistableBannerPopulator persistableBannerPopulator;
-	
+
 	@Inject
 	private ObjectMapper objectMapper;
-	
+
 	public ReadableUserBannerList getBannerUserList(String site) throws Exception {
 		try {
 			ReadableUserBannerList returnList = new ReadableUserBannerList();
 			List<BannerUserEntity> targetList = new ArrayList<BannerUserEntity>();
-			List<ReadUserBanner> dataList= bannerService.getBannerUserList(site);
-			
+			List<ReadUserBanner> dataList = bannerService.getBannerUserList(site);
+
 			if (dataList.size() > 0) {
 				for (ReadUserBanner data : dataList) {
 					BannerUserEntity targetData = objectMapper.convertValue(data, BannerUserEntity.class);
@@ -57,12 +57,12 @@ public class BannerFacadeImpl  implements BannerFacade {
 			}
 			returnList.setData(targetList);
 			return returnList;
-	} catch (ServiceException e) {
-		throw new ServiceRuntimeException(e);
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
+
 	}
-		
-	}
-	
+
 	public ReadableBannerList getBannerList(String site, String keyword, int page, int count) throws Exception {
 		try {
 			List<ReadBanner> banner = null;
@@ -87,26 +87,23 @@ public class BannerFacadeImpl  implements BannerFacade {
 			throw new ServiceRuntimeException(e);
 		}
 	}
-	
-	public PersistableBanner saveBanner(PersistableBanner banner)  throws Exception {
+
+	public PersistableBanner saveBanner(PersistableBanner banner) throws Exception {
 		try {
 
 			int bannerId = banner.getId();
-			Banner target = Optional.ofNullable(bannerId)
-					.filter(id -> id > 0)
-					.map(bannerService::getById)
+			Banner target = Optional.ofNullable(bannerId).filter(id -> id > 0).map(bannerService::getById)
 					.orElse(new Banner());
-			
-		
+
 			Banner dbBanner = populateBanner(banner, target);
 			bannerService.saveOrUpdate(dbBanner);
-			
+
 			return banner;
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while updating Banner", e);
 		}
 	}
-	
+
 	private Banner populateBanner(PersistableBanner banner, Banner target) {
 		try {
 			return persistableBannerPopulator.populate(banner, target);
@@ -114,15 +111,16 @@ public class BannerFacadeImpl  implements BannerFacade {
 			throw new ServiceRuntimeException(e);
 		}
 	}
-	
+
 	public ReadableBanner getById(int id) throws Exception {
 		Banner data = bannerService.getById(id);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		ReadableBanner targetData = objectMapper.convertValue(data, ReadableBanner.class);
 		return targetData;
 	}
-	
-	public void deleteBanner(int id) throws Exception{
-		Banner banner  =  new Banner();
+
+	public void deleteBanner(int id) throws Exception {
+		Banner banner = new Banner();
 		banner.setId(id);
 		bannerService.delete(banner);
 	}

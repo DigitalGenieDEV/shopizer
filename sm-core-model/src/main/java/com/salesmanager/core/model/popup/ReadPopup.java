@@ -19,4 +19,6 @@ public interface ReadPopup {
 	int getOrd();
 
 	int getVisible();
+	
+	String getAlt();
 }

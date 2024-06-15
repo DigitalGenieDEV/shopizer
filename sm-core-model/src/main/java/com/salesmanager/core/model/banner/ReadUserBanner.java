@@ -12,6 +12,8 @@ public interface ReadUserBanner {
 	String getLinkTarget();
 
 	String getImage();
+	
+	String getAlt();
 
 
 }

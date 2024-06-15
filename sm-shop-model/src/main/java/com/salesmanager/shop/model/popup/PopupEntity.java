@@ -25,4 +25,5 @@ public class PopupEntity {
 	private int top = 0;
 	private int ord = 0;
 	private int visible = 0;
+	private String alt="";
 }
