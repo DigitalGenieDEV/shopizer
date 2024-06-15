@@ -11,7 +11,7 @@ import com.salesmanager.core.model.banner.ReadBanner;
 public interface PageableBannerRepository extends JpaRepository<Banner, Integer> {
 
 
-	@Query(value = "SELECT  ID, NAME, SITE, POSITION,  DATE_FORMAT(SDATE, '%Y-%m-%d') AS SDATE, DATE_FORMAT(EDATE, '%Y-%m-%d') AS EDATE,  URL,TARGET,  IMAGE, ORD, VISIBLE FROM BANNER \r\n"
+	@Query(value = "SELECT  ID, NAME, SITE, POSITION,  DATE_FORMAT(SDATE, '%Y-%m-%d') AS SDATE, DATE_FORMAT(EDATE, '%Y-%m-%d') AS EDATE,  URL,TARGET,  IMAGE, ORD, VISIBLE, ALT FROM BANNER \r\n"
 			+ "WHERE 1=1  \r\n"
 			+ "	AND (CASE WHEN  ?1 != '' THEN  SITE = ?1 ELSE TRUE END  ) \r\n"
 			+ "	AND (CASE WHEN  ?2 != '' THEN  NAME LIKE %?2%  ELSE TRUE  END )\r\n"

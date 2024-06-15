@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.salesmanager.shop.model.banner.ReadableBannerList;
 import com.salesmanager.shop.model.popup.PersistablePopup;
 import com.salesmanager.shop.model.popup.ReadablePopup;
 import com.salesmanager.shop.model.popup.ReadablePopupList;
+import com.salesmanager.shop.model.popup.ReadableUserPopupList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.popup.facade.PopupFacade;
@@ -45,6 +47,14 @@ public class PopupApi {
 	
 	@Inject
 	private ManagerFacade managerFacade;
+	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/popup" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of User Popup", notes = "", response = ReadableBannerList.class)
+	public ReadableUserPopupList userList(@RequestParam(value = "site", required = false, defaultValue = "2") String site,HttpServletRequest request) throws Exception {
+		return popupFacade.getPopupUserList(site);
+	}
 	
 	
 	@ResponseStatus(HttpStatus.OK)

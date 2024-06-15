@@ -1,5 +1,7 @@
 package com.salesmanager.core.business.services.popup;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import com.salesmanager.core.business.repositories.popup.PopupRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.popup.Popup;
 import com.salesmanager.core.model.popup.ReadPopup;
+import com.salesmanager.core.model.popup.ReadUserPopup;
 
 @Service("popupService")
 public class PopupServiceImpl extends SalesManagerEntityServiceImpl<Integer, Popup> implements PopupService {
@@ -27,6 +30,10 @@ public class PopupServiceImpl extends SalesManagerEntityServiceImpl<Integer, Pop
 	public PopupServiceImpl(PopupRepository popupRepository) {
 		super(popupRepository);
 		this.popupRepository = popupRepository;
+	}
+	
+	public List<ReadUserPopup> getPopupUserList(String site) throws ServiceException{
+		return popupRepository.getPopupUserList(site);
 	}
 	
 	public Page<ReadPopup> getPopupList(String site, String keyword, int page, int count)
