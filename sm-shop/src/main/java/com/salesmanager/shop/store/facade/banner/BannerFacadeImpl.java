@@ -14,14 +14,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.banner.BannerService;
-import com.salesmanager.core.model.accesscontrol.AccessControl;
 import com.salesmanager.core.model.banner.Banner;
 import com.salesmanager.core.model.banner.ReadBanner;
-import com.salesmanager.shop.model.accesscontrol.ReadableAccessControl;
+import com.salesmanager.core.model.banner.ReadUserBanner;
 import com.salesmanager.shop.model.banner.BannerEntity;
+import com.salesmanager.shop.model.banner.BannerUserEntity;
 import com.salesmanager.shop.model.banner.PersistableBanner;
 import com.salesmanager.shop.model.banner.ReadableBanner;
 import com.salesmanager.shop.model.banner.ReadableBannerList;
+import com.salesmanager.shop.model.banner.ReadableUserBannerList;
 import com.salesmanager.shop.populator.banner.PersistableBannerPopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.banner.facade.BannerFacade;
@@ -41,6 +42,26 @@ public class BannerFacadeImpl  implements BannerFacade {
 	
 	@Inject
 	private ObjectMapper objectMapper;
+	
+	public ReadableUserBannerList getBannerUserList(String site) throws Exception {
+		try {
+			ReadableUserBannerList returnList = new ReadableUserBannerList();
+			List<BannerUserEntity> targetList = new ArrayList<BannerUserEntity>();
+			List<ReadUserBanner> dataList= bannerService.getBannerUserList(site);
+			
+			if (dataList.size() > 0) {
+				for (ReadUserBanner data : dataList) {
+					BannerUserEntity targetData = objectMapper.convertValue(data, BannerUserEntity.class);
+					targetList.add(targetData);
+				}
+			}
+			returnList.setData(targetList);
+			return returnList;
+	} catch (ServiceException e) {
+		throw new ServiceRuntimeException(e);
+	}
+		
+	}
 	
 	public ReadableBannerList getBannerList(String site, String keyword, int page, int count) throws Exception {
 		try {

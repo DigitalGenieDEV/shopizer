@@ -9,17 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
-public class BannerEntity {
+public class BannerUserEntity {
 	private int id=0;
-	private String site="";
 	private String position="";
 	private String name="";
-	private String sdate="";
-	private String edate="";
 	private String url="";
-	private String target="";
+	private String linkTarget="";
 	private String image="";
-	private int ord = 0;
-	private int visible =0;
 
 }
