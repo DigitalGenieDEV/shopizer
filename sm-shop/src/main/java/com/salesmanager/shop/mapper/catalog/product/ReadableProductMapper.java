@@ -613,8 +613,8 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				}
 			}
 		}
-		valueDescription.setName(podescription.getName());
-		valueDescription.setDescription(podescription.getDescription());
+		valueDescription.setName(podescription == null? null : podescription.getName());
+		valueDescription.setDescription(podescription == null? null : podescription.getDescription());
 		optValue.setDescription(valueDescription);
 
 		return Optional.of(optValue);
