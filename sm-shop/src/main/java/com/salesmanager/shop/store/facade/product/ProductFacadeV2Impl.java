@@ -157,13 +157,13 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
 
-		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
-
-		if (!CollectionUtils.isEmpty(instances)){
-			MerchantStore finalStore = store;
-			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
-			readableProduct.setVariants(readableInstances);
-		}
+//		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
+//
+//		if (!CollectionUtils.isEmpty(instances)){
+//			MerchantStore finalStore = store;
+//			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
+//			readableProduct.setVariants(readableInstances);
+//		}
 
 		return readableProduct;
 	}

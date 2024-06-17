@@ -20,12 +20,14 @@ import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantPrice;
@@ -125,6 +127,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private CategoryService categoryService;
+
+	@Autowired
+	private CountryService countryService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -610,7 +615,7 @@ public class ProductApiV2 {
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, // count
 			@RequestParam(value = "slug", required = false) String slug, // category slug
 			@RequestParam(value = "available", required = false) Boolean available,
-			@RequestParam(value = "sellerCountryCode", required = false) Integer sellerCountryCode,
+			@RequestParam(value = "sellerCountryCode", required = false) String sellerCountryCode,
 			// per
 			// page
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
@@ -629,7 +634,10 @@ public class ProductApiV2 {
 		if (!StringUtils.isBlank(status)) {
 			criteria.setStatus(status);
 		}
-		criteria.setSellerCountryCode(sellerCountryCode);
+		if (StringUtils.isNotEmpty(sellerCountryCode)){
+			Country country = countryService.getByCode(sellerCountryCode);
+			criteria.setSellerCountryCode(country.getId());
+		}
 		// Start Category handling
 		List<Long> categoryIds = new ArrayList<Long>();
 		if (slug != null) {
