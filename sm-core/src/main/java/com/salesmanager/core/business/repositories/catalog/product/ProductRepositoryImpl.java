@@ -1206,7 +1206,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		}
 
 		if (criteria.getSellerCountryCode() != null) {
-			countBuilderWhere.append(" and p.merchantStore.country=:mcoid");
+			countBuilderWhere.append(" and p.merchantStore.country.id=:mcoid");
 		}
 
 		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
