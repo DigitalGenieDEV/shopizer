@@ -442,7 +442,10 @@ public class ProductApiV2 {
 	public ReadableProduct getByProductIdForUser(@PathVariable Long productId,
 							   @RequestParam(value = "lang", required = false) String lang,
 							   @ApiIgnore Language language) {
+		long startTime = System.currentTimeMillis();
 		ReadableProduct product = productFacadeV2.getProductById(productId,null, language);
+		long endTime = System.currentTimeMillis();
+		System.out.println("商品查询方法执行时长:" + (endTime - startTime));
 		return product;
 	}
 

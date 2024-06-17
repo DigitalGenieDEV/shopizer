@@ -324,7 +324,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
 			long endTime1 = System.currentTimeMillis();
 
-			System.out.println("convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
+			System.out.println("getVariants convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
 
 			destination.setVariants(instances);
 			
