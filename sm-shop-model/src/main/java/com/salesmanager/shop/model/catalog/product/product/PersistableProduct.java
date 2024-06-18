@@ -22,8 +22,9 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private String identifier;
 
-	//todo
 	private List<String> productTag;
+
+	private Long shippingTemplateId;
 
 	private List<PersistableProductAttribute> properties = new ArrayList<PersistableProductAttribute>();
 
@@ -114,5 +115,13 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	public void setProductTag(List<String> productTag) {
 		this.productTag = productTag;
+	}
+
+	public Long getShippingTemplateId() {
+		return shippingTemplateId;
+	}
+
+	public void setShippingTemplateId(Long shippingTemplateId) {
+		this.shippingTemplateId = shippingTemplateId;
 	}
 }

@@ -175,7 +175,6 @@ public class ProductApiV2 {
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
-
 		// make sure product id is null
 		Product productBySku = null;
 		if(StringUtils.isNotBlank(product.getIdentifier())){

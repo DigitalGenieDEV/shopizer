@@ -1,12 +1,9 @@
 package com.salesmanager.shop.model.shipping;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.shipping.*;
 import com.salesmanager.shop.model.references.PersistableAddress;
-import com.salesmanager.shop.model.references.ReadableAddress;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class PersistableMerchantShippingConfiguration implements Serializable {
@@ -14,12 +11,6 @@ public class PersistableMerchantShippingConfiguration implements Serializable {
     private Long id;
 
     private MerchantStore merchantStore;
-
-    private Date dateCreated;
-
-    private Date dateModified;
-
-    private String modifiedBy;
 
     private String name;
 
@@ -67,30 +58,6 @@ public class PersistableMerchantShippingConfiguration implements Serializable {
 
     public void setMerchantStore(MerchantStore merchantStore) {
         this.merchantStore = merchantStore;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
     }
 
     public String getName() {
