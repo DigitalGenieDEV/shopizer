@@ -55,7 +55,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service("userAddressFacade")
+@Service
 public class UserAddressFacadeImpl implements UserAddressFacade {
 
 

@@ -29,7 +29,7 @@ public class UserAddress extends SalesManagerEntity<Long, UserAddress> implement
 	@Embedded
 	private AuditSection auditSection = new AuditSection();
 
-	@Column (name ="LAST_NAME", length=64)
+	@Column (name ="NAME", length=64)
 	private String name;
 
 	@Column (name ="COMPANY", length=100)
