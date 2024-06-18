@@ -26,7 +26,7 @@ public class MerchantShippingConfigurationRepositoryImpl implements MerchantShip
 		StringBuilder countBuilderSelect = new StringBuilder();
 		StringBuilder objectBuilderSelect = new StringBuilder();
 		
-		String countBaseQuery = "select count(o) from MerchantShippingConfiguration as o";
+		String countBaseQuery = "select count(*) from MerchantShippingConfiguration as o";
 		String baseQuery = "select o from MerchantShippingConfiguration as o";
 		countBuilderSelect.append(countBaseQuery);
 		objectBuilderSelect.append(baseQuery);

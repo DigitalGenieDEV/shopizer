@@ -10,6 +10,8 @@ import com.salesmanager.core.model.common.Criteria;
 import com.salesmanager.shop.model.shipping.PersistableMerchantShippingConfiguration;
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfiguration;
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfigurationList;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -319,9 +321,9 @@ public class ShippingConfigurationApi {
 	@ApiOperation(httpMethod = "GET", value = "Get shipping configuration by id", notes = "Get shipping configuration by id")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Configuration found", response = ReadableMerchantShippingConfiguration.class) })
-	public ReadableMerchantShippingConfiguration get(
+	public CommonResultDTO<ReadableMerchantShippingConfiguration> getByAdmin(
 			@PathVariable(name = "id") Long id) {
-		return shippingFacade.getById(null, id);
+		return getShippingConfigurationById(id);
 	}
 
 	@GetMapping(value = "/private/shipping/configurations", produces = { APPLICATION_JSON_VALUE })
@@ -329,42 +331,118 @@ public class ShippingConfigurationApi {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")
 	})
-	public ReadableMerchantShippingConfigurationList list(
+	public CommonResultDTO<ReadableMerchantShippingConfigurationList> listByAdmin(
 			@RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
 			@ApiIgnore MerchantStore merchantStore) {
-		Criteria criteria = new Criteria();
-		criteria.setStartIndex(startPage);
-		criteria.setPageSize(pageSize);
-		try {
-			return shippingFacade.list(merchantStore, criteria);
-		} catch (ServiceException e) {
-			throw new RuntimeException(e);
-		}
+		return getShippingConfigurationList(startPage, pageSize, merchantStore);
 	}
 
-	@PostMapping(value = "/private/shipping/configuration", produces = { APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/private/shipping/configuration/create", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "POST", value = "Create a new shipping configuration", notes = "Create a new shipping configuration")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Configuration created", response = PersistableMerchantShippingConfiguration.class) })
-	public ResponseEntity<PersistableMerchantShippingConfiguration> create(
+	public CommonResultDTO<Void> createByAdmin(
 			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
-		try {
-			shippingFacade.save(merchantStore, configuration);
-		} catch (ServiceException e) {
-			throw new RuntimeException(e);
-		}
-		return new ResponseEntity<>(configuration, HttpStatus.CREATED);
+		return createShippingConfiguration(configuration, merchantStore);
 	}
 
-	@PutMapping(value = "/private/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
+	@PutMapping(value = "/private/shipping/configuration/update/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "PUT", value = "Update a shipping configuration", notes = "Update a shipping configuration")
-	public ResponseEntity<PersistableMerchantShippingConfiguration> update(
+	public ResponseEntity<PersistableMerchantShippingConfiguration> updateByAdmin(
 			@PathVariable Long id,
 			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
 			@ApiIgnore MerchantStore merchantStore) {
+		return updateShippingConfiguration(id, configuration, merchantStore);
+	}
+
+	@DeleteMapping(value = "/private/shipping/configuration/deleted/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ResponseStatus(OK)
+	@ApiOperation(httpMethod = "DELETE", value = "Delete a shipping configuration", notes = "Delete a shipping configuration")
+	public void delete(@PathVariable("id") Long id, @ApiIgnore MerchantStore merchantStore) {
+		deleteShippingConfiguration(id, merchantStore);
+	}
+
+
+	@GetMapping(value = "/auth/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get shipping configuration by id", notes = "Get shipping configuration by id")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Configuration found", response = ReadableMerchantShippingConfiguration.class) })
+	public CommonResultDTO<ReadableMerchantShippingConfiguration> getBySeller(
+			@PathVariable(name = "id") Long id) {
+		return getShippingConfigurationById(id);
+	}
+
+	@GetMapping(value = "/auth/shipping/configurations", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "GET", value = "Get list of shipping configurations", notes = "Get list of shipping configurations with pagination")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")
+	})
+	public CommonResultDTO<ReadableMerchantShippingConfigurationList> listBySeller(
+			@RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+			@ApiIgnore MerchantStore merchantStore) {
+		return getShippingConfigurationList(startPage, pageSize, merchantStore);
+	}
+
+	@PostMapping(value = "/auth/shipping/configuration/create", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "Create a new shipping configuration", notes = "Create a new shipping configuration")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Configuration created", response = PersistableMerchantShippingConfiguration.class) })
+	public CommonResultDTO<Void> createBySeller(
+			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language) {
+		return createShippingConfiguration(configuration, merchantStore);
+	}
+
+	@PutMapping(value = "/auth/shipping/configuration/update/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "PUT", value = "Update a shipping configuration", notes = "Update a shipping configuration")
+	public ResponseEntity<PersistableMerchantShippingConfiguration> updateBySeller(
+			@PathVariable Long id,
+			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
+			@ApiIgnore MerchantStore merchantStore) {
+		return updateShippingConfiguration(id, configuration, merchantStore);
+	}
+
+	@DeleteMapping(value = "/auth/shipping/configuration/deleted/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ResponseStatus(OK)
+	@ApiOperation(httpMethod = "DELETE", value = "Delete a shipping configuration", notes = "Delete a shipping configuration")
+	public void deleteBySeller(@PathVariable("id") Long id, @ApiIgnore MerchantStore merchantStore) {
+		deleteShippingConfiguration(id, merchantStore);
+	}
+
+	private CommonResultDTO<ReadableMerchantShippingConfiguration> getShippingConfigurationById(Long id) {
+		try {
+			return CommonResultDTO.ofSuccess(shippingFacade.getById(null, id));
+		} catch (Exception e) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
+		}
+	}
+
+	private CommonResultDTO<ReadableMerchantShippingConfigurationList> getShippingConfigurationList(Integer startPage, Integer pageSize, MerchantStore merchantStore) {
+		try {
+			Criteria criteria = new Criteria();
+			criteria.setStartIndex(startPage);
+			criteria.setPageSize(pageSize);
+			return CommonResultDTO.ofSuccess(shippingFacade.list(merchantStore, criteria));
+		} catch (Exception e) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
+		}
+	}
+
+	private CommonResultDTO<Void> createShippingConfiguration(PersistableMerchantShippingConfiguration configuration, MerchantStore merchantStore) {
+		try {
+			shippingFacade.save(merchantStore, configuration);
+			return CommonResultDTO.ofSuccess();
+		} catch (ServiceException e) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
+		}
+	}
+
+	private ResponseEntity<PersistableMerchantShippingConfiguration> updateShippingConfiguration(Long id, PersistableMerchantShippingConfiguration configuration, MerchantStore merchantStore) {
 		configuration.setId(id);
 		try {
 			shippingFacade.save(merchantStore, configuration);
@@ -374,11 +452,14 @@ public class ShippingConfigurationApi {
 		return new ResponseEntity<>(configuration, OK);
 	}
 
-	@DeleteMapping(value = "/private/shipping/configuration/{id}", produces = { APPLICATION_JSON_VALUE })
-	@ResponseStatus(OK)
-	@ApiOperation(httpMethod = "DELETE", value = "Delete a shipping configuration", notes = "Delete a shipping configuration")
-	public void delete(@PathVariable("id") Long id, @ApiIgnore MerchantStore merchantStore) {
+	private void deleteShippingConfiguration(Long id, MerchantStore merchantStore) {
 		shippingFacade.delete(merchantStore, id);
 	}
+
+
+
+
+
+
 
 }

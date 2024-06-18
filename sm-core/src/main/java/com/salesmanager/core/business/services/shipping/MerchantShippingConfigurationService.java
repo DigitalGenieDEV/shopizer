@@ -13,7 +13,7 @@ public interface MerchantShippingConfigurationService {
     MerchantShippingConfiguration getById(Long id);
 
 
-    MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException;
+//    MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException;
 
     MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria) throws ServiceException;
 

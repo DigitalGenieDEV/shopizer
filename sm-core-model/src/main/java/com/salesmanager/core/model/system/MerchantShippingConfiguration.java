@@ -40,8 +40,8 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   @Column(name = "NAME")
   private String name;
 
-  @Column(name = "CONFIG_KEY")
-  private String key;
+//  @Column(name = "CONFIG_KEY")
+//  private String key;
 
   /**
    * activate and deactivate configuration
@@ -56,23 +56,40 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   @Lob
   private String value;
 
+  /**
+   * NATIONAL, INTERNATIONAL
+   * @see ShippingType
+   * @see ShippingType
+   */
   @Column(name = "SHIPPING_TYPE")
   private String shippingType;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "SHIPPING_BASIS_TYPE")
-  private ShippingBasisType shippingBasisType = ShippingBasisType.SHIPPING;
+//  @Enumerated(EnumType.STRING)
+//  @Column(name = "SHIPPING_BASIS_TYPE")
+//  private ShippingBasisType shippingBasisType = ShippingBasisType.SHIPPING;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "SHIPPING_PACKAGE_TYPE")
   private ShippingPackageType shippingPackageType;
 
+  /**
+   * 	EXPRESS ,FREIGHT , EXPRESS_SERVICE , DIRECT_DELIVERY;
+   * @see TransportationMethod
+   */
   @Column(name = "TRANSPORTATION_METHOD")
   private String transportationMethod;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "SHIPPING_OPTION_PRICE_TYPE")
-  private ShippingOptionPriceType shippingOptionPriceType;
+
+  /**
+   * @see ShippingTransportationType
+   */
+  @Column(name = "SHIPPING_TRANSPORTATION_TYPE")
+  private String shippingTransportationType;
+
+
+//  @Enumerated(EnumType.STRING)
+//  @Column(name = "SHIPPING_OPTION_PRICE_TYPE")
+//  private ShippingOptionPriceType shippingOptionPriceType;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "SHIPPING_ORIGIN_ID")
@@ -91,13 +108,7 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
   @Column(name = "RETURN_SHIPPING_PRICE")
   private String returnShippingPrice;
 
-  public void setKey(String key) {
-    this.key = key;
-  }
 
-  public String getKey() {
-    return key;
-  }
 
   public void setValue(String value) {
     this.value = value;
@@ -141,13 +152,6 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.shippingPackageType = shippingPackageType;
   }
 
-  public ShippingOptionPriceType getShippingOptionPriceType() {
-    return shippingOptionPriceType;
-  }
-
-  public void setShippingOptionPriceType(ShippingOptionPriceType shippingOptionPriceType) {
-    this.shippingOptionPriceType = shippingOptionPriceType;
-  }
 
   public ShippingOrigin getShippingOrigin() {
     return shippingOrigin;
@@ -213,15 +217,6 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
     this.defaultShipping = defaultShipping;
   }
 
-
-  public ShippingBasisType getShippingBasisType() {
-    return shippingBasisType;
-  }
-
-  public void setShippingBasisType(ShippingBasisType shippingBasisType) {
-    this.shippingBasisType = shippingBasisType;
-  }
-
   public String getShippingType() {
     return shippingType;
   }
@@ -236,5 +231,13 @@ public class MerchantShippingConfiguration extends SalesManagerEntity<Long, Merc
 
   public void setTransportationMethod(String transportationMethod) {
     this.transportationMethod = transportationMethod;
+  }
+
+  public String getShippingTransportationType() {
+    return shippingTransportationType;
+  }
+
+  public void setShippingTransportationType(String shippingTransportationType) {
+    this.shippingTransportationType = shippingTransportationType;
   }
 }

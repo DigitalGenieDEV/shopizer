@@ -34,10 +34,10 @@ public class MerchantShippingConfigurationServiceImpl extends
         return merchantShippingConfigurationRepository.getById(id);
     }
 
-    @Override
-    public MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException {
-        return merchantShippingConfigurationRepository.findByMerchantStoreAndKey(store.getId(), key);
-    }
+//    @Override
+//    public MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException {
+//        return merchantShippingConfigurationRepository.findByMerchantStoreAndKey(store.getId(), key);
+//    }
 
     @Override
     public MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria) throws ServiceException {
