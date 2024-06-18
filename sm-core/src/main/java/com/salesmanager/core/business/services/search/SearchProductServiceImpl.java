@@ -9,9 +9,9 @@ import com.amazonaws.services.lambda.model.InvokeResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.amazonaws.LambdaInvokeService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
-import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.catalog.product.search.*;
 import org.apache.commons.httpclient.HttpClient;
@@ -48,7 +48,7 @@ public class SearchProductServiceImpl implements SearchProductService{
 
 
     @Override
-    public SearchProductResult search(SearchRequest request) {
+    public SearchProductResult search(SearchRequest request) throws ServiceException {
         SearchResult searchResult = getProductSearchResult(request);
 
         List<ProductResult> productResults = searchResult.getProductList();
@@ -58,19 +58,22 @@ public class SearchProductServiceImpl implements SearchProductService{
 //        productResult.setProductId("350");
 //        productResults.add(productResult);
 
-        List<Product> products = new ArrayList<>();
-        for (ProductResult p : productResults) {
-            try {
-                Product product = productService.getById(Long.valueOf(p.getProductId()));
-                if(product != null && product.getId() != null && product.getId() > 0) {
-                    products.add(product);
-                }
-            } catch (Exception e) {
-            }
-        }
+//        List<Product> products = new ArrayList<>();
+//
+////        List<Product> products =
+////                productService.getProductsByIds(productResults.stream().map(ProductResult::getProductId).map(Long::valueOf).collect(Collectors.toList()));
+//        for (ProductResult p : productResults) {
+//            try {
+//                Product product = productService.getById(Long.valueOf(p.getProductId()));
+//                if(product != null && product.getId() != null && product.getId() > 0) {
+//                    products.add(product);
+//                }
+//            } catch (Exception e) {
+//            }
+//        }
 //        products.add(productResult);
         SearchProductResult searchProductResult = new SearchProductResult();
-        searchProductResult.setProductList(products);
+        searchProductResult.setProductResults(productResults);
         searchProductResult.setHitNumber(searchResult.getHitNumber());
 
 //        Map<String, List<String>> attrForFilt = new HashMap<>();

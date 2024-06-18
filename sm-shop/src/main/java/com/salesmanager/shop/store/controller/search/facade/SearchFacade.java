@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.controller.search.facade;
 import java.util.List;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
@@ -59,7 +60,7 @@ public interface SearchFacade {
 
 
 
-	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore store, Language language) throws ConversionException;
+	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore store, Language language) throws ConversionException, ServiceException;
 
 	ValueList autoCompleteRequestV2(SearchProductAutocompleteRequestV2 searchProductAutocompleteRequestV2, Language language);
 }

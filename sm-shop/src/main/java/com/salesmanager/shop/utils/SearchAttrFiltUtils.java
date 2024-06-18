@@ -11,6 +11,7 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.search.ReadableAttrFiltAttrKv;
 import com.salesmanager.shop.model.search.ReadableAttrFiltKv;
 import com.salesmanager.shop.model.search.ReadableAttrForFilt;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -150,6 +151,7 @@ public class SearchAttrFiltUtils {
         return kvs;
     }
 
+    @Cacheable(value="filt_categorys", key = "#categoryId + ':' + #language.code")
     public ReadableAttrFiltKv getCategoryAttrFiltKv(long categoryId, MerchantStore merchantStore, Language language) {
         try {
             Category category = categoryService.getById(merchantStore, categoryId);
@@ -198,7 +200,8 @@ public class SearchAttrFiltUtils {
         return null;
     }
 
-    private ReadableAttrFiltKv getAttibuteAttrFiltKv(String attrIdWithPrefix, MerchantStore merchantStore, Language language) {
+    @Cacheable(value="filt_attrs", key = "#attrIdWithPrefix + ':' + #language.code")
+    public ReadableAttrFiltKv getAttibuteAttrFiltKv(String attrIdWithPrefix, MerchantStore merchantStore, Language language) {
         try {
             ProductAttribute productAttribute = productAttributeService.getById(Long.valueOf(attrIdWithPrefix.replace(FILT_KEY_ATTR_PREFIX, "")));
             ProductOption productOption = productAttribute.getProductOption();

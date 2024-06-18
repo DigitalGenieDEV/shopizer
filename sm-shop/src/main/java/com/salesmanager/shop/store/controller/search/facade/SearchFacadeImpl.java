@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.search.SearchProductService;
+import com.salesmanager.core.model.catalog.product.recommend.ProductResult;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteRequest;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteResult;
 import com.salesmanager.core.model.catalog.product.search.SearchProductResult;
@@ -17,10 +18,8 @@ import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.recommend.ReadableDisplayProduct;
-import com.salesmanager.shop.model.search.ReadableSearchProductV2;
 import com.salesmanager.shop.model.search.ReadableSearchResult;
 import com.salesmanager.shop.populator.recommend.ReadableDisplayProductPopulator;
-import com.salesmanager.shop.populator.search.ReadableSearchProductV2Populator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.utils.SearchAttrFiltUtils;
 import org.jsoup.helper.Validate;
@@ -28,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -237,7 +237,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore merchantStore, Language language) throws ConversionException {
+	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
 		SearchRequest searchProductRequest = new SearchRequest();
 		searchProductRequest.setLang(language.getCode());
 		searchProductRequest.setSize(searchProductRequestV2.getSize());
@@ -249,17 +249,12 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setSort(searchProductRequestV2.getSort());
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
-		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
-		populator.setPricingService(pricingService);
-		populator.setimageUtils(imageUtils);
-		populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-		populator.setReadableProductVariantMapper(readableProductVariantMapper);
-		populator.setProductFeatureService(productFeatureService);
+
 
 		ReadableSearchResult result = new ReadableSearchResult();
-		for(Product product : searchProductResult.getProductList()) {
+		for(ProductResult productResult : searchProductResult.getProductResults()) {
 			//create new proxy product
-			ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
+			ReadableDisplayProduct readProduct = getReadableDisplayProduct(Long.valueOf(productResult.getProductId()), language);
 			result.getProducts().add(readProduct);
 		}
 
@@ -269,6 +264,35 @@ public class SearchFacadeImpl implements SearchFacade {
 		result.setFilterOptions(searchAttrFiltUtils.getAttrFilt(searchProductResult.getFilterOptions(), merchantStore, language));
 
 		return result;
+	}
+
+	@Cacheable(value="search_display_products", key = "#productId + ':' + #language.code")
+	public ReadableDisplayProduct getReadableDisplayProduct(Long productId, Language language) {
+		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
+		populator.setPricingService(pricingService);
+		populator.setimageUtils(imageUtils);
+		populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+		populator.setReadableProductVariantMapper(readableProductVariantMapper);
+		populator.setProductFeatureService(productFeatureService);
+
+		try {
+			Product product = productService.getById(productId);
+			if(product != null && product.getId() != null && product.getId() > 0) {
+			}
+
+			populator.setPricingService(pricingService);
+			populator.setimageUtils(imageUtils);
+			populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+			populator.setReadableProductVariantMapper(readableProductVariantMapper);
+			populator.setProductFeatureService(productFeatureService);
+
+			ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
+
+			return readProduct;
+		} catch (Exception e) {
+		}
+
+		return null;
 	}
 
 	@Override
