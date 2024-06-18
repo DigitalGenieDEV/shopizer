@@ -89,7 +89,6 @@ public class SearchProductServiceImpl implements SearchProductService{
     }
 
 
-
     @Override
     public AutocompleteResult autocomplete(AutocompleteRequest request) {
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

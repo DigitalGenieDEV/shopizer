@@ -13,6 +13,7 @@ import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.entity.ValueList;
 
+import com.salesmanager.shop.model.recommend.ReadableDisplayProduct;
 import com.salesmanager.shop.model.search.ReadableSearchProduct;
 import com.salesmanager.shop.model.search.ReadableSearchResult;
 import modules.commons.search.request.SearchItem;
@@ -58,7 +59,7 @@ public interface SearchFacade {
 	 */
 	ValueList autocompleteRequest(String query, MerchantStore store, Language language);
 
-
+	ReadableDisplayProduct getReadableDisplayProduct(Long productId, Language language);
 
 	ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore store, Language language) throws ConversionException, ServiceException;
 

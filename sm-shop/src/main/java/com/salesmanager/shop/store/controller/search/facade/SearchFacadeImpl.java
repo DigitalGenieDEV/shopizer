@@ -266,7 +266,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		return result;
 	}
 
-	@Cacheable(value="search_display_products", key = "#productId + ':' + #language.code")
+	@Override
 	public ReadableDisplayProduct getReadableDisplayProduct(Long productId, Language language) {
 		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
 		populator.setPricingService(pricingService);
@@ -276,8 +276,9 @@ public class SearchFacadeImpl implements SearchFacade {
 		populator.setProductFeatureService(productFeatureService);
 
 		try {
-			Product product = productService.getById(productId);
-			if(product != null && product.getId() != null && product.getId() > 0) {
+			Product product = productService.getProductWithOnlyMerchantStoreById(productId);
+			if(product == null || product.getId() == null) {
+				return null;
 			}
 
 			populator.setPricingService(pricingService);

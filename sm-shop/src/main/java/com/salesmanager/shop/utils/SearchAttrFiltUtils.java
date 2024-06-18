@@ -130,28 +130,49 @@ public class SearchAttrFiltUtils {
         List<ReadableAttrFiltAttrKv> kvs = new ArrayList<>();
         Set<Map.Entry<String, List<String>>> entrySets = attrForFilt.entrySet();
 
+        List<String> attrIdsWithPrefix = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : entrySets) {
             if (entry.getKey().startsWith(FILT_KEY_ATTR_PREFIX)) {
-                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
-
-                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(entry.getKey(), merchantStore, language);
-
-                List<ReadableAttrFiltKv> attrValues = entry.getValue().stream()
-                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
-                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-                        .collect(Collectors.toList());
-
-                attrKv.setAttrName(attrName);
-                attrKv.setAttrValues(attrValues);
-
-                kvs.add(attrKv);
+                attrIdsWithPrefix.add(entry.getKey());
+//                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
+//
+//                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(entry.getKey(), merchantStore, language);
+//
+//                List<ReadableAttrFiltKv> attrValues = entry.getValue().stream()
+//                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
+//                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
+//                        .collect(Collectors.toList());
+//
+//                attrKv.setAttrName(attrName);
+//                attrKv.setAttrValues(attrValues);
+//
+//                kvs.add(attrKv);
             }
+        }
+
+        List<Long> attrIds = attrIdsWithPrefix.stream()
+                .map(attrIdWithPrefix -> Long.valueOf(attrIdWithPrefix.replace(FILT_KEY_ATTR_PREFIX, ""))).collect(Collectors.toList());
+
+        List<ProductAttribute> productAttributes = productAttributeService.getByIdList(attrIds);
+
+        for (ProductAttribute productAttribute : productAttributes) {
+            ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
+
+            List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId()).stream()
+                    .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
+                    .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
+                    .collect(Collectors.toList());
+            ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
+
+            attrKv.setAttrName(attrName);
+            attrKv.setAttrValues(attrValues);
+
+            kvs.add(attrKv);
         }
 
         return kvs;
     }
 
-    @Cacheable(value="filt_categorys", key = "#categoryId + ':' + #language.code")
     public ReadableAttrFiltKv getCategoryAttrFiltKv(long categoryId, MerchantStore merchantStore, Language language) {
         try {
             Category category = categoryService.getById(merchantStore, categoryId);
@@ -200,16 +221,15 @@ public class SearchAttrFiltUtils {
         return null;
     }
 
-    @Cacheable(value="filt_attrs", key = "#attrIdWithPrefix + ':' + #language.code")
-    public ReadableAttrFiltKv getAttibuteAttrFiltKv(String attrIdWithPrefix, MerchantStore merchantStore, Language language) {
+    public ReadableAttrFiltKv getAttibuteAttrFiltKv(ProductAttribute productAttribute, Language language) {
         try {
-            ProductAttribute productAttribute = productAttributeService.getById(Long.valueOf(attrIdWithPrefix.replace(FILT_KEY_ATTR_PREFIX, "")));
+//            ProductAttribute productAttribute = productAttributeService.getById(Long.valueOf(attrIdWithPrefix.replace(FILT_KEY_ATTR_PREFIX, "")));
             ProductOption productOption = productAttribute.getProductOption();
 
             Set<ProductOptionDescription> productOptionDescriptions = productOption.getDescriptions();
 
             ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
-            kv.setValue(attrIdWithPrefix);
+            kv.setValue(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId());
 
             for (ProductOptionDescription productOptionDescription : productOptionDescriptions) {
                 if (productOptionDescription.getLanguage().getId() == language.getId()) {
