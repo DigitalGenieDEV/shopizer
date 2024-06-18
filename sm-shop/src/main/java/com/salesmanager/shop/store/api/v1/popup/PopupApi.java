@@ -51,7 +51,7 @@ public class PopupApi {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/popup" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Get list of User Popup", notes = "", response = ReadableBannerList.class)
+	@ApiOperation(httpMethod = "GET", value = "Get list of User Popup", notes = "", response = ReadableUserPopupList.class)
 	public ReadableUserPopupList userList(@RequestParam(value = "site", required = false, defaultValue = "2") String site,HttpServletRequest request) throws Exception {
 		return popupFacade.getPopupUserList(site);
 	}

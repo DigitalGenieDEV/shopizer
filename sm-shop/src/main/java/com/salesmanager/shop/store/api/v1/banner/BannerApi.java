@@ -49,7 +49,7 @@ public class BannerApi {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/banner" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "GET", value = "Get list of User Banner", notes = "", response = ReadableBannerList.class)
+	@ApiOperation(httpMethod = "GET", value = "Get list of User Banner", notes = "", response = ReadableUserBannerList.class)
 	public ReadableUserBannerList userList(@RequestParam(value = "site", required = false, defaultValue = "2") String site,HttpServletRequest request) throws Exception {
 		return bannerFacade.getBannerUserList(site);
 	}

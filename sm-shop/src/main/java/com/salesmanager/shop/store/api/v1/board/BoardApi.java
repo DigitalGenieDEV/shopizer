@@ -31,7 +31,6 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.board.PersistableBoard;
 import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.board.ReadableBoardList;
-import com.salesmanager.shop.model.manager.ReadableManagerList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.board.facade.BoardFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
@@ -105,7 +104,7 @@ public class BoardApi {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/private/board/type/file")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public void upload(final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,
 					   @ApiIgnore Language language
 					   ) throws Exception {
