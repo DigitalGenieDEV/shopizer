@@ -50,5 +50,5 @@
 
     <cache name="productByIdCache" maxElementsInMemory="100" eternal="false"
            overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />
-
+    
 </ehcache>

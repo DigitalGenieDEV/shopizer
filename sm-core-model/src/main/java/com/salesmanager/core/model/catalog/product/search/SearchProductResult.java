@@ -1,24 +1,25 @@
 package com.salesmanager.core.model.catalog.product.search;
 
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.recommend.ProductResult;
 
 import java.util.List;
 import java.util.Map;
 
 public class SearchProductResult {
 
-    private List<Product> productList;
+    private List<ProductResult> productResults;
 
     private Map<String, List<String>> filterOptions;
 
     private Integer hitNumber;
 
-    public List<Product> getProductList() {
-        return productList;
+    public List<ProductResult> getProductResults() {
+        return productResults;
     }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
+    public void setProductResults(List<ProductResult> productResults) {
+        this.productResults = productResults;
     }
 
     public Map<String, List<String>> getFilterOptions() {
