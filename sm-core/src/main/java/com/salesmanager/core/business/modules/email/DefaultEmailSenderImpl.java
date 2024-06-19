@@ -35,6 +35,8 @@ public class DefaultEmailSenderImpl implements EmailModule {
   private JavaMailSender mailSender;
 
   private static final String CHARSET = "UTF-8";
+  
+  @Inject
   private EmailConfig emailConfig;
 
   private final static String TEMPLATE_PATH = "templates/email";

@@ -31,7 +31,6 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.board.PersistableBoard;
 import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.board.ReadableBoardList;
-import com.salesmanager.shop.model.manager.ReadableManagerList;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.board.facade.BoardFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
@@ -78,23 +77,25 @@ public class BoardApi {
 	}
 	
 	
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/private/board", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public PersistableBoard create(@Valid @RequestBody PersistableBoard board, HttpServletRequest request)
+	public PersistableBoard create(PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore)
 			throws Exception {
-
+		System.out.println(board.toString());
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-		
-		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		managerFacade.authorizedMenu(authenticatedManager, multiRequest.getRequestURI().toString());
 		board.setUserId(authenticatedManager);
-		board.setUserIp(CommonUtils.getRemoteIp(request));
+		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
+		
+		System.out.println("files"+files);
 
-		return boardFacade.saveBoard(board);
+		return boardFacade.saveBoard(board, files, merchantStore);
 	}
 	
 	/**
@@ -105,7 +106,7 @@ public class BoardApi {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/private/board/type/file")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public void upload(final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,
 					   @ApiIgnore Language language
 					   ) throws Exception {
@@ -123,17 +124,17 @@ public class BoardApi {
 	}
 	
 	@PutMapping(value = "/private/board/{id}", produces = { APPLICATION_JSON_VALUE })
-	public PersistableBoard update(@PathVariable int id, @Valid @RequestBody PersistableBoard board, HttpServletRequest request) throws Exception {
+	public PersistableBoard update(@PathVariable int id,PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore) throws Exception {
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
-	
-		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		managerFacade.authorizedMenu(authenticatedManager, multiRequest.getRequestURI().toString());
 		board.setId(id);
 		board.setUserId(authenticatedManager);
-		board.setUserIp(CommonUtils.getRemoteIp(request));
-		return boardFacade.saveBoard(board);
+		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
+		return boardFacade.saveBoard(board,files,merchantStore);
 	}
 	
 	@DeleteMapping(value = "/private/board/{id}", produces = { APPLICATION_JSON_VALUE })

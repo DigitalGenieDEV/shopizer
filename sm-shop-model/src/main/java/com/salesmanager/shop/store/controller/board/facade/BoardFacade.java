@@ -25,7 +25,7 @@ public interface BoardFacade {
 	 */
 	ReadableBoardList getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count) throws Exception;
 
-	PersistableBoard saveBoard(PersistableBoard board) throws Exception;
+	PersistableBoard saveBoard(PersistableBoard board, Map<String, MultipartFile> files,  MerchantStore merchantStore) throws Exception;
 	
 	void saveBoardFile(Map<String, MultipartFile> files,MerchantStore merchantStore) throws Exception;
 

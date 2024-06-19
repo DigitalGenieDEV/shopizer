@@ -1,16 +1,16 @@
 package com.salesmanager.shop.constants;
 
 public class Constants {
-	
+
 	public final static String DEFAULT_TEMPLATE = "december";
-	
+
 	public final static String SLASH = "/";
 	public final static String BLANK = "";
 	public final static String EQUALS = "=";
 
-    public final static String RESPONSE_STATUS = "STATUS";
-    public final static String RESPONSE_SUCCESS = "SUCCESS";
-    public final static String DEFAULT_LANGUAGE = "en";
+	public final static String RESPONSE_STATUS = "STATUS";
+	public final static String RESPONSE_SUCCESS = "SUCCESS";
+	public final static String DEFAULT_LANGUAGE = "en";
 	public final static String LANGUAGE = "LANGUAGE";
 	public final static String LOCALE = "LOCALE";
 	public final static String LANG = "lang";
@@ -24,10 +24,8 @@ public class Constants {
 	public final static String REF = "ref";
 	public final static String REF_C = "c:";
 	public final static String REF_SPLITTER = ":";
-	
-	public final static String FILE_NOT_FOUND = "File not found";
-	
 
+	public final static String FILE_NOT_FOUND = "File not found";
 
 	public final static String DEFAULT_DOMAIN_NAME = "localhost:8080";
 
@@ -43,7 +41,6 @@ public class Constants {
 	public final static String SHIPPING_OPTIONS = "SHIPPING_OPTIONS";
 	public final static String ORDER_SUMMARY = "ORDER_SIMMARY";
 
-
 	public final static String GROUP_ADMIN = "ADMIN";
 	public final static String PERMISSION_AUTHENTICATED = "AUTH";
 	public final static String PERMISSION_CUSTOMER_AUTHENTICATED = "AUTH_CUSTOMER";
@@ -55,31 +52,27 @@ public class Constants {
 	public final static String GROUP_SHIPPING = "SHIPPING";
 	public final static String ANONYMOUS_CUSTOMER = "ANONYMOUS_CUSTOMER";
 
-
 	public final static String CONTENT_IMAGE = "CONTENT";
 	public final static String CONTENT_LANDING_PAGE = "LANDING_PAGE";
 	public final static String CONTENT_CONTACT_US = "contact";
 
 	public final static String STATIC_URI = "/static";
 	public final static String FILES_URI = "/files";
-	public final static String PRODUCT_URI= "/product";
-	public final static String PRODUCTS_URI= "/products";
-	public final static String SMALL_IMAGE= "SMALL";
-	public final static String LARGE_IMAGE= "LARGE";
+	public final static String PRODUCT_URI = "/product";
+	public final static String PRODUCTS_URI = "/products";
+	public final static String SMALL_IMAGE = "SMALL";
+	public final static String LARGE_IMAGE = "LARGE";
 	public final static String CATEGORY_URI = "/category";
-	public final static String PRODUCT_ID_URI= "/productid";
-	public final static String ORDER_DOWNLOAD_URI= "/order/download";
+	public final static String PRODUCT_ID_URI = "/productid";
+	public final static String ORDER_DOWNLOAD_URI = "/order/download";
 
-	public final static String URL_EXTENSION= ".html";
-	public final static String REDIRECT_PREFIX ="redirect:";
-
-
-
+	public final static String URL_EXTENSION = ".html";
+	public final static String REDIRECT_PREFIX = "redirect:";
 
 	public final static String STORE_CONFIGURATION = "STORECONFIGURATION";
 
-	public final static String HTTP_SCHEME= "http";
-	
+	public final static String HTTP_SCHEME = "http";
+
 	public final static String SHOP_SCHEME = "SHOP_SCHEME";
 	public final static String FACEBOOK_APP_ID = "shopizer.facebook-appid";
 
@@ -113,21 +106,23 @@ public class Constants {
 	public final static int MAX_ORDERS_PAGE = 5;
 	public final static String SUCCESS = "success";
 	public final static String CANCEL = "cancel";
-	
+
 	public final static String START = "start";
 	public final static String MAX = "max";
-	
+
 	public final static String CREDIT_CARD_YEARS_CACHE_KEY = "CREDIT_CARD_YEARS_CACHE_KEY";
 	public final static String MONTHS_OF_YEAR_CACHE_KEY = "MONTHS_OF_YEAR_CACHE_KEY";
-	
+
 	public final static String INIT_TRANSACTION_KEY = "init_transaction";
 
-    public final static String LINK_CODE = "LINK_CODE";
-    
-    public final static String COOKIE_NAME_USER = "user";
-    public final static String COOKIE_NAME_CART = "cart";
-    public final static String RESPONSE_KEY_USERNAME = "userName";
-    
-    public final static String DEBUG_MODE = "debugMode";
+	public final static String LINK_CODE = "LINK_CODE";
+
+	public final static String COOKIE_NAME_USER = "user";
+	public final static String COOKIE_NAME_CART = "cart";
+	public final static String RESPONSE_KEY_USERNAME = "userName";
+
+	public final static String DEBUG_MODE = "debugMode";
+
+	public static String FILE_PRG_CODE_BOARD = "Board";
 
 }

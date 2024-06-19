@@ -2,6 +2,7 @@ package com.salesmanager.shop.populator.customer;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
+import com.salesmanager.core.model.common.CompanyAddress;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.attribute.CustomerAttribute;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -179,6 +180,15 @@ public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, R
 				).collect(Collectors.toList());
 				
 				target.setTerms(customerTerms);
+				
+				if(source.getCompanyAddress() != null) {
+					CompanyAddress it = source.getCompanyAddress();
+					Address add = new Address();
+					add.setAddress(it.getAddress());
+					add.setCity(it.getCity());
+					add.setPostalCode(it.getPostalCode());
+					target.setCompanyAddress(add);
+				}
 			}
 
 		} catch (Exception e) {
