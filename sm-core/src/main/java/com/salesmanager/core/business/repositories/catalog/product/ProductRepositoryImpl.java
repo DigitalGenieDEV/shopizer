@@ -1192,142 +1192,132 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 	public ProductList listByStoreForList(MerchantStore store, Language language, ProductCriteria criteria) {
 		ProductList productList = new ProductList();
-
-		// Step 1: Query to get Product IDs
-		StringBuilder countBuilderSelect = new StringBuilder();
-		countBuilderSelect.append("select p.id from Product as p");
-
+		// Step 1: Query to get total count
 		StringBuilder countBuilderWhere = new StringBuilder();
 		countBuilderWhere.append(" where p.merchantStore.id=:mId");
-
-		// Append conditions
-		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
-			countBuilderWhere.append(" and p.id in (:pId)");
-		}
-
-		if (criteria.getSellerCountryCode() != null) {
-			countBuilderWhere.append(" and p.merchantStore.country.id=:mcoid");
-		}
-
-		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
-			countBuilderWhere.append(" and p.shippingTemplateId in (:pstId)");
-		}
-
-		countBuilderSelect.append(" inner join p.descriptions pd");
-		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
-			countBuilderWhere.append(" and pd.language.code=:lang");
-		}
-
-		if (!StringUtils.isBlank(criteria.getProductName())) {
-			countBuilderWhere.append(" and lower(pd.name) like :nm");
-		}
-
-		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
-			countBuilderSelect.append(" INNER JOIN p.categories categs");
-			countBuilderWhere.append(" and categs.id in (:cid)");
-		}
-
-		if (criteria.getManufacturerId() != null) {
-			countBuilderSelect.append(" INNER JOIN p.manufacturer manuf");
-			countBuilderWhere.append(" and manuf.id = :manufid");
-		}
-
-		// SKU
-		if (!StringUtils.isBlank(criteria.getCode())) {
-			countBuilderWhere.append(" and lower(p.sku) like :sku");
-		}
-
-		if (!StringUtils.isBlank(criteria.getStatus())) {
-			countBuilderWhere.append(" and p.productStatus = :productStatus");
-		}
-
-		if (!StringUtils.isBlank(criteria.getAuditStatus())) {
-			countBuilderWhere.append(" and p.productAuditStatus = :productAuditStatus");
-		}
-
-		Query countQ = this.em.createQuery(countBuilderSelect.toString() + countBuilderWhere.toString());
+		appendSimpleConditions(countBuilderWhere, criteria);
+		long start = System.currentTimeMillis();
+		// Count query to get total count
+		Query countQ = this.em.createQuery("SELECT COUNT(p.id) from Product p" + countBuilderWhere.toString());
 		countQ.setParameter("mId", store.getId());
+		setSimpleParameters(countQ, criteria, language);
 
-		// Set parameters
-		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
-			countQ.setParameter("cid", criteria.getCategoryIds());
-		}
-
-		if (criteria.getSellerCountryCode() != null) {
-			countQ.setParameter("mcoid", criteria.getSellerCountryCode());
-		}
-
-		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
-			countQ.setParameter("pId", criteria.getProductIds());
-		}
-
-		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
-			countQ.setParameter("pstId", criteria.getShippingTemplateIds());
-		}
-
-		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
-			countQ.setParameter("lang", language.getCode());
-		}
-
-		if (!StringUtils.isBlank(criteria.getProductName())) {
-			countQ.setParameter("nm", "%" + criteria.getProductName().toLowerCase() + "%");
-		}
-
-		if (criteria.getManufacturerId() != null) {
-			countQ.setParameter("manufid", criteria.getManufacturerId());
-		}
-
-		if (!StringUtils.isBlank(criteria.getCode())) {
-			countQ.setParameter("sku", "%" + criteria.getCode().toLowerCase() + "%");
-		}
-
-		if (!StringUtils.isBlank(criteria.getAuditStatus())) {
-			countQ.setParameter("productAuditStatus", criteria.getAuditStatus());
-		}
-
-		if (!StringUtils.isBlank(criteria.getStatus())) {
-			countQ.setParameter("productStatus", criteria.getStatus());
-		}
-
-		List<Long> productIds = countQ.getResultList();
-
-		if (productIds.isEmpty()) {
-			productList.setTotalCount(0);
+		Long totalCount = (Long) countQ.getSingleResult();
+		productList.setTotalCount(totalCount.intValue());
+		long end = System.currentTimeMillis();
+		System.out.println("query count time"+ (end - start));
+		if (totalCount == 0) {
 			return productList;
 		}
+		long start1 = System.currentTimeMillis();
+		// Step 2: Query to get paginated Product IDs with sorting by modification time
+		StringBuilder countBuilderSelect = new StringBuilder();
+		countBuilderSelect.append("select p.id from Product as p");
+		//  appendComplexConditions(countBuilderWhere, criteria);
 
-		// Step 2: Query to get detailed Product entities
-		StringBuilder qs = new StringBuilder();
-		qs.append("select distinct p from Product as p ");
-		qs.append("join fetch p.merchantStore merch ");
-		qs.append("join fetch p.availabilities pa ");
-		qs.append("left join fetch pa.prices pap ");
-		qs.append("left join fetch pap.descriptions papd ");
-		qs.append("left join fetch p.descriptions pd ");
-		qs.append("left join fetch p.categories categs ");
-		qs.append("left join fetch categs.descriptions cd ");
-		qs.append("left join fetch p.images images ");
-		qs.append("left join fetch p.manufacturer manuf ");
-		qs.append("left join fetch manuf.descriptions manufd ");
-		qs.append("left join fetch p.type type ");
-		qs.append("left join fetch p.taxClass tx ");
-		qs.append(" where p.id in (:productIds) ");
-		qs.append(" order by p.sortOrder asc");
-
-		Query q = this.em.createQuery(qs.toString());
-
-		List<Long> firstTenProductId = productIds.subList(0, Math.min(productIds.size(), 10));
-
-
-		q.setParameter("productIds", firstTenProductId);
-
-		@SuppressWarnings("unchecked")
-		List<Product> products = q.getResultList();
-
-		productList.setProducts(products);
-		productList.setTotalCount(products.size());
-
+		String fullQuery = countBuilderSelect.toString() + countBuilderWhere.toString() + " ORDER BY p.auditSection.dateModified DESC";
+		Query productIdsQ = this.em.createQuery(fullQuery);
+		productIdsQ.setParameter("mId", store.getId());
+		setComplexParameters(productIdsQ, criteria, language);
+		productIdsQ.setFirstResult(criteria.getStartIndex());
+		productIdsQ.setMaxResults(criteria.getPageSize());
+		List<Long> productIds = productIdsQ.getResultList();
+		long end1 = System.currentTimeMillis();
+		System.out.println("query productIds  time"+ (end1 - start1));
+		// Step 3: Query to get detailed Product entities with sorting by modification time
+		if (!productIds.isEmpty()) {
+			long start2 = System.currentTimeMillis();
+			List<Product> productByIds = getProductByIds(productIds);
+			long end2 = System.currentTimeMillis();
+			System.out.println("query product info   time"+ (end2 - start2));
+			productList.setProducts(productByIds);
+		}
 		return productList;
+	}
+
+	private void appendSimpleConditions(StringBuilder queryBuilder, ProductCriteria criteria) {
+		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
+			queryBuilder.append(" and p.id in (:pId)");
+		}
+		if (criteria.getSellerCountryCode() != null) {
+			queryBuilder.append(" and p.merchantStore.country.id=:mcoid");
+		}
+		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
+			queryBuilder.append(" and p.shippingTemplateId in (:pstId)");
+		}
+		if (!StringUtils.isBlank(criteria.getProductName())) {
+			queryBuilder.append(" and lower(pd.name) like :nm");
+		}
+		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
+			queryBuilder.append(" and categs.id in (:cid)");
+		}
+		if (criteria.getManufacturerId() != null) {
+			queryBuilder.append(" and manuf.id = :manufid");
+		}
+		if (!StringUtils.isBlank(criteria.getCode())) {
+			queryBuilder.append(" and lower(p.sku) like :sku");
+		}
+		if (!StringUtils.isBlank(criteria.getStatus())) {
+			queryBuilder.append(" and p.productStatus = :productStatus");
+		}
+		if (!StringUtils.isBlank(criteria.getAuditStatus())) {
+			queryBuilder.append(" and p.productAuditStatus = :productAuditStatus");
+		}
+	}
+
+	private void appendComplexConditions(StringBuilder queryBuilder, ProductCriteria criteria) {
+		queryBuilder.append(" inner join p.descriptions pd");
+		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
+			queryBuilder.append(" and pd.language.code=:lang");
+		}
+	}
+
+	private void setSimpleParameters(Query query, ProductCriteria criteria, Language language) {
+		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
+			query.setParameter("pId", criteria.getProductIds());
+		}
+		if (criteria.getSellerCountryCode() != null) {
+			query.setParameter("mcoid", criteria.getSellerCountryCode());
+		}
+		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
+			query.setParameter("pstId", criteria.getShippingTemplateIds());
+		}
+		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
+			query.setParameter("cid", criteria.getCategoryIds());
+		}
+		if (!StringUtils.isBlank(criteria.getProductName())) {
+			query.setParameter("nm", "%" + criteria.getProductName().toLowerCase() + "%");
+		}
+		if (criteria.getManufacturerId() != null) {
+			query.setParameter("manufid", criteria.getManufacturerId());
+		}
+		if (!StringUtils.isBlank(criteria.getCode())) {
+			query.setParameter("sku", "%" + criteria.getCode().toLowerCase() + "%");
+		}
+		if (!StringUtils.isBlank(criteria.getAuditStatus())) {
+			query.setParameter("productAuditStatus", criteria.getAuditStatus());
+		}
+		if (!StringUtils.isBlank(criteria.getStatus())) {
+			query.setParameter("productStatus", criteria.getStatus());
+		}
+	}
+
+	private void setComplexParameters(Query query, ProductCriteria criteria, Language language) {
+		setSimpleParameters(query, criteria, language);
+//		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
+//			query.setParameter("lang", language.getCode());
+//		}
+	}
+
+
+
+	public List<Product> getProductByIds(List<Long> productIds) {
+		final String hql = "select distinct p from Product as p " +
+				"join fetch p.merchantStore merch " +
+				"where p.id in :pid order by p.auditSection.dateCreated";
+		final Query q = this.em.createQuery(hql);
+		q.setParameter("pid", productIds);
+		return q.getResultList();
 	}
 
 

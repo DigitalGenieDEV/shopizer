@@ -89,11 +89,6 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		Validate.notNull(source, "Product cannot be null");
 		Validate.notNull(destination, "Product destination cannot be null");
 
-
-		// read only product values
-		// will contain options
-		TreeMap<Long, ReadableProductOption> /**/selectableOptions = new TreeMap<Long, ReadableProductOption>();
-
 		destination.setSku(source.getSku());
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
@@ -114,8 +109,6 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		if (language == null){
 			language = store.getDefaultLanguage();
 		}
-
-		Language finalLanguage = language;
 
 		destination.setId(source.getId());
 		destination.setAvailable(source.isAvailable());
@@ -164,10 +157,6 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 				}});
 		}
 
-
-
-
-		//if default instance
 
 		destination.setSku(source.getSku());
 

@@ -280,7 +280,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	}
 
 	@Override
-	public ReadableProduct getProductById(Long id, MerchantStore store, Language language) {
+	public ReadableProduct getProductById(Long id, Language language) {
 		Product	product = productService.getById(id);
 
 		ReadableProduct readableProduct = new ReadableProduct();

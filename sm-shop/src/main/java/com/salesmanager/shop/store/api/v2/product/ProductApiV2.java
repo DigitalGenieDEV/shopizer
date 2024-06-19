@@ -442,7 +442,8 @@ public class ProductApiV2 {
 							   @RequestParam(value = "lang", required = false) String lang,
 							   @ApiIgnore Language language) {
 		long startTime = System.currentTimeMillis();
-		ReadableProduct product = productFacadeV2.getProductById(productId,null, language);
+		ReadableProduct product = productFacadeV2.getProductById(productId, language);
+		product.setProductAuditStatus(null);
 		long endTime = System.currentTimeMillis();
 		System.out.println("商品查询方法执行时长:" + (endTime - startTime));
 		return product;
@@ -599,7 +600,7 @@ public class ProductApiV2 {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/private/products", method = RequestMethod.GET)
+	@RequestMapping(value = "/products", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
@@ -618,8 +619,6 @@ public class ProductApiV2 {
 			@RequestParam(value = "slug", required = false) String slug, // category slug
 			@RequestParam(value = "available", required = false) Boolean available,
 			@RequestParam(value = "sellerCountryCode", required = false) String sellerCountryCode,
-			// per
-			// page
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -686,10 +685,12 @@ public class ProductApiV2 {
 			criteria.setCode(sku);
 		}
 
-
 		try {
-			return productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
-
+			long start = System.currentTimeMillis();
+			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
+			long end = System.currentTimeMillis();
+			System.out.println("执行时间："+(end - start));
+			return productSimpleListsByCriterias;
 		} catch (Exception e) {
 
 			LOGGER.error("Error while filtering products product", e);

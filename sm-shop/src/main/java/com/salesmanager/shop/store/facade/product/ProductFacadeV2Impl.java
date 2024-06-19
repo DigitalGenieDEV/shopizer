@@ -107,13 +107,16 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Override
 	public ReadableProduct getProductByIdForAdmin(Long id, MerchantStore store, Language language) throws ConversionException {
-		Product product = productService.findOne(id, store);
+		Product product = productService.getProductWithOnlyMerchantStoreById(id);
+
 		if (product == null) {
 			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
 		}
 
 		if (product.getMerchantStore().getId() != store.getId()) {
-			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+			if (!store.getCode().equals("DEFAULT")){
+				return null;
+			}
 		}
 
 		ReadableProductFull readableProductFull = new ReadableProductFull();
@@ -143,16 +146,11 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	}
 
 	@Override
-	public ReadableProduct getProductById(Long id, MerchantStore store, Language language){
-		Product product = null;
-		if (store == null){
-			product = productService.getProductWithOnlyMerchantStoreById(id);
-			store = product.getMerchantStore();
-		}else {
-			product = productService.findOne(id, store);
-		}
+	public ReadableProduct getProductById(Long id, Language language){
+		Product product = productService.getProductWithOnlyMerchantStoreById(id);
+
 		if (product == null) {
-			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+			throw new ResourceNotFoundException("Product [" + id + "] not found ");
 		}
 
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);

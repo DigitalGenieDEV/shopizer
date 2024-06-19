@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,9 +86,21 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
                     readableFavorites.setManufacturer(descriptions.iterator().next().getName());
                 }
 
-                if (CollectionUtils.isNotEmpty(productById.getImages())){
-                    readableFavorites.setImage(productById.getImages().stream().filter(ProductImage::isDefaultImage).findFirst().orElse(null).getProductImageUrl());
+                Optional<ProductImage> defaultImage = productById.getImages().stream()
+                        .filter(ProductImage::isDefaultImage)
+                        .findFirst();
+
+                if (defaultImage.isPresent()) {
+                    readableFavorites.setImage(defaultImage.get().getProductImageUrl());
+                } else {
+                    if (CollectionUtils.isNotEmpty(productById.getImages())){
+                        Iterator<ProductImage> iterator = productById.getImages().iterator();
+                        if (iterator.hasNext()) {
+                            readableFavorites.setImage(iterator.next().getProductImage());
+                        }
+                    }
                 }
+
                 ProductDescription productDescription = productById.getProductDescription();
                 readableFavorites.setProductTitle(productDescription.getTitle());
                 Set<ProductAttribute> attributes = productById.getAttributes();

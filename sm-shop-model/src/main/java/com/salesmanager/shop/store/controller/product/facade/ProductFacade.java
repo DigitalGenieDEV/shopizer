@@ -28,7 +28,7 @@ public interface ProductFacade {
   ReadableProduct getProductByIdForAdmin(Long id, MerchantStore store, Language language) throws ConversionException;
 
 
-  ReadableProduct getProductById(Long id, MerchantStore store, Language language);
+  ReadableProduct getProductById(Long id,  Language language);
   /**
    * Reads a product by code
    *
