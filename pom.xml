@@ -78,13 +78,27 @@
 		<!-- jacoco coverage -->
 		<coverage.lines>.30</coverage.lines>
 		<coverage.branches>.37</coverage.branches>
+		
+		<!-- spring cloud version -->
+		<spring-cloud.version>2020.0.6</spring-cloud.version>
 
 	</properties>
 
 	<!--BOM -->
 	<dependencyManagement>
 		<dependencies>
-
+			<dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-webflux</artifactId>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.springframework.cloud</groupId>
+	            <artifactId>spring-cloud-starter-openfeign</artifactId>
+	        </dependency>
+	        <dependency>
+			   <groupId>org.springframework.cloud</groupId>
+			   <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-web</artifactId>
@@ -92,6 +106,14 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-cache</artifactId>
+			</dependency>
+			<dependency>
+			   <groupId>org.springframework.boot</groupId>
+			   <artifactId>spring-boot-starter-validation</artifactId>
+			</dependency>
+			<dependency>
+			    <groupId>org.springframework.boot</groupId>
+			    <artifactId>spring-boot-starter-mail</artifactId>
 			</dependency>
 			<dependency>
 				<groupId>com.shopizer</groupId>
@@ -401,7 +423,16 @@
 				<artifactId>javax.annotation-api</artifactId>
 				<version>${javax.annotation}</version>
 			</dependency>
+			
+			<dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 		</dependencies>
+		
 
 	</dependencyManagement>
 

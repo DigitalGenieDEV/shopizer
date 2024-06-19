@@ -2,6 +2,8 @@ package com.salesmanager.shop.model.customer;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.salesmanager.shop.model.customer.attribute.PersistableCustomerAttribute;
 import com.salesmanager.shop.model.security.PersistableGroup;
 import com.salesmanager.shop.model.term.PersistableCustomerTerms;
@@ -25,9 +27,8 @@ public class PersistableCustomer extends CustomerEntity {
     @ApiModelProperty(notes = "Customer password")
 	private String password = null;
     private String repeatPassword = null;
-	private String company;
-	private String businessNumber;
-	private String businessRegistration;
+    private MultipartFile businessRegistrationFile= null;
+    private String fileContentType = null;
 	private List<PersistableCustomerAttribute> attributes;
 	private List<PersistableGroup> groups;
 	private List<PersistableCustomerTerms> customerTerms;

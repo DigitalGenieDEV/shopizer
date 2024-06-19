@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +25,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.salesmanager.core.model.content.FileContentType;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.CustomerCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.dept.ReadableDept;
@@ -37,10 +42,12 @@ import com.salesmanager.shop.populator.customer.ReadableCustomerList;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.term.facade.CustomerTermsFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
+import com.salesmanager.shop.utils.ImageFilePath;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -71,6 +78,13 @@ public class CustomerApi {
 	
 	@Inject
 	private CustomerTermsFacade customerTermsFacade;
+	
+	@Autowired
+	private ContentFacade contentFacade;
+	
+	@Inject
+	@Qualifier("img")
+	private ImageFilePath imageUtils;
 
 	/** Create new customer for a given MerchantStore */
 	@PostMapping("/private/customer")
@@ -83,6 +97,31 @@ public class CustomerApi {
 			@ApiIgnore Language language,
 			@Valid @RequestBody PersistableCustomer customer
 	) {
+		MultipartFile file = customer.getBusinessRegistrationFile();
+		if(file != null) {
+			ContentFile f = new ContentFile();
+			f.setContentType(file.getContentType());
+			f.setName(file.getOriginalFilename());
+			try {
+				f.setFile(file.getBytes());
+			} catch (IOException e) {
+				throw new ServiceRuntimeException("Error while getting file bytes");
+			}
+	
+			contentFacade.addContentFile(
+					f,
+					merchantStore.getCode(),
+					FileContentType.valueOf(customer.getFileContentType())
+			);
+			
+			String imageValue = imageUtils.buildStaticImageUtils(
+					merchantStore,
+					f.getName()
+			);
+			
+			customer.setBusinessRegistration(imageValue);
+		}
+				
 		return customerFacade.create(customer, merchantStore, language);
 
 	}

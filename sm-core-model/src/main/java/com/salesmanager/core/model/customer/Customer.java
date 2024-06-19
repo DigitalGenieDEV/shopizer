@@ -37,6 +37,7 @@ import org.hibernate.annotations.Cascade;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.common.Billing;
+import com.salesmanager.core.model.common.CompanyAddress;
 import com.salesmanager.core.model.common.CredentialsReset;
 import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.common.audit.AuditSection;
@@ -116,6 +117,9 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	
 	@Column(name="BUSINESS_REGISTRATION")
 	private String businessRegistration;
+	
+	@Embedded
+	private CompanyAddress companyAddress;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", targetEntity = CustomerTerms.class, cascade = CascadeType.ALL)
 	private List<CustomerTerms> customerTerms = new ArrayList<>();

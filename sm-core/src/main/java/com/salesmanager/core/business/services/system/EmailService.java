@@ -9,6 +9,8 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 
 
 public interface EmailService {
+	
+	void sendVerificationEmail(String to, MerchantStore store) throws ServiceException;
 
 	void sendHtmlEmail(MerchantStore store, Email email) throws ServiceException, Exception;
 	

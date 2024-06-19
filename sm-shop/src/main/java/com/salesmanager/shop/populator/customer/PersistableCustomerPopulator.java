@@ -2,6 +2,7 @@ package com.salesmanager.shop.populator.customer;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
+import com.salesmanager.core.model.common.CompanyAddress;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
@@ -91,6 +92,18 @@ public class PersistableCustomerPopulator extends
 				target.setLanguage(source.getDefaultLanguage().getCode());
 			} else {
 				target.setLanguage(store.getDefaultLanguage().getCode());
+			}
+			
+			target.setBusinessNumber(source.getBusinessNumber());
+			target.setBusinessRegistration(source.getBusinessRegistration());
+			target.setCompany(source.getCompany());
+			if(source.getCompanyAddress() != null) {
+				CompanyAddress it = source.getCompanyAddress();
+				Address address = new Address();
+				address.setAddress(it.getAddress());
+				address.setCity(it.getCity());
+				address.setPostalCode(it.getPostalCode());
+				target.setCompanyAddress(address);
 			}
 			
 		} catch (Exception e) {

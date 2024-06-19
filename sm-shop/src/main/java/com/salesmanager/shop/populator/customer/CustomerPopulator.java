@@ -20,6 +20,7 @@ import com.salesmanager.core.business.services.reference.language.LanguageServic
 import com.salesmanager.core.business.services.reference.zone.ZoneService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.common.Billing;
+import com.salesmanager.core.model.common.CompanyAddress;
 import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.attribute.CustomerAttribute;
@@ -275,6 +276,17 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 									.build()
 						).collect(Collectors.toList());
 				target.setCustomerTerms(values);
+			}
+			
+			if(source.getCompanyAddress() != null) {
+				Address it = source.getCompanyAddress();
+				target.setCompanyAddress(
+						CompanyAddress.builder()
+						.address(it.getAddress())
+						.city(it.getCity())
+						.postalCode(it.getPostalCode())
+						.build()
+						);
 			}
 
 		} catch (Exception e) {
