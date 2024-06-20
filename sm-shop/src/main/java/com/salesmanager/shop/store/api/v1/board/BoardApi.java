@@ -55,10 +55,6 @@ public class BoardApi {
 	@Inject
 	private ManagerFacade managerFacade;
 
-
-	@Inject
-	@Qualifier("img")
-	private ImageFilePath imageUtils;
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/board" }, produces = MediaType.APPLICATION_JSON_VALUE)

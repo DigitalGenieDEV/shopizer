@@ -11,7 +11,6 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
@@ -26,17 +25,16 @@ public class CategoryAuth extends SalesManagerEntity<Integer, CategoryAuth> impl
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "CATEGORY_AUTH_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
+
 	@Column(name = "CATEGORY_ID", nullable = false, updatable = false)
 	private Integer categoryId;
 
-	@NotEmpty
+
 	@Column(name = "GRP_ID", nullable = false, updatable = false)
 	private Integer grpId;
 

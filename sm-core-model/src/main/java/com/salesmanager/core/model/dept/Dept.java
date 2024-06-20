@@ -25,13 +25,12 @@ public class Dept extends SalesManagerEntity<Integer, Dept> implements Auditable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "DEPT_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
+
 	@Column(name = "PARENT_ID", nullable = false, updatable = false)
 	private Integer parentId;
 
@@ -46,15 +45,15 @@ public class Dept extends SalesManagerEntity<Integer, Dept> implements Auditable
 	@Column(name = "TEL", length = 13, nullable = false)
 	private String tel;
 
-	@NotEmpty
+
 	@Column(name = "CONTENT", length = 1000, nullable = true)
 	private String content;
 
-	@NotEmpty
+
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
-	@NotEmpty
+
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
 

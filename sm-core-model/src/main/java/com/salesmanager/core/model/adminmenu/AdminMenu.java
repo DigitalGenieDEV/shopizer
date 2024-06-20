@@ -25,36 +25,34 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> implements
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "ADMINMENU_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
 	@Column(name = "PARENT_ID", nullable = false, length = 30, updatable = false)
 	private Integer parentId;
 
-	@NotEmpty
+
 	@Column(name = "MENU_NAME", nullable = false, length = 30)
 	private String menuName;
 
 	@Column(name = "MENU_DESC")
 	private String menuDesc;
 
-	@NotEmpty
+
 	@Column(name = "MENU_URL", nullable = false, length = 255)
 	private String menuUrl;
 
-	@NotEmpty
+
 	@Column(name = "API_URL", nullable = false, length = 255)
 	private String apiUrl;
 
-	@NotEmpty
+
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
-	@NotEmpty
+
 	@Column(name = "VISIBLE", nullable = false)
 	private int visible;
 

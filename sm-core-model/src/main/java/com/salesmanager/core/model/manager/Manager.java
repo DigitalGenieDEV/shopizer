@@ -6,13 +6,10 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -24,7 +21,6 @@ import com.salesmanager.core.model.common.CredentialsReset;
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
@@ -97,14 +93,14 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	@Column(name = "POSITION", length = 100)
 	private String position;
 
-	@NotEmpty
+
 	@Column(name = "DEPT_ID")
 	private int deptId;
 
 	@Column(name = "DEPT_NAME", length = 100)
 	private String deptName;
 
-	@NotEmpty
+
 	@Column(name = "GRP_ID")
 	private int grpId;
 

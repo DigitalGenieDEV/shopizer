@@ -25,13 +25,12 @@ public class Code extends SalesManagerEntity<Integer, Code> implements Auditable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "CODE_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
+
 	@Column(name = "PARENT_ID", nullable = false, updatable = false)
 	private Integer parentId;
 
@@ -58,11 +57,11 @@ public class Code extends SalesManagerEntity<Integer, Code> implements Auditable
 	@Column(name = "CODE_DESC", length = 1000, nullable = false)
 	private String codeDesc;
 
-	@NotEmpty
+
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
-	@NotEmpty
+
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
 

@@ -24,7 +24,6 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 public class AccessControl extends SalesManagerEntity<Integer, AccessControl> implements Auditable2 {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "ACCESSCONTROL_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
@@ -46,7 +45,7 @@ public class AccessControl extends SalesManagerEntity<Integer, AccessControl> im
 	@Column(name = "IP_ADDRESS", nullable = false, length = 30)
 	private String ipAddress;
 
-	@NotEmpty
+
 	@Column(name = "VISIBLE", nullable = false)
 	private int visible;
 
