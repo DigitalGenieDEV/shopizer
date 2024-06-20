@@ -78,25 +78,29 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
     private ReadableFavorites convertToReadableFavorites(Favorites favorite, Language language) {
         ReadableFavorites readableFavorites = new ReadableFavorites();
         try {
-            Product productById = productService.getProductById(favorite.getProductId(), language);
+            Product productById = productService.getProductWithOnlyMerchantStoreById(favorite.getProductId());
             if (productById!=null){
                 Set<ManufacturerDescription> descriptions = productById.getManufacturer().getDescriptions();
                 // 获取第一个 name 字段
                 if (!descriptions.isEmpty()) {
-                    readableFavorites.setManufacturer(descriptions.iterator().next().getName());
+                    for (ManufacturerDescription manufacturerDescription : descriptions){
+                        if (manufacturerDescription.getLanguage().getCode().equals(language.getCode())){
+                            readableFavorites.setManufacturer(manufacturerDescription.getName());
+                        }
+                    }
                 }
 
                 Optional<ProductImage> defaultImage = productById.getImages().stream()
                         .filter(ProductImage::isDefaultImage)
                         .findFirst();
-
                 if (defaultImage.isPresent()) {
                     readableFavorites.setImage(defaultImage.get().getProductImageUrl());
                 } else {
                     if (CollectionUtils.isNotEmpty(productById.getImages())){
                         Iterator<ProductImage> iterator = productById.getImages().iterator();
                         if (iterator.hasNext()) {
-                            readableFavorites.setImage(iterator.next().getProductImage());
+                            ProductImage next = iterator.next();
+                            readableFavorites.setImage(next.getProductImageUrl());
                         }
                     }
                 }
@@ -107,16 +111,17 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
                 List<String> collect = attributes.stream().map(productAttribute -> {
                     if (productAttribute.getProductOption().getId() == 50L) {
                         Set<ProductOptionValueDescription> optionValues = productAttribute.getProductOptionValue().getDescriptions();
-
-                        // 获取第一个 name 字段
                         if (!optionValues.isEmpty()) {
-                            return optionValues.iterator().next().getName();
+                            for (ProductOptionValueDescription productOptionValueDescription : optionValues){
+                                if (productOptionValueDescription.getLanguage().getCode().equals(language.getCode())){
+                                    return productOptionValueDescription.getName();
+                                }
+                            }
                         }
                     }
                     return null;
                 }).filter(Objects::nonNull).collect(Collectors.toList());
 
-                // 将第一个 name 字段设置到 readableFavorites.setOrigin()
                 if (!collect.isEmpty()) {
                     readableFavorites.setOrigin(collect.get(0));
                 }

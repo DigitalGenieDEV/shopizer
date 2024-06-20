@@ -1199,7 +1199,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		long start = System.currentTimeMillis();
 		// Count query to get total count
 		Query countQ = this.em.createQuery("SELECT COUNT(p.id) from Product p" + countBuilderWhere.toString());
-		countQ.setParameter("mId", store.getId());
+		if (store !=null){
+			countQ.setParameter("mId", store.getId());
+		}
 		setSimpleParameters(countQ, criteria, language);
 
 		Long totalCount = (Long) countQ.getSingleResult();
@@ -1217,7 +1219,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 		String fullQuery = countBuilderSelect.toString() + countBuilderWhere.toString() + " ORDER BY p.auditSection.dateModified DESC";
 		Query productIdsQ = this.em.createQuery(fullQuery);
-		productIdsQ.setParameter("mId", store.getId());
+		if (store !=null){
+			productIdsQ.setParameter("mId", store.getId());
+		}
 		setComplexParameters(productIdsQ, criteria, language);
 		productIdsQ.setFirstResult(criteria.getStartIndex());
 		productIdsQ.setMaxResults(criteria.getPageSize());
