@@ -25,21 +25,20 @@ public class Popup extends SalesManagerEntity<Integer, Popup> implements Auditab
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false, columnDefinition = "INT(11) not null comment 'ID'")
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "POPUP_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
+	
 	@Column(name = "SITE", length = 1, nullable = false, updatable = true, columnDefinition = "varchar(1) not null comment '사이트'")
 	private String site;
 
-	@NotEmpty
+	
 	@Column(name = "TYPE", length = 1, nullable = false, updatable = true, columnDefinition = "varchar(1) not null comment '팝업유형'")
 	private String type;
 
-	@NotEmpty
+	
 	@Column(name = "NAME", length = 50, nullable = false, updatable = true, columnDefinition = "varchar(50) not null comment '팝업명'")
 	private String name;
 
@@ -52,7 +51,7 @@ public class Popup extends SalesManagerEntity<Integer, Popup> implements Auditab
 	@Column(name = "URL", length = 100, nullable = true, updatable = true, columnDefinition = "varchar(100)  null comment 'URL'")
 	private String url;
 
-	@NotEmpty
+	
 	@Column(name = "TARGET", length = 1, nullable = true, updatable = true, columnDefinition = "varchar(1) not null comment '링크유형'")
 	private String target;
 

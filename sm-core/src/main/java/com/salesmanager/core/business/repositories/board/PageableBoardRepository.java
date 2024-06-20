@@ -16,7 +16,7 @@ public interface PageableBoardRepository  extends JpaRepository<Board, Integer> 
 			+ "	AND  DATE_FORMAT(SDATE, '%Y-%m-%d') BETWEEN ?5 AND ?6  \r\n"
 			+ "	AND (CASE WHEN  ?4 != '' THEN  TYPE = ?4 ELSE TRUE END  ) \r\n"
 			+ "	AND (CASE WHEN  ?1 = 'A' THEN  TITLE LIKE %?2% WHEN ?1 = 'B' THEN WRITER LIKE %?2%  ELSE TRUE  END )\r\n"
-			+ "ORDER BY REG_DATE DESC ",
+			+ "ORDER BY NOTICE DESC, REG_DATE DESC ",
 	      countQuery = "SELECT  COUNT(ID)  FROM BOARD  WHERE BBS_ID = ?3  \r\n"
 	    	    + "	AND  DATE_FORMAT(SDATE, '%Y-%m-%d') BETWEEN ?5 AND ?6 \r\n"
 	  			+ "	AND (CASE WHEN  ?4 != '' THEN  TYPE = ?4 ELSE TRUE END  ) \r\n"

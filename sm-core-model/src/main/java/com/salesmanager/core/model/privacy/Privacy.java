@@ -26,26 +26,25 @@ public class Privacy extends SalesManagerEntity<Integer, Privacy> implements Aud
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "PRIVACY_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-	@NotEmpty
+
 	@Column(name = "DIVISION", length = 1, nullable = false)
 	private String division;
 
-	@NotEmpty
+
 	@Column(name = "TITLE", length = 100, nullable = false)
 	private String title;
 
-	@NotEmpty
+
 	@Lob
 	@Column(name = "CONTENT", nullable = false)
 	private String content;
 
-	@NotEmpty
+
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
 

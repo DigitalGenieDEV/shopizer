@@ -88,6 +88,7 @@ public class BoardFacadeImpl implements BoardFacade {
 		try {
 
 			int boardId = board.getId();
+			System.out.println("boardId"+boardId);
 			Board target = Optional.ofNullable(boardId)
 					.filter(id -> id > 0)
 					.map(boardService::getById)
@@ -98,7 +99,7 @@ public class BoardFacadeImpl implements BoardFacade {
 			boardService.saveOrUpdate(dbBoard);
 			
 			int  id = 0;
-			if (board.getId() == 0) {
+			if (boardId == 0) {
 				id = boardService.getMaxId();
 			}else {
 				id = boardId;
@@ -155,9 +156,9 @@ public class BoardFacadeImpl implements BoardFacade {
 		boardService.updateReplyContent(dbBoard );
 	}
 
-	private Board populateBoard(PersistableBoard dept, Board target) {
+	private Board populateBoard(PersistableBoard board, Board target) {
 		try {
-			return persistableBoardPopulator.populate(dept, target);
+			return persistableBoardPopulator.populate(board, target);
 		} catch (ConversionException e) {
 			throw new ServiceRuntimeException(e);
 		}

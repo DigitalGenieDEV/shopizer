@@ -12,7 +12,6 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotEmpty;
 
 import com.salesmanager.core.model.common.audit2.AuditSection2;
 import com.salesmanager.core.model.common.audit2.Auditable2;
@@ -26,7 +25,6 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@NotEmpty
 	@Column(name = "ID", unique = true, nullable = false, updatable = false, columnDefinition = "INT(11) not null comment 'ID'")
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "BOARD_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
@@ -38,7 +36,7 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "TITLE", length = 50, nullable = false, columnDefinition = "varchar(50) not null comment '제목'")
 	private String title;
 
-	@NotEmpty
+
 	@Lob
 	@Column(name = "CONTENT", nullable = false, columnDefinition = "LONGTEXT not null comment '내용'")
 	private String content;
@@ -70,7 +68,7 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "STATE", length = 1, nullable = true, columnDefinition = "VARCHAR(20) not null comment '상태'")
 	private String state;
 
-	@NotEmpty
+
 	@Lob
 	@Column(name = "REPLY_CONTENT", nullable = true, columnDefinition = "VARCHAR(20) not null comment '답변내용'")
 	private String replyContent;
