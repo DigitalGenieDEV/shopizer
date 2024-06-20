@@ -35,7 +35,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 	private EntityManager em;
 
 	@Override
-	@Cacheable(value = "productByIdCache", key = "#store.id + '-' + #productId")
+//	@Cacheable(value = "productByIdCache", key = "#store.id + '-' + #productId")
 	public Product getById(Long productId, MerchantStore store) {
 		Long current = System.currentTimeMillis();
 		Product product =  get(productId, store);
