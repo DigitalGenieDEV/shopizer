@@ -1253,7 +1253,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			queryBuilder.append(" and lower(pd.name) like :nm");
 		}
 		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
-			queryBuilder.append(" and categs.id in (:cid)");
+			queryBuilder.append(" and exists (select 1 from p.categories categs where categs.id in (:cid))");
 		}
 		if (criteria.getManufacturerId() != null) {
 			queryBuilder.append(" and manuf.id = :manufid");
