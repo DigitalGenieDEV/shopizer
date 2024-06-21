@@ -20,5 +20,5 @@ public interface UserAddressFacade {
     void delete(Long id) throws ServiceException;
 
 
-    void updateDefaultAddress(Long userId, Long addressId);
+    void updateAddressToDefault(Long userId, Long addressId);
 }

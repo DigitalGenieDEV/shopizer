@@ -38,6 +38,8 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
 
+	@Column(name = "IMAGE_URL", length = 1024)
+	private String imageUrl;
 
 	@Embedded
 	private AuditSection auditSection = new AuditSection();
@@ -182,8 +184,13 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	public void setAvailabilities(Set<ProductAvailability> availabilities) {
 		this.availabilities = availabilities;
 	}
-	
 
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
 
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

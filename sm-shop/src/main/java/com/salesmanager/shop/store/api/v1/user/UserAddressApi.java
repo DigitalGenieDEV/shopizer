@@ -1,6 +1,8 @@
 package com.salesmanager.shop.store.api.v1.user;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.user.UserCriteria;
@@ -17,6 +19,7 @@ import com.salesmanager.shop.model.user.ReadableUserList;
 import com.salesmanager.shop.model.user.UserPassword;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.api.v2.product.ProductApiV2;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserAddressFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
@@ -43,42 +46,56 @@ import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-/** Api for managing admin users */
 @RestController
 @RequestMapping(value = "/api/v1")
 @Api(tags = { "User address Api" })
 @SwaggerDefinition(tags = { @Tag(name = "User address resource", description = "User address resource") })
 public class UserAddressApi {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserAddressApi.class);
-
-
 	@Autowired
 	private UserAddressFacade userAddressFacade;
 
+	@Autowired
+	private CustomerService customerService;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping({ "/auth/user/default/address/{id}" })
+	@GetMapping({ "/auth/user/default/address" })
 	@ApiOperation(httpMethod = "GET", value = "Get default address", notes = "", produces = MediaType.APPLICATION_JSON_VALUE, response = ReadableUser.class)
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public CommonResultDTO<ReadableAddress> getDefaultUserAddress( @ApiIgnore Language language, @PathVariable Long userId,
+	public CommonResultDTO<ReadableAddress> getDefaultUserAddress( @ApiIgnore Language language,
 			HttpServletRequest request) throws Exception {
 		try {
-			return CommonResultDTO.ofSuccess(userAddressFacade.findDefaultAddressByUserId(userId, language));
+			Principal userPrincipal = request.getUserPrincipal();
+			String userName = userPrincipal.getName();
+			Customer customer = customerService.getByNick(userName);
+			if (customer == null){
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), ErrorCodeEnums.USER_ERROR.getErrorMessage());
+			}
+			return CommonResultDTO.ofSuccess(userAddressFacade.findDefaultAddressByUserId(customer.getId(), language));
 		} catch (Exception e) {
+			LOGGER.error("getDefaultUserAddress is error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
 		}
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping({ "/auth/user/addresses/{id}" })
+	@GetMapping({ "/auth/user/addresses" })
 	@ApiOperation(httpMethod = "GET", value = "Get user addresses", notes = "", produces = MediaType.APPLICATION_JSON_VALUE, response = ReadableUser.class)
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public CommonResultDTO<List<ReadableAddress>> getUserAddresses(@ApiIgnore Language language, @PathVariable Long userId,
+	public CommonResultDTO<List<ReadableAddress>> getUserAddresses(@ApiIgnore Language language,
 													  HttpServletRequest request) throws Exception {
 		try {
-			return CommonResultDTO.ofSuccess(userAddressFacade.findByUserId(userId, language));
+			Principal userPrincipal = request.getUserPrincipal();
+			String userName = userPrincipal.getName();
+			Customer customer = customerService.getByNick(userName);
+			if (customer == null){
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), ErrorCodeEnums.USER_ERROR.getErrorMessage());
+			}
+			return CommonResultDTO.ofSuccess(userAddressFacade.findByUserId(customer.getId(), language));
 		} catch (Exception e) {
+			LOGGER.error("getUserAddresses is error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
 		}
 	}
@@ -90,42 +107,53 @@ public class UserAddressApi {
 	public CommonResultDTO<ReadableAddress> create(
 			@Valid @RequestBody PersistableAddress persistableAddress, HttpServletRequest request) {
 		try {
+			Principal userPrincipal = request.getUserPrincipal();
+			String userName = userPrincipal.getName();
+			Customer customer = customerService.getByNick(userName);
+			if (customer == null){
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), ErrorCodeEnums.USER_ERROR.getErrorMessage());
+			}
+			persistableAddress.setUserId(customer.getId());
 			return CommonResultDTO.ofSuccess(userAddressFacade.saveOrUpdate(persistableAddress));
-		} catch (ServiceException e) {
+		} catch (Exception e) {
+			LOGGER.error("create user address is error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
 		}
 
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping(value = { "/auth/user/address/{id}" })
+	@DeleteMapping(value = { "/auth/user/address/{addressId}" })
 	@ApiOperation(httpMethod = "DELETE", value = "Deletes a user address", notes = "", response = Void.class)
-	public CommonResultDTO<Void> delete( @PathVariable Long id,
+	public CommonResultDTO<Void> delete( @PathVariable Long addressId,
 			HttpServletRequest request) {
 		try {
-			userAddressFacade.delete(id);
+			userAddressFacade.delete(addressId);
 			return CommonResultDTO.ofSuccess();
-		} catch (ServiceException e) {
+		} catch (Exception e) {
+			LOGGER.error("delete user address is error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
 		}
 	}
 
 
-//	@ResponseStatus(HttpStatus.OK)
-//	@PutMapping(value = { "/auth/user/default/address/{userId}" })
-//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-//	public CommonResultDTO<Void> updateV2(@PathVariable Long userId,
-//						 @Valid @RequestBody PersistableProductDefinition product,
-//						 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
-//
-//		try {
-//			userAddressFacade.updateDefaultAddress(userId);
-//			return CommonResultDTO.ofSuccess();
-//		} catch (ServiceException e) {
-//			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
-//		}
-//	}
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = { "/auth/user/address/to/default/{addressId}" })
+	public CommonResultDTO<Void> updateAddressToDefault(@PathVariable Long addressId, HttpServletRequest request) {
+		try {
+			Principal userPrincipal = request.getUserPrincipal();
+			String userName = userPrincipal.getName();
+			Customer customer = customerService.getByNick(userName);
+			if (customer == null){
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), ErrorCodeEnums.USER_ERROR.getErrorMessage());
+			}
+			userAddressFacade.updateAddressToDefault(customer.getId(), addressId);
+			return CommonResultDTO.ofSuccess();
+		} catch (Exception e) {
+			LOGGER.error("update Address To Default  is error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
+		}
+	}
 
 
 }

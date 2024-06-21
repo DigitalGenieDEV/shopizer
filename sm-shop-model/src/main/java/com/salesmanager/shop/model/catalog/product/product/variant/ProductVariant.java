@@ -5,6 +5,9 @@ import com.salesmanager.shop.model.catalog.product.Product;
 public class ProductVariant extends Product {
 
 	private static final long serialVersionUID = 1L;
+
+	private String imageUrl;
+
 	private String store;
 	/** use product id or sku **/
 	private Long productId;
@@ -58,7 +61,13 @@ public class ProductVariant extends Product {
 	public void setSortOrder(int sortOrder) {
 		this.sortOrder = sortOrder;
 	}
-	
-	
 
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

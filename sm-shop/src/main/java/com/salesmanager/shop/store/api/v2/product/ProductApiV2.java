@@ -134,30 +134,24 @@ public class ProductApiV2 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
 	
-	/**
-	 * Create product inventory with variants, quantity and prices
-	 * @param product
-	 * @param merchantStore
-	 * @param language
-	 * @return
-	 */
-	@ResponseStatus(HttpStatus.CREATED)
-	@RequestMapping(value = { "/private/product/inventory" }, 
-			method = RequestMethod.POST)
-	@ApiImplicitParams({ 
-			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public @ResponseBody Entity create(
-			@Valid @RequestBody PersistableProduct product,
-			@ApiIgnore MerchantStore merchantStore, 
-			@ApiIgnore Language language) throws ServiceException {
 
-		Long id = productCommonFacade.saveProduct(merchantStore, product, language);
-		Entity returnEntity = new Entity();
-		returnEntity.setId(id);
-		return returnEntity;
-
-	}
+//	@ResponseStatus(HttpStatus.CREATED)
+//	@RequestMapping(value = { "/private/product/inventory" },
+//			method = RequestMethod.POST)
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//	public @ResponseBody Entity create(
+//			@Valid @RequestBody PersistableProduct product,
+//			@ApiIgnore MerchantStore merchantStore,
+//			@ApiIgnore Language language) throws ServiceException {
+//
+//		Long id = productCommonFacade.saveProduct(merchantStore, product, language);
+//		Entity returnEntity = new Entity();
+//		returnEntity.setId(id);
+//		return returnEntity;
+//
+//	}
 
 
 	/**

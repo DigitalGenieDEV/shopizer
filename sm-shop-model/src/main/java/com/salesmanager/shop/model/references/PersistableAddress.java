@@ -15,11 +15,14 @@ public class PersistableAddress extends Address {
 
 	private Long id;
 
+	private String email;
+
+
 	private Long userId;
 
 	private String company;
 
-	private boolean isDefault = true;
+//	private boolean isDefault = true;
 
 	private String telephone;
 

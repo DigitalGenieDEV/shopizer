@@ -70,20 +70,20 @@ public class UserAddressFacadeImpl implements UserAddressFacade {
 	public List<ReadableAddress> findByUserId(Long userId, Language language) {
 		List<UserAddress> userAddresses =  userAddressService.findByUserId(userId, language);
 		return userAddresses.stream().map(userAddress ->
-				userAddressConvert.convertPersistableAddress(userAddress)).collect(Collectors.toList());
+				userAddressConvert.convertPersistableAddress(userAddress, language)).collect(Collectors.toList());
 	}
 
 	@Override
 	public ReadableAddress findDefaultAddressByUserId(Long userId, Language language) {
 		UserAddress userAddress = userAddressService.findDefaultAddressByUserId(userId, language);
-		return userAddressConvert.convertPersistableAddress(userAddress);
+		return userAddressConvert.convertPersistableAddress(userAddress, language);
 	}
 
 	@Override
 	public ReadableAddress saveOrUpdate(PersistableAddress persistableAddress) throws ServiceException {
 		UserAddress userAddress = userAddressConvert.buildUserAddress(persistableAddress);
 		userAddressService.saveOrUpdate(userAddress);
-		return userAddressConvert.convertPersistableAddress(userAddress);
+		return userAddressConvert.convertPersistableAddress(userAddress, null);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class UserAddressFacadeImpl implements UserAddressFacade {
 	}
 
 	@Override
-	public void updateDefaultAddress(Long userId, Long addressId) {
+	public void updateAddressToDefault(Long userId, Long addressId) {
 		userAddressService.updateDefaultAddress(userId, addressId);
 	}
 

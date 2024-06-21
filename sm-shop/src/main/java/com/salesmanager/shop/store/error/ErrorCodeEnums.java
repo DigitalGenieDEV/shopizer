@@ -8,6 +8,10 @@ public enum ErrorCodeEnums {
 
     PARAM_ERROR("00002","param error"),
 
+
+    USER_ERROR("00003","user is null"),
+
+
     ;
 
 
