@@ -57,10 +57,21 @@ public class UserAddressServiceImpl extends SalesManagerEntityServiceImpl<Long, 
 	}
 
 	@Override
+	@Transactional
 	public void saveOrUpdate(UserAddress userAddress) {
 		List<UserAddress> userAddresses = userAddressRepository.findByUserId(userAddress.getUserId());
 		if (CollectionUtils.isEmpty(userAddresses)){
 			userAddress.setDefault(true);
+		}else {
+			boolean isHasDefault = false;
+			for (UserAddress address : userAddresses){
+				if(address.isDefault()){
+					isHasDefault = true;
+				}
+			}
+			if (isHasDefault){
+				userAddress.setDefault(false);
+			}
 		}
 		userAddressRepository.save(userAddress);
 	}

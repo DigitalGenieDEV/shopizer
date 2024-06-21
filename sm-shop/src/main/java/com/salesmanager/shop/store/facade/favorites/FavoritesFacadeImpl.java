@@ -81,7 +81,6 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
             Product productById = productService.getProductWithOnlyMerchantStoreById(favorite.getProductId());
             if (productById!=null){
                 Set<ManufacturerDescription> descriptions = productById.getManufacturer().getDescriptions();
-                // 获取第一个 name 字段
                 if (!descriptions.isEmpty()) {
                     for (ManufacturerDescription manufacturerDescription : descriptions){
                         if (manufacturerDescription.getLanguage().getCode().equals(language.getCode())){

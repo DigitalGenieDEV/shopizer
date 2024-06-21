@@ -108,7 +108,7 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 			instanceCode.append(variation.getCode()).append(";");
 		}
 		destination.setCode(instanceCode.substring(0, instanceCode.length() - 1)); // Remove trailing colon
-
+		destination.setImageUrl(source.getImageUrl());
 		destination.setAvailable(source.isAvailable());
 		destination.setDefaultSelection(source.isDefaultSelection());
 		destination.setSku(source.getSku());
@@ -127,7 +127,6 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 
 		destination.setSortOrder(source.getSortOrder());
 
-		// 处理库存
 		if (source.getInventory() != null) {
 			ProductAvailability availability = persistableProductAvailabilityMapper.convert(source.getInventory(), store, language);
 			availability.setProductVariant(destination);

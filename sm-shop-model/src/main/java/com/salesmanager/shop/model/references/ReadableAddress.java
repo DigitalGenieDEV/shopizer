@@ -15,12 +15,13 @@ public class ReadableAddress extends Address {
 
 	private Long userId;
 
+	private String email;
 
 	private String name;
 
 	private String company;
 
-	private boolean isDefault = true;
+	private boolean isDefault;
 
 	private String telephone;
 
