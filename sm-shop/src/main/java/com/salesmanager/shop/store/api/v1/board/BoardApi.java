@@ -93,23 +93,7 @@ public class BoardApi {
 
 		return boardFacade.saveBoard(board, files, merchantStore);
 	}
-	
-	/**
-	 * Need type, name and entity
-	 *
-	 * @param file
-	 */
-	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(value = "/private/board/type/file")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-	@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public void upload(final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,
-					   @ApiIgnore Language language
-					   ) throws Exception {
-		final Map<String, MultipartFile> files = multiRequest.getFileMap();
-		boardFacade.saveBoardFile(files,merchantStore);
-		
-	}
+
 	
 	@GetMapping(value = "/private/board/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get Board list for an given Board id", notes = "List current AccessControll and child access")
