@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.facade.file;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +38,7 @@ public class FileFacadeImpl implements FileFacade {
 		
 		Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
 		MultipartFile file;
-
+		int i=1;
 		while (itr.hasNext()) {
 		    Entry<String, MultipartFile> entry = itr.next();
 
@@ -76,14 +77,19 @@ public class FileFacadeImpl implements FileFacade {
 			CommonFile commnFile = new CommonFile();
 			commnFile.setPrgCode(Constants.FILE_PRG_CODE_BOARD);
 			commnFile.setDataId(id);
+			commnFile.setOrd(i);
 			commnFile.setFileName(file.getOriginalFilename());
 			commnFile.setFileUrl(fileUrl);
 			commnFile.setFileType(fileNameWithoutExtension.toUpperCase());
 			commnFile.setFileSize(file.getSize());
 			commnFile.setDelYn("N");
 			commnFile.setDownCnt(0);
+			commnFile.setDataId(id);
+			commnFile.setRegDate(new Date());
 			
 			fileService.saveOrUpdate(commnFile);
+			
+			i++;
 			
 		}
 	}
