@@ -19,8 +19,8 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.utils.CloneUtils;
 
 @Entity
-@Table(name = "COMMON_FILE", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRG_CODE", "DATA_ID" }) })
-public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> implements Serializable {
+@Table(name = "COMMON_FILE", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRG_CODE", "DATA_ID", "ORD" }) })
+public class CommonFile extends SalesManagerEntity<Integer, CommonFile> implements Serializable {
 	private static final long serialVersionUID = 1321251632883237664L;
 
 	@Id
@@ -33,9 +33,11 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 	@Column(name = "PRG_CODE", length = 20, nullable = false, updatable = false, columnDefinition = "varchar(20) not null comment '프로그램 코드'")
 	private String prgCode;
 
-
 	@Column(name = "DATA_ID", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '게시글ID'")
 	private int dataId = 0;
+
+	@Column(name = "ORD", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '순서'")
+	private int ord = 0;
 
 	@NotEmpty
 	@Column(name = "FILE_URL", length = 255, nullable = false, updatable = false, columnDefinition = "varchar(255) not null comment 'S3 FILE_URL'")
@@ -45,7 +47,6 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 	@Column(name = "FILE_NAME", length = 255, nullable = false, updatable = false, columnDefinition = "varchar(255) not null comment '원본파일명'")
 	private String fileName;
 
-	
 	@Column(name = "FILE_SIZE", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '파일크기'")
 	private Long fileSize;
 
@@ -90,6 +91,14 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 
 	public void setDataId(int dataId) {
 		this.dataId = dataId;
+	}
+
+	public int getOrd() {
+		return ord;
+	}
+
+	public void setOrd(int ord) {
+		this.ord = ord;
 	}
 
 	public String getFileUrl() {
