@@ -20,7 +20,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 @Entity
 @EntityListeners(value = com.salesmanager.core.model.common.audit2.AuditListener2.class)
-@Table(name = "Privacy", indexes = @Index(columnList = "VISIBLE"), uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "PRIVACY", indexes = @Index(columnList = "VISIBLE"), uniqueConstraints = @UniqueConstraint(columnNames = {
 		"ID" }))
 public class Privacy extends SalesManagerEntity<Integer, Privacy> implements Auditable2 {
 	private static final long serialVersionUID = 1L;
