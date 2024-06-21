@@ -117,11 +117,6 @@ public class BoardFacadeImpl implements BoardFacade {
 		
 	}
 	
-	@SuppressWarnings({ "unused", "deprecation" })
-	public void saveBoardFile(Map<String, MultipartFile> files,MerchantStore merchantStore) throws Exception{
-		
-		
-	}
 	
 	public ReadableBoard getById(int id) throws Exception {
 		List<FileEntity> targetList = new ArrayList<FileEntity>();
