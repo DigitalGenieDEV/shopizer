@@ -51,7 +51,7 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	@Column(name = "ADMIN_PASSWORD", length = 60)
 	private String adminPassword;
 
-	@NotEmpty
+
 	@Column(name = "MERCHANT_ID", updatable = false)
 	private int merchantId;
 
@@ -86,7 +86,7 @@ public class Manager extends SalesManagerEntity<Long, Manager> implements Audita
 	@Column(name = "LOGIN_DATE")
 	private Date loginDate;
 
-	@NotEmpty
+
 	@Column(name = "POSITION_ID")
 	private int positionId;
 

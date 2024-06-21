@@ -33,7 +33,7 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 	@Column(name = "PRG_CODE", length = 20, nullable = false, updatable = false, columnDefinition = "varchar(20) not null comment '프로그램 코드'")
 	private String prgCode;
 
-	@NotEmpty
+
 	@Column(name = "DATA_ID", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '게시글ID'")
 	private int dataId = 0;
 
@@ -45,9 +45,9 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 	@Column(name = "FILE_NAME", length = 255, nullable = false, updatable = false, columnDefinition = "varchar(255) not null comment '원본파일명'")
 	private String fileName;
 
-	@NotEmpty
+	
 	@Column(name = "FILE_SIZE", length = 11, nullable = true, updatable = true, columnDefinition = "INT(11) not null comment '파일크기'")
-	private long fileSize = 0;
+	private Long fileSize;
 
 	@NotEmpty
 	@Column(name = "FILE_TYPE", length = 10, nullable = false, updatable = false, columnDefinition = "varchar(255) not null comment '파일타입'")
@@ -108,11 +108,11 @@ public class CommonFile  extends SalesManagerEntity<Integer, CommonFile> impleme
 		this.fileName = fileName;
 	}
 
-	public long getFileSize() {
+	public Long getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(long fileSize) {
+	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 	}
 

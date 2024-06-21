@@ -63,7 +63,6 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 	@Column(name = "MENU_DESC", length = 1000, updatable = true)
 	private String menuDesc;
 
-	@NotEmpty
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
 
