@@ -65,6 +65,10 @@ public class DataConfiguration {
     @Value("${db.maxPoolSize}")
     private int maxPoolSize;
 
+
+    @Value("${db.connectionTimeout}")
+    private int connectionTimeout;
+
     @Bean
     public HikariDataSource dataSource() {
     	HikariDataSource dataSource = DataSourceBuilder.create().type(HikariDataSource.class)
@@ -78,6 +82,7 @@ public class DataConfiguration {
     	dataSource.setIdleTimeout(minPoolSize);
     	dataSource.setMaximumPoolSize(maxPoolSize);
     	dataSource.setConnectionTestQuery(testQuery);
+    	dataSource.setConnectionTimeout(connectionTimeout);
     	
     	return dataSource;
     }
