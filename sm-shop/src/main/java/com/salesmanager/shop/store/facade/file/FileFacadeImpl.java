@@ -36,6 +36,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.controller.FilesController;
 import com.salesmanager.shop.model.content.ContentFile;
+import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.file.facade.FileFacade;
 import com.salesmanager.shop.utils.ImageFilePath;
@@ -69,7 +70,6 @@ public class FileFacadeImpl implements FileFacade {
 
 		    file = entry.getValue();
 		    String orginFileName = file.getOriginalFilename();
-		    System.out.println("orginFileName"+orginFileName);
 		    //--------------------------------------
 		    // 원 파일명이 null인 경우 처리
 		    //--------------------------------------
@@ -143,5 +143,14 @@ public class FileFacadeImpl implements FileFacade {
 	
 	public List<ReadFile> getFileList(int id) throws Exception {
 		return fileService.getFileList(id, Constants.FILE_PRG_CODE_BOARD);
+	}
+	
+	public void deleteFile(int id) throws Exception{
+		CommonFile commnFile =  fileService.getById(id);
+		if(commnFile != null) {
+			fileService.delete(commnFile);
+		}else {
+			throw new ResourceNotFoundException("CommonFile with id [" + id + "] not found ");
+		}
 	}
 }

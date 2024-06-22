@@ -15,4 +15,6 @@ public interface FileFacade {
 	byte[]  getById(int id,MerchantStore merchantStore)  throws Exception;
 	
 	List<ReadFile> getFileList(int id) throws Exception;
+	
+	void deleteFile(int id) throws Exception;
 }
