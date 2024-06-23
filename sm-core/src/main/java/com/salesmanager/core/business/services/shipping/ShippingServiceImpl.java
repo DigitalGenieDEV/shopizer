@@ -899,7 +899,7 @@ public class ShippingServiceImpl implements ShippingService {
 		boolean requiresShipping = false;
 		for(ShoppingCartItem item : items) {
 			Product product = item.getProduct();
-			if(!product.isProductVirtual() && product.isProductShipeable()) {
+			if(product.isProductShipeable()) {
 				requiresShipping = true;
 			}
 		}

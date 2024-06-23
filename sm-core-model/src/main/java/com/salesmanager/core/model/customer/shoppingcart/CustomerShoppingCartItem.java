@@ -38,9 +38,6 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     @Column(name="SKU", nullable=true)
     private String sku;
 
-    @JsonIgnore
-    @Transient
-    private boolean productVirtual;
 
     @Column(name="CHECKED", nullable=true)
     private boolean checked;
@@ -82,7 +79,6 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
         this.productId = product.getId();
         this.setSku(product.getSku());
         this.quantity = 1;
-        this.productVirtual = product.isProductVirtual();
     }
 
     public CustomerShoppingCartItem() {
@@ -130,13 +126,6 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
         this.sku = sku;
     }
 
-    public boolean isProductVirtual() {
-        return productVirtual;
-    }
-
-    public void setProductVirtual(boolean productVirtual) {
-        this.productVirtual = productVirtual;
-    }
 
     public Long getVariant() {
         return variant;

@@ -57,7 +57,7 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 			destination.setId(source.getId());
 			destination.setRegion(source.getRegion());
 			destination.setRegionVariant(source.getRegionVariant());
-			destination.setStore(store(store, language));
+//			destination.setStore(store(store, language));
 			if (source.getAvailable() != null) {
 				if (source.getProductDateAvailable() != null) {
 					boolean isAfter = LocalDate.parse(DateUtil.getPresentDate())
@@ -77,8 +77,8 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 				}
 			}
 
-			List<ReadableProductPrice> prices = prices(source, store, language);
-			destination.setPrices(prices);
+//			List<ReadableProductPrice> prices = prices(source, store, language);
+//			destination.setPrices(prices);
 
 			if(!StringUtils.isEmpty(source.getSku())) {
 				destination.setSku(source.getSku());
@@ -86,13 +86,8 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 				destination.setSku(source.getProduct().getSku());
 			}
 
-			FinalPrice price = null;
-			//try {
-				price = pricingService.calculateProductPrice(source);
-				destination.setPrice(price.getStringPrice());
-			//} catch (ServiceException e) {
-			//	throw new ConversionRuntimeException("Unable to get product price", e);
-			//}
+			FinalPrice price = pricingService.calculateProductPrice(source);
+			destination.setPrice(price.getStringPrice());
 
 		} catch (Exception e) {
 			throw new ConversionRuntimeException("Error while converting Inventory", e);

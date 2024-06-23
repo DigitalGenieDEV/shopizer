@@ -211,7 +211,6 @@ public class ReadableProductPopulator extends
 				double rating = Math.round(avg * 2) / 2.0f;
 				target.setRating(rating);
 			}*/
-			target.setProductVirtual(source.getProductVirtual());
 /*			if(source.getProductReviewCount()!=null) {
 				target.setRatingCount(source.getProductReviewCount().intValue());
 			}*/
@@ -534,16 +533,12 @@ public class ReadableProductPopulator extends
 			//availability
 			ProductAvailability availability = null;
 			for(ProductAvailability a : source.getAvailabilities()) {
-				//TODO validate region
-				//if(availability.getRegion().equals(Constants.ALL_REGIONS)) {//TODO REL 2.1 accept a region
 					availability = a;
 					target.setQuantity(availability.getProductQuantity() == null ? 1:availability.getProductQuantity());
-					target.setQuantityOrderMaximum(availability.getProductQuantityOrderMax() == null ? 1:availability.getProductQuantityOrderMax());
-					target.setQuantityOrderMinimum(availability.getProductQuantityOrderMin()==null ? 1:availability.getProductQuantityOrderMin());
 					if(availability.getProductQuantity().intValue() > 0 && target.isAvailable()) {
 							target.setCanBePurchased(true);
 					}
-				//}
+
 			}
 
 

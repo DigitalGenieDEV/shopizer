@@ -52,9 +52,13 @@ public class ReadableProductPricePopulator extends
 		    }
 		    
 		    target.setDefaultPrice(source.isDefaultPrice());
-			
-			FinalPrice finalPrice = pricingService.calculateProductPrice(source.getProductAvailability().getProduct());
-			
+
+			FinalPrice finalPrice = null;
+			if (source.getProductAvailability() != null && source.getProductAvailability().getProductVariant() !=null){
+				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability());
+			}else {
+				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability().getProduct());
+			}
 			target.setOriginalPrice(pricingService.getDisplayAmount(source.getProductPriceAmount(), store));
 			if(finalPrice.isDiscounted()) {
 				target.setDiscounted(true);
@@ -63,30 +67,30 @@ public class ReadableProductPricePopulator extends
 				target.setFinalPrice(pricingService.getDisplayAmount(finalPrice.getOriginalPrice(), store));
 			}
 			
-		    if(source.getDescriptions()!=null && source.getDescriptions().size()>0) {
-		       List<com.salesmanager.shop.model.catalog.product.ProductPriceDescription> fulldescriptions = new ArrayList<com.salesmanager.shop.model.catalog.product.ProductPriceDescription>();
-	            
-               Set<ProductPriceDescription> descriptions = source.getDescriptions();
-               ProductPriceDescription description = null;
-               for(ProductPriceDescription desc : descriptions) {
-                   if(language != null && desc.getLanguage().getCode().equals(language.getCode())) {
-                       description = desc;
-                       break;
-                   } else {
-                     fulldescriptions.add(populateDescription(desc));
-                   }
-               }
-
-               
-               if (description != null) {
-                   com.salesmanager.shop.model.catalog.product.ProductPriceDescription d = populateDescription(description);
-                   target.setDescription(d);
-               }
-               
-               if(target instanceof ReadableProductPriceFull) {
-                 ((ReadableProductPriceFull)target).setDescriptions(fulldescriptions);
-               }
-		    }
+//		    if(source.getDescriptions()!=null && source.getDescriptions().size()>0) {
+//		       List<com.salesmanager.shop.model.catalog.product.ProductPriceDescription> fulldescriptions = new ArrayList<com.salesmanager.shop.model.catalog.product.ProductPriceDescription>();
+//
+//               Set<ProductPriceDescription> descriptions = source.getDescriptions();
+//               ProductPriceDescription description = null;
+//               for(ProductPriceDescription desc : descriptions) {
+//                   if(language != null && desc.getLanguage().getCode().equals(language.getCode())) {
+//                       description = desc;
+//                       break;
+//                   } else {
+//                     fulldescriptions.add(populateDescription(desc));
+//                   }
+//               }
+//
+//
+//               if (description != null) {
+//                   com.salesmanager.shop.model.catalog.product.ProductPriceDescription d = populateDescription(description);
+//                   target.setDescription(d);
+//               }
+//
+//               if(target instanceof ReadableProductPriceFull) {
+//                 ((ReadableProductPriceFull)target).setDescriptions(fulldescriptions);
+//               }
+//		    }
 
 
 		} catch(Exception e) {

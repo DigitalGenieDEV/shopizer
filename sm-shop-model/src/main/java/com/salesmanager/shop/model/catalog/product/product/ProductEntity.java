@@ -34,9 +34,6 @@ public class ProductEntity extends Product implements Serializable {
 	private String sku;
 
 	private boolean preOrder = false;
-	private boolean productVirtual = false;
-	private int quantityOrderMaximum = -1;// default unlimited
-	private int quantityOrderMinimum = 1;// default 1
 
 	private Integer batchNumber;
 
@@ -46,7 +43,6 @@ public class ProductEntity extends Product implements Serializable {
 
 
 	/**
-	 * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
 	 *
 	 * 0-No sku. Quote based on product quantity.
 	 * 1-Quotation based on SKU specifications
@@ -67,8 +63,6 @@ public class ProductEntity extends Product implements Serializable {
 	private Integer mixNumber;
 
 	private Boolean generalMixedBatch;
-
-
 
 
 	public Boolean getGeneralMixedBatch() {
@@ -180,30 +174,6 @@ public class ProductEntity extends Product implements Serializable {
 
 	public void setSortOrder(int sortOrder) {
 		this.sortOrder = sortOrder;
-	}
-
-	public void setQuantityOrderMaximum(int quantityOrderMaximum) {
-		this.quantityOrderMaximum = quantityOrderMaximum;
-	}
-
-	public int getQuantityOrderMaximum() {
-		return quantityOrderMaximum;
-	}
-
-	public void setProductVirtual(boolean productVirtual) {
-		this.productVirtual = productVirtual;
-	}
-
-	public boolean isProductVirtual() {
-		return productVirtual;
-	}
-
-	public int getQuantityOrderMinimum() {
-		return quantityOrderMinimum;
-	}
-
-	public void setQuantityOrderMinimum(int quantityOrderMinimum) {
-		this.quantityOrderMinimum = quantityOrderMinimum;
 	}
 
 	public int getRatingCount() {

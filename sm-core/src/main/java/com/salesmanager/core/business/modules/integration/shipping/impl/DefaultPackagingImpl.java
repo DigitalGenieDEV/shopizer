@@ -78,9 +78,6 @@ public class DefaultPackagingImpl implements Packaging {
 		for(ShippingProduct shippingProduct : products){
 
 			Product product = shippingProduct.getProduct();
-			if (product.isProductVirtual()) {
-				continue;
-			}
 
 			int qty = shippingProduct.getQuantity();
 
@@ -318,10 +315,6 @@ public class DefaultPackagingImpl implements Packaging {
 		List<PackageDetails> packages = new ArrayList<PackageDetails>();
 		for(ShippingProduct shippingProduct : products) {
 			Product product = shippingProduct.getProduct();
-
-			if (product.isProductVirtual()) {
-				continue;
-			}
 
 			//BigDecimal weight = product.getProductWeight();
 			Set<ProductAttribute> attributes = product.getAttributes();

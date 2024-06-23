@@ -148,7 +148,6 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			destination.setCreationDate(DateUtil.formatDate(source.getAuditSection().getDateCreated()));
 		}
 
-		destination.setProductVirtual(source.getProductVirtual());
 
 		if (source.getProductReviewCount() != null) {
 			destination.setRatingCount(source.getProductReviewCount().intValue());
@@ -319,6 +318,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		{
 			long startTime1 = System.currentTimeMillis();
 
+			System.out.println("variants size"+ source.getVariants().size());
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
 					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
@@ -369,10 +369,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		// availability
 		ProductAvailability availability = null;
 		for (ProductAvailability a : source.getAvailabilities()) {
-			// TODO validate region
-			// if(availability.getRegion().equals(Constants.ALL_REGIONS)) {//TODO REL 3.X
-			// accept a region
-			
+
 			/**
 			 * Default availability
 			 * store
@@ -384,10 +381,6 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			
 			availability = a;
 			destination.setQuantity(availability.getProductQuantity() == null ? 1 : availability.getProductQuantity());
-			destination.setQuantityOrderMaximum(
-					availability.getProductQuantityOrderMax() == null ? 1 : availability.getProductQuantityOrderMax());
-			destination.setQuantityOrderMinimum(
-					availability.getProductQuantityOrderMin() == null ? 1 : availability.getProductQuantityOrderMin());
 			if (availability.getProductQuantity().intValue() > 0 && destination.isAvailable()) {
 				destination.setCanBePurchased(true);
 			}

@@ -107,7 +107,6 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 		this.productId = product.getId();
 //		this.setSku(product.getSku());
 		this.quantity = 1;
-		this.productVirtual = product.isProductVirtual();
 	}
 
 	/** remove usage to limit possibility to implement bugs, would use constructors above to make sure all needed attributes are set correctly **/

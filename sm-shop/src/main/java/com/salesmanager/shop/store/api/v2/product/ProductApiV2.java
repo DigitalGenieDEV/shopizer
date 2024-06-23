@@ -133,26 +133,6 @@ public class ProductApiV2 {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
-	
-
-//	@ResponseStatus(HttpStatus.CREATED)
-//	@RequestMapping(value = { "/private/product/inventory" },
-//			method = RequestMethod.POST)
-//	@ApiImplicitParams({
-//			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-//	public @ResponseBody Entity create(
-//			@Valid @RequestBody PersistableProduct product,
-//			@ApiIgnore MerchantStore merchantStore,
-//			@ApiIgnore Language language) throws ServiceException {
-//
-//		Long id = productCommonFacade.saveProduct(merchantStore, product, language);
-//		Entity returnEntity = new Entity();
-//		returnEntity.setId(id);
-//		return returnEntity;
-//
-//	}
-
 
 	/**
 	 * ------------ V2
@@ -222,74 +202,12 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = { "/private/product/{id}" })
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public void updateV2(@PathVariable Long id, 
-			@Valid @RequestBody PersistableProductDefinition product,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
-
-		productDefinitionFacade.update(id, product, merchantStore, language);
-
-	}
-
-
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping(value = { "/private/product/{id}" })
-//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-//	public @ResponseBody ReadableProductDefinition getV2(
-//			@PathVariable Long id,
-//			@ApiIgnore MerchantStore merchantStore,
-//			@ApiIgnore Language language) {
-//
-//		ReadableProductDefinition def = productDefinitionFacade.getProduct(merchantStore, id, language);
-//		return def;
-//
-//	}
-	
-	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/{id}" }, method = RequestMethod.DELETE)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
 	public void deleteV2(@PathVariable Long id, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 		productCommonFacade.deleteProduct(id, merchantStore);
 	}
-	
-//	/**
-//	 * API for getting a product
-//	 *
-//	 * @param friendlyUrl
-//	 * @param lang        ?lang=fr|en
-//	 * @param response
-//	 * @return ReadableProduct
-//	 * @throws Exception
-//	 *                   <p>
-//	 *                   /api/product/123
-//	 */
-//	@RequestMapping(value = { "/product/name/{friendlyUrl}",
-//			"/product/friendly/{friendlyUrl}" }, method = RequestMethod.GET)
-////	@ApiOperation(httpMethod = "GET", value = "Get a product by friendlyUrl (slug) version 2", notes = "For shop purpose. Specifying ?merchant is "
-////			+ "required otherwise it falls back to DEFAULT")
-//	@ApiResponses(value = {
-//			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
-//	@ResponseBody
-//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-//	public ReadableProduct getByfriendlyUrl(
-//			@PathVariable final String friendlyUrl,
-//			@RequestParam(value = "lang", required = false) String lang, @ApiIgnore MerchantStore merchantStore,
-//			@ApiIgnore Language language, HttpServletResponse response) throws Exception {
-//
-//		ReadableProduct product = productFacadeV2.getProductBySeUrl(merchantStore, friendlyUrl, language);
-//
-//		if (product == null) {
-//			response.sendError(404, "Product not fount for id " + friendlyUrl);
-//			return null;
-//		}
-//
-//		return product;
-//	}
 	
 
 	/**
@@ -340,53 +258,6 @@ public class ProductApiV2 {
 		}
 	}
 
-	
-//	/** updates price quantity **/
-//	@ResponseStatus(HttpStatus.OK)
-//	@PatchMapping(value = "/private/product/{sku}", produces = { APPLICATION_JSON_VALUE })
-//	@ApiOperation(httpMethod = "PATCH", value = "Update product inventory", notes = "Updates product inventory", produces = "application/json", response = Void.class)
-//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
-//	public void update(
-//			@PathVariable String sku,
-//			@Valid @RequestBody
-//			LightPersistableProduct product,
-//			@ApiIgnore MerchantStore merchantStore,
-//			@ApiIgnore Language language) {
-//		productCommonFacade.update(sku, product, merchantStore, language);
-//		return;
-//
-//	}
-
-	
-//	/**
-//	 * API for getting a product using sku in v2
-//	 *
-//	 * @param id
-//	 * @param lang     ?lang=fr|en|...
-//	 * @param response
-//	 * @return ReadableProduct
-//	 * @throws Exception
-//	 *                   <p>
-//	 *                   /api/products/123
-//	 */
-//	@RequestMapping(value = "/product/{sku}", method = RequestMethod.GET)
-//	@ApiOperation(httpMethod = "GET", value = "Get a product by sku", notes = "For Shop purpose. Specifying ?merchant is required otherwise it falls back to DEFAULT")
-//	@ApiResponses(value = {
-//			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
-//	@ResponseBody
-//	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-//	public ReadableProduct get(@PathVariable final String sku,
-//			@RequestParam(value = "lang", required = false) String lang,
-//			@ApiIgnore MerchantStore merchantStore,
-//			@ApiIgnore Language language) {
-//		ReadableProduct product = productFacadeV2.getProductByCode(merchantStore, sku, language);
-//
-//
-//
-//		return product;
-//	}
 
 	/**
 	 * for admin
