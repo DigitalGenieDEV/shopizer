@@ -186,15 +186,15 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 	}
 
 	public Date getProductPriceSpecialStartDate() {
-		return CloneUtils.clone(productPriceSpecialStartDate);
+		return productPriceSpecialStartDate;
 	}
 
 	public void setProductPriceSpecialStartDate(Date productPriceSpecialStartDate) {
-		this.productPriceSpecialStartDate = CloneUtils.clone(productPriceSpecialStartDate);
+		this.productPriceSpecialStartDate = productPriceSpecialStartDate;
 	}
 
 	public Date getProductPriceSpecialEndDate() {
-		return CloneUtils.clone(productPriceSpecialEndDate);
+		return productPriceSpecialEndDate;
 	}
 
 	public void setProductPriceSpecialEndDate(Date productPriceSpecialEndDate) {

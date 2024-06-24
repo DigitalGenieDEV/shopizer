@@ -88,40 +88,15 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 				destination.setId(source.getId());
 			}
 			
-			//MANUFACTURER
-			if(!StringUtils.isBlank(source.getManufacturer())) {
-				Manufacturer manufacturer = manufacturerService.getByCode(store, source.getManufacturer());
-				if(manufacturer == null) {
-					throw new ConversionException("Manufacturer [" + source.getManufacturer() + "] does not exist");
-				}
-				destination.setManufacturer(manufacturer);
-			}
-
-			
-			//PRODUCT TYPE
-			if(!StringUtils.isBlank(source.getType())) {
-				ProductType type = productTypeService.getByCode(source.getType(), store, language);
-				if(type == null) {
-					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
-				}
-
-				destination.setType(type);
-			}
-
-			
 			if(!StringUtils.isBlank(source.getDateAvailable())) {
 				destination.setDateAvailable(DateUtil.getDate(source.getDateAvailable()));
 			}
 
-
-			
-			destination.setMerchantStore(store);
-			
 			List<Language> languages = new ArrayList<Language>();
 			Set<ProductDescription> descriptions = new HashSet<ProductDescription>();
 			if(!CollectionUtils.isEmpty(source.getDescriptions())) {
 				for(com.salesmanager.shop.model.catalog.product.ProductDescription description : source.getDescriptions()) {
-					
+
 				  ProductDescription productDescription = new ProductDescription();
 				  Language lang = languageService.getByCode(description.getLanguage());
 	              if(lang==null) {
@@ -146,13 +121,13 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 					productDescription.setMetatagKeywords(description.getKeyWords());
 					productDescription.setMetatagDescription(description.getMetaDescription());
 					productDescription.setTitle(description.getTitle());
-					
+
 					languages.add(lang);
 					productDescription.setLanguage(lang);
 					descriptions.add(productDescription);
 				}
 			}
-			
+
 			if(descriptions.size()>0) {
 				destination.setDescriptions(descriptions);
 			}
@@ -179,11 +154,11 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 			        }
 		      }
 		    }
-			
+
 		    if(productAvailability == null) { //create with default values
 		      productAvailability = new ProductAvailability(destination, store);
 		      destination.getAvailabilities().add(productAvailability);
-		      
+
 		      productAvailability.setProductQuantity(source.getQuantity());
 			  productAvailability.setProductQuantityOrderMin(1);
 			  productAvailability.setProductQuantityOrderMax(1);
@@ -196,7 +171,7 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 
 
 			if(defaultPrice == null) {
-				
+
 				BigDecimal defaultPriceAmount = new BigDecimal(0);
 				if(source.getPrice() != null) {
 					defaultPriceAmount = source.getPrice();
@@ -209,7 +184,7 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 			    defaultPrice.setProductAvailability(productAvailability);
                 productAvailability.getPrices().add(defaultPrice);
                 for(Language lang : languages) {
-                
+
                   ProductPriceDescription ppd = new ProductPriceDescription();
                   ppd.setProductPrice(defaultPrice);
                   ppd.setLanguage(lang);
@@ -217,7 +192,7 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
                   defaultPrice.getDescriptions().add(ppd);
                 }
 			}
-			
+
 			if(source.getProductSpecifications()!=null) {
 				destination.setProductHeight(source.getProductSpecifications().getHeight());
 				destination.setProductLength(source.getProductSpecifications().getLength());
@@ -245,48 +220,9 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
     			
 			}
 			destination.setSortOrder(source.getSortOrder());
-			destination.setProductVirtual(source.isVirtual());
 			destination.setProductShipeable(source.isShipeable());
 			
-			
-			//attributes
-			if(source.getProperties()!=null) {
-				for(com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute attr : source.getProperties()) {
-					ProductAttribute attribute = persistableProductAttributeMapper.convert(attr, store, language);
-					
-					attribute.setProduct(destination);
-					destination.getAttributes().add(attribute);
 
-				}
-			}
-
-			
-			//categories
-			if(!CollectionUtils.isEmpty(source.getCategories())) {
-				for(com.salesmanager.shop.model.catalog.category.Category categ : source.getCategories()) {
-					
-					Category c = null;
-					if(!StringUtils.isBlank(categ.getCode())) {
-						c = categoryService.getByCode(store, categ.getCode());
-					} else {
-						Validate.notNull(categ.getId(), "Category id nust not be null");
-						c = categoryService.getById(categ.getId(), store.getId());
-					}
-					
-					if(c==null) {
-						if(!StringUtils.isBlank(categ.getCode())) {
-							throw new ConversionException("Category code " + categ.getCode() + " does not exist");
-						} else {
-							throw new ConversionException("Category id " + categ.getId() + " does not exist");
-
-						}
-					}
-					if(c.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-						throw new ConversionException("Invalid category id");
-					}
-					destination.getCategories().add(c);
-				}
-			}
 			return destination;
 		
 		} catch (Exception e) {

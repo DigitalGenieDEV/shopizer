@@ -304,14 +304,14 @@ public class ProductFacadeV2Impl implements ProductFacade {
 														  ProductCriteria criterias) throws Exception {
 		Validate.notNull(criterias, "ProductCriteria must be set for this product");
 
+		Validate.isTrue(criterias.getMaxCount()<=50, "size max is 50");
+
 		/** This is for category **/
 		if (CollectionUtils.isNotEmpty(criterias.getCategoryIds())) {
 
 			if (criterias.getCategoryIds().size() == 1) {
-
 				com.salesmanager.core.model.catalog.category.Category category = categoryService
 						.getById(criterias.getCategoryIds().get(0));
-
 				if (category != null) {
 					String lineage = new StringBuilder().append(category.getLineage())
 							.toString();
@@ -335,7 +335,8 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
 			List<Long> shippingTemplateId = new ArrayList<>();
 			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
-				if (StringUtils.isNotEmpty(merchantShippingConfiguration.getShippingType())&& ShippingType.valueOf(criterias.getShippingType()) != null
+				if (StringUtils.isNotEmpty(merchantShippingConfiguration.getShippingType())
+						&& ShippingType.valueOf(criterias.getShippingType()) != null
 						&&  merchantShippingConfiguration.getShippingType().contains(criterias.getShippingType())){
 					shippingTemplateId.add(merchantShippingConfiguration.getId());
 				}

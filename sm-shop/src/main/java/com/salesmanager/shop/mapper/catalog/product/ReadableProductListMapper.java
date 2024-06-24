@@ -132,7 +132,6 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 			destination.setCreationDate(DateUtil.formatDate(source.getAuditSection().getDateCreated()));
 		}
 
-		destination.setProductVirtual(source.getProductVirtual());
 
 		if (source.getProductReviewCount() != null) {
 			destination.setRatingCount(source.getProductReviewCount().intValue());

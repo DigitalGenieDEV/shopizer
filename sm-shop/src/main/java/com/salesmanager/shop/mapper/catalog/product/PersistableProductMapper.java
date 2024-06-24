@@ -125,6 +125,17 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setManufacturer(manufacturer);
 			}
 
+			//PRODUCT TYPE
+			if(!StringUtils.isBlank(source.getType())) {
+				ProductType type = productTypeService.getByCode(source.getType(), store, language);
+				if(type == null) {
+					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
+				}
+
+				destination.setType(type);
+			}
+
+
 			//attributes
 			if(source.getProperties()!=null) {
 				List<ProductAttribute> productAttributes = new ArrayList<>();
@@ -223,7 +234,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			}
 			
 			destination.setSortOrder(source.getSortOrder());
-			destination.setProductVirtual(source.isProductVirtual());
 			destination.setProductShipeable(source.isProductShipeable());
 			if(source.getRating() != null) {
 				destination.setProductReviewAvg(new BigDecimal(source.getRating()));

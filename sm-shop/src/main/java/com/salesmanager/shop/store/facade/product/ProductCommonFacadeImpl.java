@@ -107,8 +107,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 		target = persistableProductMapper.merge(product, target, store, language);
 
-		System.out.println("cesssss");
-
 		target = productService.saveProduct(target);
 
 		if (!CollectionUtils.isEmpty(product.getProductTag())){

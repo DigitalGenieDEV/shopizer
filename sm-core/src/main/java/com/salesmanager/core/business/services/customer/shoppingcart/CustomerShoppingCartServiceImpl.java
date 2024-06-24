@@ -173,9 +173,6 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         item.setProduct(product);
 //        item.setSku(product.getSku());
 
-        if (product.isProductVirtual()) {
-            item.setProductVirtual(true);
-        }
 
         // TODO attributes
         // set item price

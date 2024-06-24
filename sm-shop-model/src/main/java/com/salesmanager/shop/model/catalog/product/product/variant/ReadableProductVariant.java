@@ -14,7 +14,7 @@ public class ReadableProductVariant extends ProductVariant {
 	private List<ReadableProductVariation> variations;
 
 	private String code;
-	private List<ReadableImage> images = new ArrayList<ReadableImage>();
+//	private List<ReadableImage> images = new ArrayList<ReadableImage>();
 	private List<ReadableInventory> inventory = new ArrayList<ReadableInventory>();
 
 	public List<ReadableProductVariation> getVariation() {
@@ -25,12 +25,12 @@ public class ReadableProductVariant extends ProductVariant {
 		this.variations = variations;
 	}
 
-	public List<ReadableImage> getImages() {
-		return images;
-	}
-	public void setImages(List<ReadableImage> images) {
-		this.images = images;
-	}
+//	public List<ReadableImage> getImages() {
+//		return images;
+//	}
+//	public void setImages(List<ReadableImage> images) {
+//		this.images = images;
+//	}
 	public String getCode() {
 		return code;
 	}

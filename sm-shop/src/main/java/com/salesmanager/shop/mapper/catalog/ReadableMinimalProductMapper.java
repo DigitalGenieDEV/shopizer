@@ -85,7 +85,6 @@ public class ReadableMinimalProductMapper implements Mapper<Product, ReadableMin
 			destination.setRating(rating);
 		}
 		
-		destination.setProductVirtual(source.getProductVirtual());
 		if(source.getProductReviewCount()!=null) {
 			destination.setRatingCount(source.getProductReviewCount().intValue());
 		}

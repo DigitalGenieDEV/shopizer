@@ -309,9 +309,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 		item.setProduct(product);
 //		item.setSku(product.getSku());
 
-		if (product.isProductVirtual()) {
-			item.setProductVirtual(true);
-		}
+
 
 		Set<ShoppingCartAttributeItem> cartAttributes = item.getAttributes();
 		Set<ProductAttribute> productAttributes = product.getAttributes();
@@ -374,7 +372,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 		List<ShippingProduct> shippingProducts = null;
 		for (ShoppingCartItem item : items) {
 			Product product = item.getProduct();
-			if (!product.isProductVirtual() && product.isProductShipeable()) {
+			if (product.isProductShipeable()) {
 				if (shippingProducts == null) {
 					shippingProducts = new ArrayList<ShippingProduct>();
 				}

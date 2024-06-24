@@ -136,9 +136,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@JoinColumn(name="TAX_CLASS_ID", nullable=true)
 	private TaxClass taxClass;
 
-	@Column(name = "PRODUCT_VIRTUAL")
-	private boolean productVirtual = false;
-	
 	@Column(name = "PRODUCT_SHIP")
 	private boolean productShipeable = false;
 
@@ -183,20 +180,10 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "SHIPPING_TEMPLATE_ID")
 	private Long shippingTemplateId;
 	
-	@Column(name="COND", nullable = true)
-	private ProductCondition condition;
-
 
 	@Column(name="PRODUCT_AUDIT_STATUS", nullable = true)
 	@Enumerated(value = EnumType.STRING)
 	private ProductAuditStatus productAuditStatus;
-
-	/**
-	 * RENTAL ADDITIONAL FIELDS
-	 */
-
-	@Column(name="RENTAL_STATUS", nullable = true)
-	private RentalStatus rentalStatus;
 
 	@Column(name="MIN_ORDER_QUANTITY", nullable = true)
 	private Integer minOrderQuantity;
@@ -228,13 +215,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Enumerated(value = EnumType.STRING)
 	private ProductStatus productStatus;
 
-
-	@Column(name="RENTAL_DURATION", nullable = true)
-	private Integer rentalDuration;
-	
-	@Column(name="RENTAL_PERIOD", nullable = true)
-	private Integer rentalPeriod;
-
 	@Column(name="OUT_PRODUCT_ID")
 	private Long outProductId;
 
@@ -253,22 +233,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setOutProductId(Long outProductId) {
 		this.outProductId = outProductId;
-	}
-
-	public Integer getRentalPeriod() {
-		return rentalPeriod;
-	}
-
-	public void setRentalPeriod(Integer rentalPeriod) {
-		this.rentalPeriod = rentalPeriod;
-	}
-
-	public Integer getRentalDuration() {
-		return rentalDuration;
-	}
-
-	public void setRentalDuration(Integer rentalDuration) {
-		this.rentalDuration = rentalDuration;
 	}
 
 	/**
@@ -303,9 +267,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	}
 
 
-	public boolean isProductVirtual() {
-		return productVirtual;
-	}
 
 
 	public boolean isProductIsFree() {
@@ -407,15 +368,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setDescriptions(Set<ProductDescription> descriptions) {
 		this.descriptions = descriptions;
-	}
-
-
-	public boolean getProductVirtual() {
-		return productVirtual;
-	}
-
-	public void setProductVirtual(boolean productVirtual) {
-		this.productVirtual = productVirtual;
 	}
 
 	public boolean getProductIsFree() {
@@ -578,22 +530,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		this.refSku = refSku;
 	}
 
-	public ProductCondition getCondition() {
-		return condition;
-	}
-
-	public void setCondition(ProductCondition condition) {
-		this.condition = condition;
-	}
-
-	public RentalStatus getRentalStatus() {
-		return rentalStatus;
-	}
-
-	public void setRentalStatus(RentalStatus rentalStatus) {
-		this.rentalStatus = rentalStatus;
-	}
-	
 	public Customer getOwner() {
 		return owner;
 	}

@@ -289,8 +289,6 @@ public class ProductManagementAPIIntegrationTest extends ServicesTestSupport {
 
 		product.setSortOrder(0);// set iterator as sort order
 		product.setAvailable(true);// force availability
-		product.setProductVirtual(false);// force tangible good
-		product.setQuantityOrderMinimum(1);// force to 1 minimum when ordering
 		product.setProductShipeable(true);// all items are shipeable
 
 		/** images **/

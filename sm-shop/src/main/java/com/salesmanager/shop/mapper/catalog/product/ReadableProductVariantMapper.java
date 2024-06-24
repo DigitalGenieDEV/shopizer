@@ -3,6 +3,7 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,6 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 	@Override
 	public ReadableProductVariant merge(ProductVariant source, ReadableProductVariant destination,
 			MerchantStore store, Language language) {
-		
 		Validate.notNull(source, "Product instance cannot be null");
 		Validate.notNull(source.getProduct(), "Product cannot be null");
 		
@@ -80,13 +80,7 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 		
 		destination.setProductShipeable(baseProduct.isProductShipeable());
 
-		if(source.getProductVariantGroup() != null) {
-			Set<String> nameSet = new HashSet<>();
-			List<ReadableImage> instanceImages = source.getProductVariantGroup().getImages().stream().map(i -> this.image(i, store, language))
-					.filter(e -> nameSet.add(e.getImageUrl()))
-					.collect(Collectors.toList());
-			destination.setImages(instanceImages);
-		}
+		destination.setImageUrl(source.getImageUrl());
 
 		if (source.getVariations() != null) {
 			List<ReadableProductVariation> variations = source.getVariations().stream()
@@ -96,22 +90,13 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 		}
 
 
-		if(!CollectionUtils.isEmpty(source.getAvailabilities())) {
-			List<ReadableInventory> inventories = source.getAvailabilities().stream().map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
+		if(source.getAvailabilities() != null) {
+			List<ReadableInventory> inventories = source.getAvailabilities().stream().filter(Objects::nonNull).map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
 			destination.setInventory(inventories);
 		}
 		
 		return destination;
 	}
 	
-	private ReadableImage image(ProductVariantImage instanceImage, MerchantStore store, Language language) {
-		ReadableImage img = new ReadableImage();
-		img.setDefaultImage(instanceImage.isDefaultImage());
-		img.setId(instanceImage.getId());
-		img.setImageName(instanceImage.getProductImage());
-		img.setImageUrl(imagUtils.buildCustomTypeImageUtils(store, img.getImageName(), FileContentType.VARIANT));
-		return img;
-	}
-
 
 }

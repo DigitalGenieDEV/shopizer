@@ -54,7 +54,6 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Lon
 			
 			productDownloadsFileManager.addFile(product.getMerchantStore().getCode(), Optional.of(path), inputFile);
 			
-			product.setProductVirtual(true);
 			productService.update(product);
 		
 		} catch (Exception e) {
@@ -89,7 +88,6 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Lon
 		String path = null;
 
 		productDownloadsFileManager.removeFile(digitalProduct.getProduct().getMerchantStore().getCode(), FileContentType.PRODUCT, digitalProduct.getProductFileName(), Optional.of(path));
-		digitalProduct.getProduct().setProductVirtual(false);
 		productService.update(digitalProduct.getProduct());
 	}
 	
@@ -105,7 +103,6 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Lon
 			super.create(digitalProduct);
 		}
 		
-		digitalProduct.getProduct().setProductVirtual(true);
 		productService.update(digitalProduct.getProduct());
 		
 		
