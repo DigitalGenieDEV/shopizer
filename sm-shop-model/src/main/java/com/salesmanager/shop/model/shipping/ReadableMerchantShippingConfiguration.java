@@ -19,7 +19,7 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
 
     private Long id;
 
-    private MerchantStore merchantStore;
+//    private MerchantStore merchantStore;
 
     private Date dateCreated;
 
@@ -46,7 +46,7 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
     /**
      * @see ShippingTransportationType
      */
-    private String shippingTransportationType;
+    private List<String> shippingTransportationType;
 
 
 //    private List<TransportationMethod> transportationMethods;
@@ -55,9 +55,9 @@ public class ReadableMerchantShippingConfiguration implements Serializable {
 
     private ReadableAddress returnShippingOrigin;
 
-    private boolean freeShippingEnabled = false;
+//    private boolean freeShippingEnabled = false;
 
-    private String orderTotalFreeShipping;
+//    private String orderTotalFreeShipping;
 
     private String returnShippingPrice;
 

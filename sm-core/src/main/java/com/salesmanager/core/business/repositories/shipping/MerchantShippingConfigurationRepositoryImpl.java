@@ -2,11 +2,14 @@ package com.salesmanager.core.business.repositories.shipping;
 
 import com.salesmanager.core.model.common.Criteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.system.MerchantShippingConfiguration;
 import com.salesmanager.core.model.system.MerchantShippingConfigurationList;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
 
 
 public class MerchantShippingConfigurationRepositoryImpl implements MerchantShippingConfigurationRepositoryCustom {
@@ -20,7 +23,8 @@ public class MerchantShippingConfigurationRepositoryImpl implements MerchantShip
      */
 	@SuppressWarnings("unchecked")
 	@Override
-	public MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria) {
+	public MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria
+			, String shippingType, String shippingTransportationType) {
 
 		MerchantShippingConfigurationList merchantShippingConfigurationList = new MerchantShippingConfigurationList();
 		StringBuilder countBuilderSelect = new StringBuilder();
@@ -33,9 +37,18 @@ public class MerchantShippingConfigurationRepositoryImpl implements MerchantShip
 
 		StringBuilder countBuilderWhere = new StringBuilder();
 		StringBuilder objectBuilderWhere = new StringBuilder();
-		String whereQuery = " where o.merchant.id=:mId";
+		String whereQuery = " where o.merchantStore.id=:mId";
 		countBuilderWhere.append(whereQuery);
 		objectBuilderWhere.append(whereQuery);
+
+		if (StringUtils.isNotEmpty(shippingType)) {
+			countBuilderWhere.append(" and o.shippingType = :shippingType");
+			objectBuilderWhere.append(" and o.shippingType = :shippingType");
+		}
+		if (StringUtils.isNotEmpty(shippingTransportationType)) {
+			countBuilderWhere.append(" and o.shippingTransportationType like :shippingTransportationType");
+			objectBuilderWhere.append(" and o.shippingTransportationType like :shippingTransportationType");
+		}
 
 		//count query
 		Query countQ = em.createQuery(
@@ -49,15 +62,30 @@ public class MerchantShippingConfigurationRepositoryImpl implements MerchantShip
 		objectQ.setParameter("mId", store.getId());
 
 
+		if (StringUtils.isNotEmpty(shippingType)) {
+			countQ.setParameter("shippingType", shippingType);
+			objectQ.setParameter("shippingType", shippingType);
+		}
+		if (StringUtils.isNotEmpty(shippingTransportationType)) {
+			countQ.setParameter("shippingTransportationType", "%" + shippingTransportationType + "%");
+			objectQ.setParameter("shippingTransportationType", "%" + shippingTransportationType + "%");
+		}
+
 		Number count = (Number) countQ.getSingleResult();
 
 		merchantShippingConfigurationList.setTotalCount(count.intValue());
 		
-        if(count.intValue()==0)
-        	return merchantShippingConfigurationList;
-        
+        if(count.intValue()==0){
+			return merchantShippingConfigurationList;
+		}
 
-		merchantShippingConfigurationList.setMerchantShippingConfigurations(objectQ.getResultList());
+		int firstResult = ((criteria.getStartPage()==0?0:criteria.getStartPage())) * criteria.getPageSize();
+		objectQ.setFirstResult(firstResult);
+		objectQ.setMaxResults(criteria.getPageSize());
+
+		@SuppressWarnings("unchecked")
+		List<MerchantShippingConfiguration> results = objectQ.getResultList();
+		merchantShippingConfigurationList.setMerchantShippingConfigurations(results);
 
 		return merchantShippingConfigurationList;
 		

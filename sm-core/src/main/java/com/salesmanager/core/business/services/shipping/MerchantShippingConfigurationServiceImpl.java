@@ -40,8 +40,8 @@ public class MerchantShippingConfigurationServiceImpl extends
 //    }
 
     @Override
-    public MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria) throws ServiceException {
-        return merchantShippingConfigurationRepository.listByStore(store, criteria);
+    public MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException {
+        return merchantShippingConfigurationRepository.listByStore(store, criteria, shippingType, shippingTransportationType);
     }
 
     @Override

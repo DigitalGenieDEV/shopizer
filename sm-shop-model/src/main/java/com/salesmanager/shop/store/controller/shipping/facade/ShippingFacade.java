@@ -46,11 +46,11 @@ public interface ShippingFacade {
 
 	ReadableMerchantShippingConfiguration getById(MerchantStore store, Long id);
 
-	ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria) throws ServiceException;
+	ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException;
 
 	void save(MerchantStore store, PersistableMerchantShippingConfiguration configuration) throws ServiceException;
 
-	void delete(MerchantStore store, Long id);
+	void delete(Long id) throws ServiceException;
 
 
 }

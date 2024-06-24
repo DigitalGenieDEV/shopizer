@@ -1182,7 +1182,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			productIdsQ.setParameter("mId", store.getId());
 		}
 		setComplexParameters(productIdsQ, criteria, language);
-		productIdsQ.setFirstResult(criteria.getStartIndex());
+		int firstResult = ((criteria.getStartPage()==0?0:criteria.getStartPage())) * criteria.getPageSize();
+		productIdsQ.setFirstResult(firstResult);
 		productIdsQ.setMaxResults(criteria.getPageSize());
 		List<Long> productIds = productIdsQ.getResultList();
 		long end1 = System.currentTimeMillis();

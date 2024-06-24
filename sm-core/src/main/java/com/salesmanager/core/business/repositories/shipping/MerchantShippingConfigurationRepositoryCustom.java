@@ -9,5 +9,6 @@ import com.salesmanager.core.model.system.MerchantShippingConfigurationList;
 
 public interface MerchantShippingConfigurationRepositoryCustom {
 
-	MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria);
+	MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria
+			, String shippingType, String shippingTransportationType);
 }
