@@ -298,5 +298,10 @@ public class ProductFacadeImpl implements ProductFacade {
 		return readableProduct;
 	}
 
+	@Override
+	public ReadableProduct getUserProductById(Long id, MerchantStore store, Language language, String currencyCode) {
+		return null;
+	}
+
 
 }

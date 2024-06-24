@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.salesmanager.shop.model.catalog.product.Product;
 import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
+import lombok.Data;
 
 import javax.persistence.Column;
 
@@ -16,6 +17,7 @@ import javax.persistence.Column;
  * @author Carl Samson
  *
  */
+@Data
 public class ProductEntity extends Product implements Serializable {
 
 	/**
@@ -38,10 +40,10 @@ public class ProductEntity extends Product implements Serializable {
 	private Integer batchNumber;
 
 	private Integer minOrderQuantity;
-	
-	private List<PriceRange> priceSupplyRangeList;
 
+	private Long leftCategoryId;
 
+	private List<PriceRange> priceRangeList;
 	/**
 	 *
 	 * 0-No sku. Quote based on product quantity.
@@ -64,184 +66,6 @@ public class ProductEntity extends Product implements Serializable {
 
 	private Boolean generalMixedBatch;
 
-
-	public Boolean getGeneralMixedBatch() {
-		return generalMixedBatch;
-	}
-
-	public void setGeneralMixedBatch(Boolean generalMixedBatch) {
-		this.generalMixedBatch = generalMixedBatch;
-	}
-
-	public Integer getMixAmount() {
-		return mixAmount;
-	}
-
-	public void setMixAmount(Integer mixAmount) {
-		this.mixAmount = mixAmount;
-	}
-
-	public Integer getMixNumber() {
-		return mixNumber;
-	}
-
-	public void setMixNumber(Integer mixNumber) {
-		this.mixNumber = mixNumber;
-	}
-
-	/**
-	 * End RENTAL fields
-	 *
-	 * @return
-	 */
-
-
-
-	public Integer getMinOrderQuantity() {
-		return minOrderQuantity;
-	}
-
-	public void setMinOrderQuantity(Integer minOrderQuantity) {
-		this.minOrderQuantity = minOrderQuantity;
-	}
-
-	public void setQuoteType(Integer quoteType) {
-		this.quoteType = quoteType;
-	}
-
-	public Integer getBatchNumber() {
-		return batchNumber;
-	}
-
-	public void setBatchNumber(Integer batchNumber) {
-		this.batchNumber = batchNumber;
-	}
-
-	public List<PriceRange> getPriceSupplyRangeList() {
-		return priceSupplyRangeList;
-	}
-
-	public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
-		this.priceSupplyRangeList = priceSupplyRangeList;
-	}
-
-	public int getQuoteType() {
-		return quoteType;
-	}
-
-	public void setQuoteType(int quoteType) {
-		this.quoteType = quoteType;
-	}
-
-
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	public String getSku() {
-		return sku;
-	}
-
-	public void setSku(String sku) {
-		this.sku = sku;
-	}
-
-
-	public boolean isProductIsFree() {
-		return productIsFree;
-	}
-
-	public void setProductIsFree(boolean productIsFree) {
-		this.productIsFree = productIsFree;
-	}
-
-	public int getSortOrder() {
-		return sortOrder;
-	}
-
-	public void setSortOrder(int sortOrder) {
-		this.sortOrder = sortOrder;
-	}
-
-	public int getRatingCount() {
-		return ratingCount;
-	}
-
-	public void setRatingCount(int ratingCount) {
-		this.ratingCount = ratingCount;
-	}
-
-	public Double getRating() {
-		return rating;
-	}
-
-	public void setRating(Double rating) {
-		this.rating = rating;
-	}
-
-	public boolean isPreOrder() {
-		return preOrder;
-	}
-
-	public void setPreOrder(boolean preOrder) {
-		this.preOrder = preOrder;
-	}
-
-	public String getRefSku() {
-		return refSku;
-	}
-
-	public void setRefSku(String refSku) {
-		this.refSku = refSku;
-	}
-
-
-	public ProductSpecification getProductSpecifications() {
-		return productSpecifications;
-	}
-
-	public void setProductSpecifications(ProductSpecification productSpecifications) {
-		this.productSpecifications = productSpecifications;
-	}
-
-
-
-	public String getCertificationDocument() {
-		return certificationDocument;
-	}
-
-	public void setCertificationDocument(String certificationDocument) {
-		this.certificationDocument = certificationDocument;
-	}
-
-	public String getIntellectualPropertyDocuments() {
-		return intellectualPropertyDocuments;
-	}
-
-	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
-		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
-	}
-
-	public String getExportDeclarationDocuments() {
-		return exportDeclarationDocuments;
-	}
-
-	public void setExportDeclarationDocuments(String exportDeclarationDocuments) {
-		this.exportDeclarationDocuments = exportDeclarationDocuments;
-	}
 
 
 }

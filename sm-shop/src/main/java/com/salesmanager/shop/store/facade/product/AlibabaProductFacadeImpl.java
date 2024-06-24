@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.alibaba.category.AlibabaCategoryService;
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
@@ -16,6 +17,7 @@ import com.salesmanager.core.business.services.catalog.product.manufacturer.Manu
 import com.salesmanager.core.business.services.catalog.product.variation.ProductVariationService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -48,6 +50,8 @@ import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade
 import com.salesmanager.shop.store.controller.product.facade.ProductDefinitionFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductVariationFacade;
 import com.salesmanager.shop.store.scheduled.MyScheduledTask;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +70,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlibabaProductFacadeImpl.class);
 
+    @Autowired
+    private ExchangeRateConfig examRateConfig;
 
     @Autowired
     private LanguageService languageService;
@@ -166,6 +172,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             String language, MerchantStore store, List<Long> categoryIds) throws Exception {
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
+        PersistableProduct persistableProduct =  new PersistableProduct();
+
         Language en = languageService.getByCode("en");
 
 
@@ -187,15 +195,19 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             }).collect(Collectors.toList());
         }else{
             Long categoryId =   productDetailModel.getCategoryId();
-            CategoryTranslationGetByIdCategory category1688 =  alCategoryService.getCategoryById(categoryId, language);
-            CategoryTranslationGetByIdCategory category1688ForEn =  alCategoryService.getCategoryById(categoryId, "en");
+            Long topCategoryId =   productDetailModel.getTopCategoryId();
+            Long secondCategoryId =   productDetailModel.getSecondCategoryId();
+            Long thirdCategoryId =   productDetailModel.getThirdCategoryId();
+            persistableProduct.setLeftCategoryId(categoryId);
 
-            Category category =  categoryService.getByCode(store, category1688.getChineseName());
-
+            Category category =  categoryService.getByCode(store, categoryId.toString());
             if (category == null){
-                Category category1 = createCategory(category1688ForEn, en, category1688,  ko, store);
+                Category topCategory = buildCategory(topCategoryId, en, ko, store);
+                Category secondCategory = buildCategory(secondCategoryId, en, ko, store);
+                Category thirdCategory = buildCategory(thirdCategoryId, en, ko, store);
+                Category category3 =  createCategoryList(topCategory, secondCategory, thirdCategory, store);
                 com.salesmanager.shop.model.catalog.category.Category category2 = new com.salesmanager.shop.model.catalog.category.Category();
-                category2.setId(category1.getId());
+                category2.setId(category3.getId());
                 categoryList.add(category2);
             }else{
                 com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(category, com.salesmanager.shop.model.catalog.category.Category.class);
@@ -205,7 +217,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         }
 
-        productDefinition.setCategories(categoryList);
 
         ProductSearchQueryProductDetailModelProductAttribute[] productAttribute = productDetailModel.getProductAttribute();
         Manufacturer manufacturers = null;
@@ -233,22 +244,20 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
-        productDefinition.setManufacturer(manufacturers.getCode());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
         Product productByOutId = productService.findByOutId(productDetailModel.getOfferId());
 
         Long productId = null;
         if (productByOutId == null){
-            createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  productDefinition);
+            productDefinition.setSku(UniqueIdGenerator.generateUniqueId());
             productId = productDefinitionFacade.saveProductDefinition(store, productDefinition, ko);
         }else {
             productId = productByOutId.getId();
-//            productDefinitionFacade.update(productId, productDefinition, store, ko);
         }
 
-        PersistableProduct persistableProduct =  new PersistableProduct();
         persistableProduct.setId(productId);
         persistableProduct.setAvailable(true);
+        persistableProduct.setCategories(categoryList);
 
         ProductSearchQueryProductDetailModelProductImage productImage = productDetailModel.getProductImage();
         String[] images = productImage.getImages();
@@ -286,15 +295,15 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         createProductVariant(ko, store, productDetailModel, persistableProduct);
 
         String jsonString = JSON.toJSONString(persistableProduct);
+        createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
 
-        System.out.println(jsonString);
+//        System.out.println(jsonString);
         productCommonFacade.saveProduct(store, persistableProduct, ko);
-        Thread.sleep(1000);
         return productId;
     }
 
 
-    private void createAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttributeForEn,Language en ,Language language, MerchantStore store, ProductSearchQueryProductDetailModelProductAttribute[] productAttribute, PersistableProductDefinition product) throws Exception {
+    private void createAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttributeForEn,Language en ,Language language, MerchantStore store, ProductSearchQueryProductDetailModelProductAttribute[] productAttribute, PersistableProduct product) throws Exception {
 
         Map<String, ProductSearchQueryProductDetailModelProductAttribute> attributeEnMap = Arrays.stream(productAttributeForEn)
                 .collect(Collectors.toMap(
@@ -327,16 +336,21 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
                 ProductOptionDescription sizeDescription = new ProductOptionDescription();
                 sizeDescription.setLanguage(language);
-                sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getAttributeNameTrans());
-                sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getAttributeNameTrans());
+                sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
+                sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
                 sizeDescription.setProductOption(option);
-                ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
-                sizeDescriptionForEn.setLanguage(en);
-                sizeDescriptionForEn.setName(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getAttributeNameTrans());
-                sizeDescriptionForEn.setDescription(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getAttributeNameTrans());
-                sizeDescriptionForEn.setProductOption(option);
 
-                option.getDescriptions().add(sizeDescriptionForEn);
+                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
+                if (productSearchQueryProductDetailModelProductAttribute1!=null){
+                    ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
+                    sizeDescriptionForEn.setLanguage(en);
+                    sizeDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null :productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    sizeDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1 == null ? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    sizeDescriptionForEn.setProductOption(option);
+                    option.getDescriptions().add(sizeDescriptionForEn);
+                }
+
+
                 option.getDescriptions().add(sizeDescription);
 
                 //create option
@@ -364,12 +378,15 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 nineDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
                 nineDescription.setProductOptionValue(productOptionValue);
 
-                ProductOptionValueDescription nineDescriptionForEn = new ProductOptionValueDescription();
-                nineDescriptionForEn.setLanguage(en);
-                nineDescriptionForEn.setName(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getValueTrans());
-                nineDescriptionForEn.setDescription(attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId()+productSearchQueryProductDetailModelProductAttribute.getValue()).getValueTrans());
-                nineDescriptionForEn.setProductOptionValue(productOptionValue);
-                productOptionValue.getDescriptions().add(nineDescriptionForEn);
+                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
+                if (productSearchQueryProductDetailModelProductAttribute1 !=null){
+                    ProductOptionValueDescription nineDescriptionForEn = new ProductOptionValueDescription();
+                    nineDescriptionForEn.setLanguage(en);
+                    nineDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    nineDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1== null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    nineDescriptionForEn.setProductOptionValue(productOptionValue);
+                    productOptionValue.getDescriptions().add(nineDescriptionForEn);
+                }
                 productOptionValue.getDescriptions().add(nineDescription);
 
                 //create an option value
@@ -396,6 +413,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         List<PersistableProductVariant> variants = new ArrayList<PersistableProductVariant>();
 
+        BigDecimal defaultPrice = new BigDecimal(Integer.MAX_VALUE); // 初始化为一个较大的值
 
         ProductSearchQueryProductDetailModelSkuInfo[] productSkuInfos = productDetailModel.getProductSkuInfos();
         for (int i=0; i<productSkuInfos.length; i++){
@@ -412,21 +430,24 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 for(int p =0;p<priceRangeList.length;p++){
                     ProductSearchQueryProductDetailModelPriceRangeV productSearchQueryProductDetailModelPriceRangeV = priceRangeList[p];
                     PriceRange priceRange = new PriceRange();
-                    priceRange.setPrice(productSearchQueryProductDetailModelPriceRangeV.getPrice());
+                    priceRange.setPrice(String.valueOf(examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(new BigDecimal(productSearchQueryProductDetailModelPriceRangeV.getPrice()))));
                     priceRange.setStartQuantity(productSearchQueryProductDetailModelPriceRangeV.getStartQuantity());
                     ranges.add(priceRange);
                 }
                 price.setPriceRangeList(ranges);
+                product.setPriceRangeList(ranges);
                 productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
-            }else {
-                price.setPrice(new BigDecimal(productSkuInfo.getPrice()));
+            } else {
+                BigDecimal skuPrice = new BigDecimal(StringUtils.isEmpty(productSkuInfo.getPromotionPrice())?
+                        productSkuInfo.getPrice() : productSkuInfo.getPromotionPrice());
+                skuPrice =  examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(skuPrice);
+                price.setPrice(skuPrice);
+                if (skuPrice.compareTo(defaultPrice) < 0) {
+                    defaultPrice = skuPrice;
+                }
             }
             product.setQuoteType(productDetailModel.getProductSaleInfo().getQuoteType());
-
             ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes = productSkuInfo.getSkuAttributes();
-
-
-
             productInventory.setPrice(price);
             List<PersistableVariation> persistableVariationList = new ArrayList<>();
             for (int s =0; s<skuAttributes.length; s++){
@@ -459,7 +480,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
                 }
                 productVariant.setOption(productOption.getId());
-
 
                 ProductOptionValue optionValue =  productOptionValueService.getByCode(store, value);
                 if (optionValue == null){
@@ -500,42 +520,83 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 persistableVariationList.add(persistableVariation);
             }
             persistableProductVariant.setProductVariations(persistableVariationList);
-            persistableProductVariant.setSku(UUID.randomUUID().toString());
+            persistableProductVariant.setSku(UUID.randomUUID().toString().replace("-", ""));
             persistableProductVariant.setInventory(productInventory);
             variants.add(persistableProductVariant);
         }
-
-
-
         product.setVariants(variants);
-
+        if (CollectionUtils.isEmpty(product.getPriceRangeList())){
+            product.setPrice(defaultPrice);
+        }
     }
+
+    private Category createCategoryList(Category firstCategory, Category secondCategory, Category thirdCategory, MerchantStore merchantStore) throws ServiceException {
+        try {
+            // 持久化第一级分类
+            Category firstCategoryByFind =  categoryService.getByCode(merchantStore, firstCategory.getCode());
+            if (firstCategoryByFind == null){
+                categoryService.create(firstCategory);
+            }else {
+                firstCategory = firstCategoryByFind;
+            }
+
+            Category secondCategoryByFind =  categoryService.getByCode(merchantStore, secondCategory.getCode());
+
+            if (secondCategoryByFind == null){
+                categoryService.create(secondCategory);
+            }else {
+                secondCategory = secondCategoryByFind;
+            }
+
+            secondCategory.setParent(firstCategory);
+            categoryService.create(secondCategory);
+
+            // 设置并持久化第三级分类（如果存在）
+            if (thirdCategory != null) {
+                thirdCategory.setParent(secondCategory);
+                categoryService.create(thirdCategory);
+                return thirdCategory;
+            }else {
+                return secondCategory;
+            }
+
+        } catch (NullPointerException e) {
+            throw new ServiceException("Error creating category list: a required category is null", e);
+        } catch (Exception e) {
+            LOGGER.error("create createCategoryList error", e);
+            throw new ServiceException("Error creating category list", e);
+        }
+    }
+
+
 
 
     /**
      *
-     * @param category1688
      * @param language
      * @return
      */
-    Category createCategory(CategoryTranslationGetByIdCategory categoryForEn, Language languageForEn, CategoryTranslationGetByIdCategory category1688, Language language, MerchantStore merchantStore) throws ServiceException {
+    Category buildCategory(Long category1688Id, Language languageForEn, Language language, MerchantStore merchantStore) throws ServiceException {
+        if (category1688Id == null){
+            return null;
+        }
+        CategoryTranslationGetByIdCategory category1688 =  alCategoryService.getCategoryById(category1688Id, language.getCode());
+        CategoryTranslationGetByIdCategory category1688ForEn =  alCategoryService.getCategoryById(category1688Id, "en");
         Category category = new Category();
         category.setMerchantStore(merchantStore);
-        category.setCode(category1688.getChineseName());
-
+        category.setCode(category1688Id.toString());
         com.salesmanager.core.model.catalog.category.CategoryDescription shoesDescription = new com.salesmanager.core.model.catalog.category.CategoryDescription();
         shoesDescription.setName(category1688.getTranslatedName());
         shoesDescription.setCategory(category);
         shoesDescription.setLanguage(language);
         com.salesmanager.core.model.catalog.category.CategoryDescription shoesDescription1 = new com.salesmanager.core.model.catalog.category.CategoryDescription();
-        shoesDescription1.setName(categoryForEn.getTranslatedName());
+        shoesDescription1.setName(category1688ForEn.getTranslatedName());
         shoesDescription1.setCategory(category);
         shoesDescription1.setLanguage(languageForEn);
         Set<com.salesmanager.core.model.catalog.category.CategoryDescription> categoryDescriptions = new HashSet<com.salesmanager.core.model.catalog.category.CategoryDescription>();
         categoryDescriptions.add(shoesDescription);
         categoryDescriptions.add(shoesDescription1);
         category.setDescriptions(categoryDescriptions);
-        categoryService.create(category);
         return category;
     }
 

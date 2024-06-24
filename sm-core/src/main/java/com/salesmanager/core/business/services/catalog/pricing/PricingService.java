@@ -30,7 +30,9 @@ public interface PricingService {
 	 * @throws ServiceException
 	 */
 	FinalPrice calculateProductPrice(Product product) throws ServiceException;
-	
+
+
+	FinalPrice calculateProductPriceByCurrencyCode(Product product, String currencyCode) throws ServiceException;
 
 
 	FinalPrice calculateProductPrice(ProductVariant variant) throws ServiceException;
@@ -91,7 +93,12 @@ public interface PricingService {
 	 */
 	String getDisplayAmount(BigDecimal amount, MerchantStore store)
 			throws ServiceException;
-	
+
+
+
+	String getDisplayAmount(BigDecimal amount, MerchantStore store, String currency)
+			throws ServiceException;
+
 	/**
 	 * Method to be used when building an amount formatted with the appropriate currency
 	 * @param amount

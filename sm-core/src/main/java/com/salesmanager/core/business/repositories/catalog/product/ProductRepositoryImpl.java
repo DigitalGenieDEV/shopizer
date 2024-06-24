@@ -473,58 +473,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		 * Testing in debug mode takes a long time with this query running in
 		 * normal mode is fine
 		 */
-
 		StringBuilder qs = new StringBuilder();
-		qs.append("select distinct p from Product as p ");
-		qs.append("join fetch p.merchantStore merch ");
-		qs.append("join fetch p.availabilities pa ");
-		qs.append("left join fetch pa.prices pap ");
-
-		qs.append("join fetch p.descriptions pd ");
-		qs.append("join fetch p.categories categs ");
-		qs.append("left join fetch pap.descriptions papd ");
-
-		// images
-		qs.append("left join fetch p.images images ");
-
-		// options (do not need attributes for listings)
-		qs.append("left join fetch p.attributes pattr ");
-		qs.append("left join fetch pattr.productOption po ");
-		qs.append("left join fetch po.descriptions pod ");
-		qs.append("left join fetch pattr.productOptionValue pov ");
-		qs.append("left join fetch pov.descriptions povd ");
-
-		qs.append(" left join fetch p.variants pinst ");
-		qs.append(" left join fetch pinst.variations pv ");
-		qs.append( "left join fetch pv.productOption pvpo ");
-		qs.append(" left join fetch pv.productOptionValue pvpov ");
-		qs.append(" left join fetch pvpo.descriptions pvpod ");
-		qs.append(" left join fetch pvpov.descriptions pvpovd ");
-		//variant availability and price
-		qs.append(" left join fetch pinst.availabilities pinsta ");
-		qs.append(" left join fetch pinsta.prices pinstap ");
-		qs.append(" left join fetch pinstap.descriptions pinstapdesc ");
-		qs.append(" left join fetch pinst.productVariantGroup pinstg ");
-		qs.append(" left join fetch pinstg.images pinstgimg ");
-		qs.append(" left join fetch pinstgimg.descriptions ");
-		//end variants
-
-		// other lefts
-		qs.append("left join fetch p.manufacturer manuf ");
-		qs.append("left join fetch manuf.descriptions manufd ");
-
-		qs.append("where p.id = (:pid) ");
-		// qs.append("and pd.language.id=:lang and papd.language.id=:lang and
-		// manufd.language.id=:lang ");
-		qs.append("and pd.language.id=:lang and papd.language.id=:lang ");
-		qs.append("and p.available=true and p.dateAvailable<=:dt ");
+		qs.append(productQueryV2());
+		qs.append("where p.id=:pid ");
+		qs.append("and pd.language.id=:lang");
 
 		String hql = qs.toString();
 		Query q = this.em.createQuery(hql);
 
 		q.setParameter("pid", productId);
 		q.setParameter("lang", language.getId());
-		q.setParameter("dt", new Date());
+//		q.setParameter("dt", new Date());
 
 		@SuppressWarnings("unchecked")
 		List<Product> products = q.getResultList();
@@ -1250,7 +1209,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			queryBuilder.append(" and p.shippingTemplateId in (:pstId)");
 		}
 		if (!StringUtils.isBlank(criteria.getProductName())) {
-			queryBuilder.append(" and lower(pd.name) like :nm");
+			queryBuilder.append(" and exists (select 1 from p.descriptions pdes where pdes.name like :nm )");
 		}
 		if (!CollectionUtils.isEmpty(criteria.getCategoryIds())) {
 			queryBuilder.append(" and exists (select 1 from p.categories categs where categs.id in (:cid))");

@@ -166,8 +166,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "SORT_ORDER")
 	private Integer sortOrder = new Integer(0);
 
-	@NotEmpty
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name = "SKU")
 	private String sku;
 	
@@ -176,6 +174,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	 */
 	@Column(name = "REF_SKU")
 	private String refSku;
+
+
+	@Column(name = "LEFT_CATEGORY_ID")
+	private Long leftCategoryId;
+
 
 	@Column(name = "SHIPPING_TEMPLATE_ID")
 	private Long shippingTemplateId;
@@ -217,6 +220,16 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@Column(name="OUT_PRODUCT_ID")
 	private Long outProductId;
+
+
+	@Column(name = "PRODUCT_PRICE_RANGE")
+	private String priceRangeList;
+
+	/**
+	 * product price
+	 */
+	@Column(name="price")
+	private BigDecimal price;
 
 
 	public Integer getQuoteType() {
@@ -592,5 +605,29 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setProductStatus(ProductStatus productStatus) {
 		this.productStatus = productStatus;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getPriceRangeList() {
+		return priceRangeList;
+	}
+
+	public void setPriceRangeList(String priceRangeList) {
+		this.priceRangeList = priceRangeList;
+	}
+
+	public Long getLeftCategoryId() {
+		return leftCategoryId;
+	}
+
+	public void setLeftCategoryId(Long leftCategoryId) {
+		this.leftCategoryId = leftCategoryId;
 	}
 }

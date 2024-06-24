@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -90,14 +93,20 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 
 		try {
 			//core properties
-			destination.setSku(source.getSku() == null? source.getIdentifier() : source.getSku());
+			if (StringUtils.isEmpty(source.getIdentifier()) && StringUtils.isEmpty(source.getSku())){
+				destination.setSku(UniqueIdGenerator.generateUniqueId());
+			}else {
+				destination.setSku(source.getSku() == null? source.getIdentifier() : source.getSku());
+			}
 
+			destination.setLeftCategoryId(source.getLeftCategoryId() == null ? null :source.getCategories().get(0).getId());
 			destination.setAvailable(source.isVisible());
 			destination.setDateAvailable(new Date());
-
 			destination.setRefSku(source.getRefSku());
-			
-			
+			destination.setPrice(source.getPrice());
+			destination.setPriceRangeList(CollectionUtils.isEmpty(source.getPriceRangeList())? null :
+					JSON.toJSONString(source.getPriceRangeList()));
+
 			if(source.getId() != null && source.getId().longValue()==0) {
 				destination.setId(null);
 			} else {
@@ -142,7 +151,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				for(com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute attr : source.getProperties()) {
 
 					ProductAttribute attribute = persistableProductAttributeMapper.convert(attr, store, language);
-
 					attribute.setProduct(destination);
 					productAttributes.add(attribute);
 				}
@@ -334,8 +342,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	
 	private ProductVariant variant(Product product, Long sourceProductId,PersistableProductVariant variant, MerchantStore store, Language language) {
 		variant.setProductId(sourceProductId);
-		ProductVariant var = persistableProductVariantMapper.convert(variant, store, language);
-		var.setProduct(product);
+		ProductVariant var = persistableProductVariantMapper.convert(variant, store, language, product);
 		return var;
 	}
 	

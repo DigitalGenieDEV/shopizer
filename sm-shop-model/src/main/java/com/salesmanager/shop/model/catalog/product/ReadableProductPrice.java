@@ -11,7 +11,7 @@ public class ReadableProductPrice extends Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private List<PriceRange> priceSupplyRangeList;
+	private List<PriceRange> priceRangeList;
 
 	private static final long serialVersionUID = 1L;
 	private String originalPrice;
@@ -60,11 +60,11 @@ public class ReadableProductPrice extends Entity implements Serializable {
 		this.defaultPrice = defaultPrice;
 	}
 
-	public List<PriceRange> getPriceSupplyRangeList() {
-		return priceSupplyRangeList;
+	public List<PriceRange> getPriceRangeList() {
+		return priceRangeList;
 	}
 
-	public void setPriceSupplyRangeList(List<PriceRange> priceSupplyRangeList) {
-		this.priceSupplyRangeList = priceSupplyRangeList;
+	public void setPriceRangeList(List<PriceRange> priceRangeList) {
+		this.priceRangeList = priceRangeList;
 	}
 }

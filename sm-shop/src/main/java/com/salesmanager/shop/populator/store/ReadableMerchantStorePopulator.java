@@ -73,7 +73,7 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 			target.setDefaultLanguage(source.getDefaultLanguage().getCode());
 		}
 
-		target.setCurrency(source.getCurrency().getCode());
+		target.setCurrency(source.getCurrency() == null? null :source.getCurrency().getCode());
 		target.setPhone(source.getStorephone());
 
 		ReadableAddress address = new ReadableAddress();

@@ -92,7 +92,6 @@ public class ProductAvailability extends SalesManagerEntity<Long, ProductAvailab
 	@JoinColumn(name = "PRODUCT_VARIANT", nullable = true)
 	private ProductVariant productVariant;
 	
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name = "SKU", nullable = true)
 	private String sku;
 

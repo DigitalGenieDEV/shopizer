@@ -49,7 +49,6 @@ public class CustomerOption extends SalesManagerEntity<Long, CustomerOption> {
 	private String customerOptionType;
 	
 	@NotEmpty
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name="CUSTOMER_OPT_CODE")
 	//@Index(name="CUST_OPT_CODE_IDX")
 	private String code;

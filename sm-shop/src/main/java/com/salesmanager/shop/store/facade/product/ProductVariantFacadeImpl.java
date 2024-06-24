@@ -117,7 +117,7 @@ public class ProductVariantFacadeImpl implements ProductVariantFacade {
 		
 		productVariant.setProductId(productId);
 		productVariant.setId(null);
-		ProductVariant variant = persistableProductVariantMapper.convert(productVariant, store, language);
+		ProductVariant variant = persistableProductVariantMapper.convert(productVariant, store, language, null);
 		
 		try {
 			productVariantService.saveProductVariant(variant);
@@ -142,7 +142,7 @@ public class ProductVariantFacadeImpl implements ProductVariantFacade {
 		
 		productVariant.setProductId(productId);
 		
-		ProductVariant mergedModel = persistableProductVariantMapper.merge(productVariant, instanceModel.get(), store, language);
+		ProductVariant mergedModel = persistableProductVariantMapper.merge(productVariant, instanceModel.get(), store, language, null);
 		try {
 			productVariantService.saveProductVariant(mergedModel);
 		} catch (ServiceException e) {

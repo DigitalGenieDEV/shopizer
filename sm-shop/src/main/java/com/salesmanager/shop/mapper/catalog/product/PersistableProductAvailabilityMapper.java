@@ -65,21 +65,21 @@ public class PersistableProductAvailabilityMapper implements Mapper<PersistableP
 					price.setProductPriceSpecialEndDate(endDate);
 				}
 				destination.getPrices().add(price);
-				for (Language lang : store.getLanguages()) {
-					ProductPriceDescription ppd = new ProductPriceDescription();
-					ppd.setProductPrice(price);
-					ppd.setLanguage(lang);
-					ppd.setName(ProductPriceDescription.DEFAULT_PRICE_DESCRIPTION);
-
-					// price appender
-					Optional<com.salesmanager.shop.model.catalog.product.ProductPriceDescription> description = source
-							.getPrice().getDescriptions().stream()
-							.filter(d -> d.getLanguage() != null && d.getLanguage().equals(lang.getCode())).findFirst();
-					if (description.isPresent()) {
-						ppd.setPriceAppender(description.get().getPriceAppender());
-					}
-					price.getDescriptions().add(ppd);
-				}
+//				for (Language lang : store.getLanguages()) {
+//					ProductPriceDescription ppd = new ProductPriceDescription();
+//					ppd.setProductPrice(price);
+//					ppd.setLanguage(lang);
+//					ppd.setName(ProductPriceDescription.DEFAULT_PRICE_DESCRIPTION);
+//
+//					// price appender
+//					Optional<com.salesmanager.shop.model.catalog.product.ProductPriceDescription> description = source
+//							.getPrice().getDescriptions().stream()
+//							.filter(d -> d.getLanguage() != null && d.getLanguage().equals(lang.getCode())).findFirst();
+//					if (description.isPresent()) {
+//						ppd.setPriceAppender(description.get().getPriceAppender());
+//					}
+//					price.getDescriptions().add(ppd);
+//				}
 
 			}
 

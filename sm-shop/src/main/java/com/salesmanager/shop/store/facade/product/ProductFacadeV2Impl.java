@@ -14,6 +14,7 @@ import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.system.MerchantShippingConfiguration;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductListMapper;
+import com.salesmanager.shop.mapper.catalog.product.UserReadableProductMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +60,9 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private UserReadableProductMapper userReadableProductMapper;
 	
 	@Inject
 	private CategoryService categoryService;
@@ -165,6 +169,21 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		return readableProduct;
 	}
+
+	@Override
+	public ReadableProduct getUserProductById(Long id, MerchantStore store, Language language, String currencyCode){
+		Product product = productService.getProductWithOnlyMerchantStoreById(id);
+		if (product == null) {
+			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
+		}
+
+		ReadableProduct readableProduct = userReadableProductMapper.convert(product, product.getMerchantStore(), language, currencyCode);
+
+		return readableProduct;
+	}
+
+
+
 
 	@Override
 	public ReadableProduct getProductByCode(MerchantStore store, String sku, Language language) {

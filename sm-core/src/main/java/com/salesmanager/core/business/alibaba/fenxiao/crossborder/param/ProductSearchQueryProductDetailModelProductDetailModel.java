@@ -2,6 +2,13 @@ package com.salesmanager.core.business.alibaba.fenxiao.crossborder.param;
 
 public class ProductSearchQueryProductDetailModelProductDetailModel {
 
+    private Long topCategoryId;
+
+    private Long secondCategoryId;
+
+    private Long thirdCategoryId;
+
+
     private Long offerId;
 
     /**
@@ -426,4 +433,28 @@ public class ProductSearchQueryProductDetailModelProductDetailModel {
         this.channelPrice = channelPrice;
     }
 
+
+    public Long getTopCategoryId() {
+        return topCategoryId;
+    }
+
+    public void setTopCategoryId(Long topCategoryId) {
+        this.topCategoryId = topCategoryId;
+    }
+
+    public Long getSecondCategoryId() {
+        return secondCategoryId;
+    }
+
+    public void setSecondCategoryId(Long secondCategoryId) {
+        this.secondCategoryId = secondCategoryId;
+    }
+
+    public Long getThirdCategoryId() {
+        return thirdCategoryId;
+    }
+
+    public void setThirdCategoryId(Long thirdCategoryId) {
+        this.thirdCategoryId = thirdCategoryId;
+    }
 }

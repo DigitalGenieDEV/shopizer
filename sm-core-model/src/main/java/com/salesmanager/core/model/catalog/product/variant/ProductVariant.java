@@ -74,7 +74,6 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 
 
 	@NotEmpty
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name = "SKU")
 	private String sku;
 	
