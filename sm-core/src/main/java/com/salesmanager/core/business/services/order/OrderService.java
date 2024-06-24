@@ -8,11 +8,7 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.order.OrderCriteria;
-import com.salesmanager.core.model.order.OrderList;
-import com.salesmanager.core.model.order.OrderSummary;
-import com.salesmanager.core.model.order.OrderTotalSummary;
+import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.Transaction;
@@ -80,6 +76,8 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 
 	Order getOrder(Long id, MerchantStore store);
 
+	Order getOrder(Long id, Customer customer);
+
 
 	/**
 	 * For finding orders. Mainly used in the administration tool
@@ -88,6 +86,14 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 	 * @return
 	 */
 	OrderList listByStore(MerchantStore store, OrderCriteria criteria);
+
+	/**
+	 * For finding customer orders.
+	 * @param store
+	 * @param criteria
+	 * @return
+	 */
+	OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria);
 
 
 	/**

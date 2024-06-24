@@ -20,7 +20,11 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
+import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.model.order.v0.ReadableOrder;
+import com.salesmanager.shop.model.order.v0.ReadableOrderList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -58,11 +62,6 @@ import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.order.OrderCriteria;
-import com.salesmanager.core.model.order.OrderList;
-import com.salesmanager.core.model.order.OrderSummary;
-import com.salesmanager.core.model.order.OrderTotalSummary;
 import com.salesmanager.core.model.order.attributes.OrderAttribute;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
@@ -934,6 +933,15 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
+	public ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, int start, int maxCount, Language language) throws Exception {
+		OrderCustomerCriteria criteria = new OrderCustomerCriteria();
+		criteria.setStartIndex(start);
+		criteria.setMaxCount(maxCount);
+
+		return this.getCustomerReadableOrderList(customer, criteria, store, language);
+	}
+
+	@Override
 	public com.salesmanager.shop.model.order.v0.ReadableOrderList getReadableOrderList(OrderCriteria criteria,
 			MerchantStore store) {
 
@@ -1093,6 +1101,37 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	}
 
+	private com.salesmanager.shop.model.order.v0.ReadableOrderList getCustomerReadableOrderList(Customer customer, OrderCustomerCriteria criteria,
+																						MerchantStore store, Language language) throws Exception {
+
+		OrderList orderList = orderService.listByCustomer(customer, criteria);
+
+		// ReadableOrderPopulator orderPopulator = new ReadableOrderPopulator();
+		Locale locale = LocaleUtils.getLocale(language);
+		readableOrderPopulator.setLocale(locale);
+
+		List<Order> orders = orderList.getOrders();
+		com.salesmanager.shop.model.order.v0.ReadableOrderList returnList = new com.salesmanager.shop.model.order.v0.ReadableOrderList();
+
+		if (CollectionUtils.isEmpty(orders)) {
+			returnList.setRecordsTotal(0);
+			// returnList.setMessage("No results for store code " + store);
+			return null;
+		}
+
+		List<com.salesmanager.shop.model.order.v0.ReadableOrder> readableOrders = new ArrayList<com.salesmanager.shop.model.order.v0.ReadableOrder>();
+		for (Order order : orders) {
+			com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
+			readableOrderPopulator.populate(order, readableOrder, store, language);
+			readableOrders.add(readableOrder);
+
+		}
+
+		returnList.setRecordsTotal(orderList.getTotalCount());
+		return this.populateOrderList(orderList, store, language);
+
+	}
+
 	@Override
 	public com.salesmanager.shop.model.order.v0.ReadableOrderList getReadableOrderList(MerchantStore store, int start,
 			int maxCount, Language language) throws Exception {
@@ -1138,6 +1177,40 @@ public class OrderFacadeImpl implements OrderFacade {
 
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, store, language);
+				orderProducts.add(orderProduct);
+			}
+
+			readableOrder.setProducts(orderProducts);
+		} catch (Exception e) {
+			throw new ServiceRuntimeException("Error while getting order [" + orderId + "]");
+		}
+
+		return readableOrder;
+	}
+
+	@Override
+	public ReadableOrder getCustomerReadableOrder(Long orderId, Customer customer, Language language) {
+		Order modelOrder = orderService.getOrder(orderId, customer);
+		if (modelOrder == null) {
+			throw new ResourceNotFoundException("Order not found with id " + orderId);
+		}
+
+		com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
+
+
+		try {
+			readableOrderPopulator.populate(modelOrder, readableOrder, modelOrder.getMerchant(), language);
+
+			// order products
+			List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
+			for (OrderProduct p : modelOrder.getOrderProducts()) {
+				ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
+				orderProductPopulator.setProductService(productService);
+				orderProductPopulator.setPricingService(pricingService);
+				orderProductPopulator.setimageUtils(imageUtils);
+
+				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
+				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
 				orderProducts.add(orderProduct);
 			}
 

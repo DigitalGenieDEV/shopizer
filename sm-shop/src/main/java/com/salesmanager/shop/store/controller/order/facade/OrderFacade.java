@@ -101,6 +101,17 @@ public interface OrderFacade {
 	 */
 	com.salesmanager.shop.model.order.v0.ReadableOrder getReadableOrder(Long orderId, MerchantStore store, Language language);
 
+
+
+	/**
+	 * Creates a ReadableOrder object from an orderId for customer
+	 * @param orderId
+	 * @param store
+	 * @param language
+	 * @return
+	 * @throws Exception
+	 */
+	com.salesmanager.shop.model.order.v0.ReadableOrder getCustomerReadableOrder(Long orderId, Customer customer, Language language);
 	/**
 	 * List of orderstatus history
 	 * @param orderId
@@ -125,6 +136,19 @@ public interface OrderFacade {
 	com.salesmanager.shop.model.order.v0.ReadableOrderList getReadableOrderList(MerchantStore store, Customer customer, int start,
 			int maxCount, Language language) throws Exception;
 
+	/**
+	 * <p>Method used to fetch all orders associated with customer customer.
+	 * It will used current customer ID to fetch all orders which has been
+	 * placed by customer for current store.</p>
+	 *
+	 * @param customer currently logged in customer
+	 * @param store store associated with current customer
+	 * @return ReadableOrderList
+	 * @throws Exception
+	 */
+
+	com.salesmanager.shop.model.order.v0.ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, int start,
+																				int maxCount, Language language) throws Exception;
 
 	/**
 	 * <p>Method used to fetch all orders associated with customer customer.

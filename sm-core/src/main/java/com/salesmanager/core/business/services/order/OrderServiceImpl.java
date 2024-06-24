@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,16 +46,6 @@ import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.common.UserContext;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.order.OrderCriteria;
-import com.salesmanager.core.model.order.OrderList;
-import com.salesmanager.core.model.order.OrderSummary;
-import com.salesmanager.core.model.order.OrderSummaryType;
-import com.salesmanager.core.model.order.OrderTotal;
-import com.salesmanager.core.model.order.OrderTotalSummary;
-import com.salesmanager.core.model.order.OrderTotalType;
-import com.salesmanager.core.model.order.OrderTotalVariation;
-import com.salesmanager.core.model.order.OrderValueType;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
@@ -562,11 +553,23 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         return orderRepository.findOne(orderId, store.getId());
     }
 
+    @Override
+    public Order getOrder(final Long orderId, Customer customer) {
+        Validate.notNull(orderId, "Order id cannot be null");
+        Validate.notNull(customer, "Customer cannot be null");
+        return orderRepository.findOneByCustomer(orderId, customer.getId());
+    }
+
 
     /** legacy **/
     @Override
     public OrderList listByStore(final MerchantStore store, final OrderCriteria criteria) {
         return orderRepository.listByStore(store, criteria);
+    }
+
+    @Override
+    public OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria) {
+        return orderRepository.listByCustomer(customer, criteria);
     }
 
     @Override

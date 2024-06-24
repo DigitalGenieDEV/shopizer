@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
@@ -259,7 +261,68 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		return orderList;
 	}
-	
+
+	@Override
+	public OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria) {
+		OrderList orderList = new OrderList();
+		StringBuilder countBuilderSelect = new StringBuilder();
+		StringBuilder objectBuilderSelect = new StringBuilder();
+
+		String orderByCriteria = " order by o.id desc";
+
+		if(criteria.getOrderBy()!=null) {
+			if(CriteriaOrderBy.ASC.name().equals(criteria.getOrderBy().name())) {
+				orderByCriteria = " order by o.id asc";
+			}
+		}
+
+		String baseQuery = "select o from Order as o left join fetch o.delivery.country left join fetch o.delivery.zone left join fetch o.billing.country left join fetch o.billing.zone left join fetch o.orderTotal ot left join fetch o.orderProducts op left join fetch o.orderAttributes oa left join fetch op.orderAttributes opo left join fetch op.prices opp";
+		String countBaseQuery = "select count(o) from Order as o";
+
+		countBuilderSelect.append(countBaseQuery);
+		objectBuilderSelect.append(baseQuery);
+
+		StringBuilder objectBuilderWhere = new StringBuilder();
+
+		String storeQuery =" where o.customerId =:cid";
+		objectBuilderWhere.append(storeQuery);
+		countBuilderSelect.append(storeQuery);
+
+		objectBuilderWhere.append(orderByCriteria);
+
+		//count query
+		Query countQ = em.createQuery(
+				countBuilderSelect.toString());
+
+		//object query
+		Query objectQ = em.createQuery(
+				objectBuilderSelect.toString() + objectBuilderWhere.toString());
+
+
+		countQ.setParameter("cid", customer.getId());
+		objectQ.setParameter("cid", customer.getId());
+
+		Number count = (Number) countQ.getSingleResult();
+
+		if(count.intValue()==0)
+			return orderList;
+
+		@SuppressWarnings("rawtypes")
+		GenericEntityList entityList = new GenericEntityList();
+		entityList.setTotalCount(count.intValue());
+
+		objectQ = RepositoryHelper.paginateQuery(objectQ, count, entityList, criteria);
+
+		//TODO use GenericEntityList
+
+		orderList.setTotalCount(entityList.getTotalCount());
+		orderList.setTotalPages(entityList.getTotalPages());
+
+		orderList.setOrders(objectQ.getResultList());
+
+		return orderList;
+	}
+
 	private String like(String q) {
 		return '%' + q + '%';
 	}
