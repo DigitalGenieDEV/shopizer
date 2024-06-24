@@ -10,7 +10,7 @@ import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.board.ReadableBoardList;
 
 public interface BoardFacade {
-	
+
 	/**
 	 *
 	 * @param gbn
@@ -23,15 +23,15 @@ public interface BoardFacade {
 	 * @param count
 	 * @return ReadableBoardList
 	 */
-	ReadableBoardList getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count) throws Exception;
+	ReadableBoardList getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate,
+			int page, int count) throws Exception;
 
-	PersistableBoard saveBoard(PersistableBoard board, Map<String, MultipartFile> files,  MerchantStore merchantStore) throws Exception;
-	
-	void saveBoardFile(Map<String, MultipartFile> files,MerchantStore merchantStore) throws Exception;
+	PersistableBoard saveBoard(PersistableBoard board, Map<String, MultipartFile> files, MerchantStore merchantStore)
+			throws Exception;
 
 	ReadableBoard getById(int id) throws Exception;
-	
+
 	void deleteBoard(int id) throws Exception;
-	
+
 	void updateReplyContent(PersistableBoard board) throws Exception;
 }

@@ -3,10 +3,8 @@ package com.salesmanager.shop.store.facade.board;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -23,11 +21,12 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.board.BoardService;
 import com.salesmanager.core.model.board.Board;
 import com.salesmanager.core.model.board.ReadBoard;
+import com.salesmanager.core.model.common.file.ReadFile;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.board.PersistableBoard;
 import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.board.ReadableBoardList;
-import com.salesmanager.shop.model.content.ContentFile;
+import com.salesmanager.shop.model.common.FileEntity;
 import com.salesmanager.shop.populator.board.PersistableBoardPopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.board.facade.BoardFacade;
@@ -118,13 +117,9 @@ public class BoardFacadeImpl implements BoardFacade {
 		
 	}
 	
-	@SuppressWarnings({ "unused", "deprecation" })
-	public void saveBoardFile(Map<String, MultipartFile> files,MerchantStore merchantStore) throws Exception{
-		
-		
-	}
 	
 	public ReadableBoard getById(int id) throws Exception {
+		List<FileEntity> targetList = new ArrayList<FileEntity>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Board data = boardService.getById(id);
 		Date regDate = data.getAuditSection().getRegDate();
@@ -138,6 +133,18 @@ public class BoardFacadeImpl implements BoardFacade {
 		targetData.setModIp(data.getAuditSection().getModIp());
 		targetData.setRegDate(dateFormat.format(regDate));
 		targetData.setModDate(dateFormat.format(modDate));
+		System.out.println("data.getId()"+data.getId());
+		List<ReadFile> fileList = fileFacade.getFileList(data.getId());
+		if(fileList.size() > 0 ) {
+			for(ReadFile file :fileList ) {
+				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+				FileEntity targetFile = objectMapper.convertValue(file, FileEntity.class);
+				targetList.add(targetFile);
+			
+			}
+		}
+		
+		targetData.setFileList(targetList);
 		return targetData;
 	}
 	
