@@ -41,6 +41,9 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private Long salesVolume;
 	private List<ReadableImage> images = new ArrayList<ReadableImage>();
 	private ReadableManufacturer manufacturer;
+
+	private List<ProductDescription> descriptions = new ArrayList<>();
+
 	private List<ReadableProductOption> options = new ArrayList<ReadableProductOption>();
 	private List<ReadableProductVariant> variants = new ArrayList<ReadableProductVariant>();
 	private List<ReadableProductProperty> properties = new ArrayList<ReadableProductProperty>();
@@ -204,5 +207,13 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+
+	public List<ProductDescription> getDescriptions() {
+		return descriptions;
+	}
+
+	public void setDescriptions(List<ProductDescription> descriptions) {
+		this.descriptions = descriptions;
 	}
 }
