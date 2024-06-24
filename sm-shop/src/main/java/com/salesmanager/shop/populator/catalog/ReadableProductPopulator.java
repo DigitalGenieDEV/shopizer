@@ -95,24 +95,25 @@ public class ReadableProductPopulator extends
 
 	        ProductDescription description = source.getProductDescription();
 
-	        if(source.getDescriptions()!=null && source.getDescriptions().size()>0) {
-	          for(ProductDescription desc : source.getDescriptions()) {
-                if(language != null && desc.getLanguage()!=null && desc.getLanguage().getId().intValue() == language.getId().intValue()) {
-                    description = desc;
-                    break;
-                } else {
-                  fulldescriptions.add(populateDescription(desc));
-                }
-              }
-	        }
+			if (source.getDescriptions() != null && source.getDescriptions().size() > 0) {
+				for (ProductDescription desc : source.getDescriptions()) {
+					if (language != null && desc.getLanguage() != null
+							&& desc.getLanguage().getId().intValue() == language.getId().intValue()) {
+						description = desc;
+						break;
+					}else {
+						com.salesmanager.shop.model.catalog.product.ProductDescription tragetDescription = populateDescription(
+								desc);
+						target.getDescriptions().add(tragetDescription);
+					}
+				}
+			}
 
-		     if(target instanceof ReadableProductFull) {
-		          ((ReadableProductFull)target).setDescriptions(fulldescriptions);
-		      }
 
-		        if(language == null) {
-			          language = store.getDefaultLanguage();
-			    }
+			if(language == null) {
+				language = store.getDefaultLanguage();
+			}
+
 
 		    final Language lang = language;
 
@@ -588,12 +589,6 @@ public class ReadableProductPopulator extends
 
 			}
 
-
-
-
-		     if(target instanceof ReadableProductFull) {
-		          ((ReadableProductFull)target).setDescriptions(fulldescriptions);
-		      }
 
 
 			return target;
