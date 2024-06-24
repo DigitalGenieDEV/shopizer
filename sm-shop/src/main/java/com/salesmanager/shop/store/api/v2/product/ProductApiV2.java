@@ -429,6 +429,7 @@ public class ProductApiV2 {
 			List<Long> longs = alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null ? null : Lists.newArrayList(leftCategoryId));
 			return CommonResultDTO.ofSuccess(longs);
 		}catch (Exception e){
+			LOGGER.error("importAlibabaProduct error", e);
 			return CommonResultDTO.ofFailed("20001", "importAlibabaProduct error");
 		}
 	}
