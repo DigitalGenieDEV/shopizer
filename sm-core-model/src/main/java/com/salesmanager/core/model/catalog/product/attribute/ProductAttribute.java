@@ -2,22 +2,11 @@ package com.salesmanager.core.model.catalog.product.attribute;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Index;
+import javax.persistence.*;
 
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.shipping.ShippingBasisType;
 
 @Entity
 @Table(name="PRODUCT_ATTRIBUTE",
@@ -63,7 +52,6 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 	
 	@Column(name="PRODUCT_ATTRIBUTE_DEFAULT")
 	private boolean attributeDefault=false;
-	
 	@Column(name="PRODUCT_ATTRIBUTE_REQUIRED")
 	private boolean attributeRequired=false;
 	
@@ -244,7 +232,6 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 	public void setProductAttributePrice(BigDecimal productAttributePrice) {
 		this.productAttributePrice = productAttributePrice;
 	}
-
 
 
 }

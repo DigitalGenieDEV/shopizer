@@ -54,7 +54,6 @@ public class ProductOptionValue extends SalesManagerEntity<Long, ProductOptionVa
 	private boolean productOptionDisplayOnly=false;
 	
 	@NotEmpty
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name="PRODUCT_OPTION_VAL_CODE")
 	private String code;
 

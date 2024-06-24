@@ -221,7 +221,7 @@ public class PersistableProductDefinitionMapper implements Mapper<PersistablePro
 			}
 			destination.setSortOrder(source.getSortOrder());
 			destination.setProductShipeable(source.isShipeable());
-			
+			destination.setMerchantStore(store);
 
 			return destination;
 		

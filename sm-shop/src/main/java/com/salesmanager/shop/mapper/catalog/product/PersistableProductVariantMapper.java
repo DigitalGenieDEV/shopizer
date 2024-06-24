@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
@@ -8,6 +9,7 @@ import com.salesmanager.core.business.repositories.catalog.product.attribute.Pro
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionValueRepository;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
+import com.salesmanager.core.model.catalog.product.price.ProductPrice;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +31,7 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
 
 @Component
-public class PersistableProductVariantMapper implements Mapper<PersistableProductVariant, ProductVariant> {
+public class PersistableProductVariantMapper  {
 	
 	@Autowired
 	private ProductVariationService productVariationService;
@@ -47,15 +49,13 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 	private ProductOptionValueRepository productOptionValueRepository;
 
 
-	@Override
-	public ProductVariant convert(PersistableProductVariant source, MerchantStore store, Language language) {
+	public ProductVariant convert(PersistableProductVariant source, MerchantStore store, Language language, Product product) {
 		ProductVariant productVariantModel = new ProductVariant();
-		return this.merge(source, productVariantModel, store, language);
+		return this.merge(source, productVariantModel, store, language, product);
 	}
 
-	@Override
 	public ProductVariant merge(PersistableProductVariant source, ProductVariant destination, MerchantStore store,
-			Language language) {
+			Language language, Product product) {
 
 		List<PersistableVariation> persistableVariations = source.getProductVariations();
 
@@ -131,8 +131,24 @@ public class PersistableProductVariantMapper implements Mapper<PersistableProduc
 			ProductAvailability availability = persistableProductAvailabilityMapper.convert(source.getInventory(), store, language);
 			availability.setProductVariant(destination);
 			destination.getAvailabilities().add(availability);
+
+			Set<ProductPrice> prices = availability.getPrices();
+			if (CollectionUtils.isNotEmpty(prices)){
+				ProductPrice price = prices.stream().iterator().next();
+				if (StringUtils.isNotEmpty(price.getPriceRangeList()) && product != null){
+					product.setPriceRangeList(price.getPriceRangeList());
+				}else {
+					if (product !=null){
+						BigDecimal defaultPrice = product.getPrice() == null ? new BigDecimal(Integer.MAX_VALUE) : product.getPrice();
+						if (price.getProductPriceAmount().compareTo(defaultPrice) < 0) {
+							product.setPrice(price.getProductPriceAmount());
+						}
+					}
+				}
+			}
 		}
 
+		destination.setProduct(product);
 		return destination;
 
 	}

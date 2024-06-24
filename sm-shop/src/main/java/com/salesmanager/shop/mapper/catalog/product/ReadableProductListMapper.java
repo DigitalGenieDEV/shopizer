@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.model.catalog.category.Category;
@@ -31,6 +32,7 @@ import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.attribute.*;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValue;
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
+import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.references.DimensionUnitOfMeasure;
@@ -149,7 +151,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 
 			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, store))
 					.collect(Collectors.toList());
-			destination.setImages(imageList);
+//			destination.setImages(imageList);
 			imageList.forEach(image->{
 				if(image.isDefaultImage()){
 					destination.setImage(image);
@@ -160,15 +162,21 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		destination.setSku(source.getSku());
 
 		try {
-			FinalPrice price = pricingService.calculateProductPrice(source);
-			if (price != null) {
-				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
-				destination.setPrice(price.getFinalPrice());
-				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));
-				if (price.isDiscounted()) {
-					destination.setDiscounted(true);
-				}
-			}
+			destination.setPrice(source.getPrice());
+			destination.setFinalPrice(pricingService.getDisplayAmount(source.getPrice(), store));
+			destination.setOriginalPrice(pricingService.getDisplayAmount(source.getPrice(), store));
+			destination.setPriceRangeList(StringUtils.isEmpty(source.getPriceRangeList())? null :
+					JSON.parseArray(source.getPriceRangeList(), PriceRange.class));
+//
+//			FinalPrice price = pricingService.calculateProductPrice(source);
+//			if (price != null) {
+//				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
+//				destination.setPrice(price.getFinalPrice());
+//				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));
+//				if (price.isDiscounted()) {
+//					destination.setDiscounted(true);
+//				}
+//			}
 
 		} catch (Exception e) {
 			throw new ConversionRuntimeException("An error while converting product price", e);

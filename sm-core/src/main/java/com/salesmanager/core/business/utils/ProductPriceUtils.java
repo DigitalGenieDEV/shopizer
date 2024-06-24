@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.salesmanager.core.business.repositories.exchangeRate.ExchangeRateRepository;
+import com.salesmanager.core.model.catalog.product.ExchangeRate;
+import com.salesmanager.core.model.catalog.product.ExchangeRatePOJO;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -16,6 +19,7 @@ import org.apache.commons.validator.routines.BigDecimalValidator;
 import org.apache.commons.validator.routines.CurrencyValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -39,6 +43,9 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
  */
 @Component("priceUtil")
 public class ProductPriceUtils {
+
+	@Autowired
+	private ExchangeRateRepository exchangeRateRepository;
 
 	private final static char DECIMALCOUNT = '2';
 	private final static char DECIMALPOINT = '.';
@@ -138,32 +145,6 @@ public class ProductPriceUtils {
 	public FinalPrice getFinalPrice(Product product) throws ServiceException {
 
 		FinalPrice finalPrice = calculateFinalPrice(product);
-
-		// attributes
-//		BigDecimal attributePrice = null;
-//		if (product.getAttributes() != null && product.getAttributes().size() > 0) {
-//			for (ProductAttribute attribute : product.getAttributes()) {
-//				if (attribute.getAttributeDefault()) {
-//					if (attribute.getProductAttributePrice() != null
-//							&& attribute.getProductAttributePrice().doubleValue() > 0) {
-//						if (attributePrice == null) {
-//							attributePrice = new BigDecimal(0);
-//						}
-//						attributePrice = attributePrice.add(attribute.getProductAttributePrice());
-//					}
-//				}
-//			}
-//
-//			if (attributePrice != null && attributePrice.doubleValue() > 0) {
-//				BigDecimal fp = finalPrice.getFinalPrice();
-//				fp = fp.add(attributePrice);
-//				finalPrice.setFinalPrice(fp);
-//
-//				BigDecimal op = finalPrice.getOriginalPrice();
-//				op = op.add(attributePrice);
-//				finalPrice.setOriginalPrice(op);
-//			}
-//		}
 
 		finalPrice.setStringPrice(getStringAmount(finalPrice.getFinalPrice()));
 		if (finalPrice.isDiscounted()) {
@@ -302,6 +283,41 @@ public class ProductPriceUtils {
 			locale = new Locale(store.getDefaultLanguage().getCode(), store.getCountry().getIsoCode());
 		} catch (Exception e) {
 			LOGGER.error("Cannot create currency or locale instance for store " + store.getCode());
+		}
+
+		NumberFormat currencyInstance = null;
+
+		if (store.isCurrencyFormatNational()) {
+			currencyInstance = NumberFormat.getCurrencyInstance(locale);// national
+		} else {
+			currencyInstance = NumberFormat.getCurrencyInstance();// international
+		}
+		currencyInstance.setCurrency(currency);
+
+		return currencyInstance.format(amount.doubleValue());
+
+	}
+
+
+	public String getStoreFormatedAmountWithCurrency(MerchantStore store, BigDecimal amount, String targetCurrencyCode) throws Exception {
+		if (amount == null) {
+			return "";
+		}
+
+		Currency currency = Constants.DEFAULT_CURRENCY;
+		Locale locale = Constants.DEFAULT_LOCALE;
+
+		try {
+			currency = store.getCurrency().getCurrency();
+			locale = new Locale(store.getDefaultLanguage().getCode(), store.getCountry().getIsoCode());
+		} catch (Exception e) {
+			LOGGER.error("Cannot create currency or locale instance for store " + store.getCode());
+		}
+
+		if (StringUtils.isNotEmpty(targetCurrencyCode) && !currency.getCurrencyCode().equals(targetCurrencyCode)){
+			ExchangeRatePOJO exchangeRate = exchangeRateRepository.findExchangeRate(currency.getCurrencyCode(), targetCurrencyCode);
+			BigDecimal rate = exchangeRate.getRate();
+			amount = rate.multiply(amount);
 		}
 
 		NumberFormat currencyInstance = null;

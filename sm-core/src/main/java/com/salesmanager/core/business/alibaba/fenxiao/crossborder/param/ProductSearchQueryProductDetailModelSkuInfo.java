@@ -164,4 +164,17 @@ public class ProductSearchQueryProductDetailModelSkuInfo {
         this.cargoNumber = cargoNumber;
     }
 
+
+    /**
+     * 营销价格
+     */
+    private String promotionPrice;
+
+    public String getPromotionPrice() {
+        return promotionPrice;
+    }
+
+    public void setPromotionPrice(String promotionPrice) {
+        this.promotionPrice = promotionPrice;
+    }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import org.drools.core.util.StringUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 
 	@Autowired
 	private PricingService pricingService;
+
+	@Autowired
+	private ProductAvailabilityService productAvailabilityService;
 
 	@Autowired
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
@@ -114,6 +118,11 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 
 		ReadableProductPricePopulator populator = null;
 		List<ReadableProductPrice> prices = new ArrayList<ReadableProductPrice>();
+
+		if (source.getPrices() == null){
+			ProductAvailability productAvailability = productAvailabilityService.getById(source.getId());
+			source.setPrices(productAvailability.getPrices());
+		}
 
 		for (ProductPrice price : source.getPrices()) {
 

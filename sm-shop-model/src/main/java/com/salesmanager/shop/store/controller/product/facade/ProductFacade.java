@@ -91,6 +91,6 @@ public interface ProductFacade {
       throws Exception;
 
 
-
+  ReadableProduct getUserProductById(Long id, MerchantStore store, Language language, String currencyCode);
  
 }

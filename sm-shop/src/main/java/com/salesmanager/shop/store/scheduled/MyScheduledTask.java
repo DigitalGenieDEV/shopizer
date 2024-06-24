@@ -4,10 +4,13 @@ import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAttributeRepository;
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import org.slf4j.Logger;
@@ -15,15 +18,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class MyScheduledTask {
@@ -40,6 +42,9 @@ public class MyScheduledTask {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductAttributeRepository productAttributeRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -95,12 +100,19 @@ public class MyScheduledTask {
     }
 
 
+    @Transactional
     public void deleteProductsInParallel() throws ServiceException {
         List<Long> listByOutId = productRepository.findListByOutId();
         for (Long id : listByOutId) {
             Optional<Product> byId = productRepository.findById(id);
             if (byId.isPresent()) {
                 Product product = byId.get();
+                List<ProductAttribute> attributes = productAttributeRepository.findByProductId(product.getId());
+
+                List<Long> collect = attributes.stream().map(ProductAttribute::getId).collect(Collectors.toList());
+
+                productAttributeRepository.deleteProductAttributesByIds(collect);
+
                 productService.delete(product);
             }
         }
