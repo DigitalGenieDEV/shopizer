@@ -1,6 +1,7 @@
 package com.salesmanager.core.model.customer;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -48,7 +50,6 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.term.CustomerTerms;
 import com.salesmanager.core.model.user.Group;
-import com.salesmanager.core.utils.CloneUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -117,6 +118,16 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	
 	@Column(name="BUSINESS_REGISTRATION")
 	private String businessRegistration;
+	
+	@Column(name="WITHDRAWAL_REASON", length = 255, nullable=true)
+	@ElementCollection(fetch = FetchType.LAZY)
+	private List<String> withdrawalReason;
+	
+	@Column(name="WITHDRAWAL_REASON_DETAIL", length = 255, nullable=true)
+	private String withdrawalResonDetail;
+	
+	@Column(name="WTIHDRAWAL_AT")
+	private LocalDateTime withdrawalAt = null;
 	
 	@Embedded
 	private CompanyAddress companyAddress;

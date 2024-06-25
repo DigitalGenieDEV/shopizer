@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,8 +30,6 @@ public class EmailServiceImpl implements EmailService {
 	
 	@Inject
 	private final EmailConfig config;
-	
-	private final JavaMailSender javaMailSender;
 	
 	@Override
 	public void sendVerificationEmail(String to, MerchantStore store) throws ServiceException {

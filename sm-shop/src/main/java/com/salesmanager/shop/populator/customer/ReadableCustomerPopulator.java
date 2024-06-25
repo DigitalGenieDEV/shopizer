@@ -189,6 +189,10 @@ public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, R
 					add.setPostalCode(it.getPostalCode());
 					target.setCompanyAddress(add);
 				}
+				
+				target.setWithdrawalReason(source.getWithdrawalReason());
+				target.setWithdrawalAt(source.getWithdrawalAt());
+				target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());
 			}
 
 		} catch (Exception e) {

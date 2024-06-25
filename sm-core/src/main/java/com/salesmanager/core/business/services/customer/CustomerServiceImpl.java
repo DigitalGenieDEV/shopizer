@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -98,8 +99,8 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 	}
 
 	public void delete(Customer customer) throws ServiceException {
-		customer = getById(customer.getId());
-		
+		//customer = getById(customer.getId());
+
 		//delete attributes
 		List<CustomerAttribute> attributes =customerAttributeService.getByCustomer(customer.getMerchantStore(), customer);
 		if(attributes!=null) {
@@ -108,7 +109,11 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 			}
 		}
 		customerRepository.delete(customer);
-
+	}
+	
+	@Override
+	public void disable(Customer customer) {
+		//TODO
 	}
 
 	@Override
