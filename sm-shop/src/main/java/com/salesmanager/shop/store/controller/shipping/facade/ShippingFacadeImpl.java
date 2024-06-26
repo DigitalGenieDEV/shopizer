@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.shipping.MerchantShippingConfigurationService;
 import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.business.utils.StringToList;
 import com.salesmanager.core.model.common.Criteria;
 import com.salesmanager.core.model.shipping.*;
 import com.salesmanager.core.model.system.MerchantShippingConfiguration;
@@ -44,6 +45,7 @@ import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.store.api.exception.OperationNotAllowedException;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("shippingFacade")
 public class ShippingFacadeImpl implements ShippingFacade {
@@ -160,18 +162,17 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	public ShippingOrigin saveShippingOrigin(PersistableAddress address, MerchantStore store) {
 		Validate.notNull(address, "PersistableAddress cannot be null");
 		try {
-			ShippingOrigin o = shippingOriginService.getByStore(store);
-			if(o == null) {
-				o = new ShippingOrigin();
-			}
-			
+			ShippingOrigin o = new ShippingOrigin();
 			o.setAddress(address.getAddress());
 			o.setCity(address.getCity());
 			o.setCountry(countryService.getByCode(address.getCountry()));
 			o.setMerchantStore(store);
 			o.setActive(address.isActive());
 			o.setPostalCode(address.getPostalCode());
-			
+			o.setTelephone(address.getTelephone());
+			o.setName(address.getName());
+			o.setCompany(address.getCompany());
+			o.setEmail(address.getEmail());
 			Zone zone = zoneService.getByCode(address.getStateProvince());
 			if(zone == null) {
 				o.setState(address.getStateProvince());
@@ -337,22 +338,31 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	}
 
 	@Override
-	public ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria) throws ServiceException {
-		MerchantShippingConfigurationList merchantShippingConfigurationList = merchantShippingConfigurationService.listByStore(store, criteria);
+	public ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException {
+		MerchantShippingConfigurationList merchantShippingConfigurationList = merchantShippingConfigurationService.listByStore(store, criteria, shippingType, shippingTransportationType);
 		return convertToReadableList(merchantShippingConfigurationList);
 	}
 
 	@Override
+	@Transactional
 	public void save(MerchantStore store, PersistableMerchantShippingConfiguration configuration) throws ServiceException {
-		org.apache.commons.lang3.Validate.notNull(ShippingTransportationType.valueOf(configuration.getShippingTransportationType()), "ShippingTransportationType error");
+		org.apache.commons.lang3.Validate.notNull(configuration.getShippingTransportationType(), "ShippingTransportationType param error");
+		org.apache.commons.lang3.Validate.notNull(configuration.getShippingType(), "ShippingType param error");
+		org.apache.commons.lang3.Validate.notNull(ShippingType.valueOf(configuration.getShippingType()), "ShippingType param error");
+		configuration.getShippingTransportationType().forEach(shippingTransportationType -> {
+			org.apache.commons.lang3.Validate.notNull(ShippingTransportationType.valueOf(shippingTransportationType), "ShippingTransportationType error");
+		});
+
 
 		MerchantShippingConfiguration merchantShippingConfiguration = convertToPersistable(configuration, store);
 		merchantShippingConfigurationService.saveOrUpdate(merchantShippingConfiguration);
 	}
 
 	@Override
-	public void delete(MerchantStore store, Long id) {
-
+	public void delete(Long id) throws ServiceException {
+		MerchantShippingConfiguration merchantShippingConfiguration = new MerchantShippingConfiguration();
+		merchantShippingConfiguration.setId(id);
+		merchantShippingConfigurationService.delete(merchantShippingConfiguration);
 	}
 
 	private PackageDetails toPackageDetails(com.salesmanager.core.model.shipping.Package pack) {
@@ -431,7 +441,7 @@ public class ShippingFacadeImpl implements ShippingFacade {
 
 		ReadableMerchantShippingConfiguration target = new ReadableMerchantShippingConfiguration();
 		target.setId(source.getId());
-		target.setMerchantStore(source.getMerchantStore());
+//		target.setMerchantStore(source.getMerchantStore());
 		target.setDateCreated(source.getAuditSection().getDateCreated());
 		target.setDateModified(source.getAuditSection().getDateModified());
 		target.setModifiedBy(source.getAuditSection().getModifiedBy());
@@ -439,15 +449,15 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		target.setActive(source.getShippingOrigin().isActive());
 		target.setDefaultShipping(source.getShippingOrigin().isActive());
 		target.setShippingType(source.getShippingType());
-		target.setShippingTransportationType(source.getShippingTransportationType());
+		target.setShippingTransportationType(StringToList.convertStringToList(source.getShippingTransportationType()));
 		if (source.getShippingOrigin() != null) {
 			target.setShippingOrigin(buildReadableAddress(source.getShippingOrigin()));
 		}
 		if (source.getReturnShippingOrigin() != null) {
 			target.setReturnShippingOrigin(buildReadableAddress(source.getReturnShippingOrigin()));
 		}
-		target.setFreeShippingEnabled(source.isFreeShippingEnabled());
-		target.setOrderTotalFreeShipping(source.getOrderTotalFreeShipping());
+//		target.setFreeShippingEnabled(source.isFreeShippingEnabled());
+//		target.setOrderTotalFreeShipping(source.getOrderTotalFreeShipping());
 		target.setReturnShippingPrice(source.getReturnShippingPrice());
 		Integer productNum = productService.countProductByShippingTemplateIdAndStoreId(source.getId(), source.getMerchantStore().getId());
 		target.setProductNum(productNum == null? 0 : productNum);
@@ -460,8 +470,10 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		list.setRecordsTotal(source.getTotalCount());
 		list.setTotalPages(source.getTotalPages());
 		List<MerchantShippingConfiguration> merchantShippingConfigurations = source.getMerchantShippingConfigurations();
-		for (MerchantShippingConfiguration config : merchantShippingConfigurations) {
-			list.getMerchantShippingConfigurations().add(convertToReadable(config));
+		if (CollectionUtils.isNotEmpty(merchantShippingConfigurations)){
+			for (MerchantShippingConfiguration config : merchantShippingConfigurations) {
+				list.getMerchantShippingConfigurations().add(convertToReadable(config));
+			}
 		}
 		return list;
 	}
@@ -473,6 +485,8 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		if (source.getReturnShippingOrigin() != null){
 			returnShippingOrigin = saveShippingOrigin(source.getReturnShippingOrigin(), store);
 		}
+		merchantShippingConfiguration.setShippingTransportationType(String.join("," , source.getShippingTransportationType()));
+		merchantShippingConfiguration.setMerchantStore(store);
 		merchantShippingConfiguration.setShippingOrigin(shippingOrigin);
 		merchantShippingConfiguration.setReturnShippingOrigin(returnShippingOrigin);
 		return merchantShippingConfiguration;
@@ -481,6 +495,10 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	ReadableAddress buildReadableAddress(ShippingOrigin shippingOrigin){
 		ReadableAddress address = new ReadableAddress();
 		address.setAddress(shippingOrigin.getAddress());
+		address.setTelephone(shippingOrigin.getTelephone());
+		address.setName(shippingOrigin.getName());
+		address.setEmail(shippingOrigin.getEmail());
+		address.setCompany(shippingOrigin.getCompany());
 		address.setActive(shippingOrigin.isActive());
 		address.setCity(shippingOrigin.getCity());
 		address.setPostalCode(shippingOrigin.getPostalCode());

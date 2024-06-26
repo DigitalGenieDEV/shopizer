@@ -61,6 +61,19 @@ public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 	@Column (name ="STATE", length=100)
 	private String state;
 
+	@Column (name ="EMAIL", length=100)
+	private String email;
+
+	@Column (name ="NAME", length=100)
+	private String name;
+
+	@Column (name ="COMPANY", length=100)
+	private String company;
+
+	@Column (name ="TELEPHONE", length=100)
+	private String telephone;
+
+
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
 	@JoinColumn(name="COUNTRY_ID", nullable=true)
 	private Country country;
@@ -145,5 +158,35 @@ public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 	}
 
 
-	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 }

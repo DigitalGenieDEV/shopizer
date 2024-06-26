@@ -45,6 +45,7 @@ import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import com.salesmanager.shop.model.catalog.product.variation.PersistableProductVariation;
+import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductDefinitionFacade;
@@ -143,8 +144,9 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 LOGGER.error("import product error", e);
             }
         });
-        return productIds;
+        return productIdList;
     }
+
 
     @Override
     public ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) {
@@ -182,17 +184,15 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         List<com.salesmanager.shop.model.catalog.category.Category> categoryList =  new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(categoryIds)){
-            categoryIds.stream().map(categoryId->{
-                Category category = null;
-                try {
-                    category = categoryService.getById(store, categoryId);
-                } catch (ServiceException e) {
-                    throw new RuntimeException(e);
-                }
-                com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(category, com.salesmanager.shop.model.catalog.category.Category.class);
-                convertCategory.setDescription(ObjectConvert.convert(category.getDescription(), CategoryDescription.class));
-                return convertCategory;
-            }).collect(Collectors.toList());
+
+            Long leftCategoryId = categoryIds.get(0);
+            Category leftCategory = categoryService.getById(store, leftCategoryId);
+            if (leftCategory == null){
+                throw new ResourceNotFoundException("leftCategory is null [" + leftCategoryId + "]");
+            }
+            com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(leftCategory, com.salesmanager.shop.model.catalog.category.Category.class);
+            convertCategory.setDescription(ObjectConvert.convert(leftCategory.getDescription(), CategoryDescription.class));
+            categoryList.add(convertCategory);
         }else{
             Long categoryId =   productDetailModel.getCategoryId();
             Long topCategoryId =   productDetailModel.getTopCategoryId();
@@ -214,7 +214,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 convertCategory.setDescription(ObjectConvert.convert(category.getDescription(), CategoryDescription.class));
                 categoryList.add(convertCategory);
             }
-
         }
 
 
@@ -234,10 +233,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     manufacturersDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
                     manufacturersDescription.setManufacturer(manufacturers);
                     manufacturers.getDescriptions().add(manufacturersDescription);
-
                     manufacturerService.create(manufacturers);
                 }
-
             }
         }
 
@@ -294,10 +291,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         persistableProduct.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
         createProductVariant(ko, store, productDetailModel, persistableProduct);
 
-        String jsonString = JSON.toJSONString(persistableProduct);
         createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
 
-//        System.out.println(jsonString);
         productCommonFacade.saveProduct(store, persistableProduct, ko);
         return productId;
     }

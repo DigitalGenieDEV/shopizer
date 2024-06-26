@@ -15,7 +15,7 @@ public interface MerchantShippingConfigurationService {
 
 //    MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException;
 
-    MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria) throws ServiceException;
+    MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException;
 
     List<MerchantShippingConfiguration> listDefaultShippingByStore(MerchantStore store) throws ServiceException;
 

@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.scheduled;
 
+import com.alibaba.fastjson.JSON;
 import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
