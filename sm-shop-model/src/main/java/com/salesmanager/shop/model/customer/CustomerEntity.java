@@ -1,17 +1,21 @@
 package com.salesmanager.shop.model.customer;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.validation.annotation.Validated;
-
 import com.salesmanager.shop.model.customer.address.Address;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CustomerEntity extends Customer implements Serializable {
 
 	/**
@@ -43,7 +47,10 @@ public class CustomerEntity extends Customer implements Serializable {
 	private String businessNumber;
 	private String businessRegistration;
 	private Address companyAddress;
-
+	private List<String> withdrawalReason;
+	private String withdrawalResonDetail;
+	private LocalDateTime withdrawalAt;
+ 
 	// @ApiModelProperty(notes = "Username (use email address)")
 	// @NotEmpty(message="{NotEmpty.customer.userName}")
 	// can be email or anything else
@@ -51,132 +58,4 @@ public class CustomerEntity extends Customer implements Serializable {
 
 	private Double rating = 0D;
 	private int ratingCount;
-
-	public void setUserName(final String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setStoreCode(final String storeCode) {
-		this.storeCode = storeCode;
-	}
-
-	public String getStoreCode() {
-		return storeCode;
-	}
-
-	public void setEmailAddress(final String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	public void setLanguage(final String language) {
-		this.language = language;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public Address getBilling() {
-		return billing;
-	}
-
-	public void setBilling(final Address billing) {
-		this.billing = billing;
-	}
-
-	public Address getDelivery() {
-		return delivery;
-	}
-
-	public void setDelivery(final Address delivery) {
-		this.delivery = delivery;
-	}
-
-	public void setGender(final String gender) {
-		this.gender = gender;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public int getRatingCount() {
-		return ratingCount;
-	}
-
-	public void setRatingCount(int ratingCount) {
-		this.ratingCount = ratingCount;
-	}
-
-	public Double getRating() {
-		return rating;
-	}
-
-	public void setRating(Double rating) {
-		this.rating = rating;
-	}
-
-	public String getProvider() {
-		return provider;
-	}
-
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public String getBusinessNumber() {
-		return businessNumber;
-	}
-
-	public void setBusinessNumber(String businessNumber) {
-		this.businessNumber = businessNumber;
-	}
-
-	public String getBusinessRegistration() {
-		return businessRegistration;
-	}
-
-	public void setBusinessRegistration(String businessRegistration) {
-		this.businessRegistration = businessRegistration;
-	}
-
-	public Address getCompanyAddress() {
-		return companyAddress;
-	}
-
-	public void setCompanyAddress(Address companyAddress) {
-		this.companyAddress = companyAddress;
-	}
 }

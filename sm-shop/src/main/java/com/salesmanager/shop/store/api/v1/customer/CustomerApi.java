@@ -2,14 +2,14 @@ package com.salesmanager.shop.store.api.v1.customer;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +32,9 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.CustomerCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
-import com.salesmanager.shop.model.dept.ReadableDept;
 import com.salesmanager.shop.model.term.ReadableCustomerTerms;
 import com.salesmanager.shop.populator.customer.ReadableCustomerList;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
@@ -53,8 +51,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import springfox.documentation.annotations.ApiIgnore;
@@ -254,6 +250,11 @@ public class CustomerApi {
 	) {
 		Principal principal = request.getUserPrincipal();
 		String userName = principal.getName();
+		/*
+		ReadableCustomer result = customerFacade.getCustomerByNick(userName, merchantStore, language);
+		String fileName = result.getBusinessRegistration();
+		result.setBusinessRegistrationFile(contentFacade.download(merchantStore, null, fileName));
+		*/
 		return customerFacade.getCustomerByNick(userName, merchantStore, language);
 	}
 
@@ -299,6 +300,8 @@ public class CustomerApi {
 	public void delete(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
+			@RequestParam List<String> withdrawalReason,
+			@RequestParam(defaultValue = "") String withdrawalReasonDetail,			
 			HttpServletRequest request
 	) {
 
@@ -311,6 +314,10 @@ public class CustomerApi {
 			if (customer == null) {
 				throw new ResourceNotFoundException("Customer [" + userName + "] not found");
 			}
+			customer.setWithdrawalReason(withdrawalReason);
+			customer.setWithdrawalResonDetail(withdrawalReasonDetail);
+			customer.setWithdrawalAt(LocalDateTime.now());
+			
 			customerFacade.delete(customer);
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("An error occured while deleting customer [" + userName + "]");

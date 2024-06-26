@@ -34,7 +34,6 @@ public class CountryRepositoryImpl implements CountryRepositoryCustom {
 				.fetchJoin()
 				.leftJoin(cz.descriptions, czd)
 				.fetchJoin()
-				.where(c.supported.isTrue().and(cd.language.id.eq(id)))
-				.fetch();
+				.where(c.supported.isTrue().and(cd.language.id.eq(id))).fetch();
 	}
 }

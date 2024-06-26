@@ -876,6 +876,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	@Override
 	public ReadableCustomer getCustomerByNick(String userName, MerchantStore merchantStore, Language language) {
 		Customer customer = getByNick(userName);
+		
 		return convertCustomerToReadableCustomer(customer, merchantStore, language);
 	}
 
@@ -892,11 +893,13 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public void delete(Customer entity) {
+		customerService.disable(entity);
+		/*
 		try {
 			customerService.delete(entity);
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException(e);
-		}
+		}*/
 	}
 
 	@Override

@@ -20,6 +20,8 @@ public interface CustomerService  extends SalesManagerEntityService<Long, Custom
 	List<Customer> getListByStore(MerchantStore store);
 
 	Customer getByNick(String nick);
+	
+	void disable(Customer customer);
 
 	void saveOrUpdate(Customer customer) throws ServiceException ;
 
