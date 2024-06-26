@@ -197,6 +197,12 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	@ElementCollection(fetch = FetchType.LAZY)
 	private List<String> categories;
 	
+	@Column(name="BUSINESS_NUMBER")
+	private String businessNumber;
+	
+	@Column(name="BUSINESS_REGISTRATION")
+	private String businessRegistration;
+	
 	@Column(name="HEADCOUNT", nullable=true)
 	private Integer headcount;
 	

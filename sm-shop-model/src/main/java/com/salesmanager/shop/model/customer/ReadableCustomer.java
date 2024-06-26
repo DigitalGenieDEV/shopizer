@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.salesmanager.core.model.content.OutputContentFile;
 import com.salesmanager.shop.model.customer.attribute.ReadableCustomerAttribute;
 import com.salesmanager.shop.model.security.ReadableGroup;
 import com.salesmanager.shop.model.term.ReadableCustomerTerms;

@@ -46,4 +46,7 @@ public class MerchantStoreEntity implements Serializable {
 	private Integer headcount;
 	private String description;
 	private String continueShoppingUrl;
+	
+	private String businessNumber;
+	private String businessRegistration;
 }

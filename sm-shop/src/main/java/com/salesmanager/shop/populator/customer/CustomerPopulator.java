@@ -288,6 +288,10 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 						.build()
 						);
 			}
+			
+			target.setWithdrawalReason(source.getWithdrawalReason());
+			target.setWithdrawalAt(source.getWithdrawalAt());
+			target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());
 
 		} catch (Exception e) {
 			throw new ConversionException(e);

@@ -89,8 +89,6 @@ public class BoardApi {
 		board.setUserId(authenticatedManager);
 		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
 		
-		System.out.println("files"+files);
-
 		return boardFacade.saveBoard(board, files, merchantStore);
 	}
 
