@@ -53,6 +53,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	 * @param productId
 	 * @return
 	 */
+	Product getProductByCache(Long productId);
+
 	Product getProductWithOnlyMerchantStoreById(Long productId);
 
 	ProductList listByStore(MerchantStore store, Language language,

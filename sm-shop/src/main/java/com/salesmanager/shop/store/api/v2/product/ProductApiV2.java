@@ -4,6 +4,7 @@ import static com.salesmanager.core.model.catalog.product.ProductCriteria.ORIGIN
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,7 @@ import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -27,6 +29,7 @@ import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
@@ -130,6 +133,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private CountryService countryService;
+
+	@Autowired
+	private CustomerService customerService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -241,7 +247,7 @@ public class ProductApiV2 {
 							.toString();
 
 					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
-							.getListByLineage(merchantStore, lineage);
+							.getListByLineage(lineage);
 
 					if (categories != null && categories.size() > 0) {
 						for (com.salesmanager.core.model.catalog.category.Category c : categories) {
@@ -553,7 +559,7 @@ public class ProductApiV2 {
 
 		try {
 			long start = System.currentTimeMillis();
-			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
+			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getProductSimpleListsByCriterias(null, language, criteria);
 			long end = System.currentTimeMillis();
 			System.out.println("执行时间："+(end - start));
 			return productSimpleListsByCriterias;
@@ -587,8 +593,12 @@ public class ProductApiV2 {
 			@RequestParam(value = "available", required = false) Boolean available,
 			@RequestParam(value = "startTime", required = false) Long startTime,
 			@RequestParam(value = "endTime", required = false) Long endTime,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			@ApiIgnore Language language, HttpServletRequest request,
+			HttpServletResponse response)  {
+
+		Principal principal = request.getUserPrincipal();
+		String userName = principal.getName();
+		Customer customer = customerService.getByNick(userName);
 
 		ProductCriteria criteria = new ProductCriteria();
 
@@ -639,7 +649,7 @@ public class ProductApiV2 {
 		}
 
 		try {
-			return productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
+			return productFacadeV2.getProductSimpleListsByCriterias(customer.getMerchantStore(), language, criteria);
 
 		} catch (Exception e) {
 
@@ -647,6 +657,7 @@ public class ProductApiV2 {
 			try {
 				response.sendError(503, "Error while filtering products " + e.getMessage());
 			} catch (Exception ignore) {
+
 			}
 
 			return null;

@@ -13,6 +13,9 @@ public interface MerchantShippingConfigurationService {
     MerchantShippingConfiguration getById(Long id);
 
 
+    List<Long> listIdByShippingType(MerchantStore store, String shippingType) throws ServiceException;
+
+
 //    MerchantShippingConfiguration getMerchantShippingConfiguration(String key, MerchantStore store) throws ServiceException;
 
     MerchantShippingConfigurationList listByStore(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException;

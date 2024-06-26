@@ -1153,8 +1153,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		ProductList productList = new ProductList();
 		// Step 1: Query to get total count
 		StringBuilder countBuilderWhere = new StringBuilder();
-		countBuilderWhere.append(" where p.merchantStore.id=:mId");
-		appendSimpleConditions(countBuilderWhere, criteria);
+		countBuilderWhere.append(" where 1 = 1");
+		appendSimpleConditions(store, countBuilderWhere, criteria);
 		long start = System.currentTimeMillis();
 		// Count query to get total count
 		Query countQ = this.em.createQuery("SELECT COUNT(p.id) from Product p" + countBuilderWhere.toString());
@@ -1199,7 +1199,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		return productList;
 	}
 
-	private void appendSimpleConditions(StringBuilder queryBuilder, ProductCriteria criteria) {
+	private void appendSimpleConditions(MerchantStore store, StringBuilder queryBuilder, ProductCriteria criteria) {
+		if (store !=null){
+			queryBuilder.append(" and p.merchantStore.id=:mId");
+		}
 		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
 			queryBuilder.append(" and p.id in (:pId)");
 		}
