@@ -590,38 +590,35 @@ public class ProductPriceUtils {
 		}
 
 		for (ProductAvailability availability : availabilities) {
-			if (!StringUtils.isEmpty(availability.getRegion())
-					&& availability.getRegion().equals(Constants.ALL_REGIONS)) {// TODO REL 2.1 accept a region
-				Set<ProductPrice> prices = availability.getPrices();
-				for (ProductPrice price : prices) {
-					FinalPrice p = finalPrice(price);
-					if (product.getQuoteType() !=null && product.getQuoteType() == 2){
-						String priceRangeList = price.getPriceRangeList();
-						if(StringUtils.isNotEmpty(priceRangeList)){
-							List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
-							p.setPriceRanges(priceRanges);
-							Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
-									.min(Comparator.comparing(PriceRange::getStartQuantity));
+			Set<ProductPrice> prices = availability.getPrices();
+			for (ProductPrice price : prices) {
+				FinalPrice p = finalPrice(price);
+				if (product.getQuoteType() !=null && product.getQuoteType() == 2){
+					String priceRangeList = price.getPriceRangeList();
+					if(StringUtils.isNotEmpty(priceRangeList)){
+						List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
+						p.setPriceRanges(priceRanges);
+						Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
+								.min(Comparator.comparing(PriceRange::getStartQuantity));
 
-							if (minStartQuantityPriceRange.isPresent()) {
-								PriceRange priceRange = minStartQuantityPriceRange.get();
-								p.setDefaultPrice(true);
-								p.setStringPrice(priceRange.getPrice());
-								p.setFinalPrice(new BigDecimal(priceRange.getPrice()));
-							}
-							finalPrice = p;
-							break;
+						if (minStartQuantityPriceRange.isPresent()) {
+							PriceRange priceRange = minStartQuantityPriceRange.get();
+							p.setDefaultPrice(true);
+							p.setStringPrice(priceRange.getPrice());
+							p.setFinalPrice(new BigDecimal(priceRange.getPrice()));
 						}
-					}
-
-					if (price.isDefaultPrice()) {
 						finalPrice = p;
-					} else {
-						if (otherPrices == null) {
-							otherPrices = new ArrayList<FinalPrice>();
-						}
-						otherPrices.add(p);
+						break;
 					}
+				}
+
+				if (price.isDefaultPrice()) {
+					finalPrice = p;
+				} else {
+					if (otherPrices == null) {
+						otherPrices = new ArrayList<FinalPrice>();
+					}
+					otherPrices.add(p);
 				}
 			}
 		}

@@ -246,8 +246,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         Long productId = null;
         if (productByOutId == null){
-            productDefinition.setSku(UniqueIdGenerator.generateUniqueId());
-            productId = productDefinitionFacade.saveProductDefinition(store, productDefinition, ko);
+            persistableProduct.setSku(UniqueIdGenerator.generateUniqueId());
+//            productId = productDefinitionFacade.saveProductDefinition(store, productDefinition, ko);
         }else {
             productId = productByOutId.getId();
         }
@@ -395,6 +395,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistentOptionValue.setId(optionValueId);
             persistableProductAttribute.setOptionValue(persistentOptionValue);
             persistableProductAttribute.setSortOrder(i);
+            persistableProductAttribute.setAttributeDisplayOnly(true);
             attributes.add(persistableProductAttribute);
         }
         product.setProperties(attributes);
@@ -440,6 +441,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 if (skuPrice.compareTo(defaultPrice) < 0) {
                     defaultPrice = skuPrice;
                 }
+                productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
             }
             product.setQuoteType(productDetailModel.getProductSaleInfo().getQuoteType());
             ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes = productSkuInfo.getSkuAttributes();

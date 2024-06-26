@@ -73,6 +73,7 @@ public class MyScheduledTask {
             for (int i = 0; i < result.length; i++) {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
+//                offerId = 705621031065L;
                 try {
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore, null);
                 } catch (Exception e) {
