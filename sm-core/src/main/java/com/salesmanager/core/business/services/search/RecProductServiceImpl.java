@@ -49,6 +49,7 @@ public class RecProductServiceImpl implements RecProductService {
 
             guessULikeResult.setProductList(getProductList(result.getProductList()));
             guessULikeResult.setCacheid(result.getCacheid());
+            guessULikeResult.setHitNumber(result.getHitNumber());
             return guessULikeResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +91,7 @@ public class RecProductServiceImpl implements RecProductService {
 
             relateItemResult.setCacheid(result.getCacheid());
             relateItemResult.setProductList(getProductList(result.getProductList()));
-
+            relateItemResult.setHitNumber(result.getHitNumber());
             return relateItemResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,6 +110,7 @@ public class RecProductServiceImpl implements RecProductService {
 
             selectionItemResult.setCacheid(result.getCacheid());
             selectionItemResult.setProductList(getProductList(result.getProductList()));
+            selectionItemResult.setHitNumber(result.getHitNumber());
             return selectionItemResult;
         } catch (Exception e) {
             e.printStackTrace();

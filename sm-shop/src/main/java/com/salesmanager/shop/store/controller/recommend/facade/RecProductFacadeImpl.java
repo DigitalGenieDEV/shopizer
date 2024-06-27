@@ -56,6 +56,9 @@ public class RecProductFacadeImpl implements RecProductFacade{
         readableRecProductList.setNumber(request.getNumber());
         readableRecProductList.setCacheid(guessULikeResult.getCacheid());
 
+        readableRecProductList.setRecordsTotal(guessULikeResult.getHitNumber());
+        readableRecProductList.setTotalPages((int) Math.ceil(guessULikeResult.getHitNumber() / request.getSize()));
+
         return readableRecProductList;
     }
 
@@ -74,6 +77,9 @@ public class RecProductFacadeImpl implements RecProductFacade{
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(relateItemResult.getProductList(), language);
         readableRecProductList.setNumber(request.getNumber());
         readableRecProductList.setCacheid(relateItemResult.getCacheid());
+        readableRecProductList.setNumber(request.getNumber());
+        readableRecProductList.setRecordsTotal(relateItemResult.getHitNumber());
+        readableRecProductList.setTotalPages((int) Math.ceil(relateItemResult.getHitNumber() / request.getSize()));
 
         return readableRecProductList;
     }
@@ -94,6 +100,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(selectionItemResult.getProductList(), language);
         readableRecProductList.setNumber(request.getPageIdx());
         readableRecProductList.setCacheid(selectionItemResult.getCacheid());
+        readableRecProductList.setRecordsTotal(selectionItemResult.getHitNumber());
+        readableRecProductList.setTotalPages((int) Math.ceil(selectionItemResult.getHitNumber() / request.getSize()));
 
         return readableRecProductList;
     }

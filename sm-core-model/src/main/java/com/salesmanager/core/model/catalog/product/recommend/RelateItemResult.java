@@ -11,6 +11,8 @@ public class RelateItemResult {
 
     private String cacheid;
 
+    private Integer hitNumber;
+
     public List<Product> getProductList() {
         return productList;
     }
@@ -25,5 +27,13 @@ public class RelateItemResult {
 
     public void setCacheid(String cacheid) {
         this.cacheid = cacheid;
+    }
+
+    public Integer getHitNumber() {
+        return hitNumber;
+    }
+
+    public void setHitNumber(Integer hitNumber) {
+        this.hitNumber = hitNumber;
     }
 }
