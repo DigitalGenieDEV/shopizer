@@ -10,7 +10,7 @@ public class CategoryEntity extends Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	
+	private String imageUrl;
 
 	private int sortOrder;
 	private boolean visible;
@@ -57,4 +57,11 @@ public class CategoryEntity extends Category implements Serializable {
 		this.featured = featured;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

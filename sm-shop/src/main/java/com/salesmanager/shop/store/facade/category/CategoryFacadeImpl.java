@@ -219,7 +219,6 @@ public class CategoryFacadeImpl implements CategoryFacade {
 																										// adjust
 																										// lineage
 		}
-
 		category.setMerchantStore(store);
 
 		// remove children
