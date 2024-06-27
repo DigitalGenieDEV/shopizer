@@ -78,7 +78,7 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
     private ReadableFavorites convertToReadableFavorites(Favorites favorite, Language language) {
         ReadableFavorites readableFavorites = new ReadableFavorites();
         try {
-            Product productById = productService.getProductWithOnlyMerchantStoreById(favorite.getProductId());
+            Product productById = productService.getProductByCache(favorite.getProductId());
             if (productById!=null){
                 Set<ManufacturerDescription> descriptions = productById.getManufacturer().getDescriptions();
                 if (!descriptions.isEmpty()) {

@@ -1,12 +1,15 @@
 package com.salesmanager.shop.store.api.v1.shipping;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.model.common.Criteria;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.shop.model.shipping.PersistableMerchantShippingConfiguration;
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfiguration;
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfigurationList;
@@ -39,6 +42,7 @@ import com.salesmanager.shop.utils.AuthorizationUtils;
 
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -55,6 +59,9 @@ public class ShippingConfigurationApi {
 
 	@Autowired
 	private AuthorizationUtils authorizationUtils;
+
+	@Autowired
+	private CustomerService customerService;
 
 	@Autowired
 	private ShippingFacade shippingFacade;
@@ -306,6 +313,17 @@ public class ShippingConfigurationApi {
 //	}
 
 	// Module configuration
+
+//	@GetMapping(value = "/product/shipping/options", produces = { APPLICATION_JSON_VALUE })
+//	@ApiOperation(httpMethod = "GET", value = "Get shipping configuration by id", notes = "Get shipping configuration by id")
+//	@ApiResponses(value = {
+//			@ApiResponse(code = 200, message = "Configuration found", response = ReadableMerchantShippingConfiguration.class) })
+//	public CommonResultDTO<List<>> getBySeller(
+//			@PathVariable(name = "id") Long id) {
+//		return getShippingConfigurationById(id);
+//	}
+
+
 	/**
 	 * private String moduleCode; private boolean active; private boolean
 	 * defaultSelected; private Map<String, String> integrationKeys = new
@@ -371,16 +389,18 @@ public class ShippingConfigurationApi {
 
 	@GetMapping(value = "/auth/shipping/list", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get list of shipping configurations", notes = "Get list of shipping configurations with pagination")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")
-	})
 	public CommonResultDTO<ReadableMerchantShippingConfigurationList> listBySeller(
 			@RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
 			@RequestParam(value = "shippingType", required = false) String shippingType,
 			@RequestParam(value = "shippingTransportationType", required = false) String shippingTransportationType,
-			@ApiIgnore MerchantStore merchantStore) {
-		return getShippingConfigurationList(startPage, pageSize, merchantStore, shippingType, shippingTransportationType);
+			HttpServletRequest request) {
+
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+
+		return getShippingConfigurationList(startPage, pageSize, customer.getMerchantStore(), shippingType, shippingTransportationType);
 	}
 
 	@PostMapping(value = "/auth/shipping/configuration/save", produces = { APPLICATION_JSON_VALUE })
@@ -389,9 +409,12 @@ public class ShippingConfigurationApi {
 			@ApiResponse(code = 201, message = "Configuration created", response = PersistableMerchantShippingConfiguration.class) })
 	public CommonResultDTO<Void> saveBySeller(
 			@Valid @RequestBody PersistableMerchantShippingConfiguration configuration,
-			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
-		return createShippingConfiguration(configuration, merchantStore);
+			HttpServletRequest request) {
+		Principal principal = request.getUserPrincipal();
+		String userName = principal.getName();
+		Customer customer = customerService.getByNick(userName);
+
+		return createShippingConfiguration(configuration, customer.getMerchantStore());
 	}
 
 

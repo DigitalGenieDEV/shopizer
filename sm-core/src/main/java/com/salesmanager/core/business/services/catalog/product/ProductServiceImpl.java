@@ -134,6 +134,12 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	@Override
 //	@Cacheable(value = "productByIdCache", key = "#productId")
+	public Product getProductByCache(Long productId) {
+		Product product = productRepository.getProductWithOnlyMerchantStoreById(productId);
+		return product;
+	}
+
+	@Override
 	public Product getProductWithOnlyMerchantStoreById(Long productId) {
 		Product product = productRepository.getProductWithOnlyMerchantStoreById(productId);
 		return product;
@@ -185,7 +191,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 		// Get the category list
 		StringBuilder lineage = new StringBuilder().append(category.getLineage()).append(category.getId()).append("/");
-		List<Category> categories = categoryService.getListByLineage(category.getMerchantStore(), lineage.toString());
+		List<Category> categories = categoryService.getListByLineage(lineage.toString());
 		Set<Long> categoryIds = new HashSet<Long>();
 		for (Category c : categories) {
 

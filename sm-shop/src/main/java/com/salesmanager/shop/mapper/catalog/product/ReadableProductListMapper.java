@@ -90,7 +90,6 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 
 		Validate.notNull(source, "Product cannot be null");
 		Validate.notNull(destination, "Product destination cannot be null");
-
 		destination.setSku(source.getSku());
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
@@ -109,7 +108,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		}
 
 		if (language == null){
-			language = store.getDefaultLanguage();
+			language = source.getMerchantStore().getDefaultLanguage();
 		}
 
 		destination.setId(source.getId());
@@ -122,7 +121,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		destination.setSortOrder(source.getSortOrder());
 
 		if (source.getType() != null) {
-			ReadableProductType readableType = readableProductTypeMapper.convert(source.getType(), store, language);
+			ReadableProductType readableType = readableProductTypeMapper.convert(source.getType(), source.getMerchantStore(), language);
 			destination.setType(readableType);
 		}
 
@@ -140,7 +139,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		}
 
 		if (source.getManufacturer() != null) {
-			ReadableManufacturer manufacturer = readableManufacturerMapper.convert(source.getManufacturer(), store,
+			ReadableManufacturer manufacturer = readableManufacturerMapper.convert(source.getManufacturer(), source.getMerchantStore(),
 					language);
 			destination.setManufacturer(manufacturer);
 		}
@@ -149,7 +148,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		Set<ProductImage> images = source.getImages();
 		if (CollectionUtils.isNotEmpty(images)) {
 
-			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, store))
+			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, source.getMerchantStore()))
 					.collect(Collectors.toList());
 //			destination.setImages(imageList);
 			imageList.forEach(image->{
@@ -163,8 +162,8 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 
 		try {
 			destination.setPrice(source.getPrice());
-			destination.setFinalPrice(pricingService.getDisplayAmount(source.getPrice(), store));
-			destination.setOriginalPrice(pricingService.getDisplayAmount(source.getPrice(), store));
+			destination.setFinalPrice(pricingService.getDisplayAmount(source.getPrice(), source.getMerchantStore()));
+			destination.setOriginalPrice(pricingService.getDisplayAmount(source.getPrice(), source.getMerchantStore()));
 			destination.setPriceRangeList(StringUtils.isEmpty(source.getPriceRangeList())? null :
 					JSON.parseArray(source.getPriceRangeList(), PriceRange.class));
 //
@@ -202,7 +201,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		if (!CollectionUtils.isEmpty(source.getCategories())) {
 			List<ReadableCategory> categoryList = new ArrayList<ReadableCategory>();
 			for (Category category : source.getCategories()) {
-				ReadableCategory readableCategory = readableCategoryMapper.convert(category, store, language);
+				ReadableCategory readableCategory = readableCategoryMapper.convert(category, source.getMerchantStore(), language);
 				categoryList.add(readableCategory);
 
 			}
@@ -214,12 +213,12 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		specifications.setLength(source.getProductLength());
 		specifications.setWeight(source.getProductWeight());
 		specifications.setWidth(source.getProductWidth());
-		if (!StringUtils.isBlank(store.getSeizeunitcode())) {
+		if (!StringUtils.isBlank(source.getMerchantStore().getSeizeunitcode())) {
 			specifications
-					.setDimensionUnitOfMeasure(DimensionUnitOfMeasure.valueOf(store.getSeizeunitcode().toLowerCase()));
+					.setDimensionUnitOfMeasure(DimensionUnitOfMeasure.valueOf(source.getMerchantStore().getSeizeunitcode().toLowerCase()));
 		}
-		if (!StringUtils.isBlank(store.getWeightunitcode())) {
-			specifications.setWeightUnitOfMeasure(WeightUnitOfMeasure.valueOf(store.getWeightunitcode().toLowerCase()));
+		if (!StringUtils.isBlank(source.getMerchantStore().getWeightunitcode())) {
+			specifications.setWeightUnitOfMeasure(WeightUnitOfMeasure.valueOf(source.getMerchantStore().getWeightunitcode().toLowerCase()));
 		}
 		destination.setProductSpecifications(specifications);
 

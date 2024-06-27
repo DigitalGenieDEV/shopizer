@@ -60,6 +60,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 	
 	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code= ?1 and c.lineage like %?2% order by c.lineage, c.sortOrder asc")
 	List<Category> findByLineage(String storeCode, String linenage);
+
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.lineage like %?1% order by c.lineage, c.sortOrder asc")
+	List<Category> findByLineage(String linenage);
 	
 	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and c.depth >= ?2 order by c.lineage, c.sortOrder asc")
 	List<Category> findByDepth(Integer merchantId, int depth);

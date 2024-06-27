@@ -11,7 +11,7 @@ import com.salesmanager.core.model.reference.language.Language;
 
 public interface CategoryService extends SalesManagerEntityService<Long, Category> {
 
-	List<Category> getListByLineage(MerchantStore store, String lineage) throws ServiceException;
+	List<Category> getListByLineage(String lineage) throws ServiceException;
 	
 	List<Category> listBySeUrl(MerchantStore store, String seUrl) throws ServiceException;
 	

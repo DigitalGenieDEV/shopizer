@@ -111,7 +111,7 @@ public class ProductFacadeImpl implements ProductFacade {
 							.toString();
 
 					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
-							.getListByLineage(store, lineage);
+							.getListByLineage(lineage);
 
 					List<Long> ids = new ArrayList<Long>();
 					if (categories != null && categories.size() > 0) {

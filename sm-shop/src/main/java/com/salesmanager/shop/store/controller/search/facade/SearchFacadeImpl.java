@@ -276,7 +276,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		populator.setProductFeatureService(productFeatureService);
 
 		try {
-			Product product = productService.getProductWithOnlyMerchantStoreById(productId);
+			Product product = productService.getProductByCache(productId);
 			if(product == null || product.getId() == null) {
 				return null;
 			}

@@ -110,9 +110,9 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 	}
 
 	@Override
-	public List<Category> getListByLineage(MerchantStore store, String lineage) throws ServiceException {
+	public List<Category> getListByLineage(String lineage) throws ServiceException {
 		try {
-			return categoryRepository.findByLineage(store.getId(), lineage);
+			return categoryRepository.findByLineage(lineage);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -234,7 +234,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 		// get category with lineage (subcategories)
 		StringBuilder lineage = new StringBuilder();
 		lineage.append(category.getLineage()).append(category.getId()).append(Constants.SLASH);
-		List<Category> categories = this.getListByLineage(category.getMerchantStore(), lineage.toString());
+		List<Category> categories = this.getListByLineage(lineage.toString());
 
 		Category dbCategory = getById(category.getId(), category.getMerchantStore().getId());
 
@@ -331,7 +331,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 			update(child);
 			StringBuilder childLineage = new StringBuilder();
 			childLineage.append(child.getLineage()).append(child.getId()).append("/");
-			List<Category> subCategories = getListByLineage(child.getMerchantStore(), childLineage.toString());
+			List<Category> subCategories = getListByLineage(childLineage.toString());
 
 			// ajust all sub categories lineages
 			if (subCategories != null && subCategories.size() > 0) {

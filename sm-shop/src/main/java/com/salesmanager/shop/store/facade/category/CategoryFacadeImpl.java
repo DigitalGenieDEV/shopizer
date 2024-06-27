@@ -267,7 +267,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 					language);
 
 			// get children
-			List<Category> children = getListByLineage(store, lineage.toString());
+			List<Category> children = getListByLineage(lineage.toString());
 
 			List<ReadableCategory> childrenCats = children.stream()
 					.map(cat -> readableCategoryMapper.convert(cat, store, language))
@@ -296,9 +296,9 @@ public class CategoryFacadeImpl implements CategoryFacade {
 		}
 	}
 
-	private List<Category> getListByLineage(MerchantStore store, String lineage) {
+	private List<Category> getListByLineage(String lineage) {
 		try {
-			return categoryService.getListByLineage(store, lineage);
+			return categoryService.getListByLineage(lineage);
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException(String.format("Error while getting root category %s", e.getMessage()), e);
 		}

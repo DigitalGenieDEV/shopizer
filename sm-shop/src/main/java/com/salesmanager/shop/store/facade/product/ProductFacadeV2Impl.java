@@ -151,7 +151,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Override
 	public ReadableProduct getProductById(Long id, Language language){
-		Product product = productService.getProductWithOnlyMerchantStoreById(id);
+		Product product = productService.getProductByCache(id);
 
 		if (product == null) {
 			throw new ResourceNotFoundException("Product [" + id + "] not found ");
@@ -172,7 +172,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Override
 	public ReadableProduct getUserProductById(Long id, MerchantStore store, Language language, String currencyCode){
-		Product product = productService.getProductWithOnlyMerchantStoreById(id);
+		Product product = productService.getProductByCache(id);
 		if (product == null) {
 			throw new ResourceNotFoundException("Product [" + id + "] not found for merchant [" + store.getCode() + "]");
 		}
@@ -268,7 +268,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 							.toString();
 
 					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
-							.getListByLineage(store, lineage);
+							.getListByLineage(lineage);
 
 					List<Long> ids = new ArrayList<Long>();
 					if (categories != null && categories.size() > 0) {
@@ -336,7 +336,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 							.toString();
 
 					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
-							.getListByLineage(store, lineage);
+							.getListByLineage(lineage);
 
 					List<Long> ids = new ArrayList<Long>();
 					if (categories != null && categories.size() > 0) {
@@ -351,16 +351,8 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		}
 
 		if (StringUtils.isNotBlank(criterias.getShippingType())){
-			List<MerchantShippingConfiguration> merchantShippingConfigurations = merchantShippingConfigurationService.listDefaultShippingByStore(store);
-			List<Long> shippingTemplateId = new ArrayList<>();
-			merchantShippingConfigurations.forEach(merchantShippingConfiguration -> {
-				if (StringUtils.isNotEmpty(merchantShippingConfiguration.getShippingType())
-						&& ShippingType.valueOf(criterias.getShippingType()) != null
-						&&  merchantShippingConfiguration.getShippingType().contains(criterias.getShippingType())){
-					shippingTemplateId.add(merchantShippingConfiguration.getId());
-				}
-			});
-			criterias.setShippingTemplateIds(shippingTemplateId);
+			List<Long> shippingTemplateIds = merchantShippingConfigurationService.listIdByShippingType(store, criterias.getShippingType());
+			criterias.setShippingTemplateIds(shippingTemplateIds);
 		}
 
 

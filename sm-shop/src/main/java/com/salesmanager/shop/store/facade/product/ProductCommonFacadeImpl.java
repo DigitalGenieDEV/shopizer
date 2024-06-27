@@ -101,6 +101,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		Product target = null;
 		if (product.getId() != null && product.getId().longValue() > 0) {
 			target = productService.getById(product.getId());
+			target.setSku(null);
 		} else {
 			target = new Product();
 		}
