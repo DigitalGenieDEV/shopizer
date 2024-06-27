@@ -11,7 +11,10 @@ import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper
 import com.salesmanager.shop.model.recommend.*;
 import com.salesmanager.shop.populator.recommend.ReadableDisplayProductPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
+import com.salesmanager.shop.store.controller.search.facade.SearchFacadeImpl;
 import com.salesmanager.shop.utils.ImageFilePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,9 @@ import java.util.List;
 
 @Service("recProductFacade")
 public class RecProductFacadeImpl implements RecProductFacade{
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecProductFacadeImpl.class);
 
     @Inject
     private RecProductService recProductService;
@@ -137,8 +143,13 @@ public class RecProductFacadeImpl implements RecProductFacade{
         ReadableRecProductList productList = new ReadableRecProductList();
         for(Product product : products) {
             //create new proxy product
-            ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
-            productList.getProducts().add(readProduct);
+            try {
+                ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
+                productList.getProducts().add(readProduct);
+            } catch (Exception e) {
+                LOGGER.error("convert2ReadableRecProduct error: ", e);
+            }
+
         }
 
         return productList;
