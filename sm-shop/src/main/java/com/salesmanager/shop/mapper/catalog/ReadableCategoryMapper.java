@@ -49,7 +49,7 @@ public class ReadableCategoryMapper implements Mapper<Category, ReadableCategory
 		parentCategory.ifPresent(target::setParent);
 
 		Optional.ofNullable(source.getDepth()).ifPresent(target::setDepth);
-
+		target.setImageUrl(source.getCategoryImage());
 		target.setLineage(source.getLineage());
 		target.setStore(source.getMerchantStore().getCode());
 		target.setCode(source.getCode());
