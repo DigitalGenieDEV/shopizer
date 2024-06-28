@@ -23,6 +23,7 @@ import com.salesmanager.core.model.board.Board;
 import com.salesmanager.core.model.board.ReadBoard;
 import com.salesmanager.core.model.common.file.ReadFile;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.board.PersistableBoard;
 import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.board.ReadableBoardList;
@@ -107,7 +108,7 @@ public class BoardFacadeImpl implements BoardFacade {
 			
 			if(files != null) {
 				//첨부파일 등록 
-				fileFacade.saveFile(id, files,merchantStore);
+				fileFacade.saveFile(id, files,merchantStore, Constants.FILE_PRG_CODE_BOARD);
 			}
 			
 			return board;
@@ -133,7 +134,6 @@ public class BoardFacadeImpl implements BoardFacade {
 		targetData.setModIp(data.getAuditSection().getModIp());
 		targetData.setRegDate(dateFormat.format(regDate));
 		targetData.setModDate(dateFormat.format(modDate));
-		System.out.println("data.getId()"+data.getId());
 		List<ReadFile> fileList = fileFacade.getFileList(data.getId());
 		if(fileList.size() > 0 ) {
 			for(ReadFile file :fileList ) {
