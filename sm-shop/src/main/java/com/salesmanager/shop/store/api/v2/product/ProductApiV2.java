@@ -31,7 +31,8 @@ import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.reference.country.Country;
-import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.shop.model.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantPrice;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantValue;
@@ -39,6 +40,7 @@ import com.salesmanager.shop.model.catalog.product.attribute.ReadableSelectedPro
 import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchKeywordQueryParam;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProductPageInfo;
+import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
@@ -66,9 +68,6 @@ import com.salesmanager.core.model.catalog.product.ProductCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
-import com.salesmanager.shop.model.catalog.product.LightPersistableProduct;
-import com.salesmanager.shop.model.catalog.product.ReadableProduct;
-import com.salesmanager.shop.model.catalog.product.ReadableProductList;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.definition.PersistableProductDefinition;
 import com.salesmanager.shop.model.catalog.product.product.definition.ReadableProductDefinition;
@@ -425,7 +424,7 @@ public class ProductApiV2 {
 	@PostMapping(value = "/private/product/import", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "POST", value = "import product", notes = "import product", produces = "application/json", response = List.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public CommonResultDTO<List<Long>> importAlibabaProduct(
 			@RequestParam(value = "productIds") List<Long> productIds,
 			@RequestParam(value = "leftCategoryId") Long leftCategoryId,
@@ -663,6 +662,26 @@ public class ProductApiV2 {
 			return null;
 		}
 	}
+
+
+	@RequestMapping(value = "/shipping/price/product/id/{productId}", method = RequestMethod.GET)
+	@ApiOperation(httpMethod = "GET", value = "Get a product shipping price", notes = "product detail get shipping price" )
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Single product found", response = ReadableProductDetailShippingPrice.class) })
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public CommonResultDTO<ReadableProductDetailShippingPrice> getShippingPriceByProductDetail(@PathVariable Long productId,
+																	@RequestParam(value = "lang", required = false) String lang,
+																	@ApiIgnore Language language) {
+		ReadableProductDetailShippingPrice readableProductDetailShippingPrice = new ReadableProductDetailShippingPrice();
+		ReadableAddress readableAddress = new ReadableAddress();
+		readableAddress.setAddress("부산광역시 강서구");
+		readableProductDetailShippingPrice.setShippingOrigin(readableAddress);
+		readableProductDetailShippingPrice.setShippingType(Lists.newArrayList(ShippingType.NATIONAL.name()));
+		readableProductDetailShippingPrice.setShippingPrice("27,000");
+		return CommonResultDTO.ofSuccess(readableProductDetailShippingPrice);
+	}
+
 
 
 }
