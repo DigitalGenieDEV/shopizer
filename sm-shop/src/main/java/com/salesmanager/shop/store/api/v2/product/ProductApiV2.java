@@ -154,24 +154,37 @@ public class ProductApiV2 {
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
-		// make sure product id is null
-		Product productByMySql = null;
-		if(StringUtils.isNotBlank(product.getIdentifier())){
-			productByMySql = productService.getBySku(product.getIdentifier(), merchantStore);
+
+		// Check if product exists based on identifier or SKU, or if it's a new product
+		if (StringUtils.isNotBlank(product.getIdentifier())) {
+			if (!productService.existsByProductIdentifier(product.getIdentifier())) {
+				product.setSku(null);
+				product.setIdentifier(null);
+			}
+		} else if (StringUtils.isNotBlank(product.getSku())) {
+			if (!productService.existsByProductIdentifier(product.getIdentifier())) {
+				product.setSku(null);
+				product.setIdentifier(null);
+			}
+		} else if (product.getId() != null && product.getId() > 0) {
+			Product productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
+			if (productByMySql != null) {
+				product.setSku(null);
+				product.setIdentifier(null);
+			}
 		}
-		if (productByMySql == null && (product.getId() !=null && product.getId().longValue() >0)){
-			productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
-		}
-		Long productId = null;
-		if (productByMySql == null){
+
+		Long productId = product.getId();
+		if (productId == null) {
 			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
-		}else{
-			productId = productByMySql.getId();
 		}
+
 		product.setId(productId);
-		productCommonFacade.saveProduct(merchantStore, product, language);
+		productId = productCommonFacade.saveProduct(merchantStore, product, language);
+
 		Entity returnEntity = new Entity();
 		returnEntity.setId(productId);
+
 		return returnEntity;
 	}
 

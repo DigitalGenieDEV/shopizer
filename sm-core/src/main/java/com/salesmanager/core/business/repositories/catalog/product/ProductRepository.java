@@ -23,6 +23,18 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"WHERE (pv.sku = ?1 OR p.sku = ?1)")
 	boolean existsBySku(String sku, Integer store);
 
+
+
+	@Query(value="SELECT " +
+			"CASE WHEN COUNT(*) > 0 THEN true ELSE false END " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.sku = ?1")
+	boolean existsByProductIdentifier(String code);
+
+
+
+
 	@Query(value="SELECT " +
 			" COUNT(*) " +
 			"FROM " +
