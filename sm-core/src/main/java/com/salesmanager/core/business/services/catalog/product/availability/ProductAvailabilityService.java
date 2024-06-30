@@ -24,7 +24,9 @@ public interface ProductAvailabilityService extends
 	 * @return
 	 */
 	Page<ProductAvailability> getBySku(String sku, MerchantStore store, int page, int count);
-	
+
+
+	void deleteProductAvailabilities(Long productId);
 	
 	/**
 	 * Get by sku
@@ -43,5 +45,5 @@ public interface ProductAvailabilityService extends
 
 	Optional<ProductAvailability> getById(Long availabilityId, MerchantStore store);
 
-
+	List<ProductAvailability> getByProductId(Long productId);
 }

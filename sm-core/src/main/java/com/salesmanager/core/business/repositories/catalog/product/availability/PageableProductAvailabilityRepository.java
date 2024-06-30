@@ -7,6 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 
+import java.util.List;
+
 public interface PageableProductAvailabilityRepository extends PagingAndSortingRepository<ProductAvailability, Long> {
 
 	@Query(value = "select distinct p from ProductAvailability p " + "left join fetch p.merchantStore pm "
@@ -59,6 +61,7 @@ public interface PageableProductAvailabilityRepository extends PagingAndSortingR
 					+ "join p.merchantStore pm " + "join p.product ppr " + "left join p.productVariant ppi "
 					+ "where ppr.sku=?1 or ppi.sku=?1 ")
 	Page<ProductAvailability> getBySku(String productCode, Pageable pageable);
+
 
 		
 	

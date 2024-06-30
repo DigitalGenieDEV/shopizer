@@ -35,8 +35,6 @@ public class PersistableProductAvailabilityMapper implements Mapper<PersistableP
 			destination.setRegion(Constants.ALL_REGIONS);
 
 			destination.setProductQuantity(source.getQuantity());
-			destination.setProductQuantityOrderMin(1);
-			destination.setProductQuantityOrderMax(1);
 
 			if (source.getPrice() != null) {
 

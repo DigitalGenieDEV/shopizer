@@ -51,7 +51,7 @@ public class ReadableCategoryMapper implements Mapper<Category, ReadableCategory
 		Optional.ofNullable(source.getDepth()).ifPresent(target::setDepth);
 		target.setImageUrl(source.getCategoryImage());
 		target.setLineage(source.getLineage());
-		target.setStore(source.getMerchantStore().getCode());
+		target.setStore(source.getMerchantStore() == null? null : source.getMerchantStore().getCode());
 		target.setCode(source.getCode());
 		target.setId(source.getId());
 		target.setSortOrder(source.getSortOrder());

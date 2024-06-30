@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityService;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionSet;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -19,6 +20,7 @@ public interface ProductOptionSetService extends SalesManagerEntityService<Long,
 	ProductOptionSet getCode(MerchantStore store, String code);
 	List<ProductOptionSet> getByProductType (Long productTypeId, MerchantStore store, Language lang);
 
+	List<Category> getAnnouncementCategory(Language language);
 
 	List<ProductOptionSet> getByCategoryId(Long categoryId, Language lang, OptionSetForSaleType optionSetForSaleType);
 

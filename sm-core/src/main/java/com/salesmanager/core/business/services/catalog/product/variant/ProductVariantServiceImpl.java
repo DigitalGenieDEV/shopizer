@@ -96,5 +96,11 @@ public class ProductVariantServiceImpl extends SalesManagerEntityServiceImpl<Lon
 	}
 
 
+	@Override
+	public List<ProductVariant> queryListByProductId(Long productId){
+		return productVariantRepository.queryListByProductId(productId);
+	}
+
+
 
 }

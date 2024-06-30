@@ -68,8 +68,14 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "where pr.id = ?2 and pvm.id = ?1")
 	List<ProductVariant> findByProductId(Integer storeId, Long productId);
 
+
 	@Query("select p from ProductVariant p join fetch p.product pr where p.sku = ?1 and pr.id = ?2")
 	ProductVariant queryBySkuAndProduct(String sku, Long productId);
+
+
+
+	@Query("select p from ProductVariant p join fetch p.product pr where pr.id = ?1")
+	List<ProductVariant> queryListByProductId(Long productId);
 
 
 

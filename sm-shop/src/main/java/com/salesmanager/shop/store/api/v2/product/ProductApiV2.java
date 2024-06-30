@@ -155,15 +155,18 @@ public class ProductApiV2 {
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
 		// make sure product id is null
-		Product productBySku = null;
+		Product productByMySql = null;
 		if(StringUtils.isNotBlank(product.getIdentifier())){
-			productBySku = productService.getBySku(product.getIdentifier(), merchantStore);
+			productByMySql = productService.getBySku(product.getIdentifier(), merchantStore);
+		}
+		if (productByMySql == null && (product.getId() !=null && product.getId().longValue() >0)){
+			productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
 		}
 		Long productId = null;
-		if (productBySku == null){
+		if (productByMySql == null){
 			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
 		}else{
-			productId = productBySku.getId();
+			productId = productByMySql.getId();
 		}
 		product.setId(productId);
 		productCommonFacade.saveProduct(merchantStore, product, language);
@@ -183,19 +186,19 @@ public class ProductApiV2 {
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
-
 		// make sure product id is null
-		Product productBySku = null;
+		Product productByMySql = null;
 		if(StringUtils.isNotBlank(product.getIdentifier())){
-			productBySku = productService.getBySku(product.getIdentifier(), merchantStore);
-		}else {
-			product.setIdentifier(UniqueIdGenerator.generateUniqueId());
+			productByMySql = productService.getBySku(product.getIdentifier(), merchantStore);
+		}
+		if (productByMySql == null && (product.getId() !=null && product.getId().longValue() >0)){
+			productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
 		}
 		Long productId = null;
-		if (productBySku == null){
+		if (productByMySql == null){
 			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
 		}else{
-			productId = productBySku.getId();
+			productId = productByMySql.getId();
 		}
 		product.setId(productId);
 		productCommonFacade.saveProduct(merchantStore, product, language);

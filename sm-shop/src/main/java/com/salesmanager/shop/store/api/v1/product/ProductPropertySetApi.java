@@ -5,7 +5,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
+import com.salesmanager.shop.init.data.InitializationLoader;
+import com.salesmanager.shop.model.catalog.category.ReadableCategory;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +48,8 @@ import springfox.documentation.annotations.ApiIgnore;
 		@Tag(name = "Product property set regroupment management resource resource", description = "Edit product property set") })
 public class ProductPropertySetApi {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductPropertySetApi.class);
+
 	@Autowired
 	private ProductOptionSetFacade productOptionSetFacade;
 
@@ -56,6 +64,20 @@ public class ProductPropertySetApi {
 
 		productOptionSetFacade.create(optionSet, merchantStore, language);
 
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = { "/private/product/property/announcement/category" }, method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	public CommonResultDTO<List<ReadableCategory>> getAnnouncementCategory(@ApiIgnore Language language) {
+		try {
+			List<ReadableCategory> announcementCategory = productOptionSetFacade.getAnnouncementCategory(language);
+			return CommonResultDTO.ofSuccess(announcementCategory);
+		}catch (Exception e){
+			LOGGER.error("getAnnouncementCategory error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage());
+		}
 	}
 
 	@ResponseStatus(HttpStatus.OK)

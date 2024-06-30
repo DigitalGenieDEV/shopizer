@@ -273,9 +273,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	private Product saveOrUpdate(Product product) throws ServiceException {
 		Validate.notNull(product, "product cannot be null");
-		Validate.notNull(product.getAvailabilities(), "product must have at least one availability");
-		Validate.notEmpty(product.getAvailabilities(), "product must have at least one availability");
-
 		// take care of product images separately
 		Set<ProductImage> originalProductImages = new HashSet<ProductImage>(product.getImages());
 

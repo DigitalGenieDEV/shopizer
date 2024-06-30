@@ -3,9 +3,11 @@ package com.salesmanager.core.business.repositories.catalog.product.availability
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ProductAvailabilityRepository extends JpaRepository<ProductAvailability, Long> {
 
@@ -30,7 +32,14 @@ public interface ProductAvailabilityRepository extends JpaRepository<ProductAvai
       + "where p.id=?1 "
       + "and pprm.id=?2")
   ProductAvailability getById(Long availabilityId, int merchantId);
-  
+
+
+	@Modifying
+	@Transactional
+	@Query(value ="DELETE FROM ProductAvailability p WHERE p.product.id  = ?1")
+	void deleteProductAvailabilitiesByProductIds(Long productId);
+
+
 
   @Query(value = "select distinct p from ProductAvailability p "
 	      + "left join fetch p.merchantStore pm "
@@ -53,4 +62,8 @@ public interface ProductAvailabilityRepository extends JpaRepository<ProductAvai
 	      + "where ppr.sku=?1 or ppi.sku=?1")
   List<ProductAvailability> getBySku(String sku);
 
+
+	@Query(value = "select  p from ProductAvailability p "
+			+ "where p.product.id=?1")
+	List<ProductAvailability> getByProductId(Long productId);
 }

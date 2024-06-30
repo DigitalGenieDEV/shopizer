@@ -5,13 +5,20 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductAnnouncementAttributeService;
+import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
+import com.salesmanager.core.business.services.catalog.product.image.ProductImageService;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.feature.ProductFeature;
+import com.salesmanager.shop.mapper.catalog.PersistableProductAnnouncementAttributeMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ConversionException;
@@ -60,7 +67,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("productCommonFacade")
 public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
+	@Autowired
+	private ProductAvailabilityService productAvailabilityService;
 
+	@Autowired
+	private PersistableProductAnnouncementAttributeMapper persistableProductAnnouncementAttributeMapper;
 	@Inject
 	private LanguageService languageService;
 
@@ -69,6 +80,9 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Inject
 	private PricingService pricingService;
+
+	@Autowired
+	private ProductVariantService productVariantService;
 
 	@Inject
 	private CustomerService customerService;
@@ -81,6 +95,12 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Autowired
 	private ProductFeatureService productFeatureService;
+
+	@Autowired
+	private ProductImageService productImageService;
+
+	@Autowired
+	private ProductAnnouncementAttributeService productAnnouncementAttributeService;
 
 	@Inject
 	@Qualifier("img")
@@ -101,6 +121,20 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		Product target = null;
 		if (product.getId() != null && product.getId().longValue() > 0) {
 			target = productService.getById(product.getId());
+			Validate.notNull(target,"Product must not be null");
+
+			List<ProductAvailability> byProductId = productAvailabilityService.getByProductId(product.getId());
+			productAvailabilityService.deleteAll(byProductId);
+			Set<ProductAvailability> productAvailabilities = new HashSet<>();
+			List<ProductVariant> productVariants = productVariantService.queryListByProductId(product.getId());
+			productVariantService.deleteAll(productVariants);
+			target.setAvailabilities(productAvailabilities);
+
+			Set<ProductImage> images = target.getImages();
+			for (ProductImage image : images) {
+				productImageService.removeProductImage(image);
+			}
+			target.setImages(new HashSet<>());
 			target.setSku(null);
 		} else {
 			target = new Product();
@@ -109,12 +143,26 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		target = persistableProductMapper.merge(product, target, store, language);
 
 		target = productService.saveProduct(target);
-
+		Long productId = target.getId();
 		if (!CollectionUtils.isEmpty(product.getProductTag())){
 			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(target.getId());
 			processProductFeatureDiff(listByProductId, product.getProductTag(), target.getId());
 		}
+		if (!CollectionUtils.isEmpty(product.getAnnouncementAttributes())) {
+			Boolean result = productAnnouncementAttributeService.existsByProductId(target.getId());
+			if (result){
+				productAnnouncementAttributeService.deleteByProductId(target.getId());
+			}
+			product.getAnnouncementAttributes().forEach(persistableAnnouncement -> {
+				persistableAnnouncement.setProductId(productId);
+				try {
+					productAnnouncementAttributeService.saveOrUpdate(persistableProductAnnouncementAttributeMapper.convert(persistableAnnouncement, store, language));
+				} catch (ServiceException e) {
+					throw new RuntimeException(e);
+				}
+			});
 
+		}
 		return target.getId();
 	}
 

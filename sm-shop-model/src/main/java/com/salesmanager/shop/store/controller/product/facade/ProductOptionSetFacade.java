@@ -5,6 +5,7 @@ import java.util.List;
 import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.product.attribute.optionset.PersistableProductOptionSet;
 import com.salesmanager.shop.model.catalog.product.attribute.optionset.ReadableProductOptionSet;
 
@@ -19,7 +20,7 @@ public interface ProductOptionSetFacade {
 	void update(Long id, PersistableProductOptionSet optionSet, MerchantStore store, Language language);
 	void delete(Long id, MerchantStore store);
 
-
+	List<ReadableCategory> getAnnouncementCategory(Language language);
 	/**
 	 * Get property set by category
 	 * @param language

@@ -63,6 +63,10 @@ public abstract class SalesManagerEntityServiceImpl<K extends Serializable & Com
 	public void delete(E entity) throws ServiceException {
 		repository.delete(entity);
 	}
+
+	public void deleteAll(Iterable<E> entities) throws ServiceException {
+		repository.deleteAll(entities);
+	}
 	
 	
 	public void flush() {

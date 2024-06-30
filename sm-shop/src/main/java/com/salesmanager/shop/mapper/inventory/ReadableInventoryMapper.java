@@ -53,10 +53,6 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 
 		try {
 			destination.setQuantity(source.getProductQuantity() != null ? source.getProductQuantity().intValue() : 0);
-			destination.setProductQuantityOrderMax(
-					source.getProductQuantityOrderMax() != null ? source.getProductQuantityOrderMax().intValue() : 0);
-			destination.setProductQuantityOrderMin(
-					source.getProductQuantityOrderMin() != null ? source.getProductQuantityOrderMin().intValue() : 0);
 			destination.setOwner(source.getOwner());
 			destination.setId(source.getId());
 			destination.setRegion(source.getRegion());

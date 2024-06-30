@@ -58,6 +58,11 @@ public class ProductAvailabilityServiceImpl extends SalesManagerEntityServiceImp
 	}
 
 
+	@Override
+	public void  deleteProductAvailabilities(Long productId) {
+		productAvailabilityRepository.deleteProductAvailabilitiesByProductIds(productId);
+	}
+
 
 	@Override
 	public Page<ProductAvailability> listByProduct(Long productId, MerchantStore store, int page,
@@ -93,6 +98,12 @@ public class ProductAvailabilityServiceImpl extends SalesManagerEntityServiceImp
 	public List<ProductAvailability> getBySku(String sku, MerchantStore store) {
 		Validate.notNull(store, "MerchantStore cannot be null");
 		return productAvailabilityRepository.getBySku(sku, store.getCode());
+	}
+
+
+	@Override
+	public List<ProductAvailability> getByProductId(Long productId){
+		return productAvailabilityRepository.getByProductId(productId);
 	}
 
 }

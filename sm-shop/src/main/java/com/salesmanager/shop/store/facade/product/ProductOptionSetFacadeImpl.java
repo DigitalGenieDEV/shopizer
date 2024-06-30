@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.attribute.OptionSetForSaleType;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.store.controller.category.facade.CategoryFacade;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,9 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 
 	@Autowired
 	private ReadableProductOptionSetMapper readableProductOptionSetMapper;
+
+	@Autowired
+	private ReadableCategoryMapper readableCategoryMapper;
 
 	@Autowired
 	private ProductOptionSetService productOptionSetService;
@@ -140,6 +145,17 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 			throw new ServiceRuntimeException("Exception while deleting ProductOptionSet", e);
 		}
 
+	}
+
+	@Override
+	public List<ReadableCategory> getAnnouncementCategory(Language language) {
+		List<Category> announcementCategory = productOptionSetService.getAnnouncementCategory(language);
+		if (CollectionUtils.isEmpty(announcementCategory)){
+			return null;
+		}
+		return announcementCategory.stream().map(category->{
+			return readableCategoryMapper.convert(category, null, language);
+		}).collect(Collectors.toList());
 	}
 
 	@Override

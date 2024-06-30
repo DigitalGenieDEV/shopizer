@@ -106,8 +106,6 @@ public class PersistableInventoryMapper implements Mapper<PersistableInventory, 
 			}
 
 			destination.setProductQuantity(source.getQuantity());
-			destination.setProductQuantityOrderMin(source.getProductQuantityOrderMax());
-			destination.setProductQuantityOrderMax(source.getProductQuantityOrderMin());
 			destination.setAvailable(source.isAvailable());
 			destination.setOwner(source.getOwner());
 

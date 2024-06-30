@@ -8,14 +8,18 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductAnnouncementAttributeService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.shipping.MerchantShippingConfigurationService;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAnnouncementAttribute;
 import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.system.MerchantShippingConfiguration;
+import com.salesmanager.shop.mapper.catalog.ReadableProductAnnouncementAttributeMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductListMapper;
 import com.salesmanager.shop.mapper.catalog.product.UserReadableProductMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAnnouncement;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -63,6 +67,12 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 	@Autowired
 	private UserReadableProductMapper userReadableProductMapper;
+
+	@Autowired
+	private ProductAnnouncementAttributeService productAnnouncementAttributeService;
+
+	@Autowired
+	private ReadableProductAnnouncementAttributeMapper readableProductAnnouncementAttributeMapper;
 	
 	@Inject
 	private CategoryService categoryService;
@@ -146,6 +156,13 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			readableProduct.setTags(collect);
 		}
 
+		List<ProductAnnouncementAttribute> productAnnouncementAttributes = productAnnouncementAttributeService.getByProductId(id);
+		if (CollectionUtils.isNotEmpty(productAnnouncementAttributes)){
+			List<ReadableProductAnnouncement> readableProductAnnouncements = productAnnouncementAttributes.stream().map(productAnnouncementAttribute -> {
+				return readableProductAnnouncementAttributeMapper.convert(productAnnouncementAttribute, product.getMerchantStore(), language);
+			}).collect(Collectors.toList());
+			readableProduct.setProductAnnouncements(readableProductAnnouncements);
+		}
 		return readableProduct;
 	}
 
@@ -159,14 +176,13 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
 
-//		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
-//
-//		if (!CollectionUtils.isEmpty(instances)){
-//			MerchantStore finalStore = store;
-//			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
-//			readableProduct.setVariants(readableInstances);
-//		}
-
+		List<ProductAnnouncementAttribute> productAnnouncementAttributes = productAnnouncementAttributeService.getByProductId(id);
+		if (CollectionUtils.isNotEmpty(productAnnouncementAttributes)){
+			List<ReadableProductAnnouncement> readableProductAnnouncements = productAnnouncementAttributes.stream().map(productAnnouncementAttribute -> {
+				return readableProductAnnouncementAttributeMapper.convert(productAnnouncementAttribute, product.getMerchantStore(), language);
+			}).collect(Collectors.toList());
+			readableProduct.setProductAnnouncements(readableProductAnnouncements);
+		}
 		return readableProduct;
 	}
 

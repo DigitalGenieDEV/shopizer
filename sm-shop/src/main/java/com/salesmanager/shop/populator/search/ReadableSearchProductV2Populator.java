@@ -507,8 +507,6 @@ public class ReadableSearchProductV2Populator  extends
                 //if(availability.getRegion().equals(Constants.ALL_REGIONS)) {//TODO REL 2.1 accept a region
                 availability = a;
                 target.setQuantity(availability.getProductQuantity() == null ? 1:availability.getProductQuantity());
-                target.setQuantityOrderMaximum(availability.getProductQuantityOrderMax() == null ? 1:availability.getProductQuantityOrderMax());
-                target.setQuantityOrderMinimum(availability.getProductQuantityOrderMin()==null ? 1:availability.getProductQuantityOrderMin());
                 if(availability.getProductQuantity().intValue() > 0 && target.isAvailable()) {
                     target.setCanBePurchased(true);
                 }

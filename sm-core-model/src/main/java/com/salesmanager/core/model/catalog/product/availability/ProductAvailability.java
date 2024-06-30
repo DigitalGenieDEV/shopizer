@@ -124,11 +124,6 @@ public class ProductAvailability extends SalesManagerEntity<Long, ProductAvailab
 	@Column(name = "AVAILABLE")
 	private Boolean available;
 
-	@Column(name = "QUANTITY_ORD_MIN")
-	private Integer productQuantityOrderMin = 0;
-
-	@Column(name = "QUANTITY_ORD_MAX")
-	private Integer productQuantityOrderMax = 0;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productAvailability", cascade = CascadeType.ALL)
 	private Set<ProductPrice> prices = new HashSet<ProductPrice>();
@@ -200,21 +195,6 @@ public class ProductAvailability extends SalesManagerEntity<Long, ProductAvailab
 		this.productIsAlwaysFreeShipping = productIsAlwaysFreeShipping;
 	}
 
-	public Integer getProductQuantityOrderMin() {
-		return productQuantityOrderMin;
-	}
-
-	public void setProductQuantityOrderMin(Integer productQuantityOrderMin) {
-		this.productQuantityOrderMin = productQuantityOrderMin;
-	}
-
-	public Integer getProductQuantityOrderMax() {
-		return productQuantityOrderMax;
-	}
-
-	public void setProductQuantityOrderMax(Integer productQuantityOrderMax) {
-		this.productQuantityOrderMax = productQuantityOrderMax;
-	}
 
 	@Override
 	public Long getId() {
