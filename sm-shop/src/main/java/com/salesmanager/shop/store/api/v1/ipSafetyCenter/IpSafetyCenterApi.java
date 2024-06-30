@@ -69,7 +69,7 @@ public class IpSafetyCenterApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/private/ipSafetyCenter", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public PersistableIpSafetyCenter create(@Valid @RequestBody PersistableIpSafetyCenter data, HttpServletRequest request)
 			throws Exception {
 

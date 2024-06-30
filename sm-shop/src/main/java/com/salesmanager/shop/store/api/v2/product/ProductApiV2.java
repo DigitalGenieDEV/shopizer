@@ -148,7 +148,7 @@ public class ProductApiV2 {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/private/product"})
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody Entity createV2(@Valid @RequestBody PersistableProduct product,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
@@ -180,7 +180,7 @@ public class ProductApiV2 {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/auth/product"})
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody Entity createBySeller(@Valid @RequestBody PersistableProduct product,
 										 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
@@ -212,7 +212,7 @@ public class ProductApiV2 {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/{id}" }, method = RequestMethod.DELETE)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void deleteV2(@PathVariable Long id, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 		productCommonFacade.deleteProduct(id, merchantStore);
 	}
@@ -228,7 +228,7 @@ public class ProductApiV2 {
 	@RequestMapping(value = "/private/product/count/by/category", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public Long queryProductCountByCategory(
 			@RequestParam(value = "lang", required = false) String lang,
 			@ApiIgnore MerchantStore merchantStore,
@@ -281,7 +281,7 @@ public class ProductApiV2 {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProduct getByProductIdForAdmin(@PathVariable Long productId,
 										  @RequestParam(value = "lang", required = false) String lang,
 										  @ApiIgnore MerchantStore merchantStore,
@@ -310,7 +310,7 @@ public class ProductApiV2 {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
 	@ResponseBody
-	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProduct getByProductIdForUser(@PathVariable Long productId,
 							   @RequestParam(value = "lang", required = false) String lang,
 							   @ApiIgnore Language language) {
@@ -345,7 +345,7 @@ public class ProductApiV2 {
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
 	public ReadableProductPrice calculateVariantPrice(
 			@PathVariable final Long id,
@@ -477,7 +477,7 @@ public class ProductApiV2 {
 	@RequestMapping(value = "/private/products", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProductList list(
 			@RequestParam(value = "lang", required = false) String lang,
 			@RequestParam(value = "category", required = false) Long category,
@@ -581,7 +581,7 @@ public class ProductApiV2 {
 	@RequestMapping(value = "/auth/products", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProductList listBySeller(
 			@RequestParam(value = "identifier", required = false) String identifier,
 			@RequestParam(value = "lang", required = false) String lang,

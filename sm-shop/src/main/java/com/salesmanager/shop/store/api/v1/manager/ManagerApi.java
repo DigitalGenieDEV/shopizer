@@ -137,7 +137,7 @@ public class ManagerApi {
 			@ApiResponse(code = 400, message = "Error while getting User"),
 			@ApiResponse(code = 401, message = "Login required") })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableManager get( @PathVariable Long id, HttpServletRequest request)  throws Exception{
 		return managerFacade.getById(id);
 	}

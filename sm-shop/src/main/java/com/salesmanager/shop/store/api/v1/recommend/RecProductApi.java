@@ -42,7 +42,7 @@ public class RecProductApi {
     @PostMapping("/rec/guess_u_like")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
     })
     public ReadableRecProductList getRecGuessULike(
             @RequestBody RecGuessULikeRequest recGuessULikeRequest,
@@ -70,7 +70,7 @@ public class RecProductApi {
     @PostMapping("/rec/relate_item")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
     })
     public ReadableRecProductList getRecRelate(
             @RequestBody RecRelateItemRequest recRelateItemRequest,
@@ -100,7 +100,7 @@ public class RecProductApi {
     @PostMapping("/rec/selection_product")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
     })
     public ReadableRecProductList getRecSelection(
             @RequestBody RecSelectionProductRequest recSelectionProductRequest,
@@ -128,7 +128,7 @@ public class RecProductApi {
     @PostMapping("/rec/foot_print")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
     })
     public ReadableRecProductList getRecFootPrint(
             @RequestBody RecFootPrintRequest request,

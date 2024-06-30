@@ -82,7 +82,7 @@ public class OrderProductApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableOrderProduct getOrderProduct(
             @PathVariable final Long id,
             @ApiIgnore MerchantStore merchantStore,

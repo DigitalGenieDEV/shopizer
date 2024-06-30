@@ -80,7 +80,7 @@ public class CategoryApi {
 	)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public ReadableCategory get(
 			@PathVariable(name = "id") Long categoryId,
@@ -100,7 +100,7 @@ public class CategoryApi {
 	)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public ReadableCategory getByfriendlyUrl(
 			@PathVariable(name = "friendlyUrl") String friendlyUrl,
@@ -115,7 +115,7 @@ public class CategoryApi {
 	@GetMapping(value = { "/private/category/unique" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	@ApiOperation(
 			httpMethod = "GET", value = "Check if category code already exists", notes = "", response = EntityExists.class
@@ -133,7 +133,7 @@ public class CategoryApi {
 	@GetMapping(value = { "/private/category/depth/list" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	@ApiOperation(httpMethod = "GET", value = "category List By Depth", notes = "", response = EntityExists.class)
 	public ResponseEntity<List<ReadableCategory>> categoryListByDepth(
@@ -157,7 +157,7 @@ public class CategoryApi {
 	)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public ReadableCategoryList list(
 			@RequestParam(value = "filter", required = false) List<String> filter,
@@ -178,7 +178,7 @@ public class CategoryApi {
 	@ApiOperation(httpMethod = "GET", value = "Get category by product", notes = "")
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public ReadableCategoryList list(
 			@PathVariable(name = "ProductId") Long id,
@@ -192,7 +192,7 @@ public class CategoryApi {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/category/list/by/parent" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	@ApiOperation(httpMethod = "GET", value = "category List By Parent", notes = "", response = EntityExists.class)
 	public ResponseEntity<List<ReadableCategory>> listByParent(
 			@RequestParam(value = "categoryId") Long categoryId,
@@ -204,7 +204,7 @@ public class CategoryApi {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/admin/category/by/user" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	@ApiOperation(
 			httpMethod = "GET", value = "admin Category By User CategoryId", notes = "", response = EntityExists.class
 	)
@@ -219,7 +219,7 @@ public class CategoryApi {
 	@PostMapping(value = "/private/user/category", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public PersistableCategory createUser(
 			@Valid @RequestBody PersistableCategory category,
@@ -254,7 +254,7 @@ public class CategoryApi {
 	@PostMapping(value = "/private/category", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public PersistableCategory create(
 			@Valid @RequestBody PersistableCategory category,
@@ -362,7 +362,7 @@ public class CategoryApi {
 	)
 	@ApiImplicitParams(
 			{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-					@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") }
+					@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
 	public ReadableCategory getByUser(
 			@PathVariable(name = "id") Long categoryId,

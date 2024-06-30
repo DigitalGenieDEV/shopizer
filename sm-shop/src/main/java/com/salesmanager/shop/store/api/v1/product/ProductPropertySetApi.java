@@ -56,7 +56,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(value = { "/private/product/property/set" }, method = RequestMethod.POST)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void create(
 			@Valid @RequestBody PersistableProductOptionSet optionSet, 
 			@ApiIgnore MerchantStore merchantStore,
@@ -69,7 +69,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/property/announcement/category" }, method = RequestMethod.GET)
 	@ResponseBody
-	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public CommonResultDTO<List<ReadableCategory>> getAnnouncementCategory(@ApiIgnore Language language) {
 		try {
 			List<ReadableCategory> announcementCategory = productOptionSetFacade.getAnnouncementCategory(language);
@@ -83,7 +83,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/product/property/set/unique" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	@ApiOperation(httpMethod = "GET", value = "Check if option set code already exists", notes = "", response = EntityExists.class)
 	public ResponseEntity<EntityExists> exists(
 			@RequestParam(value = "code") String code,
@@ -98,7 +98,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/property/set/{id}" }, method = RequestMethod.GET)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	@ResponseBody
 	public ReadableProductOptionSet get(
 			@PathVariable Long id, 
@@ -113,7 +113,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/property/set/{id}" }, method = RequestMethod.PUT)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void update(
 			@Valid @RequestBody PersistableProductOptionSet option, 
 			@PathVariable Long id,
@@ -130,7 +130,7 @@ public class ProductPropertySetApi {
 	@RequestMapping(value = { "/private/product/property/set/{id}" }, method = RequestMethod.DELETE)
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void delete(
 			@PathVariable Long id,
 			@ApiIgnore MerchantStore merchantStore,
@@ -151,7 +151,7 @@ public class ProductPropertySetApi {
 	@RequestMapping(value = { "/private/product/property/set" }, method = RequestMethod.GET)
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody List<ReadableProductOptionSet> list(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
@@ -173,7 +173,7 @@ public class ProductPropertySetApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/property/category/set" }, method = RequestMethod.GET)
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ResponseEntity<List<ReadableProductOptionSet>> listByCategoryId(
 			@ApiIgnore Language language,
 			@RequestParam(value = "categoryId", required = false) Long categoryId,

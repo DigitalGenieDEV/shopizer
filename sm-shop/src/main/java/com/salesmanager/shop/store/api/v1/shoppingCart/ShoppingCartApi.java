@@ -76,7 +76,7 @@ public class ShoppingCartApi {
 	@PostMapping(value = "/cart")
 	@ApiOperation(httpMethod = "POST", value = "Add product to shopping cart when no cart exists, this will create a new cart id", notes = "No customer ID in scope. Add to cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":1}", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableShoppingCart addToCart(
 			@Valid @RequestBody PersistableShoppingCartItem shoppingCartItem,
 			@ApiIgnore MerchantStore merchantStore,
@@ -87,7 +87,7 @@ public class ShoppingCartApi {
 	@PutMapping(value = "/cart/{code}")
 	@ApiOperation(httpMethod = "PUT", value = "Add to an existing shopping cart or modify an item quantity", notes = "No customer ID in scope. Modify cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":0} for instance will remove item 1234 from cart", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ResponseEntity<ReadableShoppingCart> modifyCart(
 			@PathVariable String code,
 			@Valid @RequestBody PersistableShoppingCartItem shoppingCartItem, 
@@ -118,7 +118,7 @@ public class ShoppingCartApi {
 	@PostMapping(value = "/cart/{code}/promo/{promo}")
 	@ApiOperation(httpMethod = "POST", value = "Add promo / coupon to an existing cart", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ResponseEntity<ReadableShoppingCart> modifyCart(
 			@PathVariable String code,//shopping cart code
 			@PathVariable String promo,
@@ -149,7 +149,7 @@ public class ShoppingCartApi {
 	@PostMapping(value = "/cart/{code}/multi", consumes = { "application/json" }, produces = { "application/json" })
 	@ApiOperation(httpMethod = "POST", value = "Add to an existing shopping cart or modify an item quantity", notes = "No customer ID in scope. Modify cart for non authenticated users, as simple as {\"product\":1232,\"quantity\":0} for instance will remove item 1234 from cart", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ResponseEntity<ReadableShoppingCart> modifyCart(
 			@PathVariable String code,
 			@Valid @RequestBody PersistableShoppingCartItem[] shoppingCartItems, 
@@ -176,7 +176,7 @@ public class ShoppingCartApi {
 	@RequestMapping(value = "/cart/{code}", method = RequestMethod.GET)
 	@ApiOperation(httpMethod = "GET", value = "Get a chopping cart by code", notes = "", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableShoppingCart getByCode(@PathVariable String code,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletResponse response) {
 
@@ -206,7 +206,7 @@ public class ShoppingCartApi {
 	@RequestMapping(value = "/customers/{id}/cart", method = RequestMethod.POST)
 	@ApiOperation(httpMethod = "POST", value = "Add product to a specific customer shopping cart", notes = "", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableShoppingCart addToCart(@PathVariable Long id,
 			@Valid @RequestBody PersistableShoppingCartItem shoppingCartItem, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, HttpServletResponse response) {
@@ -220,7 +220,7 @@ public class ShoppingCartApi {
 	@RequestMapping(value = "/auth/customer/{id}/cart", method = RequestMethod.GET)
 	@ApiOperation(httpMethod = "GET", value = "Get a shopping cart by customer id. Customer must be authenticated", notes = "", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableShoppingCart getByCustomer(@PathVariable Long id, // customer
 																					// id
 			@RequestParam Optional<String> cart, // cart code
@@ -252,7 +252,7 @@ public class ShoppingCartApi {
 	@RequestMapping(value = "/auth/customer/cart", method = RequestMethod.GET)
 	@ApiOperation(httpMethod = "GET", value = "Get a shopping cart by authenticated customer", notes = "", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableShoppingCart getByCustomer(
 			@RequestParam Optional<String> cart, // cart code
 			@ApiIgnore MerchantStore merchantStore, 
@@ -286,7 +286,7 @@ public class ShoppingCartApi {
 	@DeleteMapping(value = "/cart/{code}/product/{sku}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "DELETE", value = "Remove a product from a specific cart", notes = "If body set to true returns remaining cart in body, empty cart gives empty body. If body set to false no body ", produces = "application/json", response = ReadableShoppingCart.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko"),
 			@ApiImplicitParam(name = "body", dataType = "boolean", defaultValue = "false"), })
 	public ResponseEntity<ReadableShoppingCart> deleteCartItem(@PathVariable("code") String cartCode,
 			@PathVariable("sku") String sku, 

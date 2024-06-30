@@ -62,7 +62,7 @@ public class ProductVariantGroupApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/private/product/productVariantGroup" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public @ResponseBody Entity create(
 			@Valid @RequestBody PersistableProductVariantGroup instanceGroup,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request) throws Exception {
@@ -199,7 +199,7 @@ public class ProductVariantGroupApi {
 	@RequestMapping(value = { "/private/product/productVariantGroup/{id}/image" }, consumes = {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, method = RequestMethod.POST)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void addImage(
 			@PathVariable Long id, 
 			@RequestParam(value = "file", required = true) MultipartFile file,

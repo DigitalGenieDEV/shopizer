@@ -82,7 +82,7 @@ public class OrderShippingApi {
   @ResponseBody
   @ApiImplicitParams({
       @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
   })
   public ReadableShippingSummary shipping(
       @PathVariable final String code,
@@ -193,7 +193,7 @@ public class OrderShippingApi {
   @ResponseBody
   @ApiImplicitParams({
       @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
   })
   public ReadableShippingSummary shipping(
       @PathVariable final String code,

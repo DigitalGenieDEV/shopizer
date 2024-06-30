@@ -72,7 +72,7 @@ public class PopupApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/private/popup", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public PersistablePopup create(@Valid @RequestBody PersistablePopup popup, HttpServletRequest request)
 			throws Exception {
 

@@ -65,7 +65,7 @@ public class CustomerReviewApi {
   @ResponseStatus(HttpStatus.CREATED)
   @ApiImplicitParams({
       @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-      @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en")
+      @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")
   })
   public PersistableCustomerReview create(
       @PathVariable final Long id,
@@ -78,7 +78,7 @@ public class CustomerReviewApi {
   @GetMapping("/customers/{id}/reviews")
   @ApiImplicitParams({
       @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-      @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en")
+      @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")
   })
   public List<ReadableCustomerReview> getAll(
       @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {

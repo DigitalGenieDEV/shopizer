@@ -113,7 +113,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrderList list(@PathVariable final Long id,
 			@RequestParam(value = "start", required = false) Integer start,
 			@RequestParam(value = "count", required = false) Integer count, @ApiIgnore MerchantStore merchantStore,
@@ -166,7 +166,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrderList list(@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "count", required = false) Integer count, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -264,7 +264,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrder get(
 			@PathVariable final Long id,
 			@ApiIgnore MerchantStore merchantStore,
@@ -293,7 +293,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrder getOrder(@PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Principal principal = request.getUserPrincipal();
@@ -344,7 +344,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrderConfirmation checkout(
 			@PathVariable final String code, //shopping cart
 			@Valid @RequestBody PersistableOrder order, // order
@@ -403,7 +403,7 @@ public class OrderApi {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public ReadableOrderConfirmation checkout(
 			@PathVariable final String code,//shopping cart
 			@Valid @RequestBody PersistableAnonymousOrder order,//order
@@ -475,7 +475,7 @@ public class OrderApi {
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public void updateOrderCustomer(
 			@PathVariable final Long id,
 			@Valid @RequestBody PersistableCustomer orderCustomer,
@@ -496,7 +496,7 @@ public class OrderApi {
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	public void updateOrderStatus(
 			@PathVariable final Long id,
 			@Valid @RequestBody String status,

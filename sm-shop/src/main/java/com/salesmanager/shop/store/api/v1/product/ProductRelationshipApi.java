@@ -101,7 +101,7 @@ public class ProductRelationshipApi {
   @ResponseBody
   @ApiImplicitParams({
       @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
   })
   public List<ReadableProduct> getAll(
       @PathVariable final Long id,

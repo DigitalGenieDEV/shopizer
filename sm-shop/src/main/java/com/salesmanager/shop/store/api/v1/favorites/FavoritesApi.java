@@ -42,7 +42,7 @@ public class FavoritesApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(httpMethod = "GET", value = "get favorite products by userId", notes = "",
             response = ReadableEntityList.class)
-    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")})
     public ReadableEntityList<ReadableFavorites> getListFavoriteProducts(
             @RequestParam(value = "userId", required = true) Long userId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,

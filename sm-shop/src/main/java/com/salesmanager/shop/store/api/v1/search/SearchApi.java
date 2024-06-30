@@ -50,7 +50,7 @@ public class SearchApi {
 //  @PostMapping("/search")
 //  @ApiImplicitParams({
 //    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 //  })
 //
 //  //TODO use total, count and page
@@ -65,7 +65,7 @@ public class SearchApi {
   @PostMapping("/search")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-          @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+          @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
   })
   public @ResponseBody
   ReadableSearchResult searchV2(
@@ -80,7 +80,7 @@ public class SearchApi {
 //  @PostMapping("/search/autocomplete")
 //  @ApiImplicitParams({
 //    @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+//    @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 //  })
 //  public @ResponseBody ValueList autocomplete(
 //      @RequestBody SearchProductRequest searchRequest,
@@ -92,7 +92,7 @@ public class SearchApi {
   @PostMapping("/search/autocomplete")
   @ApiImplicitParams({
           @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-          @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+          @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
   })
   public @ResponseBody ValueList autocomplete(
           @RequestBody SearchProductAutocompleteRequestV2 searchRequest,

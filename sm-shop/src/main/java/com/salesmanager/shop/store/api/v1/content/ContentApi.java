@@ -78,7 +78,7 @@ public class ContentApi {
 //	@GetMapping(value = {"/private/content/pages", "/content/pages"}, produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ApiOperation(httpMethod = "GET", value = "Get page names created for a given MerchantStore", notes = "", produces = "application/json", response = List.class)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableEntityList<ReadableContentPage> pages(
 //			@ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language,
@@ -99,7 +99,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "GET", value = "Get boxes for a given MerchantStore", notes = "", produces = "application/json", response = List.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableEntityList<ReadableContentBox> boxes(
 //			@ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language,
@@ -119,7 +119,7 @@ public class ContentApi {
 //	@GetMapping(value = "/content/pages/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ApiOperation(httpMethod = "GET", value = "Get page content by code for a given MerchantStore", notes = "", produces = "application/json", response = ReadableContentPage.class)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableContentPage page(@PathVariable("code") String code, @ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language) {
 //
@@ -137,7 +137,7 @@ public class ContentApi {
 //	@GetMapping(value = "/content/pages/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ApiOperation(httpMethod = "GET", value = "Get page content by code for a given MerchantStore", notes = "", produces = "application/json", response = ReadableContentPage.class)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableContentPage pageByName(@PathVariable("name") String name, @ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language) {
 //
@@ -154,7 +154,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "POST", value = "Create content box", notes = "", response = Entity.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public Entity createBox(
 //			@RequestBody @Valid PersistableContentBox box,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -171,7 +171,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "GET", value = "Check unique content box", notes = "", response = EntityExists.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public EntityExists boxExists(
 //			@PathVariable String code,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -187,7 +187,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "GET", value = "Check unique content page", notes = "", response = EntityExists.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public EntityExists pageExists(
 //			@PathVariable String code,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -209,7 +209,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "POST", value = "Create content page", notes = "", response = Entity.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public Entity createPage(
 //			@RequestBody @Valid PersistableContentPage page,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -230,7 +230,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "DELETE", value = "Delete content page", notes = "", response = Void.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void deletePage(
 //			@PathVariable Long id,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -251,7 +251,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "DELETE", value = "Delete content box", notes = "", response = Void.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void deleteBox(
 //			@PathVariable Long id,
 //			@ApiIgnore MerchantStore merchantStore,
@@ -266,7 +266,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "PUT", value = "Update content page", notes = "", response = Void.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void updatePage(
 //			@RequestBody @Valid PersistableContentPage page,
 //			@PathVariable Long id,
@@ -281,7 +281,7 @@ public class ContentApi {
 //	@ApiOperation(httpMethod = "PUT", value = "Update content box", notes = "", response = Void.class)
 //	@ApiImplicitParams({
 //		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void updateBox(
 //			@RequestBody @Valid PersistableContentBox box,
 //			@PathVariable Long id,
@@ -294,7 +294,7 @@ public class ContentApi {
 //	@GetMapping(value = "/private/content/boxes/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ApiOperation(httpMethod = "GET", value = "Manage box content by code for a code and a given MerchantStore", notes = "", produces = "application/json", response = List.class)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableContentBox manageBoxByCode(@PathVariable("code") String code, @ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language) {
 //		return contentFacade.getContentBox(code, merchantStore, language);
@@ -303,7 +303,7 @@ public class ContentApi {
 //	@GetMapping(value = "/content/boxes/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ApiOperation(httpMethod = "GET", value = "Get box content by code for a code and a given MerchantStore", notes = "", produces = "application/json", response = List.class)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public ReadableContentBox getBoxByCode(@PathVariable("code") String code, @ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language) {
 //		return contentFacade.getContentBox(code, merchantStore, language);
@@ -320,7 +320,7 @@ public class ContentApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public void addFolder(@RequestParam
 	String parent,
@@ -346,7 +346,7 @@ public class ContentApi {
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public ContentFolder images(@ApiIgnore
 	MerchantStore merchantStore,
@@ -370,7 +370,7 @@ public class ContentApi {
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public ContentFolder getFileUrls(@ApiIgnore
 	MerchantStore merchantStore,
@@ -392,7 +392,7 @@ public class ContentApi {
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public ContentFolder getFileUrlsForSeller(@ApiIgnore
 	MerchantStore merchantStore,
@@ -422,7 +422,7 @@ public class ContentApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public String upload(@RequestParam("file")
 	MultipartFile file,
@@ -464,7 +464,7 @@ public class ContentApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public String uploadForSeller(@RequestParam("file")
 	MultipartFile file,
@@ -520,7 +520,7 @@ public class ContentApi {
 //	@PostMapping(value = "/private/file")
 //	@ResponseStatus(HttpStatus.CREATED)
 //	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void upload(@RequestParam("file") MultipartFile file, @ApiIgnore MerchantStore merchantStore,
 //			@ApiIgnore Language language) {
 //
@@ -543,7 +543,7 @@ public class ContentApi {
 //			// @ApiImplicitParam(name = "file[]", value = "File stream object",
 //			// required = true,dataType = "MultipartFile",allowMultiple = true),
 //			@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+//			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 //	public void uploadMultipleFiles(@RequestParam(value = "file[]", required = true) MultipartFile[] files,
 //			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
 //
@@ -572,7 +572,7 @@ public class ContentApi {
 	)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public void deleteFile(@Valid
 	ContentName name,
@@ -599,7 +599,7 @@ public class ContentApi {
 	)
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") }
+				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public void deleteFileForSeller(@Valid
 	ContentName name,

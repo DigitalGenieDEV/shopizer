@@ -90,7 +90,7 @@ public class AuthenticateCustomerApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(httpMethod = "POST", value = "Registers a customer to the application", notes = "Used as self-served operation",response = AuthenticationResponse.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-		@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+		@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
 	@ResponseBody
 	public ResponseEntity<?> register(
 			@Valid @RequestBody PersistableCustomer customer, 

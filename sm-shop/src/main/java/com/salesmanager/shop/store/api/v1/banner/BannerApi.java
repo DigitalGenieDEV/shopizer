@@ -70,7 +70,7 @@ public class BannerApi {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/private/banner", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public PersistableBanner create(@Valid @RequestBody PersistableBanner banner, HttpServletRequest request)
 			throws Exception {
 

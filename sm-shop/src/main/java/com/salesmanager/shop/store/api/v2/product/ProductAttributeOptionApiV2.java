@@ -45,7 +45,7 @@ public class ProductAttributeOptionApiV2 {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/options" }, method = RequestMethod.GET)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableProductOptionList2 options(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, 
@@ -62,7 +62,7 @@ public class ProductAttributeOptionApiV2 {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = { "/private/product/option/values" }, method = RequestMethod.GET)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableProductOptionValueList2 optionValues(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, 

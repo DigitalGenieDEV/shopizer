@@ -67,7 +67,7 @@ public class CustomerOrderApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableCustomerOrderList list(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
@@ -117,7 +117,7 @@ public class CustomerOrderApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableCustomerOrder getCustomerOrder(
             @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
@@ -242,7 +242,7 @@ public class CustomerOrderApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableOrderList listOrders(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
@@ -286,7 +286,7 @@ public class CustomerOrderApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableOrder getOrder(
             @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response

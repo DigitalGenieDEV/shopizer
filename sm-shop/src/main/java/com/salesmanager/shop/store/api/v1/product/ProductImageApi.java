@@ -83,7 +83,7 @@ public class ProductImageApi {
 	@RequestMapping(value = { "/private/product/{id}/image", "/auth/product/{id}/image" }, consumes = {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, method = RequestMethod.POST)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void uploadImage(
 			@PathVariable Long id, 
 			@RequestParam(value = "file", required = true) MultipartFile[] files,
@@ -210,7 +210,7 @@ public class ProductImageApi {
 			@ApiResponse(code = 200, message = "List of ProductImage found", response = List.class) })
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public List<ReadableImage> images(
 			@PathVariable Long productId, 
 			@ApiIgnore MerchantStore merchantStore, 
@@ -267,7 +267,7 @@ public class ProductImageApi {
 	@RequestMapping(value = { "/private/product/{id}/image/{imageId}",
 			"/auth/product/{id}/image/{id}" }, method = RequestMethod.PATCH)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void imageDetails(@PathVariable Long id, @PathVariable Long imageId,
 			@RequestParam(value = "order", required = false, defaultValue = "0") Integer position,
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws IOException {
