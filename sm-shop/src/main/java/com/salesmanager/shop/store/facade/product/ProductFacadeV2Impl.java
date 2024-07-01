@@ -16,8 +16,7 @@ import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.system.MerchantShippingConfiguration;
 import com.salesmanager.shop.mapper.catalog.ReadableProductAnnouncementAttributeMapper;
-import com.salesmanager.shop.mapper.catalog.product.ReadableProductListMapper;
-import com.salesmanager.shop.mapper.catalog.product.UserReadableProductMapper;
+import com.salesmanager.shop.mapper.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAnnouncement;
 import org.apache.commons.collections4.CollectionUtils;
@@ -44,8 +43,6 @@ import com.salesmanager.core.model.catalog.product.relationship.ProductRelations
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.mapper.catalog.product.ReadableProductMapper;
-import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductList;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
@@ -83,6 +80,8 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	@Autowired
 	private ReadableProductMapper readableProductMapper;
 
+	@Autowired
+	private ReadableProductByAdminMapper readableProductByAdminMapper;
 
 	@Autowired
 	private ReadableProductListMapper readableProductListMapper;
@@ -133,22 +132,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			}
 		}
 
-		ReadableProductFull readableProductFull = new ReadableProductFull();
-
-		ReadableProductPopulator populator = new ReadableProductPopulator();
-
-		populator.setPricingService(pricingService);
-		populator.setimageUtils(imageUtils);
-
-		ReadableProduct readableProduct = populator.populate(product, readableProductFull, store, language);
-
-		List<ProductVariant> instances = productVariantService.getByProductId(store, product, language);
-
-		if (!CollectionUtils.isEmpty(instances)){
-			MerchantStore finalStore = store;
-			List<ReadableProductVariant> readableInstances = instances.stream().map(p -> this.productVariant(p, finalStore, language)).collect(Collectors.toList());
-			readableProduct.setVariants(readableInstances);
-		}
+		ReadableProduct readableProduct = readableProductByAdminMapper.convert(product, product.getMerchantStore(), language);
 
 		List<ProductFeature> listByProductId = productFeatureService.findListByProductId(id);
 		if (!CollectionUtils.isEmpty(listByProductId)){
