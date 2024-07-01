@@ -9,7 +9,7 @@ public class RecSelectionProductRequest {
     private Integer uid;
     private String deviceId;
     private Integer categoryId;
-    private Integer pageIdx = 0;
+    private Integer number = 0;
     private Integer size = 20;
     private String tag;
     private String cacheid;
@@ -22,12 +22,12 @@ public class RecSelectionProductRequest {
         this.uid = uid;
     }
 
-    public Integer getPageIdx() {
-        return pageIdx;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setPageIdx(Integer pageIdx) {
-        this.pageIdx = pageIdx;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Integer getSize() {
