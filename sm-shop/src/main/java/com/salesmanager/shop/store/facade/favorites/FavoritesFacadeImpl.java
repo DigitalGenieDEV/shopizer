@@ -80,8 +80,8 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
         try {
             Product productById = productService.getProductByCache(favorite.getProductId());
             if (productById!=null){
-                Set<ManufacturerDescription> descriptions = productById.getManufacturer().getDescriptions();
-                if (!descriptions.isEmpty()) {
+                if (productById.getManufacturer() !=null && !productById.getManufacturer().getDescriptions().isEmpty()){
+                    Set<ManufacturerDescription> descriptions = productById.getManufacturer().getDescriptions();
                     for (ManufacturerDescription manufacturerDescription : descriptions){
                         if (manufacturerDescription.getLanguage().getCode().equals(language.getCode())){
                             readableFavorites.setManufacturer(manufacturerDescription.getName());

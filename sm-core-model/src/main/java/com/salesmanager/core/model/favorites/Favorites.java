@@ -9,6 +9,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
@@ -27,11 +28,11 @@ public class Favorites extends SalesManagerEntity<Long, Favorites> implements Au
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
     private Long id;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "USER_ID",  nullable = false)
     private Long userId;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "PRODUCT_ID", nullable = false)
     private Long productId;
 
