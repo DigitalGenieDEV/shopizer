@@ -124,6 +124,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
 
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(footPrintResult.getProductList(), language);
         readableRecProductList.setProducts(readableRecProductList.getProducts());
+        readableRecProductList.setRecordsTotal(footPrintResult.getHitNumber());
+        readableRecProductList.setTotalPages((int) Math.ceil(footPrintResult.getHitNumber() / request.getSize()));
 
         return readableRecProductList;
     }
