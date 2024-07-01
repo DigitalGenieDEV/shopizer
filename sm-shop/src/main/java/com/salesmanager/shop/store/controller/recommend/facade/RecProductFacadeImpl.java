@@ -96,7 +96,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         selectionItemRequest.setDeviceid(request.getDeviceId());
         selectionItemRequest.setCategoryId(request.getCategoryId());
         selectionItemRequest.setUid(request.getUid());
-        selectionItemRequest.setPageIdx(request.getPageIdx());
+        selectionItemRequest.setPageIdx(request.getNumber());
         selectionItemRequest.setTag(request.getTag());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setCacheid(request.getCacheid());
@@ -104,7 +104,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         SelectionItemResult selectionItemResult = recProductService.selectionItem(selectionItemRequest);
 
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(selectionItemResult.getProductList(), language);
-        readableRecProductList.setNumber(request.getPageIdx());
+        readableRecProductList.setNumber(request.getNumber());
         readableRecProductList.setCacheid(selectionItemResult.getCacheid());
         readableRecProductList.setRecordsTotal(selectionItemResult.getHitNumber());
         readableRecProductList.setTotalPages((int) Math.ceil(selectionItemResult.getHitNumber() / request.getSize()));

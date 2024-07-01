@@ -192,6 +192,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
             destination.setCartItems(readableCustomerShoppingCartItems);
             destination.setTotals(totals);
             destination.setLanguage(language.getCode());
+            destination.setId(source.getId());
         } catch (Exception e) {
             throw new ConversionRuntimeException("An error occured while converting ReadableCustomerShoppingCart", e);
         }
