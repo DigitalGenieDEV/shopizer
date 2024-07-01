@@ -3,8 +3,6 @@ package com.salesmanager.shop.store.api.v1.recommend;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.core.utils.StringUtil;
-import com.salesmanager.shop.model.common.ReadablePaginationResult;
 import com.salesmanager.shop.model.recommend.*;
 import com.salesmanager.shop.store.controller.recommend.facade.RecProductFacade;
 import com.salesmanager.shop.store.security.JWTTokenUtil;
@@ -125,7 +123,7 @@ public class RecProductApi {
         return recProductFacade.getRecSelectionProduct(recSelectionProductRequest, language);
     }
 
-    @PostMapping("/rec/foot_print")
+    @PostMapping("/recent_view")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
@@ -134,7 +132,7 @@ public class RecProductApi {
             @RequestBody RecFootPrintRequest request,
             @ApiIgnore Language language
     ) throws Exception {
-        return recProductFacade.getFootPrint(request, language);
+        return recProductFacade.getRecentView(request, language);
     }
 
 }

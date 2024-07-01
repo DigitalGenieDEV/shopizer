@@ -113,7 +113,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
     }
 
     @Override
-    public ReadableRecProductList getFootPrint(RecFootPrintRequest request, Language language) throws Exception {
+    public ReadableRecProductList getRecentView(RecFootPrintRequest request, Language language) throws Exception {
         FootPrintRequest footPrintRequest = new FootPrintRequest();
         footPrintRequest.setUid(request.getUid());
         footPrintRequest.setSize(request.getSize());
@@ -124,6 +124,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
 
         ReadableRecProductList readableRecProductList = convert2ReadableRecProduct(footPrintResult.getProductList(), language);
         readableRecProductList.setProducts(readableRecProductList.getProducts());
+        readableRecProductList.setRecordsTotal(footPrintResult.getHitNumber());
+        readableRecProductList.setTotalPages((int) Math.ceil(footPrintResult.getHitNumber() / request.getSize()));
 
         return readableRecProductList;
     }

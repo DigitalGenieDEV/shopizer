@@ -128,6 +128,7 @@ public class RecProductServiceImpl implements RecProductService {
             FootPrintInvokeResult result = objectMapper.readValue(response, FootPrintInvokeResult.class);
 
             footPrintResult.setProductList(getProductList(result.getProductList()));
+            footPrintResult.setHitNumber(result.getHitNumber());
             return footPrintResult;
         } catch (Exception e) {
             e.printStackTrace();
