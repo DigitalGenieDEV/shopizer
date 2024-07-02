@@ -1207,7 +1207,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			queryBuilder.append(" and p.id in (:pId)");
 		}
 		if (!StringUtils.isEmpty(criteria.getPublishWay())) {
-			queryBuilder.append(" and p.publishWay = pbw");
+			queryBuilder.append(" and p.publishWay = :pbw");
 		}
 		if (criteria.getSellerCountryCode() != null) {
 			queryBuilder.append(" and p.merchantStore.country.id=:mcoid");
