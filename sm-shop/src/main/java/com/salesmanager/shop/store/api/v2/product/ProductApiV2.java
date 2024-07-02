@@ -39,12 +39,14 @@ import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVari
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantValue;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableSelectedProductVariant;
 import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
+import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchKeywordQueryParam;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProductPageInfo;
 import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -187,6 +189,18 @@ public class ProductApiV2 {
 		returnEntity.setId(productId);
 
 		return returnEntity;
+	}
+
+
+	@PutMapping(value = { "/private/product/simple/update"})
+	public @ResponseBody CommonResultDTO<Long> productSimpleUpdate(
+			@Valid @RequestBody PersistableSimpleProductUpdateReq product) throws ServiceException {
+		try {
+			return CommonResultDTO.ofSuccess(productCommonFacade.simpleUpdateProduct(product));
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
 	}
 
 

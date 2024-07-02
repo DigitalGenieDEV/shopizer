@@ -5,10 +5,12 @@ import java.util.List;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.product.Product;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
@@ -23,6 +25,21 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"WHERE (pv.sku = ?1 OR p.sku = ?1)")
 	boolean existsBySku(String sku, Integer store);
 
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p SET p.type.id = :productTypeId WHERE p.id = :productId")
+	void updateProductType(@Param("productId") Long productId, @Param("productTypeId") Long productTypeId);
+
+	@Modifying
+	@Transactional
+	@Query(value = "INSERT INTO PRODUCT_CATEGORY (PRODUCT_ID, CATEGORY_ID) VALUES (:productId, :categoryId) ON DUPLICATE KEY UPDATE CATEGORY_ID = :categoryId", nativeQuery = true)
+	void addOrUpdateProductCategory(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
+
+	@Modifying
+	@Transactional
+	@Query(value ="UPDATE PRODUCT_CATEGORY pc SET pc.CATEGORY_ID = :categoryId WHERE pc.PRODUCT_ID = :productId", nativeQuery = true)
+	void updateProductCategory(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
 
 
 	@Query(value="SELECT " +

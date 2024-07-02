@@ -24,6 +24,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -494,6 +495,17 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		return productRepository.existsByProductIdentifier(code);
 	}
 
+
+
+	@Override
+	public void updateProductType(Long productId,Long productTypeId){
+		productRepository.updateProductType(productId, productTypeId);
+	}
+
+	@Override
+	public void updateProductCategory(Long productId, Long categoryId){
+		productRepository.updateProductCategory(productId, categoryId);
+	}
 
 	@Override
 	public Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer storeId){

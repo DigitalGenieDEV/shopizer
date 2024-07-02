@@ -17,7 +17,7 @@ import com.salesmanager.core.model.catalog.product.description.ProductDescriptio
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.tax.taxclass.TaxClass;
-
+import org.springframework.data.repository.query.Param;
 
 
 public interface ProductService extends SalesManagerEntityService<Long, Product> {
@@ -66,6 +66,10 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer storeId);
 
+
+	void updateProductType(Long productId,Long productTypeId);
+
+	void updateProductCategory(Long productId, Long categoryId);
 	/**
 	 * countProductsByCategoryIds
 	 * @param categoryIds

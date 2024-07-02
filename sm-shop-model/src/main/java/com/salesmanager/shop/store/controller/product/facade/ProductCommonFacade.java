@@ -14,6 +14,7 @@ import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
+import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
 
 public interface ProductCommonFacade {
 	
@@ -28,6 +29,8 @@ public interface ProductCommonFacade {
 	  Long saveProduct(MerchantStore store, PersistableProduct product,
 	      Language language) throws ServiceException;
 
+
+	Long simpleUpdateProduct(PersistableSimpleProductUpdateReq product) throws ServiceException;
 	  /**
 	   * Update minimal product details
 	   * @param product

@@ -9,7 +9,7 @@ import com.salesmanager.core.model.catalog.product.type.ProductType;
 
 public interface ProductTypeRepository extends JpaRepository<ProductType, Long> {
 
-	@Query(value = "select p from ProductType p join fetch p.merchantStore pm where p.code=?1")
+	@Query(value = "select p from ProductType p  where p.code=?1")
 	ProductType findByCode(String code);
 
 	@Query(value = "select p from ProductType p left join fetch p.descriptions pd left join fetch p.merchantStore pm where p.code=?1 and (pm is null or pm.id=?2)")

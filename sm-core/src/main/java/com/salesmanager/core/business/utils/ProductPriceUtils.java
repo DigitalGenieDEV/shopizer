@@ -727,7 +727,7 @@ public class ProductPriceUtils {
 		}
 
 		if (hasDiscount) {
-			finalPrice.setDiscountPercent(price.getDiscountPercent());
+			finalPrice.setDiscountPercent(price.getDiscountPercent() == null? 0 : price.getDiscountPercent());
 			finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
 		}
 

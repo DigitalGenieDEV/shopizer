@@ -9,10 +9,13 @@ import com.salesmanager.core.business.services.catalog.product.attribute.Product
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.catalog.product.image.ProductImageService;
+import com.salesmanager.core.business.services.catalog.product.type.ProductTypeService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
+import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.shop.mapper.catalog.PersistableProductAnnouncementAttributeMapper;
+import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -102,6 +105,9 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Autowired
 	private ProductAnnouncementAttributeService productAnnouncementAttributeService;
 
+	@Autowired
+	private ProductTypeService productTypeService;
+
 	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
@@ -164,6 +170,21 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 		}
 		return target.getId();
+	}
+
+
+
+	@Override
+	@Transactional
+	public Long simpleUpdateProduct(PersistableSimpleProductUpdateReq product) throws ServiceException {
+		ProductType productType = productTypeService.getProductType(product.getType());
+		productService.updateProductType(product.getProductId(), productType.getId());
+		productService.updateProductCategory(product.getProductId(), product.getLeftCategory());
+		if (!CollectionUtils.isEmpty(product.getProductTag())){
+			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(product.getProductId());
+			processProductFeatureDiff(listByProductId, product.getProductTag(), product.getProductId());
+		}
+		return product.getProductId();
 	}
 
 	public void updateProduct(MerchantStore store, PersistableProduct product, Language language) {
