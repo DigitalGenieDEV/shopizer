@@ -112,7 +112,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
                 readableShoppingCartMapper.merge(shoppingCart, readableShoppingCart, shoppingCart.getMerchantStore(), language);
 
                 readableShoppingCart.getProducts().stream().map(i -> convert2ReadableCustomerShoppingCartItem(i, false)).forEach(item -> {
-                    item.setId(getCustomerShoppingCartIdItemId(source, item.getSku()));
+                    CustomerShoppingCartItem customerShoppingCartItem = getCustomerShoppingCartItemBySku(source, item.getSku());
+                    item.setId(customerShoppingCartItem.getId());
+                    item.setProductId(customerShoppingCartItem.getProductId());
                     readableUncheckedCustomerShoppingCartItems.put(item.getSku(), item);
                 });
             }
@@ -129,7 +131,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
                 readableCheckedItemsShoppingCarts.add(readableShoppingCart);
 
                readableShoppingCart.getProducts().stream().map(i -> convert2ReadableCustomerShoppingCartItem(i, true)).forEach(item -> {
-                   item.setId(getCustomerShoppingCartIdItemId(source, item.getSku()));
+                   CustomerShoppingCartItem customerShoppingCartItem = getCustomerShoppingCartItemBySku(source, item.getSku());
+                   item.setId(customerShoppingCartItem.getId());
+                   item.setProductId(customerShoppingCartItem.getProductId());
                    readableCheckedCustomerShoppingCartItems.put(item.getSku(), item);
                });
             }
@@ -204,10 +208,10 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         return destination;
     }
 
-    private Long getCustomerShoppingCartIdItemId(CustomerShoppingCart customerShoppingCart, String sku) {
+    private CustomerShoppingCartItem getCustomerShoppingCartItemBySku(CustomerShoppingCart customerShoppingCart, String sku) {
         return customerShoppingCart.getLineItems()
                 .stream().filter(customerShoppingCartItem -> StringUtils.equals(customerShoppingCartItem.getSku(), sku))
-                .findFirst().map(CustomerShoppingCartItem::getId).orElse(0l);
+                .findFirst().orElse(null);
     }
 
     private ReadableCustomerShoppingCartItem convert2ReadableCustomerShoppingCartItem(ReadableShoppingCartItem readableShoppingCartItem, boolean checked) {

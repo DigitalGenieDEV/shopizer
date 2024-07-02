@@ -29,10 +29,19 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 
     private boolean checked;
 
+    private Long productId;
+
 
     private List<ReadableProductVariation> variants = null;
 
 
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
     public BigDecimal getSubTotal() {
         return subTotal;
