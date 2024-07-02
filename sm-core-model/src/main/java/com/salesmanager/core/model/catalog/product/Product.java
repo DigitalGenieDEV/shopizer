@@ -190,7 +190,7 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@Column(name="PUBLISH_WAY", nullable = true)
 	@Enumerated(value = EnumType.STRING)
-	private PublishWayEnums publishWayEnums;
+	private PublishWayEnums publishWay;
 
 	@Column(name="MIN_ORDER_QUANTITY", nullable = true)
 	private Integer minOrderQuantity;
@@ -627,12 +627,12 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		this.priceRangeList = priceRangeList;
 	}
 
-	public PublishWayEnums getPublishWayEnums() {
-		return publishWayEnums;
+	public PublishWayEnums getPublishWay() {
+		return publishWay;
 	}
 
-	public void setPublishWayEnums(PublishWayEnums publishWayEnums) {
-		this.publishWayEnums = publishWayEnums;
+	public void setPublishWay(PublishWayEnums publishWay) {
+		this.publishWay = publishWay;
 	}
 
 	public Long getLeftCategoryId() {
