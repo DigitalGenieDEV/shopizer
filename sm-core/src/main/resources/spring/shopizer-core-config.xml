@@ -71,6 +71,7 @@
 					<beans:value>classpath:shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -88,6 +89,7 @@
 					<beans:value>classpath:shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -102,10 +104,10 @@
 				<beans:list>
 					<beans:value>classpath:profiles/gcp/database.properties</beans:value>
 					<beans:value>classpath:email.properties</beans:value>
-					<beans:value>classpath:profiles/gcp/shopizer-core.properties
-					</beans:value>
+					<beans:value>classpath:profiles/gcp/shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -120,10 +122,10 @@
 				<beans:list>
 					<beans:value>classpath:profiles/aws/database.properties</beans:value>
 					<beans:value>classpath:email.properties</beans:value>
-					<beans:value>classpath:profiles/aws/shopizer-core.properties
-					</beans:value>
+					<beans:value>classpath:profiles/aws/shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:profiles/aws/sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -138,10 +140,10 @@
 				<beans:list>
 					<beans:value>classpath:profiles/cloud/database.properties</beans:value>
 					<beans:value>classpath:email.properties</beans:value>
-					<beans:value>classpath:profiles/cloud/shopizer-core.properties
-					</beans:value>
+					<beans:value>classpath:profiles/cloud/shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -159,6 +161,7 @@
 					<beans:value>classpath:profiles/local/shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:profiles/local/sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
@@ -176,6 +179,7 @@
 					<beans:value>classpath:profiles/mysql/shopizer-core.properties</beans:value>
 					<beans:value>classpath:authentication.properties</beans:value>
 					<beans:value>classpath:sendy.properties</beans:value>
+					<beans:value>classpath:s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>

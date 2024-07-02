@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,7 +86,7 @@ public class CustomerApi {
 	private ImageFilePath imageUtils;
 
 	/** Create new customer for a given MerchantStore */
-	@PostMapping("/private/customer")
+	@PostMapping(value = "/private/customer", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	@ApiOperation(
 			httpMethod = "POST", value = "Creates a customer", notes = "Requires administration access", produces = "application/json", response = ReadableCustomer.class
 	)
@@ -91,9 +94,10 @@ public class CustomerApi {
 	public ReadableCustomer create(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
-			@Valid @RequestBody PersistableCustomer customer
+			@Valid @RequestPart PersistableCustomer customer,
+			@RequestPart MultipartFile businessRegistrationFile
 	) {
-		MultipartFile file = customer.getBusinessRegistrationFile();
+		MultipartFile file = businessRegistrationFile;
 		if(file != null) {
 			ContentFile f = new ContentFile();
 			f.setContentType(file.getContentType());
@@ -292,7 +296,7 @@ public class CustomerApi {
 		return customerFacade.update(userName, customer, merchantStore);
 	}
 
-	@DeleteMapping("/auth/customer/")
+	@DeleteMapping({"/auth/customer/", "/private/customer"})
 	@ApiOperation(
 			httpMethod = "DELETE", value = "Deletes a loged in customer profile", notes = "Requires authentication", produces = "application/json", response = Void.class
 	)
@@ -300,7 +304,7 @@ public class CustomerApi {
 	public void delete(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
-			@RequestParam List<String> withdrawalReason,
+			@RequestParam(value="withdrawalReason") List<String> withdrawalReason,
 			@RequestParam(defaultValue = "") String withdrawalReasonDetail,			
 			HttpServletRequest request
 	) {
@@ -310,7 +314,7 @@ public class CustomerApi {
 
 		Customer customer;
 		try {
-			customer = customerFacade.getCustomerByUserName(userName, merchantStore);
+			customer = customerFacade.getCustomerByUserName(userName);
 			if (customer == null) {
 				throw new ResourceNotFoundException("Customer [" + userName + "] not found");
 			}

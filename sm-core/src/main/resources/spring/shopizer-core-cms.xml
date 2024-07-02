@@ -123,18 +123,36 @@
 				</beans:property>
 	</beans:bean>
 	
-	 <beans:bean id="httpdContentAssetsManager"
+	<beans:bean id="httpdContentAssetsManager"
 				class="com.salesmanager.core.business.modules.cms.content.local.CmsStaticContentFileManagerImpl" factory-method="getInstance" >
 				<beans:property name="cacheManager">
 						<beans:ref bean="httpdAssetsManager" />
 				</beans:property>
 	</beans:bean>
-
+	
 	<beans:bean id="httpdDownloadsManager"
 				class="com.salesmanager.core.business.modules.cms.content.local.CmsStaticContentFileManagerImpl" factory-method="getInstance" >
 				<beans:property name="cacheManager">
 						<beans:ref bean="httpdAssetsManager" />
 				</beans:property>
+	</beans:bean>
+	<!--
+	<beans:bean id="localProductAssetsManager"
+				class="com.salesmanager.core.business.modules.cms.product.local.S3ProductContentFileManager" factory-method="getInstance" >
+				<beans:property name="cmsManager">
+						<beans:ref bean="localAssetsManager" />
+				</beans:property>
+	</beans:bean>
+	
+	<beans:bean id="localContentAssetsManager"
+				class="com.salesmanager.core.business.modules.cms.content.local.S3StaticContentAssetsManagerImpl" factory-method="getInstance" >
+				<beans:property name="cmsManager">
+						<beans:ref bean="localAssetsManager" />
+				</beans:property>
+	</beans:bean>
+	-->
+	<beans:bean id="localDownloadsManager"
+				class="com.salesmanager.core.business.modules.cms.content.local.S3StaticContentAssetsManagerImpl">
 	</beans:bean>
 
 	<!-- AWS-->
@@ -197,6 +215,13 @@
 
     <!-- aws -->
 	<beans:bean id="awsAssetsManager" 
+		class="com.salesmanager.core.business.modules.cms.impl.S3CacheManagerImpl">
+		<beans:constructor-arg value="${config.cms.aws.bucket}"/>
+		<beans:constructor-arg value="${config.cms.aws.region}"/>
+	</beans:bean>
+
+    <!-- local -->
+	<beans:bean id="localAssetsManager" 
 		class="com.salesmanager.core.business.modules.cms.impl.S3CacheManagerImpl">
 		<beans:constructor-arg value="${config.cms.aws.bucket}"/>
 		<beans:constructor-arg value="${config.cms.aws.region}"/>

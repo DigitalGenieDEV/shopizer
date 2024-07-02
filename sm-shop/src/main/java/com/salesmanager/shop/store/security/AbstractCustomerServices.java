@@ -37,6 +37,7 @@ public abstract class AbstractCustomerServices implements UserDetailsService{
 	public AbstractCustomerServices(
 			CustomerService customerService, 
 			PermissionService permissionService, 
+			
 			GroupService groupService) {
 		
 		this.customerService = customerService;
@@ -60,6 +61,8 @@ public abstract class AbstractCustomerServices implements UserDetailsService{
 			
 				if(user==null) {
 					//return null;
+					throw new UsernameNotFoundException("User " + userName + " not found");
+				} else if(user.getWithdrawalAt() != null) {
 					throw new UsernameNotFoundException("User " + userName + " not found");
 				}
 	
