@@ -100,7 +100,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setSku(source.getSku() == null? source.getIdentifier() : source.getSku());
 			}
 
-			destination.setPublishWayEnums(PublishWayEnums.valueOf(source.getPublishWay()));
+			destination.setPublishWay(PublishWayEnums.valueOf(source.getPublishWay()));
 			destination.setLeftCategoryId(source.getLeftCategoryId() == null ? null :source.getLeftCategoryId());
 			destination.setAvailable(source.isVisible());
 			destination.setDateAvailable(new Date());
