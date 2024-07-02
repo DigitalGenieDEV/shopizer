@@ -21,6 +21,7 @@ import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.*;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
@@ -34,8 +35,10 @@ import com.salesmanager.shop.model.catalog.product.ProductDescription;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductOptionValue;
 import com.salesmanager.shop.model.catalog.product.attribute.ProductPropertyOption;
+import com.salesmanager.shop.model.catalog.product.attribute.api.PersistableProductOptionEntity;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProductInventory;
+import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchKeywordQueryParam;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProductSearchQueryModelProduct;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableAlibabaProductSearchQueryPriceInfo;
@@ -238,7 +241,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             }
         }
 
-
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
@@ -288,11 +290,22 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableProduct.setMixNumber(productDetailModel.getSellerMixSetting().getMixNumber());
             persistableProduct.setMixAmount(productDetailModel.getSellerMixSetting().getMixAmount());
         }
+
+        if (productDetailModel != null && productDetailModel.getProductShippingInfo() != null) {
+            ProductSpecification productSpecification = new ProductSpecification();
+            ProductSearchQueryProductDetailModelProductShippingInfo shippingInfo = productDetailModel.getProductShippingInfo();
+            productSpecification.setHeight(convertToBigDecimal(shippingInfo.getHeight()));
+            productSpecification.setLength(convertToBigDecimal(shippingInfo.getLength()));
+            productSpecification.setWeight(convertToBigDecimal(shippingInfo.getWeight()));
+            productSpecification.setWidth(convertToBigDecimal(shippingInfo.getWidth()));
+            persistableProduct.setProductSpecifications(productSpecification);
+        }
+
         persistableProduct.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
         createProductVariant(ko, store, productDetailModel, persistableProduct);
 
         createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
-
+        persistableProduct.setPublishWay(PublishWayEnums.IMPORT_BY_1688.name());
         productCommonFacade.saveProduct(store, persistableProduct, ko);
         return productId;
     }
@@ -322,52 +335,47 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             String value = productSearchQueryProductDetailModelProductAttribute.getValue();
 
             ProductOption productOption =  productOptionService.getByCode(store, attributeName);
-            if (productOption!=null){
-                productOptionService.delete(productOption);
+            Long productOptionId = productOption == null ? null : productOption.getId();
+            if (productOption == null){
+                ProductOption option =  new ProductOption();
+                option.setMerchantStore(store);
+                option.setCode(attributeName);
+                option.setProductOptionType(ProductOptionType.Select.name());
+
+                ProductOptionDescription sizeDescription = new ProductOptionDescription();
+                sizeDescription.setLanguage(language);
+                sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
+                sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
+                sizeDescription.setProductOption(option);
+
+                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
+                if (productSearchQueryProductDetailModelProductAttribute1!=null){
+                    ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
+                    sizeDescriptionForEn.setLanguage(en);
+                    sizeDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null :productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    sizeDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1 == null ? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    sizeDescriptionForEn.setProductOption(option);
+                    option.getDescriptions().add(sizeDescriptionForEn);
+                }
+
+
+                option.getDescriptions().add(sizeDescription);
+
+                //create option
+                productOptionService.saveOrUpdate(option);
+                ProductOption byCode = productOptionService.getByCode(store, attributeName);
+                productOptionId = byCode.getId();
+
             }
-            Long productOptionId = null;
-
-            ProductOption option =  new ProductOption();
-            option.setMerchantStore(store);
-            option.setCode(attributeName);
-            option.setProductOptionType(ProductOptionType.Select.name());
-
-            ProductOptionDescription sizeDescription = new ProductOptionDescription();
-            sizeDescription.setLanguage(language);
-            sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-            sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-            sizeDescription.setProductOption(option);
-
-            ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
-            if (productSearchQueryProductDetailModelProductAttribute1!=null){
-                ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
-                sizeDescriptionForEn.setLanguage(en);
-                sizeDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null :productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                sizeDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1 == null ? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                sizeDescriptionForEn.setProductOption(option);
-                option.getDescriptions().add(sizeDescriptionForEn);
-            }
-
-
-            option.getDescriptions().add(sizeDescription);
-
-            //create option
-            productOptionService.saveOrUpdate(option);
-            ProductOption byCode = productOptionService.getByCode(store, attributeName);
-            productOptionId = byCode.getId();
-
-            ProductPropertyOption propertyOption = new ProductPropertyOption();
+            PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
             propertyOption.setCode(attributeName);
             propertyOption.setId(productOptionId);
             persistableProductAttribute.setOption(propertyOption);
 
             ProductOptionValue optionValue =  productOptionValueService.getByCode(store, value);
-            if (optionValue!= null){
-                productOptionValueService.delete(optionValue);
-            }
+            Long optionValueId = optionValue == null ? null : optionValue.getId();
 
-            Long optionValueId = null;
-
+            if (optionValue == null){
                 ProductOptionValue productOptionValue = new ProductOptionValue();
                 productOptionValue.setMerchantStore(store);
                 productOptionValue.setCode(value);
@@ -378,12 +386,12 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 nineDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
                 nineDescription.setProductOptionValue(productOptionValue);
 
-                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute2 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
+                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
                 if (productSearchQueryProductDetailModelProductAttribute1 !=null){
                     ProductOptionValueDescription nineDescriptionForEn = new ProductOptionValueDescription();
                     nineDescriptionForEn.setLanguage(en);
-                    nineDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute2 == null? null : productSearchQueryProductDetailModelProductAttribute2.getValueTrans());
-                    nineDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute2== null? null : productSearchQueryProductDetailModelProductAttribute2.getValueTrans());
+                    nineDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
+                    nineDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1== null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
                     nineDescriptionForEn.setProductOptionValue(productOptionValue);
                     productOptionValue.getDescriptions().add(nineDescriptionForEn);
                 }
@@ -392,10 +400,9 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 //create an option value
                 productOptionValueService.saveOrUpdate(productOptionValue);
 
-                ProductOptionValue productOptionValueServiceByCode = productOptionValueService.getByCode(store, value);
-                optionValueId = productOptionValueServiceByCode.getId();
-
-
+                ProductOptionValue byCode = productOptionValueService.getByCode(store, value);
+                optionValueId = byCode.getId();
+            }
             PersistableProductOptionValue persistentOptionValue = new PersistableProductOptionValue();
             persistentOptionValue.setCode(value);
             persistentOptionValue.setId(optionValueId);
@@ -461,50 +468,48 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 String attributeName = skuAttribute.getAttributeName();
                 String value = skuAttribute.getValue();
                 ProductOption productOption =  productOptionService.getByCode(store, attributeName);
-                if (productOption != null){
-                    productOptionService.delete(productOption);
+                if (productOption == null){
+                    ProductOption option =  new ProductOption();
+                    option.setMerchantStore(store);
+                    option.setCode(attributeName);
+                    option.setProductOptionType(ProductOptionType.Select.name());
+
+                    ProductOptionDescription sizeDescription = new ProductOptionDescription();
+                    sizeDescription.setLanguage(language);
+                    sizeDescription.setName(skuAttribute.getAttributeNameTrans());
+                    sizeDescription.setDescription(skuAttribute.getAttributeNameTrans());
+                    sizeDescription.setProductOption(option);
+
+                    option.getDescriptions().add(sizeDescription);
+
+                    //create option
+                    productOptionService.saveOrUpdate(option);
+
+                    productOption = productOptionService.getByCode(store, attributeName);
+
+
                 }
-                ProductOption option =  new ProductOption();
-                option.setMerchantStore(store);
-                option.setCode(attributeName);
-                option.setProductOptionType(ProductOptionType.Select.name());
-
-                ProductOptionDescription sizeDescription = new ProductOptionDescription();
-                sizeDescription.setLanguage(language);
-                sizeDescription.setName(skuAttribute.getAttributeNameTrans());
-                sizeDescription.setDescription(skuAttribute.getAttributeNameTrans());
-                sizeDescription.setProductOption(option);
-
-                option.getDescriptions().add(sizeDescription);
-
-                //create option
-                productOptionService.saveOrUpdate(option);
-
-                productOption = productOptionService.getByCode(store, attributeName);
-
                 productVariant.setOption(productOption.getId());
 
                 ProductOptionValue optionValue =  productOptionValueService.getByCode(store, value);
-                if (optionValue != null){
-                    productOptionValueService.delete(optionValue);
+                if (optionValue == null){
+                    ProductOptionValue productOptionValue = new ProductOptionValue();
+                    productOptionValue.setMerchantStore(store);
+                    productOptionValue.setCode(value);
+
+                    ProductOptionValueDescription nineDescription = new ProductOptionValueDescription();
+                    nineDescription.setLanguage(language);
+                    nineDescription.setName(skuAttribute.getValueTrans());
+                    nineDescription.setDescription(skuAttribute.getValueTrans());
+                    nineDescription.setProductOptionValue(productOptionValue);
+
+                    productOptionValue.getDescriptions().add(nineDescription);
+
+                    //create an option value
+                    productOptionValueService.saveOrUpdate(productOptionValue);
+
+                    optionValue = productOptionValueService.getByCode(store, value);
                 }
-                ProductOptionValue productOptionValue = new ProductOptionValue();
-                productOptionValue.setMerchantStore(store);
-                productOptionValue.setCode(value);
-
-                ProductOptionValueDescription nineDescription = new ProductOptionValueDescription();
-                nineDescription.setLanguage(language);
-                nineDescription.setName(skuAttribute.getValueTrans());
-                nineDescription.setDescription(skuAttribute.getValueTrans());
-                nineDescription.setProductOptionValue(productOptionValue);
-
-                productOptionValue.getDescriptions().add(nineDescription);
-
-                //create an option value
-                productOptionValueService.saveOrUpdate(productOptionValue);
-
-                optionValue = productOptionValueService.getByCode(store, value);
-
                 productVariant.setOptionValue(optionValue.getId());
 
                 productVariant.setCode(attributeName+":"+value);
@@ -603,6 +608,9 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         categoryDescriptions.add(shoesDescription1);
         category.setDescriptions(categoryDescriptions);
         return category;
+    }
+    private BigDecimal convertToBigDecimal(Double value) {
+        return value != null ? BigDecimal.valueOf(value) : BigDecimal.ZERO;
     }
 
 

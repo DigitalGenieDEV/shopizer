@@ -13,6 +13,7 @@ public class Product extends Entity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String publishWay;
 	private boolean productShipeable = false;
 
 	private boolean available;
@@ -28,6 +29,14 @@ public class Product extends Entity implements Serializable {
 
 	public String getModificationDate() {
 		return modificationDate;
+	}
+
+	public String getPublishWay() {
+		return publishWay;
+	}
+
+	public void setPublishWay(String publishWay) {
+		this.publishWay = publishWay;
 	}
 
 	public void setModificationDate(String modificationDate) {

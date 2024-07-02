@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -99,6 +100,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setSku(source.getSku() == null? source.getIdentifier() : source.getSku());
 			}
 
+			destination.setPublishWayEnums(PublishWayEnums.valueOf(source.getPublishWay()));
 			destination.setLeftCategoryId(source.getLeftCategoryId() == null ? null :source.getLeftCategoryId());
 			destination.setAvailable(source.isVisible());
 			destination.setDateAvailable(new Date());

@@ -1,6 +1,8 @@
 package com.salesmanager.shop.model.catalog.product.attribute;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.salesmanager.shop.model.entity.Entity;
 
 
@@ -13,6 +15,16 @@ public class ProductPropertyOption extends Entity implements Serializable {
   private String code;
   private String type;
   private boolean readOnly;
+
+  private List<ProductOptionDescription> descriptions ;
+
+  public List<ProductOptionDescription> getDescriptions() {
+    return descriptions;
+  }
+
+  public void setDescriptions(List<ProductOptionDescription> descriptions) {
+    this.descriptions = descriptions;
+  }
 
   public String getCode() {
     return code;

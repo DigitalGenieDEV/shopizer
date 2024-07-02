@@ -70,6 +70,9 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 	@Column(name = "PRODUCT_PRICE_SPECIAL_AMOUNT")
 	private BigDecimal productPriceSpecialAmount;
 
+	@Column(name = "DISCOUNT_PERCENT")
+	private int discountPercent;
+
 	@JsonIgnore
 	@ManyToOne(targetEntity = ProductAvailability.class)
 	@JoinColumn(name = "PRODUCT_AVAIL_ID", nullable = false)
@@ -248,5 +251,11 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 		return productPriceType;
 	}
 
+	public int getDiscountPercent() {
+		return discountPercent;
+	}
 
+	public void setDiscountPercent(int discountPercent) {
+		this.discountPercent = discountPercent;
+	}
 }

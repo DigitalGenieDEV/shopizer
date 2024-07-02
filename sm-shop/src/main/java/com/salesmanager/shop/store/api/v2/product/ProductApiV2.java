@@ -26,6 +26,7 @@ import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
@@ -146,7 +147,7 @@ public class ProductApiV2 {
 	 */
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(value = { "/private/product"})
+	@PostMapping(value = { "/product"})
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody Entity createV2(@Valid @RequestBody PersistableProduct product,
@@ -551,6 +552,13 @@ public class ProductApiV2 {
 		if (CollectionUtils.isNotEmpty(optionValueIds)) {
 			criteria.setOptionValueIds(optionValueIds);
 		}
+		if (StringUtils.isNotBlank(sellerCountryCode)){
+			criteria.setPublishWay(PublishWayEnums.SELLER.name());
+		}
+		if (StringUtils.isNotBlank(productType)){
+			criteria.setPublishWay(PublishWayEnums.IMPORT_BY_1688.name());
+		}
+
 
 		if (owner != null) {
 			criteria.setOwnerId(owner);
@@ -618,6 +626,7 @@ public class ProductApiV2 {
 		ProductCriteria criteria = new ProductCriteria();
 
 		criteria.setOrigin(ORIGIN_ADMIN);
+		criteria.setPublishWay(PublishWayEnums.SELLER.name());
 
 		// do not use legacy pagination anymore
 		if (lang != null) {

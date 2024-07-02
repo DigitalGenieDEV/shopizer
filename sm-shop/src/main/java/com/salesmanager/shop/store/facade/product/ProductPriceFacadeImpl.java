@@ -1,9 +1,14 @@
 package com.salesmanager.shop.store.facade.product;
 
 import static com.salesmanager.core.business.utils.NumberUtils.isPositive;
+
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.shop.model.catalog.product.PersistableProductPriceDiscount;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ import com.salesmanager.shop.populator.catalog.ReadableProductPricePopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.ProductPriceFacade;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductPriceFacadeImpl implements ProductPriceFacade {
@@ -145,6 +151,38 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 		} catch (ConversionException e) {
 			throw new ServiceRuntimeException("An exception occured while deleting product price [" + productPriceId + "] for product sku [" + sku + "] and Store [" + store.getCode() + "]", e);
 		}
+	}
+
+	@Override
+	@Transactional
+	public void setProductDiscount(PersistableProductPriceDiscount discount) {
+		Validate.notNull(discount.getProductId(), "Product  id cannot be null");
+		Validate.notNull(discount.getDiscount(), "discount cannot be null");
+		Long productId = discount.getProductId();
+
+		List<ProductAvailability> productAvailabilities = productAvailabilityService.getByProductId(productId);
+
+		productAvailabilities.forEach(productAvailability -> {
+			Set<ProductPrice> prices = productAvailability.getPrices();
+			for (ProductPrice price : prices) {
+				price.setDiscountPercent(discount.getDiscount());
+
+				BigDecimal productPriceAmount = price.getProductPriceAmount();
+				BigDecimal discountPercent = new BigDecimal(discount.getDiscount());
+
+				BigDecimal discountAmount = productPriceAmount.multiply(discountPercent).divide(new BigDecimal(100));
+
+				BigDecimal productPriceSpecialAmount = productPriceAmount.subtract(discountAmount);
+
+				price.setDiscountPercent(discount.getDiscount());
+				price.setProductPriceSpecialAmount(productPriceSpecialAmount);
+				try {
+					productPriceService.save(price);
+				} catch (ServiceException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 
 }

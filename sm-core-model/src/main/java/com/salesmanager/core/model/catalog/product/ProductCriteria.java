@@ -22,6 +22,7 @@ public class ProductCriteria extends Criteria {
 	private Long endTime;
 	private String auditStatus;
 
+	private String publishWay;
 
 	private List<Long> shippingTemplateIds;
 
@@ -229,5 +230,13 @@ public class ProductCriteria extends Criteria {
 				", manufacturerId=" + manufacturerId +
 				", ownerId=" + ownerId +
 				'}';
+	}
+
+	public String getPublishWay() {
+		return publishWay;
+	}
+
+	public void setPublishWay(String publishWay) {
+		this.publishWay = publishWay;
 	}
 }

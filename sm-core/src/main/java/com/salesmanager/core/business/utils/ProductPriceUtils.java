@@ -725,8 +725,10 @@ public class ProductPriceUtils {
 		if (price.isDefaultPrice()) {
 			finalPrice.setDefaultPrice(true);
 		}
+
 		if (hasDiscount) {
-			discountPrice(finalPrice);
+			finalPrice.setDiscountPercent(price.getDiscountPercent());
+			finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
 		}
 
 		return finalPrice;
@@ -744,7 +746,6 @@ public class ProductPriceUtils {
 		finalPrice.setDiscountPercent(percent);
 
 		// calculate percent
-		BigDecimal price = finalPrice.getOriginalPrice();
 		finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
 	}
 

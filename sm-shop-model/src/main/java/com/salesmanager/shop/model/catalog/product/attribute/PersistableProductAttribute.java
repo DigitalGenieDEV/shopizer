@@ -3,6 +3,7 @@ package com.salesmanager.shop.model.catalog.product.attribute;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.salesmanager.shop.model.catalog.product.attribute.api.PersistableProductOptionEntity;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ProductAttributeEntity;
 
 public class PersistableProductAttribute extends ProductAttributeEntity
@@ -12,15 +13,16 @@ public class PersistableProductAttribute extends ProductAttributeEntity
 	private BigDecimal productAttributePrice;
 	private Long productId;
 	
-	private ProductPropertyOption option;
+	private PersistableProductOptionEntity option;
 	private PersistableProductOptionValue optionValue;
 
 
-	public void setOption(ProductPropertyOption option) {
-		this.option = option;
-	}
-	public ProductPropertyOption getOption() {
+	public PersistableProductOptionEntity getOption() {
 		return option;
+	}
+
+	public void setOption(PersistableProductOptionEntity option) {
+		this.option = option;
 	}
 
 	/**

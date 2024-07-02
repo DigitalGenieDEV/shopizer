@@ -31,6 +31,8 @@ import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 public class PersistableProductAttributeMapper implements Mapper<PersistableProductAttribute, ProductAttribute> {
 
 	@Inject
+	private PersistableProductOptionMapper persistableProductOptionMapper;
+	@Inject
 	private ProductOptionService productOptionService;
 	@Inject
 	private ProductOptionValueService productOptionValueService;
@@ -54,14 +56,25 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 		
 		if(!StringUtils.isBlank(source.getOption().getCode())) {
 			productOption = productOptionService.getByCode(store, source.getOption().getCode());
-		} else {
+		} else if(source.getProductId() != null && source.getOption().getId().longValue()>0){
 			Validate.notNull(source.getOption().getId(),"Product option id is null");
 			productOption = productOptionService.getById(source.getOption().getId());
+		}else {
+			productOption = new ProductOption();
 		}
 
-		if(productOption==null) {
-			throw new ConversionRuntimeException("Product option id " + source.getOption().getId() + " does not exist");
+		if(!CollectionUtils.isEmpty((source.getOption().getDescriptions()))) {
+			productOption =  persistableProductOptionMapper.merge(source.getOption(),productOption, store, language);
+			try {
+				productOption.setCode(UUID.randomUUID().toString());
+				productOption.setMerchantStore(store);
+				productOptionService.saveOrUpdate(productOption);
+			} catch (ServiceException e) {
+				throw new ConversionRuntimeException("Error converting ProductOptionValue",e);
+			}
 		}
+
+
 		
 		ProductOptionValue productOptionValue = null;
 		

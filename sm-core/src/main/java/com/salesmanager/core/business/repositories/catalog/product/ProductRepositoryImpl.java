@@ -1206,6 +1206,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (!CollectionUtils.isEmpty(criteria.getProductIds())) {
 			queryBuilder.append(" and p.id in (:pId)");
 		}
+		if (!StringUtils.isEmpty(criteria.getPublishWay())) {
+			queryBuilder.append(" and p.publishWay = pbw");
+		}
 		if (criteria.getSellerCountryCode() != null) {
 			queryBuilder.append(" and p.merchantStore.country.id=:mcoid");
 		}
@@ -1245,6 +1248,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		}
 		if (criteria.getSellerCountryCode() != null) {
 			query.setParameter("mcoid", criteria.getSellerCountryCode());
+		}
+		if (!StringUtils.isEmpty(criteria.getPublishWay())) {
+			query.setParameter("pbw", PublishWayEnums.valueOf(criteria.getPublishWay()));
 		}
 		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
 			query.setParameter("pstId", criteria.getShippingTemplateIds());

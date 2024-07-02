@@ -5,6 +5,7 @@ import java.util.List;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.PersistableProductPrice;
+import com.salesmanager.shop.model.catalog.product.PersistableProductPriceDiscount;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 
 
@@ -74,4 +75,7 @@ public interface ProductPriceFacade {
 	 * @return
 	 */
 	ReadableProductPrice get(String sku, Long productPriceId, MerchantStore store, Language language);
+
+
+	void setProductDiscount(PersistableProductPriceDiscount discount);
 }
