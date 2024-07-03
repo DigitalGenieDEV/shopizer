@@ -3,6 +3,7 @@ package com.salesmanager.shop.mapper.catalog.product;
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
@@ -18,6 +19,7 @@ import com.salesmanager.core.model.catalog.product.price.ProductPrice;
 import com.salesmanager.core.model.catalog.product.price.ProductPriceDescription;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
+import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.Mapper;
@@ -65,6 +67,9 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 	private ImageFilePath imageUtils;
 
 	@Autowired
+	private ProductFeatureService productFeatureService;
+
+	@Autowired
 	private ReadableCategoryMapper readableCategoryMapper;
 
 	@Autowired
@@ -110,6 +115,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		if (language == null){
 			language = source.getMerchantStore().getDefaultLanguage();
 		}
+
 
 		destination.setId(source.getId());
 		destination.setAvailable(source.isAvailable());
@@ -176,6 +182,10 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 //					destination.setDiscounted(true);
 //				}
 //			}
+
+			List<ProductFeature> productFeatures = productFeatureService.findListByProductId(source.getId());
+			List<String> tags = productFeatures.stream().filter(productFeature -> "1".equals(productFeature.getValue())).map(ProductFeature::getKey).collect(Collectors.toList());
+			destination.setTags(tags);
 
 		} catch (Exception e) {
 			throw new ConversionRuntimeException("An error while converting product price", e);
