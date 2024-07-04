@@ -1,5 +1,7 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -9,8 +11,10 @@ import org.apache.http.auth.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,19 +22,26 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.salesmanager.core.model.content.FileContentType;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
 import com.salesmanager.shop.store.api.exception.GenericRuntimeException;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
+import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
+import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
@@ -40,6 +51,7 @@ import com.salesmanager.shop.store.security.JWTTokenUtil;
 import com.salesmanager.shop.store.security.PasswordRequest;
 import com.salesmanager.shop.store.security.user.JWTUser;
 import com.salesmanager.shop.utils.AuthorizationUtils;
+import com.salesmanager.shop.utils.ImageFilePath;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -73,6 +85,9 @@ public class AuthenticateCustomerApi {
 
 	@Inject
 	private CustomerFacade customerFacade;
+	
+	@Inject
+	private ContentFacade contentFacade;
 
 	@Inject
 	private StoreFacade storeFacade;
@@ -82,20 +97,26 @@ public class AuthenticateCustomerApi {
 
 	@Autowired
 	private UserFacade userFacade;
+	
+	@Inject
+	@Qualifier("img")
+	private ImageFilePath imageUtils;
 
 	/**
 	 * Create new customer for a given MerchantStore, then authenticate that customer
 	 */
-	@RequestMapping( value={"/customer/register"}, method=RequestMethod.POST, produces ={ "application/json" })
+	@PostMapping(value = "/customer/register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_MIXED_VALUE})
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(httpMethod = "POST", value = "Registers a customer to the application", notes = "Used as self-served operation",response = AuthenticationResponse.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "en") })
 	@ResponseBody
 	public ResponseEntity<?> register(
-			@Valid @RequestBody PersistableCustomer customer, 
+			@Valid @RequestPart PersistableCustomer customer, 
 			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) throws Exception {
+			@ApiIgnore Language language,
+			@RequestPart MultipartFile businessRegistrationFile
+			) throws Exception {
 
 
 		customer.setUserName(customer.getEmailAddress());
@@ -108,6 +129,31 @@ public class AuthenticateCustomerApi {
 		Validate.notNull(customer.getUserName(),"Username cannot be null");
 		Validate.notNull(customer.getBilling(),"Requires customer Country code");
 		Validate.notNull(customer.getBilling().getCountry(),"Requires customer Country code");
+		
+		MultipartFile file = businessRegistrationFile;
+		if(file != null) {
+			ContentFile f = new ContentFile();
+			f.setContentType(file.getContentType());
+			f.setName(file.getOriginalFilename());
+			try {
+				f.setFile(file.getBytes());
+			} catch (IOException e) {
+				throw new ServiceRuntimeException("Error while getting file bytes");
+			}
+	
+			contentFacade.addContentFile(
+					f,
+					merchantStore.getCode(),
+					FileContentType.valueOf(customer.getFileContentType())
+			);
+			
+			String imageValue = imageUtils.buildStaticImageUtils(
+					merchantStore,
+					f.getName()
+			);
+			
+			customer.setBusinessRegistration(imageValue);
+		}
 
 		customerFacade.registerCustomer(customer, merchantStore, language);
 

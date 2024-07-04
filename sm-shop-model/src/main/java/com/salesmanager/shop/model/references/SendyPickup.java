@@ -17,5 +17,5 @@ public class SendyPickup {
 	private Boolean hasPassenger;
 	private LocalDate date;
 	private LocalTime time;
-	private SendyTruckInfo truckInfo;
+	private SendyTruckerInfo truckInfo;
 }
