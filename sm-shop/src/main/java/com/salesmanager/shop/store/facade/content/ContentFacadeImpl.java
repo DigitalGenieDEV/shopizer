@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.constants.Constants;
 import com.salesmanager.shop.model.content.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
@@ -74,7 +75,7 @@ public class ContentFacadeImpl implements ContentFacade {
 					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path : " + folder));
 
 			// images from CMS
-			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store))
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store, null))
 					.collect(Collectors.toList());
 
 			ContentFolder contentFolder = new ContentFolder();
@@ -97,7 +98,7 @@ public class ContentFacadeImpl implements ContentFacade {
 					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path  "));
 
 			// images from CMS
-			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store))
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store, fileContentType))
 					.collect(Collectors.toList());
 
 			ContentFolder contentFolder = new ContentFolder();
@@ -120,7 +121,7 @@ public class ContentFacadeImpl implements ContentFacade {
 					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path  "));
 
 			// images from CMS
-			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store))
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentImage(name, store, fileContentType))
 					.collect(Collectors.toList());
 
 			ContentFolder contentFolder = new ContentFolder();
@@ -133,8 +134,8 @@ public class ContentFacadeImpl implements ContentFacade {
 	}
 
 
-	private ContentImage convertToContentImage(String name, MerchantStore store) {
-		String path = absolutePath(store, null);
+	private ContentImage convertToContentImage(String name, MerchantStore store, FileContentType fileContentType) {
+		String path = absolutePath(store, fileContentType);
 		ContentImage contentImage = new ContentImage();
 		contentImage.setName(name);
 		contentImage.setPath(path);
@@ -142,9 +143,9 @@ public class ContentFacadeImpl implements ContentFacade {
 	}
 
 	@Override
-	public String absolutePath(MerchantStore store, String file) {
-		return new StringBuilder().append(imageUtils.getContextPath())
-				.append(imageUtils.buildStaticImageUtils(store, file)).toString();
+	public String absolutePath(MerchantStore store, FileContentType type) {
+		StringBuilder builder = new StringBuilder().append(imageUtils.getContextPath());
+		return builder.append(imageUtils.buildStaticImageUtils(store, type.name(), null)).toString();
 	}
 
 	@Override

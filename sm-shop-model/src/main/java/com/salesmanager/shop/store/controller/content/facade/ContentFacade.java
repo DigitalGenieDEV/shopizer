@@ -41,7 +41,7 @@ public interface ContentFacade {
 	 * @param file
 	 * @return
 	 */
-	String absolutePath(MerchantStore store, String file);
+	String absolutePath(MerchantStore store, FileContentType fileContentType);
 	
 	/**
 	 * Deletes a file from CMS
