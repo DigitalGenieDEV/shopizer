@@ -345,24 +345,18 @@ public class ContentApi {
 	@GetMapping(value = "/content/images", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams(
-		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
+		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
 	public ContentFolder images(@ApiIgnore
-	MerchantStore merchantStore,
-			@ApiIgnore
-			Language language,
-			@RequestParam(value = "path", required = false)
-			String path,
+	MerchantStore merchantStore, @RequestParam(value = "fileContentType", required = true) String fileContentType,
 			HttpServletRequest request,
 			HttpServletResponse response
 	) throws Exception {
 
-		// String decodedPath = decodeContentPath(path);
 		ContentFolder folder = contentFacade.getContentFolder(
-				path,
-				merchantStore
-		);
+				merchantStore,
+				FileContentType.valueOf(fileContentType));
+
 		return folder;
 	}
 
