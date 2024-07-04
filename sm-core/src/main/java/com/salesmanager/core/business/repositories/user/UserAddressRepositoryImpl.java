@@ -40,18 +40,14 @@ public class UserAddressRepositoryImpl implements UserAddressRepositoryCustom {
 
 
 	@Override
-	public UserAddress findDefaultAddressByUserId(Long userId, Integer langId) {
+	public UserAddress findDefaultAddressByUserId(Long userId) {
 		String jpql = "select ua from UserAddress ua " +
 				"left join fetch ua.country c " +
-				"left join fetch c.descriptions cd " +
 				"left join fetch ua.city ci " +
-				"left join fetch ci.descriptions cid  " +
 				"left join fetch ua.province pr  " +
-				"left join fetch pr.descriptions prd  " +
-				"where ua.userId = :userId and ua.isDefault = true and prd.language.id = :langId and cid.language.id = :langId and cd.language.id = :langId";
+				"where ua.userId = :userId and ua.isDefault = true ";
 		TypedQuery<UserAddress> query = em.createQuery(jpql, UserAddress.class);
 		query.setParameter("userId", userId);
-		query.setParameter("langId", langId);
 		return query.getSingleResult();
 	}
 

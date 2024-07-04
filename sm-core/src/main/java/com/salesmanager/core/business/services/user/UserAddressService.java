@@ -11,7 +11,7 @@ public interface UserAddressService extends SalesManagerEntityService<Long, User
 
     List<UserAddress> findByUserId(Long userId, Language language);
 
-    UserAddress findDefaultAddressByUserId(Long userId, Language language);
+    UserAddress findDefaultAddressByUserId(Long userId);
 
     void saveOrUpdate(UserAddress userAddress);
 

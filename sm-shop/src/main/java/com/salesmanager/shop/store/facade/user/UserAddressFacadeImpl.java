@@ -75,7 +75,7 @@ public class UserAddressFacadeImpl implements UserAddressFacade {
 
 	@Override
 	public ReadableAddress findDefaultAddressByUserId(Long userId, Language language) {
-		UserAddress userAddress = userAddressService.findDefaultAddressByUserId(userId, language);
+		UserAddress userAddress = userAddressService.findDefaultAddressByUserId(userId);
 		return userAddressConvert.convertPersistableAddress(userAddress, language);
 	}
 

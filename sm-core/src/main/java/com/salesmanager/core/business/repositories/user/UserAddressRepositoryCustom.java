@@ -13,6 +13,6 @@ public interface UserAddressRepositoryCustom {
 
 
 
-	UserAddress findDefaultAddressByUserId( Long userId, Integer langId);
+	UserAddress findDefaultAddressByUserId( Long userId);
 
 }

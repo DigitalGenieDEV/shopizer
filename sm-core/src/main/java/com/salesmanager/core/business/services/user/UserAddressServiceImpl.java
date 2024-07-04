@@ -46,8 +46,8 @@ public class UserAddressServiceImpl extends SalesManagerEntityServiceImpl<Long, 
 	}
 
 	@Override
-	public UserAddress findDefaultAddressByUserId(Long userId, Language language) {
-		return userAddressRepository.findDefaultAddressByUserId(userId, language.getId());
+	public UserAddress findDefaultAddressByUserId(Long userId) {
+		return userAddressRepository.findDefaultAddressByUserId(userId);
 	}
 
 	@Override
