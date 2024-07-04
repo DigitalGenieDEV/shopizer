@@ -163,7 +163,12 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 //    @Transactional
     private void getPopulatedItem(final CustomerShoppingCartItem item) throws Exception {
         long start = System.currentTimeMillis();
-        Product product = productService.getBySku(item.getSku());
+        Product product = null;
+        try {
+            product = productService.getBySku(item.getSku());
+        } catch (Exception e) {
+            LOGGER.error("getPopulatedItem get product exception: [" + item.getSku() + "]", e);
+        }
 //        Product product = productService.getBySku(item.getSku(), item.getMerchantStore(), item.getMerchantStore().getDefaultLanguage());
         if (product == null) {
             item.setObsolete(true);

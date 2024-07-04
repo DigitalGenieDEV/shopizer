@@ -454,7 +454,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         List<ShoppingCartItem> itemList = new ArrayList<ShoppingCartItem>(shoppingCart.getLineItems());
         //filter out unavailable
-        itemList = itemList.stream().filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
+        itemList = itemList.stream().filter(p -> !p.isObsolete()).filter(p -> p.getProduct().isAvailable()).collect(Collectors.toList());
         orderSummary.setProducts(itemList);
 
 

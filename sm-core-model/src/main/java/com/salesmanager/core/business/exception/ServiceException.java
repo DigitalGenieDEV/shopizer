@@ -29,7 +29,7 @@ public class ServiceException extends Exception {
 	}
 	
 	public ServiceException(String messageCode) {
-		super();
+		super(messageCode);
 		this.messageCode = messageCode;
 	}
 

@@ -136,6 +136,11 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 				for (com.salesmanager.core.model.shoppingcart.ShoppingCartItem item : items) {
 					ReadableShoppingCartItem shoppingCartItem = new ReadableShoppingCartItem();
 					LOG.debug("[ReadableShoppingCartMapper/merge] minimal product mapper, [sku:" + item.getSku() + "]");
+					if (item.isObsolete()) {
+						LOG.debug("[ReadableShoppingCartMapper/merge] cart item isObsolete, [sku:" + item.getSku() + "]");
+						continue;
+					}
+
 					readableMinimalProductMapper.merge(item.getProduct(), shoppingCartItem, store, language);
 
 					LOG.debug("[ReadableShoppingCartMapper/merge] calculate variant, [sku:" + shoppingCartItem.getSku() + "]");
