@@ -109,4 +109,5 @@ public interface ImageFilePath {
 	public String buildStaticContentFilePath(MerchantStore store, String fileName);
 
 
+	public String buildStaticImageUtilsByPath(MerchantStore store, String path);
 }

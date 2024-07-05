@@ -109,6 +109,11 @@ public class GCPStaticContentAssetsManagerImpl implements ContentAssetsManager {
 	}
 
 	@Override
+	public List<String> getFileNames(String merchantStoreCode, String path) throws ServiceException {
+		return null;
+	}
+
+	@Override
 	public List<OutputContentFile> getFiles(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType)
 			throws ServiceException {
 		try {

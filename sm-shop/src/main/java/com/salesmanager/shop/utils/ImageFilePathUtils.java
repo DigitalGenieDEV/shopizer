@@ -25,6 +25,11 @@ public class ImageFilePathUtils extends AbstractimageFilePath{
 	}
 
 	@Override
+	public String buildStaticImageUtilsByPath(MerchantStore store, String path) {
+		return basePath;
+	}
+
+	@Override
 	public void setBasePath(String basePath) {
 		this.basePath = basePath;
 	}

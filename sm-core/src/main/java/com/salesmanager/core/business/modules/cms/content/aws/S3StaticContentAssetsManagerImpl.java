@@ -184,6 +184,42 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 	}
 
 	@Override
+	public List<String> getFileNames(String merchantStoreCode, String path) throws ServiceException {
+		try {
+			// get buckets
+			String bucketName = bucketName();
+
+			ListObjectsV2Request listObjectsRequest = new ListObjectsV2Request().withBucketName(bucketName)
+					.withPrefix(nodePath(merchantStoreCode, path));
+
+			List<String> fileNames = null;
+
+			final AmazonS3 s3 = s3Client();
+			ListObjectsV2Result results = s3.listObjectsV2(listObjectsRequest);
+			List<S3ObjectSummary> objects = results.getObjectSummaries();
+			for (S3ObjectSummary os : objects) {
+				if (isInsideSubFolder(os.getKey())) {
+					continue;
+				}
+				if (fileNames == null) {
+					fileNames = new ArrayList<String>();
+				}
+				String mimetype = URLConnection.guessContentTypeFromName(os.getKey());
+				if (!StringUtils.isBlank(mimetype)) {
+					fileNames.add(getName(os.getKey()));
+				}
+			}
+
+			LOGGER.info("Content get file names");
+			return fileNames;
+		} catch (final Exception e) {
+			LOGGER.error("Error while getting file names", e);
+			throw new ServiceException(e);
+
+		}
+	}
+
+	@Override
 	public List<OutputContentFile> getFiles(String merchantStoreCode, Optional<String> folderPath, FileContentType fileContentType)
 			throws ServiceException {
 		try {

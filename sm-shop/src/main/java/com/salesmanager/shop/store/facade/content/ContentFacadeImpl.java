@@ -110,6 +110,26 @@ public class ContentFacadeImpl implements ContentFacade {
 		}
 	}
 
+	@Override
+	public ContentFolder getContentFolder(MerchantStore store, String path)  {
+		try {
+			List<String> imageNames = Optional
+					.ofNullable(contentService.getContentFilesNamesByPath(store.getCode(), path))
+					.orElseThrow(() -> new ResourceNotFoundException("No Folder found for path  "));
+
+			// images from CMS
+			List<ContentImage> contentImages = imageNames.stream().map(name -> convertToContentByPath(name, store, path))
+					.collect(Collectors.toList());
+
+			ContentFolder contentFolder = new ContentFolder();
+			contentFolder.getContent().addAll(contentImages);
+			return contentFolder;
+
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException("Error while getting folder " + e.getMessage(), e);
+		}
+	}
+
 
 	@Override
 	public ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType,
@@ -140,6 +160,20 @@ public class ContentFacadeImpl implements ContentFacade {
 		contentImage.setName(name);
 		contentImage.setPath(path);
 		return contentImage;
+	}
+
+	private ContentImage convertToContentByPath(String name, MerchantStore store, String path) {
+		String absolutePath = absolutePath(store, path);
+		ContentImage contentImage = new ContentImage();
+		contentImage.setName(name);
+		contentImage.setPath(absolutePath);
+		return contentImage;
+	}
+
+
+	public String absolutePath(MerchantStore store, String path) {
+		StringBuilder builder = new StringBuilder().append(imageUtils.getContextPath());
+		return builder.append(imageUtils.buildStaticImageUtilsByPath(store, path)).toString();
 	}
 
 	@Override

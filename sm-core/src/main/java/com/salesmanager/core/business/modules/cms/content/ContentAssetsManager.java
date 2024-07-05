@@ -40,6 +40,17 @@ public interface ContentAssetsManager extends AssetsManager, FileGet, FilePut, F
 
     }
 
+
+    default String nodePath(String store, String path) {
+        StringBuilder builder = new StringBuilder();
+        String root = nodePath(store);
+        builder.append(root);
+        builder.append(path).append(Constants.SLASH);
+        return builder.toString();
+
+    }
+
+
     default String nodePath(String store) {
 
         StringBuilder builder = new StringBuilder();

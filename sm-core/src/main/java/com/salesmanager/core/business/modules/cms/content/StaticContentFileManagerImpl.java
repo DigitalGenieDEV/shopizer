@@ -75,6 +75,11 @@ public class StaticContentFileManagerImpl extends StaticContentFileManager {
 	}
 
 	@Override
+	public List<String> getFileNames(String merchantStoreCode, String path) throws ServiceException {
+		return getFile.getFileNames(merchantStoreCode, path);
+	}
+
+	@Override
 	public List<OutputContentFile> getFiles(String merchantStoreCode, Optional<String> path, FileContentType fileContentType)
 			throws ServiceException {
 		return getFile.getFiles(merchantStoreCode, path, fileContentType);

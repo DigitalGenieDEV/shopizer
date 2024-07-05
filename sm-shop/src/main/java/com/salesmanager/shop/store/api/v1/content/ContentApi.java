@@ -333,12 +333,48 @@ public class ContentApi {
 	) {
 
 	}
+	@GetMapping(value = "/private/content/images/{path}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
+	@ApiImplicitParams(
+			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
+	)
+	public ContentFolder getAdminImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
+		return getImagesByPathInternal(merchantStore, path);
+	}
+
+	@GetMapping(value = "/auth/content/images/{path}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
+	@ApiImplicitParams(
+			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
+	)
+	public ContentFolder getSellerImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
+		return getImagesByPathInternal(merchantStore, path);
+	}
+
+	@GetMapping(value = "/content/images/{path}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
+	@ApiImplicitParams(
+			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
+	)
+	public ContentFolder getImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
+		return getImagesByPathInternal(merchantStore, path);
+	}
+
+
+
+
+	private ContentFolder getImagesByPathInternal(MerchantStore merchantStore, String path) {
+		ContentFolder folder = new ContentFolder();
+		try {
+			folder = contentFacade.getContentFolder(merchantStore, path);
+		} catch (Exception e) {
+			LOGGER.error("Error fetching images", e);
+		}
+		return folder;
+	}
+
 
 	/**
-	 * @param code
-	 * @param path
-	 * @param request
-	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
@@ -347,18 +383,18 @@ public class ContentApi {
 	@ApiImplicitParams(
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
-	public ContentFolder images(@ApiIgnore
-	MerchantStore merchantStore, @RequestParam(value = "fileContentType", required = true) String fileContentType,
-			HttpServletRequest request,
-			HttpServletResponse response
-	) throws Exception {
-
-		ContentFolder folder = contentFacade.getContentFolder(
-				merchantStore,
-				FileContentType.valueOf(fileContentType));
-
+	public ContentFolder images(@ApiIgnore MerchantStore merchantStore,
+								@RequestParam(value = "fileContentType", required = true) String fileContentType) {
+		ContentFolder folder = new ContentFolder();
+		try {
+			folder = contentFacade.getContentFolder(merchantStore, FileContentType.valueOf(fileContentType));
+			return folder;
+		}catch (Exception e){
+			LOGGER.error("images is error");
+		}
 		return folder;
 	}
+
 
 	@GetMapping(value = "/private/content/files", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)

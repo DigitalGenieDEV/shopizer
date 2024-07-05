@@ -142,6 +142,9 @@ public interface ContentService
     List<String> getContentFilesNames(String merchantStoreCode,
 			FileContentType fileContentType) throws ServiceException;
 
+	List<String> getContentFilesNamesByPath(String merchantStoreCode,
+									  String path) throws ServiceException;
+
 	List<String> getContentFilesNames(String merchantStoreCode, FileContentType fileContentType,
 									  String sortBy, Boolean ascending, String searchQuery)throws ServiceException;
 

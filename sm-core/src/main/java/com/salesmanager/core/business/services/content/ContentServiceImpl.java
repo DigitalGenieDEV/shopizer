@@ -429,6 +429,14 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<Long, Cont
 	}
 
 	@Override
+	public List<String> getContentFilesNamesByPath(String merchantStoreCode, String path) throws ServiceException {
+		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
+
+
+		return contentFileManager.getFileNames(merchantStoreCode, path);
+	}
+
+	@Override
 	public List<String> getContentFilesNames(String merchantStoreCode, FileContentType fileContentType,
 											 String sortBy, Boolean ascending, String searchQuery)
 			throws ServiceException {

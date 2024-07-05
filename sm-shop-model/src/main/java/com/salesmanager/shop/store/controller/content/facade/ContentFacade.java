@@ -33,6 +33,9 @@ public interface ContentFacade {
 	ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType) throws Exception;
 
 
+	ContentFolder getContentFolder(MerchantStore store, String path) throws Exception;
+
+
 	ContentFolder getContentFolder(MerchantStore store, FileContentType fileContentType,
 								   ContentListQueryRequest contentListQueryRequest) throws Exception;
 	/**

@@ -421,6 +421,11 @@ public class CmsStaticContentFileManagerImpl
 
 	}
 
+	@Override
+	public List<String> getFileNames(String merchantStoreCode, String path) throws ServiceException {
+		return null;
+	}
+
 	public void setRootName(String rootName) {
 		this.rootName = rootName;
 	}

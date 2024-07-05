@@ -53,7 +53,8 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 		return imgName.toString();
 				
 	}
-	
+
+
 	/**
 	 * Builds a static content image file path that can be used by image servlet
 	 * utility for getting the physical image by specifying the image type
