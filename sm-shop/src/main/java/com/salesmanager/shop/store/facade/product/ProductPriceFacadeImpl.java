@@ -7,8 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.shop.model.catalog.product.PersistableProductPriceDiscount;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -167,15 +173,18 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 			for (ProductPrice price : prices) {
 				price.setDiscountPercent(discount.getDiscount());
 
-				BigDecimal productPriceAmount = price.getProductPriceAmount();
-				BigDecimal discountPercent = new BigDecimal(discount.getDiscount());
-
-				BigDecimal discountAmount = productPriceAmount.multiply(discountPercent).divide(new BigDecimal(100));
-
-				BigDecimal productPriceSpecialAmount = productPriceAmount.subtract(discountAmount);
+				if (StringUtils.isNotEmpty(price.getPriceRangeList())){
+					List<PriceRange> priceRanges = JSON.parseObject(price.getPriceRangeList(), new TypeReference<List<PriceRange>>() {});
+					List<PriceRange> result = priceRanges.stream().map(priceRange -> {
+						priceRange.setPromotionPrice(buildDiscountPriceAmount(new BigDecimal(priceRange.getPrice()), discount.getDiscount()).toString());
+						return priceRange;
+					}).collect(Collectors.toList());
+					price.setPriceRangeList(JSON.toJSONString(result));
+				}else {
+					price.setProductPriceSpecialAmount(buildDiscountPriceAmount(price.getProductPriceAmount(), discount.getDiscount()));
+				}
 
 				price.setDiscountPercent(discount.getDiscount());
-				price.setProductPriceSpecialAmount(productPriceSpecialAmount);
 				try {
 					productPriceService.save(price);
 				} catch (ServiceException e) {
@@ -183,6 +192,15 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 				}
 			}
 		});
+	}
+
+	BigDecimal buildDiscountPriceAmount(BigDecimal price, int discount){
+		BigDecimal productPriceAmount = price;
+		BigDecimal discountPercent = new BigDecimal(discount);
+
+		BigDecimal discountAmount = productPriceAmount.multiply(discountPercent).divide(new BigDecimal(100));
+
+		return productPriceAmount.subtract(discountAmount);
 	}
 
 }

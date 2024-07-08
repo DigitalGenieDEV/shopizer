@@ -1,6 +1,9 @@
 package com.salesmanager.shop.store.api.v1.content;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -338,8 +341,8 @@ public class ContentApi {
 	@ApiImplicitParams(
 			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
-	public ContentFolder getAdminImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
-		return getImagesByPathInternal(merchantStore, path);
+	public ContentFolder getAdminImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable("path") String path) {
+		return getImagesByPathInternal(merchantStore, decodePathVariable(path));
 	}
 
 	@GetMapping(value = "/auth/content/images/{path}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -347,8 +350,8 @@ public class ContentApi {
 	@ApiImplicitParams(
 			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
-	public ContentFolder getSellerImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
-		return getImagesByPathInternal(merchantStore, path);
+	public ContentFolder getSellerImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable("path") String path) {
+		return getImagesByPathInternal(merchantStore, decodePathVariable(path));
 	}
 
 	@GetMapping(value = "/content/images/{path}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -356,12 +359,15 @@ public class ContentApi {
 	@ApiImplicitParams(
 			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
-	public ContentFolder getImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable String path) {
-		return getImagesByPathInternal(merchantStore, path);
+	public ContentFolder getImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable("path") String path) {
+		return getImagesByPathInternal(merchantStore, decodePathVariable(path));
 	}
 
 
-
+	private String decodePathVariable(String path) {
+		String result = path.replaceAll("_", "/");
+		return result;
+	}
 
 	private ContentFolder getImagesByPathInternal(MerchantStore merchantStore, String path) {
 		ContentFolder folder = new ContentFolder();

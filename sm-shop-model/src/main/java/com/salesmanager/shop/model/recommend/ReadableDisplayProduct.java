@@ -3,8 +3,6 @@ package com.salesmanager.shop.model.recommend;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.ProductDescription;
 import com.salesmanager.shop.model.catalog.product.ReadableImage;
-import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
-import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.entity.Entity;

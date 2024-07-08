@@ -25,6 +25,7 @@ import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.*;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
+import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
@@ -44,7 +45,6 @@ import com.salesmanager.shop.model.catalog.product.product.alibaba.AlibabaProduc
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableAlibabaProductSearchQueryPriceInfo;
 import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProductPageInfo;
 import com.salesmanager.shop.model.catalog.product.product.definition.PersistableProductDefinition;
-import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import com.salesmanager.shop.model.catalog.product.variation.PersistableProductVariation;
@@ -53,7 +53,6 @@ import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacad
 import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductDefinitionFacade;
 import com.salesmanager.shop.store.controller.product.facade.ProductVariationFacade;
-import com.salesmanager.shop.store.scheduled.MyScheduledTask;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -398,7 +398,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		try {
 			FinalPrice price = pricingService.calculateProductPrice(source);
 			if (price != null) {
-
+				destination.setPriceRangeList(price.getPriceRanges());
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
 				destination.setPrice(price.getFinalPrice());
 				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));

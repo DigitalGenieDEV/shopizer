@@ -3,7 +3,7 @@ package com.salesmanager.shop.model.catalog.product;
 import java.io.Serializable;
 import java.util.List;
 
-import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
+import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.shop.model.entity.Entity;
 
 public class ReadableProductPrice extends Entity implements Serializable {

@@ -48,7 +48,7 @@
 <!--    <cache name="productListCache" maxElementsInMemory="100" eternal="false"-->
 <!--           overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />-->
 
-<!--    <cache name="productByIdCache" maxElementsInMemory="100" eternal="false"-->
-<!--           overflowToDisk="false" memoryStoreEvictionPolicy="LFU" />-->
+    <cache name="productByIdCache" maxElementsInMemory="100" eternal="false"
+           overflowToDisk="false" memoryStoreEvictionPolicy="LCU" />
     
 </ehcache>

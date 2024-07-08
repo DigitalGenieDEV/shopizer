@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.salesmanager.shop.model.catalog.product.product.definition.PriceRange;
+import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import org.apache.commons.lang3.StringUtils;
 /**
  * A product entity is used by services API

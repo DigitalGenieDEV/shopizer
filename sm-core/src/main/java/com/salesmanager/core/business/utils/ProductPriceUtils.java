@@ -593,24 +593,7 @@ public class ProductPriceUtils {
 			Set<ProductPrice> prices = availability.getPrices();
 			for (ProductPrice price : prices) {
 				FinalPrice p = finalPrice(price);
-				if (product.getQuoteType() !=null && product.getQuoteType() == 2){
-					String priceRangeList = price.getPriceRangeList();
-					if(StringUtils.isNotEmpty(priceRangeList)){
-						List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
-						p.setPriceRanges(priceRanges);
-						Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
-								.min(Comparator.comparing(PriceRange::getStartQuantity));
 
-						if (minStartQuantityPriceRange.isPresent()) {
-							PriceRange priceRange = minStartQuantityPriceRange.get();
-							p.setDefaultPrice(true);
-							p.setStringPrice(priceRange.getPrice());
-							p.setFinalPrice(new BigDecimal(priceRange.getPrice()));
-						}
-						finalPrice = p;
-						break;
-					}
-				}
 
 				if (price.isDefaultPrice()) {
 					finalPrice = p;
@@ -635,7 +618,9 @@ public class ProductPriceUtils {
 			throw new ServiceException(ServiceException.EXCEPTION_ERROR,
 					"No inventory available to calculate the price. Availability should contain at least a region set to *");
 		}
-
+		if (!CollectionUtils.isEmpty(finalPrice.getPriceRanges())){
+			product.setPriceRangeList(JSON.toJSONString(finalPrice.getPriceRanges()));
+		}
 		return finalPrice;
 
 	}
@@ -724,6 +709,21 @@ public class ProductPriceUtils {
 
 		if (price.isDefaultPrice()) {
 			finalPrice.setDefaultPrice(true);
+		}
+
+		String priceRangeList = price.getPriceRangeList();
+		if(StringUtils.isNotEmpty(priceRangeList)){
+			List<PriceRange> priceRanges = JSON.parseObject(priceRangeList, new TypeReference<List<PriceRange>>() {});
+			finalPrice.setPriceRanges(priceRanges);
+			Optional<PriceRange> minStartQuantityPriceRange = priceRanges.stream()
+					.min(Comparator.comparing(PriceRange::getStartQuantity));
+
+			if (minStartQuantityPriceRange.isPresent()) {
+				PriceRange priceRange = minStartQuantityPriceRange.get();
+				finalPrice.setDefaultPrice(true);
+				finalPrice.setStringPrice(priceRange.getPrice());
+				finalPrice.setFinalPrice(new BigDecimal(priceRange.getPrice()));
+			}
 		}
 
 		if (hasDiscount) {
