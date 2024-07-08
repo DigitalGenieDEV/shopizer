@@ -25,14 +25,10 @@ import com.salesmanager.shop.model.popup.ReadablePopupList;
 import com.salesmanager.shop.model.popup.ReadableUserPopupList;
 import com.salesmanager.shop.populator.popup.PersistablePopupPopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
-import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.popup.facade.PopupFacade;
 
 @Service
 public class PopupFacadeImpl  implements PopupFacade {
-	
-	@Inject
-	private ContentFacade contentFacade;
 
 	@Inject
 	private PopupService popupService;
