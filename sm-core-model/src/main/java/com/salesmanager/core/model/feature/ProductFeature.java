@@ -42,6 +42,10 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	@Enumerated(value = EnumType.STRING)
 	private ProductFeatureStatus productFeatureStatus;
 
+	@Column(name="SORT", nullable = true)
+	private Integer sort;
+
+
 	public ProductFeatureStatus getProductFeatureStatus() {
 		return productFeatureStatus;
 	}
@@ -50,6 +54,13 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 		this.productFeatureStatus = productFeatureStatus;
 	}
 
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
 
 	public String getKey() {
 		return key;

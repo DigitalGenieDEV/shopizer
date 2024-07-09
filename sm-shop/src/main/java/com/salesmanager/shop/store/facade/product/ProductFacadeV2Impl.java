@@ -378,6 +378,63 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		return productList;
 	}
 
+
+
+
+	public ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language,
+																ProductCriteria criterias) throws ServiceException {
+		Validate.notNull(criterias, "ProductCriteria must be set for this product");
+
+		Validate.isTrue(criterias.getMaxCount()<=50, "size max is 50");
+
+		/** This is for category **/
+		if (CollectionUtils.isNotEmpty(criterias.getCategoryIds())) {
+
+			if (criterias.getCategoryIds().size() == 1) {
+				com.salesmanager.core.model.catalog.category.Category category = categoryService
+						.getById(criterias.getCategoryIds().get(0));
+				if (category != null) {
+					String lineage = new StringBuilder().append(category.getLineage())
+							.toString();
+
+					List<com.salesmanager.core.model.catalog.category.Category> categories = categoryService
+							.getListByLineage(lineage);
+
+					List<Long> ids = new ArrayList<Long>();
+					if (categories != null && categories.size() > 0) {
+						for (com.salesmanager.core.model.catalog.category.Category c : categories) {
+							ids.add(c.getId());
+						}
+					}
+					ids.add(category.getId());
+					criterias.setCategoryIds(ids);
+				}
+			}
+		}
+
+		Page<Product> modelProductList = productService.mainDisplayManagementList(store, language, criterias, criterias.getStartPage(), criterias.getMaxCount());
+
+		List<Product> products = modelProductList.getContent();
+		ReadableProductList productList = new ReadableProductList();
+
+
+		/**
+		 * ReadableProductMapper
+		 */
+
+		List<ReadableProduct> readableProducts = products.stream().map(p -> readableProductListMapper.convert(p, store, language))
+				.sorted(Comparator.comparing(ReadableProduct::getSortOrder)).collect(Collectors.toList());
+
+
+		productList.setRecordsTotal(modelProductList.getTotalElements());
+		productList.setNumber(modelProductList.getNumberOfElements());
+		productList.setProducts(readableProducts);
+		productList.setTotalPages(modelProductList.getTotalPages());
+
+		return productList;
+	}
+
+
 	@Override
 	public List<ReadableProduct> relatedItems(MerchantStore store, Product product, Language language)
 			throws Exception {

@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.controller.product.facade;
 import java.util.List;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -74,7 +75,8 @@ public interface ProductFacade {
   ReadableProductList getProductListsByCriterias(MerchantStore store, Language language,
       ProductCriteria criterias) throws Exception;
 
-
+  ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language,
+                                                   ProductCriteria criterias) throws ServiceException;
 
   ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language,
                                                        ProductCriteria criterias) throws Exception;

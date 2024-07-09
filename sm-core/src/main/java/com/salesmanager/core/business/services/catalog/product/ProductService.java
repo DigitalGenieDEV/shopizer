@@ -100,6 +100,9 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 	Page<Product> simpleListByStore(MerchantStore store, Language language,
 							  ProductCriteria criteria, int page, int count);
 
+	Page<Product> mainDisplayManagementList(MerchantStore store, Language language,
+									ProductCriteria criteria, int page, int count);
+
 	List<Product> listByStore(MerchantStore store);
 
 	List<Product> listByTaxClass(TaxClass taxClass);

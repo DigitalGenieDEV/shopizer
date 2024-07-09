@@ -68,6 +68,7 @@ public interface ProductRepositoryCustom {
 
 	ProductList listByStoreForList(MerchantStore store, Language language, ProductCriteria criteria);
 
+	ProductList mainDisplayManagementList(MerchantStore store, Language language, ProductCriteria criteria);
 	List<Product> getProductsForLocale(MerchantStore store,
 									   Set<Long> categoryIds, Language language, Locale locale);
 }

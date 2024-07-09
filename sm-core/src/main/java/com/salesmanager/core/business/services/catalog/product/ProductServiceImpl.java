@@ -420,6 +420,26 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		return p;
 	}
 
+
+	public Page<Product> mainDisplayManagementList(MerchantStore store, Language language, ProductCriteria criteria, int page,
+										   int count) {
+
+		criteria.setPageSize(page);
+		criteria.setPageSize(count);
+		criteria.setLegacyPagination(false);
+
+		ProductList productList = productRepository.mainDisplayManagementList(store, language, criteria);
+
+		PageRequest pageRequest = PageRequest.of(page, count);
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Page<Product> p = new PageImpl(productList.getProducts(),pageRequest, productList.getTotalCount());
+
+		return p;
+	}
+
+
+
 	@Override
 	public Product saveProduct(Product product) throws ServiceException{
 		try {

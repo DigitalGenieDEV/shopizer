@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import com.salesmanager.core.model.feature.ProductFeature;
 import org.hibernate.annotations.Cascade;
 
 import com.salesmanager.core.model.catalog.category.Category;
@@ -217,6 +218,15 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "QUOTE_TYPE", nullable = true)
 	private Integer quoteType;
 
+	@Column(name = "BIZ_TYPE", nullable = true)
+	private String bizType;
+
+	@Column(name = "DISCOUNT", nullable = true)
+	private Integer discount;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+	private Set<ProductFeature> features = new HashSet<>();
 
 	@Column(name="PRODUCT_STATUS", nullable = true)
 	@Enumerated(value = EnumType.STRING)
@@ -235,6 +245,21 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name="price")
 	private BigDecimal price;
 
+	public String getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
 
 	public Integer getQuoteType() {
 		return quoteType;
@@ -284,7 +309,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	}
 
 
+	public Set<ProductFeature> getFeatures() {
+		return features;
+	}
 
+	public void setFeatures(Set<ProductFeature> features) {
+		this.features = features;
+	}
 
 	public boolean isProductIsFree() {
 		return productIsFree;

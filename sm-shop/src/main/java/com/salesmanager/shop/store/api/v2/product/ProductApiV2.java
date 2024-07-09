@@ -613,6 +613,89 @@ public class ProductApiV2 {
 	}
 
 
+
+	@RequestMapping(value = "/private/main/display/products", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public ReadableProductList getMainDisplayManagementList(
+			@RequestParam(value = "lang", required = false) String lang,
+			@RequestParam(value = "category", required = false) Long category,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "identifier", required = false) String identifier,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "productType", required = false) String productType,
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, // count
+			@RequestParam(value = "companyName", required = false) String companyName,
+			@RequestParam(value = "tag", required = true) String tag,
+			@ApiIgnore Language language, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		ProductCriteria criteria = new ProductCriteria();
+
+		criteria.setOrigin(ORIGIN_ADMIN);
+
+		// do not use legacy pagination anymore
+		if (lang != null) {
+			criteria.setLanguage(lang);
+		} else {
+			criteria.setLanguage(language.getCode());
+		}
+		if (!StringUtils.isBlank(status)) {
+			criteria.setStatus(status);
+		}
+		if (!StringUtils.isBlank(tag)) {
+			criteria.setTag(tag);
+		}
+		// Start Category handling
+		List<Long> categoryIds = new ArrayList<Long>();
+
+		if (category != null) {
+			categoryIds.add(category);
+		}
+		if (categoryIds.size() > 0) {
+			criteria.setCategoryIds(categoryIds);
+		}
+		// End Category handling
+
+		if (!StringUtils.isBlank(companyName)) {
+			criteria.setCompanyName(companyName);
+		}
+
+		if (page != null) {
+			criteria.setStartPage(page);
+		}
+
+		if (count != null) {
+			criteria.setMaxCount(count);
+		}
+
+		if (!StringUtils.isBlank(name)) {
+			criteria.setProductName(name);
+		}
+
+		if (!StringUtils.isBlank(identifier)) {
+			criteria.setCode(identifier);
+		}
+
+		try {
+			long start = System.currentTimeMillis();
+			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getMainDisplayManagementList(null, language, criteria);
+			long end = System.currentTimeMillis();
+			System.out.println("执行时间："+(end - start));
+			return productSimpleListsByCriterias;
+		} catch (Exception e) {
+
+			LOGGER.error("Error while filtering products product", e);
+			try {
+				response.sendError(503, "Error while filtering products " + e.getMessage());
+			} catch (Exception ignore) {
+			}
+
+			return null;
+		}
+	}
+
+
 	@RequestMapping(value = "/auth/products", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),

@@ -156,6 +156,11 @@ public class ProductFacadeImpl implements ProductFacade {
 	}
 
 	@Override
+	public ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language, ProductCriteria criterias) throws ServiceException {
+		return null;
+	}
+
+	@Override
 	public ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language, ProductCriteria criterias) throws Exception {
 		return null;
 	}

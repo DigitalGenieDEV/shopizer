@@ -1275,6 +1275,90 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		}
 	}
 
+
+	public ProductList mainDisplayManagementList(MerchantStore store, Language language, ProductCriteria criteria) {
+		ProductList productList = new ProductList();
+
+		// Step 1: Query to get total count
+		StringBuilder countWhereClause = new StringBuilder();
+		countWhereClause.append(" WHERE 1 = 1");
+		appendSimpleConditions(store, countWhereClause, criteria);
+
+		// Use a temp query builder for count query to avoid repeating code
+		StringBuilder countQueryBuilder = new StringBuilder("SELECT COUNT(p.id) FROM Product p");
+		if (!StringUtils.isBlank(criteria.getTag())) {
+			countQueryBuilder.append(" INNER JOIN ProductFeature pf ON p.id = pf.productId");
+			countWhereClause.append(" AND pf.key = :featureKey");
+		}
+		countQueryBuilder.append(countWhereClause.toString());
+
+		long start = System.currentTimeMillis();
+		Query countQuery = this.em.createQuery(countQueryBuilder.toString());
+		if (store != null) {
+			countQuery.setParameter("mId", store.getId());
+		}
+		setSimpleParameters(countQuery, criteria, language);
+		if (!StringUtils.isBlank(criteria.getTag())) {
+			countQuery.setParameter("featureKey", criteria.getTag());
+		}
+
+		Long totalCount = (Long) countQuery.getSingleResult();
+		productList.setTotalCount(totalCount.intValue());
+		long end = System.currentTimeMillis();
+		System.out.println("Query count time: " + (end - start));
+
+		if (totalCount == 0) {
+			return productList;
+		}
+
+		// Step 2: Query to get paginated Product IDs with sorting by modification time
+		long start1 = System.currentTimeMillis();
+		StringBuilder productQueryBuilder = new StringBuilder("SELECT p FROM Product p");
+		if (!StringUtils.isBlank(criteria.getTag())) {
+			productQueryBuilder.append(" INNER JOIN p.features pf");
+			productQueryBuilder.append(countWhereClause.toString());
+		} else {
+			productQueryBuilder.append(countWhereClause.toString());
+		}
+
+
+		//Step 3 :sort
+		if (StringUtils.isNotEmpty(criteria.getSortField())){
+			if (ProductCriteriaSortField.DISCOUNT.name().equals(criteria.getSortField())){
+				productQueryBuilder.append(" ORDER BY p.discount");
+			}
+			if (ProductCriteriaSortField.DATE_CREATED.name().equals(criteria.getSortField())){
+				productQueryBuilder.append(" ORDER BY p.dateCreated");
+			}
+			if (ProductCriteriaSortField.DATE_MODIFIED.name().equals(criteria.getSortField())){
+				productQueryBuilder.append(" ORDER BY p.dateModified");
+			}
+		}else {
+			productQueryBuilder.append(" ORDER BY pf.sort");
+		}
+
+		Query productQuery = this.em.createQuery(productQueryBuilder.toString());
+		if (store != null) {
+			productQuery.setParameter("mId", store.getId());
+		}
+		setSimpleParameters(productQuery, criteria, language);
+		if (!StringUtils.isBlank(criteria.getTag())) {
+			productQuery.setParameter("featureKey", criteria.getTag());
+		}
+
+		int firstResult = (criteria.getStartPage() == 0 ? 0 : criteria.getStartPage()) * criteria.getPageSize();
+		productQuery.setFirstResult(firstResult);
+		productQuery.setMaxResults(criteria.getPageSize());
+
+		List<Product> products = productQuery.getResultList();
+		productList.setProducts(products);
+
+		long end1 = System.currentTimeMillis();
+		System.out.println("Query product IDs time: " + (end1 - start1));
+
+		return productList;
+	}
+
 	private void setComplexParameters(Query query, ProductCriteria criteria, Language language) {
 		setSimpleParameters(query, criteria, language);
 //		if (criteria.getLanguage() != null && !criteria.getLanguage().equals("_all")) {
