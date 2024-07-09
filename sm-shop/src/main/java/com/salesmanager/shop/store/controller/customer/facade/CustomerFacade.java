@@ -78,6 +78,7 @@ public interface CustomerFacade
     public ShoppingCart mergeCart(final Customer customer,final String sessionShoppingCartId,final MerchantStore store,final Language language) throws Exception;
     
     public Customer getCustomerByUserName(final String userName, final MerchantStore store);
+    public Customer getCustomerByUserName(final String userName);
     
     public boolean checkIfUserExists(final String userName,final MerchantStore store) throws Exception;
     

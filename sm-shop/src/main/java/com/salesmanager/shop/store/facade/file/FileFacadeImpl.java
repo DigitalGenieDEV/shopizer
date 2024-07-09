@@ -60,7 +60,7 @@ public class FileFacadeImpl implements FileFacade {
 	private ImageFilePath imageUtils;
 
 	
-	public void saveFile(int id, Map<String, MultipartFile> files, MerchantStore merchantStore)  throws Exception{
+	public void saveFile(int id, Map<String, MultipartFile> files, MerchantStore merchantStore, String path)  throws Exception{
 		
 		Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
 		MultipartFile file;
@@ -92,7 +92,7 @@ public class FileFacadeImpl implements FileFacade {
 		    String fileNameWithoutExtension = orginFileName.substring(index + 1);
 		    System.out.println(fileNameWithoutExtension);
 			f.setContentType(file.getContentType());
-			f.setName(file.getOriginalFilename());
+			f.setName(path+"/"+file.getOriginalFilename());
 			f.setFile(file.getBytes());
 			contentFacade.addContentFile(f, merchantStore.getCode());
 			

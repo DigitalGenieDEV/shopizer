@@ -290,6 +290,17 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 
 	}
+	
+	@Override
+	// KEEP
+	public Customer getCustomerByUserName(String userName) {
+		try {
+			return customerService.getByNick(userName);
+		} catch (Exception e) {
+			throw new ServiceRuntimeException(e);
+		}
+
+	}
 
 	@Override
 	public ReadableCustomer getByUserName(String userName, MerchantStore merchantStore, Language language) {

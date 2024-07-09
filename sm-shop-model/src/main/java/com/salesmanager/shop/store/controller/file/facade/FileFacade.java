@@ -10,7 +10,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 
 public interface FileFacade {
 	
-	void saveFile(int id, Map<String, MultipartFile> files, MerchantStore merchantStore)  throws Exception;
+	void saveFile(int id, Map<String, MultipartFile> files, MerchantStore merchantStore, String path)  throws Exception;
 	
 	byte[]  getById(int id,MerchantStore merchantStore)  throws Exception;
 	

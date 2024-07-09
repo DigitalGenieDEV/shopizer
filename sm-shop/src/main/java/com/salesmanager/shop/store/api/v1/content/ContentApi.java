@@ -460,8 +460,8 @@ public class ContentApi {
 		{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
-	public String upload(@RequestParam("file")
-	MultipartFile file,
+	public String upload(
+			@RequestParam("file") MultipartFile file,
 			@ApiIgnore
 			MerchantStore merchantStore,
 			@ApiIgnore

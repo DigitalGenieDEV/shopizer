@@ -33,7 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequiredArgsConstructor
 public class SendyApi {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerApi.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SendyApi.class);
 	
 	private final SendyFacade sendyFacade;
 	
