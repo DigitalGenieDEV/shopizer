@@ -291,11 +291,6 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                     break;
                 }
             }
-//            Set<ProductAvailability> instanceAvailabilities = instance.getAvailabilities();
-//            if(!CollectionUtils.isEmpty(instanceAvailabilities)) {
-//                availabilities = instanceAvailabilities;
-//            }
-
         }
 
         if (CollectionUtils.isEmpty(availabilities)) {
@@ -303,7 +298,6 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                     "Item with id " + product.getId() + " is not properly configured. It contains no inventory");
         }
 
-        //todo filter sku and store
         for (ProductAvailability availability : availabilities) {
             if (availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
                 throw new Exception("Product with id " + product.getId() + " is not available");
@@ -322,7 +316,6 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         item.setQuantity(customerShoppingCartItem.getQuantity());
         item.setCustomerShoppingCart(cartModel);
         item.setSku(customerShoppingCartItem.getSku());
-//        item.setSku(product.getSku());
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
 

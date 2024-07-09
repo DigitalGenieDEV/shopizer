@@ -100,6 +100,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         selectionItemRequest.setTag(request.getTag());
         selectionItemRequest.setUid(request.getUid());
         selectionItemRequest.setCacheid(request.getCacheid());
+        selectionItemRequest.setSize(request.getSize());
 
         SelectionItemResult selectionItemResult = recProductService.selectionItem(selectionItemRequest);
 
