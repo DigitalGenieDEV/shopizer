@@ -19,6 +19,7 @@ import com.salesmanager.shop.mapper.catalog.ReadableProductAnnouncementAttribute
 import com.salesmanager.shop.mapper.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.ReadableProductFull;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAnnouncement;
+import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -52,6 +53,7 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.ProductFacade;
 import com.salesmanager.shop.utils.ImageFilePath;
 import com.salesmanager.shop.utils.LocaleUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("productFacadeV2")
@@ -378,7 +380,27 @@ public class ProductFacadeV2Impl implements ProductFacade {
 		return productList;
 	}
 
+	@Override
+	@Transactional
+	public void sortUpdateMainDisplayManagementProduct(List<PersistableProductFeature> persistableProductFeatures ){
+		persistableProductFeatures.forEach(persistableProductFeature->{
+			productFeatureService.sortUpdateMainDisplayManagementProduct(persistableProductFeature.getProductId(),
+					persistableProductFeature.getKey(), persistableProductFeature.getSort());
+		});
+	}
 
+
+	@Override
+	public void addMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature) {
+		productFeatureService.addMainDisplayManagementProduct(
+				persistableProductFeature.getProductId(), persistableProductFeature.getKey());
+	}
+
+	@Override
+	public void removeMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature){
+		productFeatureService.removeMainDisplayManagementProduct(
+				persistableProductFeature.getProductId(), persistableProductFeature.getKey());
+	}
 
 
 	public ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language,
@@ -433,6 +455,8 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		return productList;
 	}
+
+
 
 
 	@Override

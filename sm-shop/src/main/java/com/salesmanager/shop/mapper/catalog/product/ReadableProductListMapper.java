@@ -125,7 +125,11 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		destination.setPreOrder(source.isPreOrder());
 		destination.setRefSku(source.getRefSku());
 		destination.setSortOrder(source.getSortOrder());
-
+		destination.setDiscountedNum(source.getDiscount());
+		if (source.getDiscount() != null){
+			destination.setDiscounted(true);
+		}
+		destination.setFeatureSort(source.getFeatureSort());
 		if (source.getType() != null) {
 			ReadableProductType readableType = readableProductTypeMapper.convert(source.getType(), source.getMerchantStore(), language);
 			destination.setType(readableType);

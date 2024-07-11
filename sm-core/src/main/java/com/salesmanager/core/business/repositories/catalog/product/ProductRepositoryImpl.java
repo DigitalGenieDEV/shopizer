@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -13,6 +14,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.salesmanager.core.model.catalog.product.*;
+import com.salesmanager.core.model.feature.ProductFeature;
+import com.salesmanager.core.model.feature.ProductFeatureType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1212,6 +1215,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (criteria.getSellerCountryCode() != null) {
 			queryBuilder.append(" and p.merchantStore.country.id=:mcoid");
 		}
+		if (!StringUtils.isBlank(criteria.getCompanyName())) {
+			queryBuilder.append(" and p.merchantStore.storename=:storename");
+		}
 		if (!CollectionUtils.isEmpty(criteria.getShippingTemplateIds())) {
 			queryBuilder.append(" and p.shippingTemplateId in (:pstId)");
 		}
@@ -1232,6 +1238,21 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		}
 		if (!StringUtils.isBlank(criteria.getAuditStatus())) {
 			queryBuilder.append(" and p.productAuditStatus = :productAuditStatus");
+		}
+		if (criteria.getAvailable() != null) {
+			queryBuilder.append(" and p.available = :available");
+		}
+		if (criteria.getCreateStartTime() != null && criteria.getCreateStartTime() > 0) {
+			queryBuilder.append(" and p.auditSection.dateCreated >= :createStartTime");
+		}
+		if (criteria.getCreateEndTime() != null && criteria.getCreateEndTime() > 0) {
+			queryBuilder.append(" and p.auditSection.dateCreated <= :createEndTime");
+		}
+		if (criteria.getModifiedStartTime() != null && criteria.getModifiedStartTime() > 0) {
+			queryBuilder.append(" and p.auditSection.dateModified >= :modifiedStartTime");
+		}
+		if (criteria.getModifiedEndTime() != null && criteria.getModifiedEndTime() > 0) {
+			queryBuilder.append(" and p.auditSection.dateModified <= :modifiedEndTime");
 		}
 	}
 
@@ -1273,6 +1294,28 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (!StringUtils.isBlank(criteria.getStatus())) {
 			query.setParameter("productStatus", criteria.getStatus());
 		}
+		if (!StringUtils.isBlank(criteria.getCompanyName())) {
+			query.setParameter("storename", criteria.getCompanyName());
+		}
+		if (criteria.getAvailable() != null) {
+			query.setParameter("available", criteria.getAvailable());
+		}
+
+		if (criteria.getCreateStartTime() !=null && criteria.getCreateStartTime() >0) {
+			query.setParameter("createStartTime", new Date(criteria.getCreateStartTime()));
+		}
+
+		if (criteria.getCreateEndTime() !=null && criteria.getCreateEndTime() >0) {
+			query.setParameter("createEndTime", new Date(criteria.getCreateEndTime()));
+		}
+
+		if (criteria.getModifiedEndTime() !=null && criteria.getModifiedEndTime() >0) {
+			query.setParameter("modifiedEndTime", new Date(criteria.getModifiedEndTime()));
+		}
+
+		if (criteria.getModifiedStartTime() !=null && criteria.getModifiedStartTime() >0) {
+			query.setParameter("modifiedStartTime", new Date(criteria.getModifiedStartTime()));
+		}
 	}
 
 
@@ -1290,6 +1333,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 			countQueryBuilder.append(" INNER JOIN ProductFeature pf ON p.id = pf.productId");
 			countWhereClause.append(" AND pf.key = :featureKey");
 		}
+		if (!StringUtils.isBlank(criteria.getProductFeatureType())) {
+			countWhereClause.append(" AND pf.productFeatureType = :featureType");
+		}else {
+			countWhereClause.append(" AND pf.sort is null");
+		}
 		countQueryBuilder.append(countWhereClause.toString());
 
 		long start = System.currentTimeMillis();
@@ -1301,7 +1349,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (!StringUtils.isBlank(criteria.getTag())) {
 			countQuery.setParameter("featureKey", criteria.getTag());
 		}
-
+		if (!StringUtils.isBlank(criteria.getProductFeatureType())) {
+			countQuery.setParameter("featureType", ProductFeatureType.valueOf(criteria.getProductFeatureType()));
+		}
 		Long totalCount = (Long) countQuery.getSingleResult();
 		productList.setTotalCount(totalCount.intValue());
 		long end = System.currentTimeMillis();
@@ -1313,7 +1363,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
 		// Step 2: Query to get paginated Product IDs with sorting by modification time
 		long start1 = System.currentTimeMillis();
-		StringBuilder productQueryBuilder = new StringBuilder("SELECT p FROM Product p");
+		StringBuilder productQueryBuilder = new StringBuilder("SELECT p,pf FROM Product p");
 		if (!StringUtils.isBlank(criteria.getTag())) {
 			productQueryBuilder.append(" INNER JOIN p.features pf");
 			productQueryBuilder.append(countWhereClause.toString());
@@ -1326,12 +1376,24 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (StringUtils.isNotEmpty(criteria.getSortField())){
 			if (ProductCriteriaSortField.DISCOUNT.name().equals(criteria.getSortField())){
 				productQueryBuilder.append(" ORDER BY p.discount");
+				if (StringUtils.isEmpty(criteria.getSortDirection())) {
+					productQueryBuilder.append(" desc");
+				}
 			}
 			if (ProductCriteriaSortField.DATE_CREATED.name().equals(criteria.getSortField())){
-				productQueryBuilder.append(" ORDER BY p.dateCreated");
+				productQueryBuilder.append(" ORDER BY p.auditSection.dateCreated");
+				if (StringUtils.isEmpty(criteria.getSortDirection())) {
+					productQueryBuilder.append(" desc");
+				}
 			}
 			if (ProductCriteriaSortField.DATE_MODIFIED.name().equals(criteria.getSortField())){
-				productQueryBuilder.append(" ORDER BY p.dateModified");
+				productQueryBuilder.append(" ORDER BY p.auditSection.dateModified");
+				if (StringUtils.isEmpty(criteria.getSortDirection())) {
+					productQueryBuilder.append(" desc");
+				}
+			}
+			if (StringUtils.isNotEmpty(criteria.getSortDirection())) {
+				productQueryBuilder.append(" " + criteria.getSortDirection());
 			}
 		}else {
 			productQueryBuilder.append(" ORDER BY pf.sort");
@@ -1345,12 +1407,25 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 		if (!StringUtils.isBlank(criteria.getTag())) {
 			productQuery.setParameter("featureKey", criteria.getTag());
 		}
+		if (!StringUtils.isBlank(criteria.getProductFeatureType())) {
+			productQuery.setParameter("featureType", ProductFeatureType.valueOf(criteria.getProductFeatureType()));
+		}
 
 		int firstResult = (criteria.getStartPage() == 0 ? 0 : criteria.getStartPage()) * criteria.getPageSize();
 		productQuery.setFirstResult(firstResult);
 		productQuery.setMaxResults(criteria.getPageSize());
 
-		List<Product> products = productQuery.getResultList();
+		List<Object[]> resultList = productQuery.getResultList(); // this is a list of Object arrays
+
+		List<Product> products = resultList.stream().map(result -> {
+			Product product = (Product) result[0];
+
+			ProductFeature productFeature = (ProductFeature) result[1];
+
+			product.setFeatureSort(productFeature.getSort());
+			return product;
+		}).collect(Collectors.toList());
+
 		productList.setProducts(products);
 
 		long end1 = System.currentTimeMillis();

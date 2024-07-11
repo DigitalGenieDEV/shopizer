@@ -31,6 +31,7 @@ import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.feature.ProductFeatureType;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.shop.model.catalog.product.*;
@@ -618,16 +619,17 @@ public class ProductApiV2 {
 	@ResponseBody
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProductList getMainDisplayManagementList(
+			@RequestParam(value = "tag", required = true) String tag,
 			@RequestParam(value = "lang", required = false) String lang,
 			@RequestParam(value = "category", required = false) Long category,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "identifier", required = false) String identifier,
+			@RequestParam(value = "sortField", required = false) String sortField,
+			@RequestParam(value = "sortDirection", required = false) String sortDirection,
 			@RequestParam(value = "status", required = false) String status,
-			@RequestParam(value = "productType", required = false) String productType,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, // count
 			@RequestParam(value = "companyName", required = false) String companyName,
-			@RequestParam(value = "tag", required = true) String tag,
 			@ApiIgnore Language language, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		ProductCriteria criteria = new ProductCriteria();
@@ -640,6 +642,9 @@ public class ProductApiV2 {
 		} else {
 			criteria.setLanguage(language.getCode());
 		}
+		criteria.setSortField(sortField);
+		criteria.setSortDirection(sortDirection);
+		criteria.setProductFeatureType(ProductFeatureType.MARKET_SORT.name());
 		if (!StringUtils.isBlank(status)) {
 			criteria.setStatus(status);
 		}
@@ -804,6 +809,152 @@ public class ProductApiV2 {
 		return CommonResultDTO.ofSuccess(readableProductDetailShippingPrice);
 	}
 
+
+
+
+
+
+
+	@RequestMapping(value = "/private/main/display/search/products", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public ReadableProductList getMainDisplayManagementSearchProductList(
+			@RequestParam(value = "lang", required = false) String lang,
+			@RequestParam(value = "category", required = false) Long category,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "identifier", required = false) String identifier,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "productType", required = false) String productType,
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page, // current
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count, // count
+			@RequestParam(value = "companyName", required = false) String companyName,
+			@RequestParam(value = "available", required = false) Boolean available,
+			@RequestParam(value = "createStartTime", required = false) Long createStartTime,
+			@RequestParam(value = "createEndTime", required = false) Long createEndTime,
+			@RequestParam(value = "modifiedStartTime", required = false) Long modifiedStartTime,
+			@RequestParam(value = "tag", required = true) String tag,
+			@RequestParam(value = "modifiedEndTime", required = false) Long modifiedEndTime,
+			@ApiIgnore Language language, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		ProductCriteria criteria = new ProductCriteria();
+
+		criteria.setOrigin(ORIGIN_ADMIN);
+
+		if (!StringUtils.isBlank(status)) {
+			criteria.setStatus(status);
+		}
+		// do not use legacy pagination anymore
+		if (lang != null) {
+			criteria.setLanguage(lang);
+		} else {
+			criteria.setLanguage(language.getCode());
+		}
+		if (available != null) {
+			criteria.setAvailable(available);
+		}
+		if (!StringUtils.isBlank(status)) {
+			criteria.setStatus(status);
+		}
+		criteria.setTag(tag);
+		criteria.setModifiedStartTime(modifiedStartTime);
+		criteria.setModifiedEndTime(modifiedEndTime);
+		criteria.setCreateStartTime(createStartTime);
+		criteria.setCreateEndTime(createEndTime);
+
+		// Start Category handling
+		List<Long> categoryIds = new ArrayList<Long>();
+
+		if (category != null) {
+			categoryIds.add(category);
+		}
+		if (categoryIds.size() > 0) {
+			criteria.setCategoryIds(categoryIds);
+		}
+		// End Category handling
+
+		if (!StringUtils.isBlank(companyName)) {
+			criteria.setCompanyName(companyName);
+		}
+
+		if (page != null) {
+			criteria.setStartPage(page);
+		}
+
+		if (count != null) {
+			criteria.setMaxCount(count);
+		}
+
+		if (!StringUtils.isBlank(name)) {
+			criteria.setProductName(name);
+		}
+
+		if (!StringUtils.isBlank(identifier)) {
+			criteria.setCode(identifier);
+		}
+
+		try {
+			long start = System.currentTimeMillis();
+			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getMainDisplayManagementList(null, language, criteria);
+			long end = System.currentTimeMillis();
+			System.out.println("执行时间："+(end - start));
+			return productSimpleListsByCriterias;
+		} catch (Exception e) {
+
+			LOGGER.error("Error while filtering products product", e);
+			try {
+				response.sendError(503, "Error while filtering products " + e.getMessage());
+			} catch (Exception ignore) {
+			}
+
+			return null;
+		}
+	}
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PostMapping(value = "/private/add/main/display/product", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "add main display product", notes = "add main display  product", produces = "application/json", response = List.class)
+	public CommonResultDTO<Void> addMainDisplayManagementProduct(@RequestBody PersistableProductFeature productFeature){
+		try {
+			productFacadeV2.addMainDisplayManagementProduct(productFeature);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("addMainDisplayManagementProduct error", e);
+			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+		}
+	}
+
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PostMapping(value = "/private/delete/main/display/product", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "delete main display product", notes = "delete main display  product", produces = "application/json", response = List.class)
+	public CommonResultDTO<Void> deleteMainDisplayManagementProduct(@RequestBody PersistableProductFeature productFeature){
+		try {
+			productFacadeV2.removeMainDisplayManagementProduct(productFeature);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("deleteMainDisplayManagementProduct error", e);
+			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+		}
+	}
+
+
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PostMapping(value = "/private/update/main/display/product/sort", produces = { APPLICATION_JSON_VALUE })
+	@ApiOperation(httpMethod = "POST", value = "update main display product", notes = "update main display  product", produces = "application/json", response = List.class)
+	public CommonResultDTO<Void> sortUpdateMainDisplayManagementProduct(@RequestBody List<PersistableProductFeature> persistableProductFeatures){
+		try {
+			productFacadeV2.sortUpdateMainDisplayManagementProduct(persistableProductFeatures);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("sortUpdateMainDisplayManagementProduct error", e);
+			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+		}
+	}
 
 
 }

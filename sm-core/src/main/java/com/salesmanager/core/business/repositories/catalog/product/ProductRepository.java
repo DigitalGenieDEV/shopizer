@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.repositories.catalog.product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
@@ -24,6 +25,25 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"LEFT JOIN ProductVariant pv ON pv.product.id = p.id " +
 			"WHERE (pv.sku = ?1 OR p.sku = ?1)")
 	boolean existsBySku(String sku, Integer store);
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p SET p.discount = :discount WHERE p.id = :productId")
+	void updateProductDiscount(@Param("productId") Long productId, @Param("discount") Integer discount);
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p SET p.price = :price WHERE p.id = :productId")
+	void updateProductPrice(@Param("productId") Long productId, @Param("price") BigDecimal price);
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p SET p.priceRangeList = :priceRange WHERE p.id = :productId")
+	void updateProductPriceRange(@Param("productId") Long productId, @Param("priceRange") String priceRange);
+
 
 
 	@Modifying

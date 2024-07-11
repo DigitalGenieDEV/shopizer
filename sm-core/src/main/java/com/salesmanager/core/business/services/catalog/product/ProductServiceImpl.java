@@ -2,6 +2,7 @@ package com.salesmanager.core.business.services.catalog.product;
 
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -99,6 +100,9 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	public Optional<Product> retrieveById(Long id, MerchantStore store) {
 		return Optional.ofNullable(findOne(id,store));
 	}
+
+
+
 
 	@Override
 	public void addProductDescription(Product product, ProductDescription description) throws ServiceException {
@@ -219,6 +223,22 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	public List<Product> listByStore(MerchantStore store) {
 
 		return productRepository.listByStore(store);
+	}
+
+
+	@Override
+	public void updateProductDiscount(Long productId, Integer discount){
+		productRepository.updateProductDiscount(productId, discount);
+	}
+
+	@Override
+	public void updateProductPrice(Long productId, BigDecimal price) {
+		productRepository.updateProductPrice(productId, price);
+	}
+
+	@Override
+	public void updateProductPriceRange(Long productId, String priceRange) {
+		productRepository.updateProductPriceRange(productId, priceRange);
 	}
 
 	@Override

@@ -5,15 +5,14 @@ import static com.salesmanager.core.business.utils.NumberUtils.isPositive;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.shop.model.catalog.product.PersistableProductPriceDiscount;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +42,9 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 	
 	@Autowired
 	private ProductPriceService productPriceService;
+
+	@Autowired
+	private ProductService productService;
 	
 	@Autowired
 	private PricingService pricingService;
@@ -168,6 +170,11 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 
 		List<ProductAvailability> productAvailabilities = productAvailabilityService.getByProductId(productId);
 
+		AtomicReference<Boolean> isPriceRange = new AtomicReference<>(false);
+
+		AtomicReference<String> productPriceRanges = new AtomicReference<String>();
+		AtomicReference<BigDecimal> productPrice = new AtomicReference<BigDecimal>();
+
 		productAvailabilities.forEach(productAvailability -> {
 			Set<ProductPrice> prices = productAvailability.getPrices();
 			for (ProductPrice price : prices) {
@@ -180,8 +187,14 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 						return priceRange;
 					}).collect(Collectors.toList());
 					price.setPriceRangeList(JSON.toJSONString(result));
+					isPriceRange.set(true);
+					productPriceRanges.set(JSON.toJSONString(result));
 				}else {
-					price.setProductPriceSpecialAmount(buildDiscountPriceAmount(price.getProductPriceAmount(), discount.getDiscount()));
+					BigDecimal productPriceSpecialAmount = buildDiscountPriceAmount(price.getProductPriceAmount(), discount.getDiscount());
+					price.setProductPriceSpecialAmount(productPriceSpecialAmount);
+					if (productPrice.get() == null || productPriceSpecialAmount.compareTo(productPrice.get()) < 0) {
+						productPrice.set(productPriceSpecialAmount);
+					}
 				}
 
 				price.setDiscountPercent(discount.getDiscount());
@@ -190,6 +203,12 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 				} catch (ServiceException e) {
 					throw new RuntimeException(e);
 				}
+			}
+			productService.updateProductDiscount(discount.getProductId(), discount.getDiscount());
+			if (isPriceRange.get()){
+				productService.updateProductPriceRange(discount.getProductId(), productPriceRanges.get());
+			}else {
+				productService.updateProductPrice(discount.getProductId(), productPrice.get());
 			}
 		});
 	}

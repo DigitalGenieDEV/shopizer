@@ -12,6 +12,7 @@ import com.salesmanager.shop.model.catalog.product.ProductPriceRequest;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductList;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
+import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 
 public interface ProductFacade {
 
@@ -78,7 +79,16 @@ public interface ProductFacade {
   ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language,
                                                    ProductCriteria criterias) throws ServiceException;
 
-  ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language,
+
+   void addMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature);
+
+  void removeMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature);
+
+  void sortUpdateMainDisplayManagementProduct(List<PersistableProductFeature> persistableProductFeatures);
+
+
+
+    ReadableProductList getProductSimpleListsByCriterias(MerchantStore store, Language language,
                                                        ProductCriteria criterias) throws Exception;
   /**
    * Get related items
