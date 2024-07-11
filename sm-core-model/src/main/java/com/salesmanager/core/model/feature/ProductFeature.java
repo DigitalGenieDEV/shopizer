@@ -46,6 +46,19 @@ public class ProductFeature extends SalesManagerEntity<Long, ProductFeature> imp
 	private Integer sort;
 
 
+	@Column(name="TYPE", nullable = true)
+	@Enumerated(value = EnumType.STRING)
+	private ProductFeatureType productFeatureType;
+
+
+	public ProductFeatureType getProductFeatureType() {
+		return productFeatureType;
+	}
+
+	public void setProductFeatureType(ProductFeatureType productFeatureType) {
+		this.productFeatureType = productFeatureType;
+	}
+
 	public ProductFeatureStatus getProductFeatureStatus() {
 		return productFeatureStatus;
 	}

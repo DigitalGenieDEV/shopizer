@@ -30,6 +30,12 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private String finalPrice = "0";
 	private String originalPrice = null;
 	private boolean discounted = false;
+
+	private Integer discountedNum;
+
+
+	private Integer featureSort;
+
 	private ReadableImage image;
 
 	private String identifier;
@@ -227,5 +233,21 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setProductAnnouncements(List<ReadableProductAnnouncement> productAnnouncements) {
 		this.productAnnouncements = productAnnouncements;
+	}
+
+	public Integer getFeatureSort() {
+		return featureSort;
+	}
+
+	public void setFeatureSort(Integer featureSort) {
+		this.featureSort = featureSort;
+	}
+
+	public Integer getDiscountedNum() {
+		return discountedNum;
+	}
+
+	public void setDiscountedNum(Integer discountedNum) {
+		this.discountedNum = discountedNum;
 	}
 }

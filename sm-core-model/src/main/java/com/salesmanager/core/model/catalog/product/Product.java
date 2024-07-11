@@ -245,6 +245,16 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name="price")
 	private BigDecimal price;
 
+	private Integer featureSort;
+
+	public Integer getFeatureSort() {
+		return featureSort;
+	}
+
+	public void setFeatureSort(Integer featureSort) {
+		this.featureSort = featureSort;
+	}
+
 	public String getBizType() {
 		return bizType;
 	}

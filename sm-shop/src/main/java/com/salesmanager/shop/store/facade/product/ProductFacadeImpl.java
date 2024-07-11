@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.shop.model.catalog.product.feature.PersistableProductFeature;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -158,6 +159,21 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Override
 	public ReadableProductList getMainDisplayManagementList(MerchantStore store, Language language, ProductCriteria criterias) throws ServiceException {
 		return null;
+	}
+
+	@Override
+	public void addMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature) {
+
+	}
+
+	@Override
+	public void removeMainDisplayManagementProduct(PersistableProductFeature persistableProductFeature) {
+
+	}
+
+	@Override
+	public void sortUpdateMainDisplayManagementProduct(List<PersistableProductFeature> persistableProductFeatures) {
+
 	}
 
 	@Override

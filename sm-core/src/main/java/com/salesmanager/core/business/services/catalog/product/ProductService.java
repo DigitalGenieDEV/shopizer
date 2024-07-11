@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.services.catalog.product;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -104,6 +105,13 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 									ProductCriteria criteria, int page, int count);
 
 	List<Product> listByStore(MerchantStore store);
+
+	void updateProductDiscount(Long productId, Integer discount);
+
+	void updateProductPrice(Long productId, BigDecimal price);
+
+	void updateProductPriceRange(Long productId, String priceRange);
+
 
 	List<Product> listByTaxClass(TaxClass taxClass);
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.salesmanager.core.model.catalog.product.attribute.AttributeCriteria;
 import com.salesmanager.core.model.common.Criteria;
+import com.salesmanager.core.model.feature.ProductFeatureType;
 import lombok.Data;
 
 @Data
@@ -13,6 +14,12 @@ public class ProductCriteria extends Criteria {
 	public static final String ORIGIN_ADMIN = "admin";
 
 	private String tag;
+
+	/**
+	 * @see ProductFeatureType
+	 */
+	private String productFeatureType;
+
 
 	private String companyName;
 
@@ -27,6 +34,18 @@ public class ProductCriteria extends Criteria {
 	private Long startTime;
 
 	private Long endTime;
+
+
+	private Long createStartTime;
+
+	private Long createEndTime;
+
+
+	private Long modifiedStartTime;
+
+	private Long modifiedEndTime;
+
+
 	private String auditStatus;
 
 	private String publishWay;
@@ -57,7 +76,12 @@ public class ProductCriteria extends Criteria {
 	private String sortField;
 
 
-	@Override
+	/**
+	 * desc asc
+	 */
+	private String sortDirection;
+
+ 	@Override
 	public String toString() {
 		return "ProductCriteria{" +
 				"sellerCountryCode=" + sellerCountryCode +
