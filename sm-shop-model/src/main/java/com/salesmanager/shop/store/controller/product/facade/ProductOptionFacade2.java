@@ -4,6 +4,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.attribute.DeleteProductValue;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList2;
+import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList3;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValueList2;
 
 public interface ProductOptionFacade2 {
@@ -17,4 +18,6 @@ public interface ProductOptionFacade2 {
 	void deleteOption(DeleteProductValue delOption)  throws Exception;
 	
 	void deleteValues(DeleteProductValue delValue)  throws Exception;
+	
+	ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId) throws Exception;
 }

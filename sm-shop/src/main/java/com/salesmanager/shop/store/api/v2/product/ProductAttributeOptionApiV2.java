@@ -21,6 +21,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.attribute.DeleteProductValue;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList2;
+import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList3;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValueList2;
 import com.salesmanager.shop.store.controller.product.facade.ProductOptionFacade2;
 
@@ -52,7 +53,7 @@ public class ProductAttributeOptionApiV2 {
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "categoryId", required = false) int categoryId,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count)  throws Exception{
+			@RequestParam(value = "count", required = false, defaultValue = "1000") Integer count)  throws Exception{
 
 		return productOptionFacade2.getListOption(merchantStore, language, name, categoryId, page, count);
 
@@ -82,5 +83,18 @@ public class ProductAttributeOptionApiV2 {
 	@ResponseStatus(OK)
 	public void valueDelete(@Valid @RequestBody DeleteProductValue delValue, HttpServletRequest request) throws Exception {
 		productOptionFacade2.deleteValues(delValue);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = { "/private/product/optionList" }, method = RequestMethod.GET)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public @ResponseBody ReadableProductOptionList3 optionList(
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language, 
+			@RequestParam(value = "categoryId", required = false) int categoryId)  throws Exception{
+
+		return productOptionFacade2.getProductListOption(merchantStore, language,  categoryId);
+
 	}
 }

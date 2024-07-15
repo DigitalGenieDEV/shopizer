@@ -18,7 +18,9 @@ import com.salesmanager.core.business.repositories.catalog.product.attribute.Pro
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption2;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue2;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 
@@ -72,6 +74,14 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 		productOptionValueRepository2.deleteProductOption(optionId);
 	
 		
+	}
+	
+	public List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId) throws ServiceException{
+		return productOptionValueRepository2.getProductListOption(code, languageId, categoryId);
+	}
+	
+	public List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId) throws ServiceException{
+		return productOptionValueRepository2.getProductListOptionValue(code, languageId, categoryId);
 	}
 	
 	

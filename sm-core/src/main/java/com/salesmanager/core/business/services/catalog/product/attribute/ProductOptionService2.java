@@ -8,7 +8,9 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityService;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption2;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue2;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 
@@ -21,5 +23,9 @@ public interface ProductOptionService2  extends SalesManagerEntityService<Long, 
 	void deleteValues(int setId, int valueId)throws ServiceException;
 	
 	void deleteOption(int setId, int optionId)  throws ServiceException;
+	
+	List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId) throws ServiceException;
+	
+	List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId) throws ServiceException;
 
 }

@@ -13,14 +13,20 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService2;
+import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption2;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue2;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.attribute.DeleteProductValue;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption2;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption3;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOptionValue2;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOptionValue4;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList2;
+import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionList3;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValueList2;
 import com.salesmanager.shop.store.controller.product.facade.ProductOptionFacade2;
 
@@ -29,6 +35,9 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 
 	@Autowired
 	private ProductOptionService2 productOptionService2;
+	
+	@Autowired
+	private LanguageService languageService;
 
 	@Inject
 	private ObjectMapper objectMapper;
@@ -86,5 +95,49 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 	public void deleteOption(DeleteProductValue delOption)  throws Exception{
 		productOptionService2.deleteOption(delOption.getSetId(), delOption.getOptionId());
 	}
+	
+	public ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId) throws Exception{
+		
+		Language lang = languageService.getByCode(language.getCode());
+		
+		ReadableProductOptionList3 reiciveData =  new ReadableProductOptionList3();
+		List<ReadProductOption2> propertiesList = productOptionService2.getProductListOption(store.getId(), lang.getId(),categoryId);
+		List<ReadProductOptionValue2> optionValueList = productOptionService2.getProductListOptionValue(store.getId(), lang.getId(),categoryId);
+		List<ReadableProductOption3> dataList = new ArrayList<ReadableProductOption3>();
+	
+		
+		if (propertiesList.size() > 0) {
+			for (ReadProductOption2 data : propertiesList) {
+				List<ReadableProductOptionValue4> dataList2 = new ArrayList<ReadableProductOptionValue4>();
+				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+				ReadableProductOption3 targetData = objectMapper.convertValue(data, ReadableProductOption3.class);
+				for (ReadProductOptionValue2  option : optionValueList) {
+					if(data.getId().equals(option.getId()) && data.getOptionId().equals(option.getOptionId())) {
+						
+						if(data.getId().equals(168)) {
+							System.out.println("option.getId()"+option.getId());
+							System.out.println("data.getOptionId()"+data.getOptionId());
+							System.out.println("option.getId()"+option.getOptionId());
+						}
+						objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+						ReadableProductOptionValue4 targetData2 = objectMapper.convertValue(option, ReadableProductOptionValue4.class);
+						
+						 dataList2.add(targetData2);
+						 targetData.setOptionValue(dataList2);
+						
+						
+					}
+				}
+				 dataList.add(targetData);
+				//targetData.setOptionValue(dataList2);
+				
+			}
+		}
+		
+		reiciveData.setProperties(dataList);
+		return reiciveData;
+	}
+	
+	
 
 }
