@@ -957,4 +957,17 @@ public class ProductApiV2 {
 	}
 
 
+	@RequestMapping(value = "/private/announcement", method = RequestMethod.GET)
+	@ResponseBody
+	public CommonResultDTO<String> getAdminAnnouncement(
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		try {
+			return CommonResultDTO.ofSuccess(productService.getAdminProductAnnouncement());
+		}catch(Exception e){
+			LOGGER.error("getAdminAnnouncement error", e);
+			return CommonResultDTO.ofFailed("20001", e.getMessage());
+		}
+	}
+
 }

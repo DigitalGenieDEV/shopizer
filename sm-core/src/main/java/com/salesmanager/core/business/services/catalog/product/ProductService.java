@@ -23,6 +23,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductService extends SalesManagerEntityService<Long, Product> {
 
+
+	String getAdminProductAnnouncement() throws Exception;
+
 	Optional<Product> retrieveById(Long id, MerchantStore store);
 
 	void addProductDescription(Product product, ProductDescription description) throws ServiceException;
