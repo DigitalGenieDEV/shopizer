@@ -11,6 +11,7 @@ import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
+import com.salesmanager.shop.model.customer.order.PersistableDirectCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
@@ -304,6 +305,59 @@ public class CustomerShoppingCartApi {
             return new ResponseEntity<>(updatedCart, HttpStatus.OK);
         }
         return new ResponseEntity<>(updatedCart, HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = { "/auth/customer_cart/product/{sku}/checkout" }, method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+    public ReadableCustomerOrderConfirmation directCheckout(
+            @PathVariable("sku")  String sku,
+            @Valid @RequestBody PersistableDirectCustomerOrder persistableDirectCustomerOrder, // order
+            @ApiIgnore MerchantStore store,
+            @ApiIgnore Language language,
+            HttpServletRequest request,
+            HttpServletResponse response, Locale locale
+    ) {
+
+        long start = LogPermUtil.start("CustomerShoppingCartApi/directCheckout");
+        try {
+            Principal principal = request.getUserPrincipal();
+            String userName = principal.getName();
+
+            Customer customer = customerService.getByNick(userName);
+
+            if (customer == null) {
+                response.sendError(401, "Error while performing checkout customer not authorized");
+                return null;
+            }
+
+            CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
+            if (cart == null) {
+                throw new ResourceNotFoundException("Cusotmer Cart [" + customer.getId() + "] does not exist");
+            }
+
+            persistableDirectCustomerOrder.setSku(sku);
+            persistableDirectCustomerOrder.setCustomerId(customer.getId());
+            persistableDirectCustomerOrder.setCurrency("CAD");
+
+            CustomerOrder modelCustomerOrder = customerOrderFacade.processDirectCustomerOrder(persistableDirectCustomerOrder, customer, store, language, locale);
+            Long customerOrderId = modelCustomerOrder.getId();
+            modelCustomerOrder.setId(customerOrderId);
+
+            ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+
+            LogPermUtil.end("CustomerShoppingCartApi/directCheckout", start);
+            return readableCustomerOrderConfirmation;
+        } catch (Exception e) {
+            LOGGER.error("Error while processing direct checkout", e);
+            try {
+                response.sendError(503, "Error while processing direct checkout " + e.getMessage());
+            } catch (Exception ignore) {
+            }
+            return null;
+        }
     }
 
     @PostMapping(value = "/auth/customer_cart/del_multi", produces = { APPLICATION_JSON_VALUE })
