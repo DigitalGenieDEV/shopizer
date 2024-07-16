@@ -1,9 +1,12 @@
 package com.salesmanager.core.business.services.catalog.product;
 
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +24,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -60,6 +66,8 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	ProductRepository productRepository;
 
+	@Autowired
+	private ResourceLoader resourceLoader;
 	@Inject
 	CategoryService categoryService;
 
@@ -90,10 +98,18 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	@Inject
 	ProductReviewService productReviewService;
 
+	private final static String PRODUCT_ANNOUNCEMENT = "announcement/admin.json";
+
+
 	@Inject
 	public ProductServiceImpl(ProductRepository productRepository) {
 		super(productRepository);
 		this.productRepository = productRepository;
+	}
+
+	@Override
+	public String getAdminProductAnnouncement() throws Exception {
+		return resourceAsText(loadSearchConfig(PRODUCT_ANNOUNCEMENT));
 	}
 
 	@Override
@@ -551,6 +567,22 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	public Integer countProductByShippingTemplateIdAndStoreId(Long shippingTemplateId, Integer storeId){
 		return productRepository.countProductByShippingTemplateIdAndStoreId(shippingTemplateId, storeId);
 	}
+
+
+	private String resourceAsText(Resource resource) throws Exception {
+		InputStream mappingstream = resource.getInputStream();
+
+		return new BufferedReader(
+				new InputStreamReader(mappingstream, StandardCharsets.UTF_8))
+				.lines()
+				.collect(Collectors.joining("\n"));
+	}
+
+	private Resource loadSearchConfig(String file) {
+		return resourceLoader.getResource(
+				"classpath:" + file);
+	}
+
 
 
 }
