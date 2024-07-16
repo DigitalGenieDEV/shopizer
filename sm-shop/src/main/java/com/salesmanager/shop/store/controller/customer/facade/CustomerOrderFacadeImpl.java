@@ -33,11 +33,10 @@ import com.salesmanager.shop.mapper.customer.ReadableCustomerMapper;
 import com.salesmanager.shop.mapper.order.ReadableOrderProductMapper;
 import com.salesmanager.shop.mapper.order.ReadableOrderTotalMapper;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
-import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
+import com.salesmanager.shop.model.customer.order.*;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
+import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.shipping.PersistableDeliveryAddress;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
@@ -125,6 +124,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
     @Inject
     private CombinePaymentService combinePaymentService;
+
+    @Inject
+    private CustomerShoppingCartFacadeImpl customerShoppingCartFacade;
 
     @Override
     public CustomerOrder processCustomerOrder(PersistableCustomerOrder customerOrder, Customer customer, Language language, Locale locale) throws ServiceException {
@@ -231,16 +233,43 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             }
 
             // 移除购物车项
-//            Set<CustomerShoppingCartItem> existsItems = cart.getCheckedLineItems();
-//            List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
-//            for (CustomerShoppingCartItem item: existsItems) {
-//                if (skus.contains(item.getSku())) {
-//                    customerShoppingCartService.deleteCustomerShoppingCartItem(item.getId());
-//                }
-//            }
+            Set<CustomerShoppingCartItem> existsItems = cart.getCheckedLineItems();
+            List<String> skus = lineItems.stream().map(i -> i.getSku()).collect(Collectors.toList());
+            for (CustomerShoppingCartItem item: existsItems) {
+                if (skus.contains(item.getSku())) {
+                    customerShoppingCartService.deleteCustomerShoppingCartItem(item.getId());
+                }
+            }
 
             LogPermUtil.end("processCustomerOrder", start);
             return  modelCustomerOrder;
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+
+    }
+
+    @Override
+    public CustomerOrder processDirectCustomerOrder(PersistableDirectCustomerOrder persistableDirectCustomerOrder, Customer customer, MerchantStore merchantStore, Language language, Locale locale) throws ServiceException {
+        try {
+            CustomerShoppingCart cartModel = customerShoppingCartFacade.getCustomerShoppingCartModel(customer);
+            Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> items = cartModel.getLineItems();
+
+            for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem anItem: items) {
+                anItem.setChecked(false);
+            }
+
+            customerShoppingCartFacade.saveOrUpdateCustomerShoppingCart(cartModel);
+
+            PersistableCustomerShoppingCartItem cartItem = new PersistableCustomerShoppingCartItem();
+            cartItem.setSku(persistableDirectCustomerOrder.getSku());
+            cartItem.setQuantity(persistableDirectCustomerOrder.getQuantity());
+            cartItem.setChecked(true);
+            customerShoppingCartFacade.modifyCart(customer, cartItem, merchantStore, language);
+
+            CustomerOrder customerOrder = this.processCustomerOrder(persistableDirectCustomerOrder, customer, language, locale);
+
+            return customerOrder;
         } catch (Exception e) {
             throw new ServiceException(e);
         }

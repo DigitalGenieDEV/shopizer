@@ -7,10 +7,7 @@ import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
-import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
+import com.salesmanager.shop.model.customer.order.*;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
 
@@ -19,6 +16,8 @@ import java.util.Locale;
 public interface CustomerOrderFacade {
 
     CustomerOrder processCustomerOrder(PersistableCustomerOrder customerOrder, Customer customer, Language language, Locale locale) throws ServiceException;
+
+    CustomerOrder processDirectCustomerOrder(PersistableDirectCustomerOrder customerOrder, Customer customer, MerchantStore merchantStore, Language language, Locale locale) throws ServiceException;
 
     ReadableCustomerOrderConfirmation orderConfirmation(CustomerOrder customerOrder, Customer customer, Language language) throws Exception;
 

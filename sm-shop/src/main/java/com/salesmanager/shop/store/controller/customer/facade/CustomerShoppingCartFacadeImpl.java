@@ -417,7 +417,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         long start = System.currentTimeMillis();
         CustomerShoppingCart cartModel = getCustomerShoppingCartModel(customer);
         if (cartModel == null) {
-//            throw new ResourceNotFoundException("Cart code [" + cartCode + "] not found");
+            throw new ResourceNotFoundException("Customer Cart not found");
         }
 
         ReadableCustomerShoppingCart readableCustomerShoppingCart =  modifyCart(customer, cartModel, item, store, language);
