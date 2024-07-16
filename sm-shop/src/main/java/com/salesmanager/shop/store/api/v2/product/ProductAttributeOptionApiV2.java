@@ -92,9 +92,10 @@ public class ProductAttributeOptionApiV2 {
 	public @ResponseBody ReadableProductOptionList3 optionList(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language, 
-			@RequestParam(value = "categoryId", required = false) int categoryId)  throws Exception{
+			@RequestParam(value = "categoryId", required = false) int categoryId,
+			@RequestParam(value = "division", required = false) String division)  throws Exception{
 
-		return productOptionFacade2.getProductListOption(merchantStore, language,  categoryId);
+		return productOptionFacade2.getProductListOption(merchantStore, language,  categoryId,division);
 
 	}
 }

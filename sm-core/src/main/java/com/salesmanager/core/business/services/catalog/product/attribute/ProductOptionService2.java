@@ -24,8 +24,8 @@ public interface ProductOptionService2  extends SalesManagerEntityService<Long, 
 	
 	void deleteOption(int setId, int optionId)  throws ServiceException;
 	
-	List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId) throws ServiceException;
+	List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId, String division) throws ServiceException;
 	
-	List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId) throws ServiceException;
+	List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId, String division) throws ServiceException;
 
 }

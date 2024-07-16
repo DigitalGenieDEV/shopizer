@@ -19,5 +19,5 @@ public interface ProductOptionFacade2 {
 	
 	void deleteValues(DeleteProductValue delValue)  throws Exception;
 	
-	ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId) throws Exception;
+	ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId, String division) throws Exception;
 }

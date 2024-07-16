@@ -96,13 +96,13 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 		productOptionService2.deleteOption(delOption.getSetId(), delOption.getOptionId());
 	}
 	
-	public ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId) throws Exception{
+	public ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId, String division) throws Exception{
 		
 		Language lang = languageService.getByCode(language.getCode());
 		
 		ReadableProductOptionList3 reiciveData =  new ReadableProductOptionList3();
-		List<ReadProductOption2> propertiesList = productOptionService2.getProductListOption(store.getId(), lang.getId(),categoryId);
-		List<ReadProductOptionValue2> optionValueList = productOptionService2.getProductListOptionValue(store.getId(), lang.getId(),categoryId);
+		List<ReadProductOption2> propertiesList = productOptionService2.getProductListOption(store.getId(), lang.getId(),categoryId,division);
+		List<ReadProductOptionValue2> optionValueList = productOptionService2.getProductListOptionValue(store.getId(), lang.getId(),categoryId,  division);
 		List<ReadableProductOption3> dataList = new ArrayList<ReadableProductOption3>();
 	
 		

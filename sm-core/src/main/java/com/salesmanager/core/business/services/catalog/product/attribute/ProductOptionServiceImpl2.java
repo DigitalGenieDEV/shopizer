@@ -76,12 +76,12 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 		
 	}
 	
-	public List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId) throws ServiceException{
-		return productOptionValueRepository2.getProductListOption(code, languageId, categoryId);
+	public List<ReadProductOption2> getProductListOption(int code, int languageId, int categoryId, String division) throws ServiceException{
+		return productOptionValueRepository2.getProductListOption(code, languageId, categoryId,division);
 	}
 	
-	public List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId) throws ServiceException{
-		return productOptionValueRepository2.getProductListOptionValue(code, languageId, categoryId);
+	public List<ReadProductOptionValue2> getProductListOptionValue(int code, int languageId, int categoryId, String division) throws ServiceException{
+		return productOptionValueRepository2.getProductListOptionValue(code, languageId, categoryId,division);
 	}
 	
 	
