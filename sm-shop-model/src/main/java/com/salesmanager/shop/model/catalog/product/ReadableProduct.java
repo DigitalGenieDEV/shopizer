@@ -251,19 +251,4 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.discountedNum = discountedNum;
 	}
 
-	public Integer getFeatureSort() {
-		return featureSort;
-	}
-
-	public void setFeatureSort(Integer featureSort) {
-		this.featureSort = featureSort;
-	}
-
-	public Integer getDiscountedNum() {
-		return discountedNum;
-	}
-
-	public void setDiscountedNum(Integer discountedNum) {
-		this.discountedNum = discountedNum;
-	}
 }
