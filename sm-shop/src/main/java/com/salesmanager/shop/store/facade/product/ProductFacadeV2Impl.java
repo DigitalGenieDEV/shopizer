@@ -142,13 +142,11 @@ public class ProductFacadeV2Impl implements ProductFacade {
 			readableProduct.setTags(collect);
 		}
 
-		List<ProductAnnouncementAttribute> productAnnouncementAttributes = productAnnouncementAttributeService.getByProductId(id);
-		if (CollectionUtils.isNotEmpty(productAnnouncementAttributes)){
-			List<ReadableProductAnnouncement> readableProductAnnouncements = productAnnouncementAttributes.stream().map(productAnnouncementAttribute -> {
-				return readableProductAnnouncementAttributeMapper.convert(productAnnouncementAttribute, product.getMerchantStore(), language);
-			}).collect(Collectors.toList());
-			readableProduct.setProductAnnouncements(readableProductAnnouncements);
-		}
+		List<ProductAnnouncementAttribute> productAnnouncementAttribute = productAnnouncementAttributeService.getByProductId(id);
+
+		readableProduct.setProductAnnouncement(readableProductAnnouncementAttributeMapper.convert(
+				CollectionUtils.isEmpty(productAnnouncementAttribute)? null : productAnnouncementAttribute.get(0), product.getMerchantStore(), language));
+
 		return readableProduct;
 	}
 
@@ -162,13 +160,11 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
 
-		List<ProductAnnouncementAttribute> productAnnouncementAttributes = productAnnouncementAttributeService.getByProductId(id);
-		if (CollectionUtils.isNotEmpty(productAnnouncementAttributes)){
-			List<ReadableProductAnnouncement> readableProductAnnouncements = productAnnouncementAttributes.stream().map(productAnnouncementAttribute -> {
-				return readableProductAnnouncementAttributeMapper.convert(productAnnouncementAttribute, product.getMerchantStore(), language);
-			}).collect(Collectors.toList());
-			readableProduct.setProductAnnouncements(readableProductAnnouncements);
-		}
+		List<ProductAnnouncementAttribute> productAnnouncementAttribute = productAnnouncementAttributeService.getByProductId(id);
+
+		readableProduct.setProductAnnouncement(readableProductAnnouncementAttributeMapper.convert(
+				CollectionUtils.isEmpty(productAnnouncementAttribute)? null : productAnnouncementAttribute.get(0), product.getMerchantStore(), language));
+
 		return readableProduct;
 	}
 

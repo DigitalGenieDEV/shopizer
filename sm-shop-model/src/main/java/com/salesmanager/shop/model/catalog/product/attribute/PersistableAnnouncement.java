@@ -2,16 +2,22 @@ package com.salesmanager.shop.model.catalog.product.attribute;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class PersistableAnnouncement {
 
-    private Long id;
 
-    private boolean attributeRequired=false;
+    @Data
+    public static class AnnouncementField{
+        private String field;
 
-    private PersistableProductOption option;
+        private String comment;
 
-    private PersistableProductOptionValue value;
+        private String value;
+    }
+
+    private List<AnnouncementField> announcementFields;
 
     private Long productId;
 }

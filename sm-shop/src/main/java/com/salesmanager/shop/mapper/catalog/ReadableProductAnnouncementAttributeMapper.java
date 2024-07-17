@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.catalog;
 
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService;
@@ -53,31 +54,14 @@ public class ReadableProductAnnouncementAttributeMapper implements Mapper<Produc
 	@Override
 	public ReadableProductAnnouncement merge(ProductAnnouncementAttribute source, ReadableProductAnnouncement destination,
 								  MerchantStore store, Language language) {
-
-
-		ReadableProductAnnouncement attr = new ReadableProductAnnouncement();
-		if(destination !=null) {
-			attr = destination;
-		}
-		try {
-			attr.setId(source.getId());
-
-			if(source.getProductOption()!=null) {
-				ReadableProductOptionEntity option = readableProductOptionMapper.convert(source.getProductOption(), store, language);
-				attr.setOption(option);
-			}
-
-			if(source.getProductOptionValue()!=null) {
-				ReadableProductOptionValue optionValue = readableProductOptionValueMapper.convert(source.getProductOptionValue(), store, language);
-				attr.setValue(optionValue);
-			}
-
-		} catch (Exception e) {
-			throw new ConversionRuntimeException("Exception while product attribute conversion",e);
+		ReadableProductAnnouncement announcement = new ReadableProductAnnouncement();
+		if (!StringUtils.isEmpty(source.getText())){
+			announcement = JSON.parseObject(source.getText(), ReadableProductAnnouncement.class);
 		}
 
+		announcement.setProductId(source.getProductId());
 
-		return attr;
+		return announcement;
 	}
 
 }

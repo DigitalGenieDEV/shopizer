@@ -3,13 +3,23 @@ package com.salesmanager.shop.model.catalog.product.attribute;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionEntity;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ReadableProductAnnouncement {
 
-    private Long id;
 
-    private ReadableProductOptionEntity option;
+    @Data
+    public static class AnnouncementField{
+        private String field;
 
-    private com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValue value;
+        private String comment;
 
+        private String value;
+
+    }
+
+    private List<AnnouncementField> announcementFields;
+
+    private Long productId;
 }

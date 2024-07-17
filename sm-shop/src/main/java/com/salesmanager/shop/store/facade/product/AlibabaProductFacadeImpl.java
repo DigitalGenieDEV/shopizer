@@ -2,9 +2,11 @@ package com.salesmanager.shop.store.facade.product;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.modules.AnnouncementInfo;
 import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.alibaba.category.AlibabaCategoryService;
@@ -23,6 +25,9 @@ import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.*;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValueDescription;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.manufacturer.ManufacturerDescription;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
@@ -33,9 +38,7 @@ import com.salesmanager.shop.model.catalog.category.CategoryDescription;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
 import com.salesmanager.shop.model.catalog.product.PersistableProductPrice;
 import com.salesmanager.shop.model.catalog.product.ProductDescription;
-import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
-import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductOptionValue;
-import com.salesmanager.shop.model.catalog.product.attribute.ProductPropertyOption;
+import com.salesmanager.shop.model.catalog.product.attribute.*;
 import com.salesmanager.shop.model.catalog.product.attribute.api.PersistableProductOptionEntity;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProductInventory;
@@ -305,6 +308,18 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
         persistableProduct.setPublishWay(PublishWayEnums.IMPORT_BY_1688.name());
+        PersistableAnnouncement persistableAnnouncement = new PersistableAnnouncement();
+        persistableAnnouncement.setProductId(productId);
+
+
+        PersistableAnnouncement.AnnouncementField annotationField = new PersistableAnnouncement.AnnouncementField();
+        annotationField.setComment("3333");
+        annotationField.setField("222");
+        annotationField.setValue("1111");
+        persistableAnnouncement.setAnnouncementFields(Lists.newArrayList(annotationField));
+        persistableProduct.setAnnouncement(persistableAnnouncement);
+//        persistableAnnouncement.setAnnouncementFields();
+//        persistableProduct.setAnnouncementAttributes();
         productCommonFacade.saveProduct(store, persistableProduct, ko);
         return productId;
     }

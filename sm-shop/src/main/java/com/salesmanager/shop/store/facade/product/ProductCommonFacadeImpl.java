@@ -15,6 +15,7 @@ import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.shop.mapper.catalog.PersistableProductAnnouncementAttributeMapper;
+import com.salesmanager.shop.model.catalog.product.attribute.PersistableAnnouncement;
 import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -154,20 +155,14 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(target.getId());
 			processProductFeatureDiff(listByProductId, product.getProductTag(), target.getId());
 		}
-		if (!CollectionUtils.isEmpty(product.getAnnouncementAttributes())) {
+		if (product.getAnnouncement() !=null) {
 			Boolean result = productAnnouncementAttributeService.existsByProductId(target.getId());
 			if (result){
 				productAnnouncementAttributeService.deleteByProductId(target.getId());
 			}
-			product.getAnnouncementAttributes().forEach(persistableAnnouncement -> {
-				persistableAnnouncement.setProductId(productId);
-				try {
-					productAnnouncementAttributeService.saveOrUpdate(persistableProductAnnouncementAttributeMapper.convert(persistableAnnouncement, store, language));
-				} catch (ServiceException e) {
-					throw new RuntimeException(e);
-				}
-			});
-
+			PersistableAnnouncement announcement = product.getAnnouncement();
+			announcement.setProductId(productId);
+			productAnnouncementAttributeService.saveOrUpdate(persistableProductAnnouncementAttributeMapper.convert(announcement, store, language));
 		}
 		return target.getId();
 	}
