@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.catalog;
 
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService;
@@ -45,67 +46,9 @@ public class PersistableProductAnnouncementAttributeMapper implements Mapper<Per
 	public ProductAnnouncementAttribute merge(PersistableAnnouncement source, ProductAnnouncementAttribute destination,
 								  MerchantStore store, Language language) {
 
-		
-		ProductOption productOption = null;
-		
-		if(!StringUtils.isBlank(source.getOption().getCode())) {
-			productOption = productOptionService.getByCode(store, source.getOption().getCode());
-		} else {
-			Validate.notNull(source.getOption().getId(),"Product option id is null");
-			productOption = productOptionService.getById(source.getOption().getId());
+		if (!CollectionUtils.isEmpty(source.getAnnouncementFields())){
+			destination.setText(JSON.toJSONString(source));
 		}
-
-		if(productOption==null) {
-			throw new ConversionRuntimeException("Product option id " + source.getOption().getId() + " does not exist");
-		}
-		
-		ProductOptionValue productOptionValue = null;
-		
-		if(!StringUtils.isBlank(source.getValue().getCode())) {
-			productOptionValue = productOptionValueService.getByCode(store, source.getValue().getCode());
-		} else if(source.getValue() != null && source.getValue().getId().longValue()>0) {
-			productOptionValue = productOptionValueService.getById(source.getValue().getId());
-		} else {
-			//ProductOption value is text
-			productOptionValue = new ProductOptionValue();
-			productOptionValue.setProductOptionDisplayOnly(true);
-			productOptionValue.setCode(UUID.randomUUID().toString());
-			productOptionValue.setMerchantStore(store);
-		}
-		
-		if(!CollectionUtils.isEmpty((source.getValue().getDescriptions()))) {
-			productOptionValue =  persistableProductOptionValueMapper.merge(source.getValue(),productOptionValue, store, language);
-			try {
-				productOptionValueService.saveOrUpdate(productOptionValue);
-			} catch (ServiceException e) {
-				throw new ConversionRuntimeException("Error converting ProductOptionValue",e); 
-			}
-		}
-		
-		/**
-			productOptionValue
-			.getDescriptions().stream()
-			.map(val -> this.persistableProductOptionValueMapper.convert(val, store, language)).collect(Collectors.toList());
-			
-		}**/
-		
-		if(productOption.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-			throw new ConversionRuntimeException("Invalid product option id ");
-		}
-		
-		if(productOptionValue!=null && productOptionValue.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-			throw new ConversionRuntimeException("Invalid product option value id ");
-		}
-		
-
-		if(destination.getId()!=null && destination.getId().longValue()>0) {
-			destination.setId(destination.getId());
-		} else {
-			destination.setId(null);
-		}
-
-		destination.setProductOption(productOption);
-		destination.setProductOptionValue(productOptionValue);
 		destination.setProductId(source.getProductId());
 		
 		return destination;

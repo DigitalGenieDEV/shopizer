@@ -58,7 +58,7 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private ReadableProductType type;
 
 
-	private List<ReadableProductAnnouncement>  productAnnouncements = new ArrayList<>();
+	private ReadableProductAnnouncement  productAnnouncement = new ReadableProductAnnouncement();
 
 	private List<String> tags;
 
@@ -227,12 +227,28 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.descriptions = descriptions;
 	}
 
-	public List<ReadableProductAnnouncement> getProductAnnouncements() {
-		return productAnnouncements;
+	public ReadableProductAnnouncement getProductAnnouncement() {
+		return productAnnouncement;
 	}
 
-	public void setProductAnnouncements(List<ReadableProductAnnouncement> productAnnouncements) {
-		this.productAnnouncements = productAnnouncements;
+	public void setProductAnnouncement(ReadableProductAnnouncement productAnnouncement) {
+		this.productAnnouncement = productAnnouncement;
+	}
+
+	public Integer getFeatureSort() {
+		return featureSort;
+	}
+
+	public void setFeatureSort(Integer featureSort) {
+		this.featureSort = featureSort;
+	}
+
+	public Integer getDiscountedNum() {
+		return discountedNum;
+	}
+
+	public void setDiscountedNum(Integer discountedNum) {
+		this.discountedNum = discountedNum;
 	}
 
 	public Integer getFeatureSort() {

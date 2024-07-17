@@ -11,13 +11,11 @@ import java.math.BigDecimal;
     indexes = @Index(columnList = "PRODUCT_ID"),
 	uniqueConstraints={
 		@UniqueConstraint(columnNames={
-				"OPTION_ID",
-				"OPTION_VALUE_ID",
 				"PRODUCT_ID"
 			})
 	}
 )
-public class ProductAnnouncementAttribute extends SalesManagerEntity<Long, ProductAnnouncementAttribute> implements Optionable {
+public class ProductAnnouncementAttribute extends SalesManagerEntity<Long, ProductAnnouncementAttribute>  {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,24 +25,21 @@ public class ProductAnnouncementAttribute extends SalesManagerEntity<Long, Produ
 	private Long id;
 
 
-	@Column(name="PRODUCT_ATTRIBUTE_REQUIRED")
-	private boolean attributeRequired=false;
-
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="OPTION_ID", nullable=false)
-	private ProductOption productOption;
-
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="OPTION_VALUE_ID", nullable=false)
-	private ProductOptionValue productOptionValue;
-
+	@Column(columnDefinition = "TEXT")
+	private String text;
 
 	@Column(name="PRODUCT_ID")
 	private Long productId;
 
 	public ProductAnnouncementAttribute() {
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	@Override
@@ -57,30 +52,6 @@ public class ProductAnnouncementAttribute extends SalesManagerEntity<Long, Produ
 		this.id = id;
 	}
 
-	public boolean getAttributeRequired() {
-		return attributeRequired;
-	}
-
-	public void setAttributeRequired(boolean attributeRequired) {
-		this.attributeRequired = attributeRequired;
-	}
-
-	public ProductOption getProductOption() {
-		return productOption;
-	}
-
-	public void setProductOption(ProductOption productOption) {
-		this.productOption = productOption;
-	}
-
-	public ProductOptionValue getProductOptionValue() {
-		return productOptionValue;
-	}
-
-	public void setProductOptionValue(ProductOptionValue productOptionValue) {
-		this.productOptionValue = productOptionValue;
-	}
-
 	public Long getProductId() {
 		return productId;
 	}
@@ -89,7 +60,4 @@ public class ProductAnnouncementAttribute extends SalesManagerEntity<Long, Produ
 		this.productId = productId;
 	}
 
-	public boolean isAttributeRequired() {
-		return attributeRequired;
-	}
 }

@@ -12,22 +12,18 @@ import java.util.List;
 
 public interface ProductAnnouncementAttributeRepository extends JpaRepository<ProductAnnouncementAttribute, Long> {
 
-	@Query("select p from ProductAnnouncementAttribute p left join fetch p.productOption po left join fetch p.productOptionValue pov left join fetch po.descriptions pod left join fetch pov.descriptions povd  where p.id = ?1")
+	@Query("select p from ProductAnnouncementAttribute p  where p.id = ?1")
 	ProductAnnouncementAttribute findOne(Long id);
 
 	@Query("select COUNT(p) > 0 from ProductAnnouncementAttribute p " +
 			"where p.productId = ?1")
 	boolean existsByProductId(Long productId);
 
-	@Query("select p from ProductAnnouncementAttribute p left join fetch p.productOption po left join fetch p.productOptionValue pov left join fetch po.descriptions pod left join fetch pov.descriptions povd where p.id in ?1")
+	@Query("select p from ProductAnnouncementAttribute p where p.id in ?1")
 	List<ProductAnnouncementAttribute> findByIds(List<Long> ids);
 	
 
 	@Query("select distinct p from ProductAnnouncementAttribute p  " +
-			" left join fetch p.productOption po " +
-			"left join fetch p.productOptionValue pov " +
-			"left join fetch po.descriptions pod " +
-			"left join fetch pov.descriptions povd " +
 			" where p.productId = ?1")
 	List<ProductAnnouncementAttribute> findByProductId(Long productId);
 

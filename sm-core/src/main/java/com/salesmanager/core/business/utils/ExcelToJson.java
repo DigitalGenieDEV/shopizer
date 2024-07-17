@@ -77,7 +77,8 @@ public class ExcelToJson {
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return cell.getDateCellValue().toString();
                 } else {
-                    return Double.toString(cell.getNumericCellValue());
+                    double numericCellValue = cell.getNumericCellValue();
+                    return String.valueOf((int)numericCellValue);
                 }
             case BOOLEAN:
                 return Boolean.toString(cell.getBooleanCellValue());

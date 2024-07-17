@@ -30,7 +30,7 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private List<PersistableProductAttribute> properties = new ArrayList<PersistableProductAttribute>();
 
-	private List<PersistableAnnouncement> announcementAttributes = new ArrayList<PersistableAnnouncement>();
+	private PersistableAnnouncement announcement = new PersistableAnnouncement();
 
 	private List<ProductDescription> descriptions = new ArrayList<ProductDescription>();
 
