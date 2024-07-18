@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.modules.AnnouncementInfo;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
@@ -27,6 +30,7 @@ import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAnnouncementAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
@@ -959,11 +963,16 @@ public class ProductApiV2 {
 
 	@RequestMapping(value = "/private/announcement", method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResultDTO<String> getAdminAnnouncement(
+	public CommonResultDTO<Map<Integer,AnnouncementInfo>> getAdminAnnouncement(
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		try {
-			return CommonResultDTO.ofSuccess(productService.getAdminProductAnnouncement());
+			String adminProductAnnouncement = productService.getAdminProductAnnouncement();
+			if (StringUtils.isNotEmpty(adminProductAnnouncement)){
+				Map<Integer,AnnouncementInfo> announcementInfo = JSON.parseObject(adminProductAnnouncement, Map.class);
+				return CommonResultDTO.ofSuccess(announcementInfo);
+			}
+			return null;
 		}catch(Exception e){
 			LOGGER.error("getAdminAnnouncement error", e);
 			return CommonResultDTO.ofFailed("20001", e.getMessage());
