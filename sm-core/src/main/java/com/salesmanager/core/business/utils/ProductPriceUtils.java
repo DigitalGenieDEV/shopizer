@@ -1,6 +1,8 @@
 package com.salesmanager.core.business.utils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -439,6 +441,9 @@ public class ProductPriceUtils {
 	// Utility
 	public BigDecimal getAmount(String amount) throws Exception {
 
+		if (StringUtils.isNotEmpty(amount)){
+			amount = formatToTwoDecimalPlaces(amount);
+		}
 		// validations
 		/**
 		 * 1) remove decimal and thousand
@@ -747,6 +752,16 @@ public class ProductPriceUtils {
 
 		// calculate percent
 		finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
+	}
+
+	public static String formatToTwoDecimalPlaces(String s) {
+		try {
+			BigDecimal bd = new BigDecimal(s);
+			bd = bd.setScale(2, RoundingMode.HALF_UP);
+			return bd.toPlainString();
+		} catch (NumberFormatException e) {
+			return "Invalid number format";
+		}
 	}
 
 }
