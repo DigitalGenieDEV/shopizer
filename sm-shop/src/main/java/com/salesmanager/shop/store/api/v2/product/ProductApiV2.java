@@ -27,9 +27,8 @@ import com.salesmanager.core.business.services.catalog.product.variant.ProductVa
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.model.catalog.category.Category;
+import com.salesmanager.core.model.catalog.product.*;
 import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
-import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAnnouncementAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
@@ -50,7 +49,7 @@ import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProdu
 import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
-import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
+import com.salesmanager.shop.store.controller.product.facade.*;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -72,7 +71,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.salesmanager.core.model.catalog.product.ProductCriteria;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
@@ -83,9 +81,6 @@ import com.salesmanager.shop.model.entity.Entity;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.category.facade.CategoryFacade;
-import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
-import com.salesmanager.shop.store.controller.product.facade.ProductDefinitionFacade;
-import com.salesmanager.shop.store.controller.product.facade.ProductFacade;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -143,6 +138,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private SellerTextInfoFacade sellerTextInfoFacade;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -334,7 +332,6 @@ public class ProductApiV2 {
 	 * for user
 	 * @param productId
 	 * @param lang
-	 * @param merchantStore
 	 * @param language
 	 * @return
 	 */
@@ -707,8 +704,7 @@ public class ProductApiV2 {
 
 	@RequestMapping(value = "/auth/products", method = RequestMethod.GET)
 	@ResponseBody
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProductList listBySeller(
 			@RequestParam(value = "identifier", required = false) String identifier,
 			@RequestParam(value = "lang", required = false) String lang,
@@ -925,7 +921,7 @@ public class ProductApiV2 {
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("addMainDisplayManagementProduct error", e);
-			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
 
@@ -941,7 +937,7 @@ public class ProductApiV2 {
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("deleteMainDisplayManagementProduct error", e);
-			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
 
@@ -956,7 +952,7 @@ public class ProductApiV2 {
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("sortUpdateMainDisplayManagementProduct error", e);
-			return CommonResultDTO.ofFailed("20001", "addMainDisplayManagementProduct error");
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
 
@@ -975,8 +971,73 @@ public class ProductApiV2 {
 			return null;
 		}catch(Exception e){
 			LOGGER.error("getAdminAnnouncement error", e);
-			return CommonResultDTO.ofFailed("20001", e.getMessage());
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
+
+
+	@RequestMapping(value = "/private/seller/shipping/text/list", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT")})
+	public CommonResultDTO<List<SellerProductShippingTextInfo>> getAdminSellerProductShippingTextInfoListByMerchant(
+			@ApiIgnore MerchantStore merchantStore,
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		try {
+			List<SellerProductShippingTextInfo> sellerProductShippingTextInfoListByMerchant = sellerTextInfoFacade.getSellerProductShippingTextInfoListByMerchant(merchantStore);
+			return CommonResultDTO.ofSuccess(sellerProductShippingTextInfoListByMerchant);
+		}catch(Exception e){
+			LOGGER.error("getSellerProductShippingTextInfoListByMerchant error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+	@PutMapping(value = { "/private/seller/shipping/text"})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT")})
+	public @ResponseBody CommonResultDTO<Long> saveAdminSellerProductShippingTextInfoListByMerchant(
+			@ApiIgnore MerchantStore merchantStore,
+			@Valid @RequestBody SellerProductShippingTextInfo sellerProductShippingTextInfo) {
+		try {
+			return CommonResultDTO.ofSuccess(sellerTextInfoFacade.save(sellerProductShippingTextInfo, merchantStore));
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+	@RequestMapping(value = "/auth/seller/shipping/text/list", method = RequestMethod.GET)
+	@ResponseBody
+	public CommonResultDTO<List<SellerProductShippingTextInfo>> getSellerProductShippingTextInfoListByMerchant(
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			List<SellerProductShippingTextInfo> sellerProductShippingTextInfoListByMerchant = sellerTextInfoFacade.getSellerProductShippingTextInfoListByMerchant(customer.getMerchantStore());
+			return CommonResultDTO.ofSuccess(sellerProductShippingTextInfoListByMerchant);
+		}catch(Exception e){
+			LOGGER.error("getSellerProductShippingTextInfoListByMerchant error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+	@PutMapping(value = { "/auth/seller/shipping/text"})
+	public @ResponseBody CommonResultDTO<Long> saveSellerProductShippingTextInfoListByMerchant(
+			@Valid @RequestBody SellerProductShippingTextInfo sellerProductShippingTextInfo,
+			HttpServletRequest request) {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			return CommonResultDTO.ofSuccess(sellerTextInfoFacade.save(sellerProductShippingTextInfo, customer.getMerchantStore()));
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
 
 }

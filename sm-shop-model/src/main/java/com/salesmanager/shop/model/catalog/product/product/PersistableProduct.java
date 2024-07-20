@@ -3,6 +3,8 @@ package com.salesmanager.shop.model.catalog.product.product;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.shop.model.catalog.category.Category;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
 import com.salesmanager.shop.model.catalog.product.ProductDescription;
@@ -19,6 +21,8 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private Long sellerTextInfoId;
 
 	private String manufacturer;
 

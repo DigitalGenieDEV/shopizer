@@ -7,7 +7,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
+import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -85,6 +87,9 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 	@Autowired
 	private PricingService pricingService;
+
+	@Autowired
+	private SellerTextInfoFacade serviceFacade;
 
 	@Override
 	public ReadableProduct convert(Product source, MerchantStore store, Language language) {
@@ -390,7 +395,11 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				break;
 			}
 		}
-		
+		if (source.getSellerTextInfoId() != null){
+			SellerProductShippingTextInfo sellerProductShippingTextInfo = serviceFacade.getSellerProductShippingTextById(source.getSellerTextInfoId());
+			destination.setSellerProductShippingTextInfo(sellerProductShippingTextInfo);
+		}
+
 		//if default instance
 
 		destination.setSku(source.getSku());
