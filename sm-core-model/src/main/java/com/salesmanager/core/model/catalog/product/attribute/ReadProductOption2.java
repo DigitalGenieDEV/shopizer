@@ -4,5 +4,7 @@ public interface ReadProductOption2 {
 	Integer getId();
 	Integer getOptionId();
 	Integer getCategoryId();
+	Integer getDescId();
 	String getDescription();
+	String getCode();
 }

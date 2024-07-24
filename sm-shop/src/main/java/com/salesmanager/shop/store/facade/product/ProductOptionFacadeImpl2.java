@@ -113,12 +113,7 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 				ReadableProductOption3 targetData = objectMapper.convertValue(data, ReadableProductOption3.class);
 				for (ReadProductOptionValue2  option : optionValueList) {
 					if(data.getId().equals(option.getId()) && data.getOptionId().equals(option.getOptionId())) {
-						
-						if(data.getId().equals(168)) {
-							System.out.println("option.getId()"+option.getId());
-							System.out.println("data.getOptionId()"+data.getOptionId());
-							System.out.println("option.getId()"+option.getOptionId());
-						}
+					
 						objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 						ReadableProductOptionValue4 targetData2 = objectMapper.convertValue(option, ReadableProductOptionValue4.class);
 						

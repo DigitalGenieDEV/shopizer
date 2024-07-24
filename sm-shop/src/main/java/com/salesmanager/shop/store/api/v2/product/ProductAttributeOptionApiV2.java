@@ -86,7 +86,7 @@ public class ProductAttributeOptionApiV2 {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value = { "/private/product/optionList" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/private/product/optionList", "/auth/product/optionList", "product/optionList" }, method = RequestMethod.GET)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody ReadableProductOptionList3 optionList(

@@ -67,7 +67,7 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 
 	
 	@Query( value ="SELECT  \r\n"
-			+ "	A.PRODUCT_OPTION_SET_ID AS ID, A.PRODUCT_OPTION_ID AS OPTIONID, CATEGORY_ID AS CATEGORYID , C.DESCRIPTION  \r\n"
+			+ "	A.PRODUCT_OPTION_SET_ID AS ID, A.PRODUCT_OPTION_ID AS OPTIONID, CATEGORY_ID AS CATEGORYID , C.DESCRIPTION, A.PRODUCT_OPTION_SET_CODE AS CODE, C.DESCRIPTION_ID AS DESCID  \r\n"
 			+ "FROM PRODUCT_OPTION_SET A INNER JOIN PRODUCT_OPTION B \r\n"
 			+ "ON A.PRODUCT_OPTION_ID = B.PRODUCT_OPTION_ID \r\n"
 			+ "INNER JOIN PRODUCT_OPTION_DESC C\r\n"
@@ -75,7 +75,7 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?4 \r\n"
 			+ "AND A.CATEGORY_ID = ?3 \r\n"
 			+ "AND C.LANGUAGE_ID = ?2 \r\n"
-			+ "AND B.MERCHANT_ID = ?1 \r\n"
+			+ "AND ( B.MERCHANT_ID = ?1 OR  B.MERCHANT_ID = 1) \r\n"
 			+ "ORDER BY B.PRODUCT_OPTION_ID ASC\r\n"
 			+ " ", nativeQuery=true)
 	public List<ReadProductOption2> getProductListOption(int code, int lagnageId, int categoryId, String division);
@@ -91,7 +91,7 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?4 \r\n"
 			+ "AND A.CATEGORY_ID = ?3 \r\n"
 			+ "AND D.LANGUAGE_ID = ?2 \r\n"
-			+ "AND C.MERCHANT_ID = ?1 \r\n"
+			+ "AND ( C.MERCHANT_ID = ?1 OR  C.MERCHANT_ID = 1) \r\n"
 			+ "ORDER BY A.PRODUCT_OPTION_ID ASC \r\n"
 			+ " ", nativeQuery=true)
 	public List<ReadProductOptionValue2> getProductListOptionValue(int code, int lagnageId, int categoryId, String division);

@@ -14,7 +14,9 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 public class ReadableProductOption3 {
 	private int id=0;
+	private String code="";
 	private int optionId=0;
+	private int descId=0;
 	private int categoryId=0;
 	private String description="";
 	private List<ReadableProductOptionValue4> optionValue = new ArrayList<ReadableProductOptionValue4>();
