@@ -75,6 +75,9 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "product")//cascade is set to remove because product save requires logic to create physical image first and then save the image id in the database, cannot be done in cascade
 	private Set<ProductImage> images = new HashSet<ProductImage>();
 
+	@Column(name = "sellerTextInfoId")
+	private Long sellerTextInfoId;
+
 	/**
 	 * Related items / product groups
 	 */
@@ -533,7 +536,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		return sortOrder;
 	}
 
+	public Long getSellerTextInfoId() {
+		return sellerTextInfoId;
+	}
 
+	public void setSellerTextInfoId(Long sellerTextInfoId) {
+		this.sellerTextInfoId = sellerTextInfoId;
+	}
 
 	public void setAvailable(Boolean available) {
 		this.available = available;

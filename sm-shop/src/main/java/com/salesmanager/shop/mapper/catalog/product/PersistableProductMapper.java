@@ -117,6 +117,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			/**
 			 *
 			 */
+			destination.setSellerTextInfoId(source.getSellerTextInfoId());
 			destination.setBatchNumber(source.getBatchNumber());
 			destination.setQuoteType(source.getQuoteType());
 			destination.setMinOrderQuantity(source.getMinOrderQuantity());

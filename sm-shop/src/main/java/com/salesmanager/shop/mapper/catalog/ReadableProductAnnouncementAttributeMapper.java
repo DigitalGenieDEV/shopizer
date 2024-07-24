@@ -55,12 +55,10 @@ public class ReadableProductAnnouncementAttributeMapper implements Mapper<Produc
 	public ReadableProductAnnouncement merge(ProductAnnouncementAttribute source, ReadableProductAnnouncement destination,
 								  MerchantStore store, Language language) {
 		ReadableProductAnnouncement announcement = new ReadableProductAnnouncement();
-		if (!StringUtils.isEmpty(source.getText())){
+		if (source !=null && !StringUtils.isEmpty(source.getText())){
 			announcement = JSON.parseObject(source.getText(), ReadableProductAnnouncement.class);
+			announcement.setProductId(source.getProductId());
 		}
-
-		announcement.setProductId(source.getProductId());
-
 		return announcement;
 	}
 

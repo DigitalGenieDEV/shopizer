@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
@@ -22,6 +23,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private SellerProductShippingTextInfo sellerProductShippingTextInfo;
 
 	private ReadableMerchantStore merchantStore;
 
@@ -251,4 +254,11 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.discountedNum = discountedNum;
 	}
 
+	public SellerProductShippingTextInfo getSellerProductShippingTextInfo() {
+		return sellerProductShippingTextInfo;
+	}
+
+	public void setSellerProductShippingTextInfo(SellerProductShippingTextInfo sellerProductShippingTextInfo) {
+		this.sellerProductShippingTextInfo = sellerProductShippingTextInfo;
+	}
 }
