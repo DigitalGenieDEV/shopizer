@@ -957,7 +957,7 @@ public class ProductApiV2 {
 	}
 
 
-	@RequestMapping(value = "/private/announcement", method = RequestMethod.GET)
+	@RequestMapping(value = {"/private/announcement","/auth/announcement" }, method = RequestMethod.GET)
 	@ResponseBody
 	public CommonResultDTO<Map<Integer,AnnouncementInfo>> getAdminAnnouncement(
 			HttpServletRequest request,
