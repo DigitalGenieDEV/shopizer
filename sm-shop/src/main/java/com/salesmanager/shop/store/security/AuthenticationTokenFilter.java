@@ -74,7 +74,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     	String requestUrl = request.getRequestURL().toString();
 
 
-    	if(requestUrl.contains("/api/v1/auth")) {
+    	if(requestUrl.contains("/api/v1/auth") || requestUrl.contains("/api/v2/auth")) {
     		//setHeader(request,response);   	
 	    	final String requestHeader = request.getHeader(this.tokenHeader);//token
 	    	
