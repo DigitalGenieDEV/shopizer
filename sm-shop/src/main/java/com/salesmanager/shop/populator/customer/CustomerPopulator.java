@@ -2,6 +2,7 @@ package com.salesmanager.shop.populator.customer;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -275,7 +276,7 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 									.privacyValue(it.getPrivacyValue())
 									.build()
 						).collect(Collectors.toList());
-				target.setCustomerTerms(values);
+				target.setCustomerTerms(new HashSet<>(values));
 			}
 			
 			if(source.getCompanyAddress() != null) {
@@ -289,7 +290,7 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 						);
 			}
 			
-			target.setWithdrawalReason(source.getWithdrawalReason());
+			target.setWithdrawalReason(new HashSet<>(source.getWithdrawalReason()));
 			target.setWithdrawalAt(source.getWithdrawalAt());
 			target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());
 

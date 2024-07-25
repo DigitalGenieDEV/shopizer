@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.api.v1.customer;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -318,7 +319,7 @@ public class CustomerApi {
 			if (customer == null) {
 				throw new ResourceNotFoundException("Customer [" + userName + "] not found");
 			}
-			customer.setWithdrawalReason(withdrawalReason);
+			customer.setWithdrawalReason(new HashSet<>(withdrawalReason));
 			customer.setWithdrawalResonDetail(withdrawalReasonDetail);
 			customer.setWithdrawalAt(LocalDateTime.now());
 			

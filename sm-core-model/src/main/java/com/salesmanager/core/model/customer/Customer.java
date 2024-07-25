@@ -121,7 +121,7 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	
 	@Column(name="WITHDRAWAL_REASON", length = 255, nullable=true)
 	@ElementCollection(fetch = FetchType.LAZY)
-	private List<String> withdrawalReason;
+	private Set<String> withdrawalReason;
 	
 	@Column(name="WITHDRAWAL_REASON_DETAIL", length = 255, nullable=true)
 	private String withdrawalResonDetail;
@@ -133,7 +133,7 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	private CompanyAddress companyAddress;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", targetEntity = CustomerTerms.class, cascade = CascadeType.ALL)
-	private List<CustomerTerms> customerTerms = new ArrayList<>();
+	private Set<CustomerTerms> customerTerms = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "LANGUAGE_ID", nullable=false)

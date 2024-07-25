@@ -27,13 +27,14 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
 		StringBuilder objectBuilderSelect = new StringBuilder();
 		
 		String baseCountQuery = "select count(c) from Customer as c";
-		String baseQuery = "select c from Customer as c  left join fetch c.delivery.country left join fetch c.delivery.zone left join fetch c.billing.country left join fetch c.billing.zone";
+		String baseQuery = "select c from Customer as c  left join fetch c.delivery.country left join fetch c.delivery.zone left join fetch c.billing.country left join fetch c.billing.zone left join fetch c.customerTerms left join fetch c.withdrawalReason left join fetch c.merchantStore";
 		countBuilderSelect.append(baseCountQuery);
 		objectBuilderSelect.append(baseQuery);
 		
 		StringBuilder countBuilderWhere = new StringBuilder();
 		StringBuilder objectBuilderWhere = new StringBuilder();
-		String whereQuery = " where c.merchantStore.id=:mId";
+		//String whereQuery = " where c.merchantStore.id=:mId";
+		String whereQuery = " where 1=1";
 		countBuilderWhere.append(whereQuery);
 		objectBuilderWhere.append(whereQuery);
 
@@ -76,9 +77,11 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
 		//object query
 		Query objectQ = em.createQuery(
 				objectBuilderSelect.toString() + objectBuilderWhere.toString());
-
+		
+		/*
 		countQ.setParameter("mId", store.getId());
 		objectQ.setParameter("mId", store.getId());
+		*/
 		
 
 		if(!StringUtils.isBlank(criteria.getName())) {
@@ -141,7 +144,5 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
 		
 		
 	}
-
-    
 
 }

@@ -18,6 +18,7 @@ import com.salesmanager.shop.model.customer.attribute.ReadableCustomerOptionValu
 import com.salesmanager.shop.model.security.ReadableGroup;
 import com.salesmanager.shop.model.term.ReadableCustomerTerms;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -190,7 +191,7 @@ public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, R
 					target.setCompanyAddress(add);
 				}
 				
-				target.setWithdrawalReason(source.getWithdrawalReason());
+				target.setWithdrawalReason(new ArrayList<>(source.getWithdrawalReason()));
 				target.setWithdrawalAt(source.getWithdrawalAt());
 				target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());
 			}
