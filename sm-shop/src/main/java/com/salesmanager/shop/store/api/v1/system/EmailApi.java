@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.services.system.EmailService;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.shop.store.controller.email.facade.EmailFacade;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,9 +30,9 @@ import lombok.RequiredArgsConstructor;
 })
 @RequiredArgsConstructor
 public class EmailApi {
-	private final EmailService emailService;
+	private final EmailFacade emailFacade;
 	
-	private final MerchantStoreService merchantService;
+	
 	
 	@PostMapping("/mail/authorization")
 	@ApiOperation(
@@ -41,9 +42,9 @@ public class EmailApi {
 	public ResponseEntity<Void> sendVerification(
 			@RequestParam("email") @Valid String to
 			) throws Exception {
-		MerchantStore merchant = merchantService.getByCode( MerchantStore.DEFAULT_STORE );
+		//MerchantStore merchant = merchantService.getByCode( MerchantStore.DEFAULT_STORE );
 		
-	    emailService.sendVerificationEmail(to, merchant);
+		emailFacade.emailVerification(to);
 	    
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

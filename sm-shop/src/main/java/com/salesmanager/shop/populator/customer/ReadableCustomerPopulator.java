@@ -169,20 +169,21 @@ public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, R
 					target.setCompany(source.getCompany());
 				}
 
-				List<ReadableCustomerTerms> customerTerms =  source.getCustomerTerms().stream().map(
-						it -> new ReadableCustomerTerms(
-								it.getId(),
-								it.isConsented(),
-								it.getModifiedDate(),
-								it.getExpiredDate(),
-								it.getPrivacyCode(),
-								it.getPrivacyValue()
-						)
-				).collect(Collectors.toList());
-				
+				List<ReadableCustomerTerms> customerTerms = source.getCustomerTerms().stream()
+						.map(
+								it -> new ReadableCustomerTerms(
+										it.getId(),
+										it.isConsented(),
+										it.getModifiedDate(),
+										it.getExpiredDate(),
+										it.getPrivacyCode(),
+										it.getPrivacyValue()
+								)
+						).collect(Collectors.toList());
+
 				target.setTerms(customerTerms);
-				
-				if(source.getCompanyAddress() != null) {
+
+				if (source.getCompanyAddress() != null) {
 					CompanyAddress it = source.getCompanyAddress();
 					Address add = new Address();
 					add.setAddress(it.getAddress());
@@ -190,7 +191,7 @@ public class ReadableCustomerPopulator extends AbstractDataPopulator<Customer, R
 					add.setPostalCode(it.getPostalCode());
 					target.setCompanyAddress(add);
 				}
-				
+
 				target.setWithdrawalReason(new ArrayList<>(source.getWithdrawalReason()));
 				target.setWithdrawalAt(source.getWithdrawalAt());
 				target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());

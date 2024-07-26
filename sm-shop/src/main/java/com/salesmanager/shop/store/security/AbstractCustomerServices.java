@@ -72,7 +72,7 @@ public abstract class AbstractCustomerServices implements UserDetailsService{
 			authorities.add(role); 
 			
 			List<Integer> groupsId = new ArrayList<Integer>();
-			List<Group> groups = user.getGroups();
+			List<Group> groups = new ArrayList<>(user.getGroups());
 			for(Group group : groups) {
 				groupsId.add(group.getId());
 			}

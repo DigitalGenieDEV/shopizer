@@ -6,12 +6,16 @@ package com.salesmanager.shop.store.controller.customer.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.inject.Inject;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -29,6 +33,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.modules.email.Email;
@@ -70,8 +75,6 @@ import com.salesmanager.shop.model.customer.ReadableCustomerReview;
 import com.salesmanager.shop.model.customer.UserAlreadyExistException;
 import com.salesmanager.shop.model.customer.address.Address;
 import com.salesmanager.shop.model.customer.optin.PersistableCustomerOptin;
-import com.salesmanager.shop.model.security.GroupEntity;
-import com.salesmanager.shop.model.security.PersistableGroup;
 import com.salesmanager.shop.populator.customer.CustomerBillingAddressPopulator;
 import com.salesmanager.shop.populator.customer.CustomerDeliveryAddressPopulator;
 import com.salesmanager.shop.populator.customer.CustomerEntityPopulator;
@@ -381,7 +384,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 		customerModel = customerPopulator.populate(customer, merchantStore, language);
 		List<Group> groups = getGroupInfos(customer);
-		customerModel.setGroups(groups);
+		customerModel.setGroups(new HashSet<Group>(groups));
 
 		// we are creating or resetting a customer
 		if (StringUtils.isBlank(customerModel.getPassword()) && !StringUtils.isBlank(customer.getPassword())) {
@@ -434,7 +437,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 																														// login
 		authorities.add(role);
 		List<Integer> groupsId = new ArrayList<Integer>();
-		List<Group> groups = customer.getGroups();
+		Set<Group> groups = customer.getGroups();
 		if (groups != null) {
 			for (Group group : groups) {
 				groupsId.add(group.getId());
@@ -628,7 +631,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 //    List<Group> groups = getListOfGroups(GroupType.CUSTOMER);
 		List<Group> groups = getGroupInfos(customer);
-		cust.setGroups(groups);
+		cust.setGroups(new HashSet<>(groups));
 
 		String password = customer.getPassword();
 		if (StringUtils.isBlank(password)) {

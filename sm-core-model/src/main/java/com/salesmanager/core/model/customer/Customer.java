@@ -169,7 +169,7 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 		org.hibernate.annotations.CascadeType.REPLICATE
 		
 	})
-	private List<Group> groups = new ArrayList<Group>();
+	private Set<Group> groups = new HashSet<Group>();
 	
 	@JsonIgnore
 	@Transient
