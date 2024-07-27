@@ -6,7 +6,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
-import com.salesmanager.core.business.modules.AnnouncementInfo;
 import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.alibaba.category.AlibabaCategoryService;
@@ -68,6 +67,7 @@ import org.springframework.util.CollectionUtils;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -453,7 +453,12 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 for(int p =0;p<priceRangeList.length;p++){
                     ProductSearchQueryProductDetailModelPriceRangeV productSearchQueryProductDetailModelPriceRangeV = priceRangeList[p];
                     PriceRange priceRange = new PriceRange();
-                    priceRange.setPrice(String.valueOf(examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(new BigDecimal(productSearchQueryProductDetailModelPriceRangeV.getPrice()))));
+                    priceRange.setPrice(
+                            examRateConfig.getRate(ExchangeRateEnums.CNY_KRW)
+                                    .multiply(new BigDecimal(productSearchQueryProductDetailModelPriceRangeV.getPrice()))
+                                    .setScale(2, RoundingMode.HALF_UP)
+                                    .toString()
+                    );
                     priceRange.setStartQuantity(productSearchQueryProductDetailModelPriceRangeV.getStartQuantity());
                     ranges.add(priceRange);
                 }
