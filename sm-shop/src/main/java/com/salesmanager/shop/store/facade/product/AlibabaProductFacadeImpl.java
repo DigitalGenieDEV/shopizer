@@ -546,6 +546,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableProductVariant.setProductVariations(persistableVariationList);
             persistableProductVariant.setSku(UUID.randomUUID().toString().replace("-", ""));
             persistableProductVariant.setInventory(productInventory);
+            persistableProductVariant.setSpecId(productSkuInfo.getSpecId());
             variants.add(persistableProductVariant);
         }
         product.setVariants(variants);

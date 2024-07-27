@@ -72,6 +72,9 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	@Column(name="SORT_ORDER")
 	private Integer sortOrder = 0;
 
+	@Column(name="SPEC_ID")
+	private String specId;
+
 
 	@NotEmpty
 	@Column(name = "SKU")
@@ -184,6 +187,13 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 		this.availabilities = availabilities;
 	}
 
+	public String getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
 
 	public String getImageUrl() {
 		return imageUrl;
