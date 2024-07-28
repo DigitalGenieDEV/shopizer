@@ -8,6 +8,8 @@ public class ProductVariant extends Product {
 
 	private String imageUrl;
 
+	private String specId;
+
 	private String store;
 	/** use product id or sku **/
 	private Long productId;
@@ -62,6 +64,13 @@ public class ProductVariant extends Product {
 		this.sortOrder = sortOrder;
 	}
 
+	public String getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
 
 	public String getImageUrl() {
 		return imageUrl;

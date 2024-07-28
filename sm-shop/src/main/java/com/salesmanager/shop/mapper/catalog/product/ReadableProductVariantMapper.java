@@ -71,7 +71,7 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 		destination.setSku(source.getSku());
 		destination.setSortOrder(source.getSortOrder());
 		destination.setCode(source.getCode());
-		
+		destination.setSpecId(source.getSpecId());
 		//get product
 		Product baseProduct = source.getProduct();
 		if(baseProduct == null) {

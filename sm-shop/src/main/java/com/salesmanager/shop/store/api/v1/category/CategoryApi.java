@@ -171,7 +171,7 @@ public class CategoryApi {
 		ListCriteria criteria = new ListCriteria();
 		criteria.setName(name);
 		return categoryFacade
-				.getCategoryHierarchy(merchantStore, criteria, DEFAULT_CATEGORY_DEPTH, language, filter, page, count);
+				.getCategoryHierarchy(merchantStore, criteria, DEFAULT_CATEGORY_DEPTH, language, filter, page, count, "USER");
 	}
 
 	@GetMapping(value = "/category/product/{ProductId}", produces = { APPLICATION_JSON_VALUE })

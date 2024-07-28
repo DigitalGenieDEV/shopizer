@@ -25,7 +25,8 @@ public interface CategoryFacade {
      * @param count
      * @return ReadableCategoryList
      */
-	ReadableCategoryList getCategoryHierarchy(MerchantStore store, ListCriteria criteria, int depth, Language language, List<String> filter, int page, int count);
+	ReadableCategoryList getCategoryHierarchy(MerchantStore store, ListCriteria criteria, int depth,
+											  Language language, List<String> filter, int page, int count, String type);
 
 	/**
 	 *

@@ -71,7 +71,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 
 	@Override
 	public ReadableCategoryList getCategoryHierarchy(MerchantStore store, ListCriteria criteria, int depth,
-			Language language, List<String> filter, int page, int count) {
+			Language language, List<String> filter, int page, int count, String type) {
 
 		Validate.notNull(store,"MerchantStore can not be null");
 
@@ -91,7 +91,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 				returnList.setTotalPages(1);
 			} else {
 				org.springframework.data.domain.Page<Category> pageable = categoryService.getListByDepth(parent, language,
-						criteria != null ? criteria.getName() : null, depth, page, count);
+						criteria != null ? criteria.getName() : null, depth, page, count, type);
 				categories = pageable.getContent();
 				returnList.setRecordsTotal(pageable.getTotalElements());
 				returnList.setTotalPages(pageable.getTotalPages());
