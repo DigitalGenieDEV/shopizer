@@ -5,11 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.shipping.MerchantShippingConfigurationService;
 import com.salesmanager.core.business.utils.ObjectConvert;
-import com.salesmanager.core.business.utils.StringToList;
 import com.salesmanager.core.model.common.Criteria;
 import com.salesmanager.core.model.shipping.*;
 import com.salesmanager.core.model.system.MerchantShippingConfiguration;
@@ -18,7 +16,6 @@ import com.salesmanager.shop.model.shipping.PersistableMerchantShippingConfigura
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfiguration;
 import com.salesmanager.shop.model.shipping.ReadableMerchantShippingConfigurationList;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +42,6 @@ import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.store.api.exception.OperationNotAllowedException;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("shippingFacade")
 public class ShippingFacadeImpl implements ShippingFacade {
@@ -162,17 +158,71 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	public ShippingOrigin saveShippingOrigin(PersistableAddress address, MerchantStore store) {
 		Validate.notNull(address, "PersistableAddress cannot be null");
 		try {
+//			// -- gunu 24.07.23 origin, return 분리
+//			ShippingOrigin o = shippingOriginService.getByStore(store);
+//			ShippingOrigin o = shippingOriginService.getByOriginType(store, ShippingOriginType.ORIGIN);
+//			if(o == null) {
+//				o = new ShippingOrigin();
+//			}
+			
 			ShippingOrigin o = new ShippingOrigin();
-			o.setAddress(address.getAddress());
+			o.setOriginType(ShippingOriginType.ORIGIN);
+			// -- gunu 24.07.23 
+			// -- 외국주소의 경우 상세만 넘어옴
+			if(address.getAddress() == null || address.getAddress().equalsIgnoreCase("")) {
+				o.setAddress("-");
+			} else {
+				o.setAddress(address.getAddress());
+			}
 			o.setCity(address.getCity());
 			o.setCountry(countryService.getByCode(address.getCountry()));
 			o.setMerchantStore(store);
 			o.setActive(address.isActive());
 			o.setPostalCode(address.getPostalCode());
-			o.setTelephone(address.getTelephone());
-			o.setName(address.getName());
-			o.setCompany(address.getCompany());
-			o.setEmail(address.getEmail());
+			
+			Zone zone = zoneService.getByCode(address.getStateProvince());
+			if(zone == null) {
+				o.setState(address.getStateProvince());
+			} else {
+				o.setZone(zone);
+			}
+			
+			shippingOriginService.save(o);
+			return o;
+		} catch (ServiceException e) {
+			LOGGER.error("Error while getting shipping origin for country [" + address.getCountry() + "]",e);
+			throw new ServiceRuntimeException("Error while getting shipping origin for country [" + address.getCountry() + "]",e);
+		}
+
+
+	}
+	
+	@Override
+	public ShippingOrigin saveReturnShippingOrigin(PersistableAddress address, MerchantStore store) {
+		Validate.notNull(address, "PersistableAddress cannot be null");
+		try {
+//			// -- gunu 24.07.23 origin, return 분리
+//			ShippingOrigin o = shippingOriginService.getByStore(store);
+//			ShippingOrigin o = shippingOriginService.getByOriginType(store, ShippingOriginType.RETURN);
+//			if(o == null) {
+//				o = new ShippingOrigin();
+//			}
+			
+			ShippingOrigin o = new ShippingOrigin();
+			o.setOriginType(ShippingOriginType.RETURN);
+			// -- gunu 24.07.23 
+			// -- 외국주소의 경우 상세만 넘어옴
+			if(address.getAddress() == null || address.getAddress().equalsIgnoreCase("")) {
+				o.setAddress("-");
+			} else {
+				o.setAddress(address.getAddress());
+			}
+			o.setCity(address.getCity());
+			o.setCountry(countryService.getByCode(address.getCountry()));
+			o.setMerchantStore(store);
+			o.setActive(address.isActive());
+			o.setPostalCode(address.getPostalCode());
+			
 			Zone zone = zoneService.getByCode(address.getStateProvince());
 			if(zone == null) {
 				o.setState(address.getStateProvince());
@@ -338,31 +388,32 @@ public class ShippingFacadeImpl implements ShippingFacade {
 	}
 
 	@Override
-	public ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria, String shippingType, String shippingTransportationType) throws ServiceException {
-		MerchantShippingConfigurationList merchantShippingConfigurationList = merchantShippingConfigurationService.listByStore(store, criteria, shippingType, shippingTransportationType);
+	public ReadableMerchantShippingConfigurationList list(MerchantStore store, Criteria criteria, String keywordType, String keyword) throws ServiceException {
+		MerchantShippingConfigurationList merchantShippingConfigurationList = merchantShippingConfigurationService.listByStore(store, criteria, keywordType, keyword);
 		return convertToReadableList(merchantShippingConfigurationList);
 	}
 
 	@Override
-	@Transactional
 	public void save(MerchantStore store, PersistableMerchantShippingConfiguration configuration) throws ServiceException {
-		org.apache.commons.lang3.Validate.notNull(configuration.getShippingTransportationType(), "ShippingTransportationType param error");
-		org.apache.commons.lang3.Validate.notNull(configuration.getShippingType(), "ShippingType param error");
-		org.apache.commons.lang3.Validate.notNull(ShippingType.valueOf(configuration.getShippingType()), "ShippingType param error");
-		configuration.getShippingTransportationType().forEach(shippingTransportationType -> {
-			org.apache.commons.lang3.Validate.notNull(ShippingTransportationType.valueOf(shippingTransportationType), "ShippingTransportationType error");
-		});
-
-
-		MerchantShippingConfiguration merchantShippingConfiguration = convertToPersistable(configuration, store);
+		ShippingOrigin returnShippingOrigin = null;
+		ShippingOrigin shippingOrigin = saveShippingOrigin(configuration.getShippingOrigin(), store);
+		if(!(configuration.getReturnShippingOrigin() == null || configuration.getReturnShippingOrigin().getPostalCode().equalsIgnoreCase(""))) {
+//			// -- gunu 24.07.23 
+//			// -- 출고지, 반환지가 다를 경우때문에 변경
+//			returnShippingOrigin = saveShippingOrigin(configuration.getReturnShippingOrigin(), store);
+			returnShippingOrigin = saveReturnShippingOrigin(configuration.getReturnShippingOrigin(), store);
+		}
+		MerchantShippingConfiguration merchantShippingConfiguration = convertToPersistable(configuration);
+		merchantShippingConfiguration.setMerchantStore(store);
+		merchantShippingConfiguration.setShippingOrigin(shippingOrigin);
+		merchantShippingConfiguration.setReturnShippingOrigin(returnShippingOrigin);
 		merchantShippingConfigurationService.saveOrUpdate(merchantShippingConfiguration);
 	}
 
 	@Override
-	public void delete(Long id) throws ServiceException {
-		MerchantShippingConfiguration merchantShippingConfiguration = new MerchantShippingConfiguration();
-		merchantShippingConfiguration.setId(id);
-		merchantShippingConfigurationService.delete(merchantShippingConfiguration);
+	public void delete(MerchantStore store, Long id) throws ServiceException {
+		MerchantShippingConfiguration configuration = merchantShippingConfigurationService.getById(id);
+		merchantShippingConfigurationService.delete(configuration);
 	}
 
 	private PackageDetails toPackageDetails(com.salesmanager.core.model.shipping.Package pack) {
@@ -421,10 +472,6 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("Error getting shipping country", e);
 		}
-
-		
-		
-		
 	}
 	
 	ReadableCountry convert(Country country, MerchantStore store, Language lang) throws ConversionException {
@@ -441,26 +488,33 @@ public class ShippingFacadeImpl implements ShippingFacade {
 
 		ReadableMerchantShippingConfiguration target = new ReadableMerchantShippingConfiguration();
 		target.setId(source.getId());
-//		target.setMerchantStore(source.getMerchantStore());
+		target.setMerchantStore(source.getMerchantStore());
 		target.setDateCreated(source.getAuditSection().getDateCreated());
 		target.setDateModified(source.getAuditSection().getDateModified());
 		target.setModifiedBy(source.getAuditSection().getModifiedBy());
 		target.setName(source.getName());
+		target.setKey(source.getKey());
 		target.setActive(source.getShippingOrigin().isActive());
 		target.setDefaultShipping(source.getShippingOrigin().isActive());
-		target.setShippingType(source.getShippingType());
-		target.setShippingTransportationType(StringToList.convertStringToList(source.getShippingTransportationType()));
+		target.setValue(source.getValue());
+		target.setShippingTypeList(ShippingType.convertStringToShippingTypes(source.getShippingType()));
+		target.setShippingWayList(ShippingWay.convertStringToShippingWays(source.getShippingWay()));
+		target.setShippingBasisType(source.getShippingBasisType());
+		target.setShippingPackageType(source.getShippingPackageType());
+		target.setTransportationMethods(TransportationMethod.convertStringToTransportationMethods(source.getTransportationMethod()));
+		target.setShippingOptionPriceType(source.getShippingOptionPriceType());
 		if (source.getShippingOrigin() != null) {
 			target.setShippingOrigin(buildReadableAddress(source.getShippingOrigin()));
 		}
 		if (source.getReturnShippingOrigin() != null) {
 			target.setReturnShippingOrigin(buildReadableAddress(source.getReturnShippingOrigin()));
 		}
-//		target.setFreeShippingEnabled(source.isFreeShippingEnabled());
-//		target.setOrderTotalFreeShipping(source.getOrderTotalFreeShipping());
+		target.setFreeShippingEnabled(source.isFreeShippingEnabled());
+		target.setOrderTotalFreeShipping(source.getOrderTotalFreeShipping());
 		target.setReturnShippingPrice(source.getReturnShippingPrice());
 		Integer productNum = productService.countProductByShippingTemplateIdAndStoreId(source.getId(), source.getMerchantStore().getId());
 		target.setProductNum(productNum == null? 0 : productNum);
+		target.setReturnEnabled(source.isReturnEnabled());
 		return target;
 	}
 
@@ -470,7 +524,7 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		list.setRecordsTotal(source.getTotalCount());
 		list.setTotalPages(source.getTotalPages());
 		List<MerchantShippingConfiguration> merchantShippingConfigurations = source.getMerchantShippingConfigurations();
-		if (CollectionUtils.isNotEmpty(merchantShippingConfigurations)){
+		if(merchantShippingConfigurations != null) {
 			for (MerchantShippingConfiguration config : merchantShippingConfigurations) {
 				list.getMerchantShippingConfigurations().add(convertToReadable(config));
 			}
@@ -478,27 +532,42 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		return list;
 	}
 
-	public MerchantShippingConfiguration convertToPersistable(PersistableMerchantShippingConfiguration source, MerchantStore store) {
-		MerchantShippingConfiguration merchantShippingConfiguration = ObjectConvert.convert(source, MerchantShippingConfiguration.class);
-		ShippingOrigin returnShippingOrigin = null;
-		ShippingOrigin shippingOrigin = saveShippingOrigin(source.getShippingOrigin(), store);
-		if (source.getReturnShippingOrigin() != null){
-			returnShippingOrigin = saveShippingOrigin(source.getReturnShippingOrigin(), store);
+	public MerchantShippingConfiguration convertToPersistable(PersistableMerchantShippingConfiguration source) {
+		MerchantShippingConfiguration convert = ObjectConvert.convert(source, MerchantShippingConfiguration.class);
+		if (CollectionUtils.isNotEmpty(source.getShippingTypeList())) {
+			convert.setShippingType(ShippingType.convertShippingTypesToString(source.getShippingTypeList()));
 		}
-		merchantShippingConfiguration.setShippingTransportationType(String.join("," , source.getShippingTransportationType()));
-		merchantShippingConfiguration.setMerchantStore(store);
-		merchantShippingConfiguration.setShippingOrigin(shippingOrigin);
-		merchantShippingConfiguration.setReturnShippingOrigin(returnShippingOrigin);
-		return merchantShippingConfiguration;
+		
+		if (CollectionUtils.isNotEmpty(source.getShippingWayList())) {
+			convert.setShippingWay(ShippingWay.convertShippingWaysToString(source.getShippingWayList()));
+		}
+
+		if (source.getShippingBasisType() != null) {
+			convert.setShippingBasisType(ShippingBasisType.valueOf(source.getShippingBasisType()));
+		}
+
+		if (source.getShippingPackageType() != null) {
+			convert.setShippingPackageType(ShippingPackageType.valueOf(source.getShippingPackageType()));
+		}
+
+		if (CollectionUtils.isNotEmpty(source.getTransportationMethods())) {
+			convert.setTransportationMethod(
+					TransportationMethod.convertTransportationMethodsToString(source.getTransportationMethods()));
+		}
+
+		if (source.getShippingOptionPriceType() != null) {
+			convert.setShippingOptionPriceType(ShippingOptionPriceType.valueOf(source.getShippingOptionPriceType()));
+		}
+		
+		return convert;
+		
+		// -- gunu 24.07.23 converting하고 왜 새로운 객체를 생성하는지....
+//		return new MerchantShippingConfiguration();
 	}
 
 	ReadableAddress buildReadableAddress(ShippingOrigin shippingOrigin){
 		ReadableAddress address = new ReadableAddress();
 		address.setAddress(shippingOrigin.getAddress());
-		address.setTelephone(shippingOrigin.getTelephone());
-		address.setName(shippingOrigin.getName());
-		address.setEmail(shippingOrigin.getEmail());
-		address.setCompany(shippingOrigin.getCompany());
 		address.setActive(shippingOrigin.isActive());
 		address.setCity(shippingOrigin.getCity());
 		address.setPostalCode(shippingOrigin.getPostalCode());

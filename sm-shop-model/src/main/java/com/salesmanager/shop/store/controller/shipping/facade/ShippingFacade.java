@@ -50,7 +50,8 @@ public interface ShippingFacade {
 
 	void save(MerchantStore store, PersistableMerchantShippingConfiguration configuration) throws ServiceException;
 
-	void delete(Long id) throws ServiceException;
+	void delete(MerchantStore store, Long id) throws ServiceException;
+	ShippingOrigin saveReturnShippingOrigin(PersistableAddress address, MerchantStore store);
 
 
 }

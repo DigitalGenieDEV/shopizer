@@ -2,6 +2,8 @@ package com.salesmanager.core.model.shipping;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,8 +21,15 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.zone.Zone;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "SHIPING_ORIGIN")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 
 	
@@ -40,6 +49,13 @@ public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 	@Column(name = "ACTIVE")
 	private boolean active;
 	
+	
+	@Column(name = "SHIPPING_PACKAGE_TYPE")
+	private ShippingPackageType shippingPackageType;
+	
+	@Enumerated(EnumType.STRING)
+	@Column (name ="ORIGIN_TYPE")
+	private ShippingOriginType originType;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
@@ -61,19 +77,6 @@ public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 	@Column (name ="STATE", length=100)
 	private String state;
 
-	@Column (name ="EMAIL", length=100)
-	private String email;
-
-	@Column (name ="NAME", length=100)
-	private String name;
-
-	@Column (name ="COMPANY", length=100)
-	private String company;
-
-	@Column (name ="TELEPHONE", length=100)
-	private String telephone;
-
-
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
 	@JoinColumn(name="COUNTRY_ID", nullable=true)
 	private Country country;
@@ -82,111 +85,8 @@ public class ShippingOrigin extends SalesManagerEntity<Long, ShippingOrigin> {
 	@JoinColumn(name="ZONE_ID", nullable=true)
 	private Zone zone;
 
-	@Override
-	public Long getId() {
-		return this.id;
-	}
-
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-		
-	}
-
-	public MerchantStore getMerchantStore() {
-		return merchantStore;
-	}
-
-	public void setMerchantStore(MerchantStore merchantStore) {
-		this.merchantStore = merchantStore;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 	
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
-	}
-
-	public Zone getZone() {
-		return zone;
-	}
-
-	public void setZone(Zone zone) {
-		this.zone = zone;
-	}
 
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
+	
 }
