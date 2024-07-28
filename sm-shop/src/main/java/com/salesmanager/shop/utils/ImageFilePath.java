@@ -26,6 +26,15 @@ public interface ImageFilePath {
 	public String buildStaticImageUtils(MerchantStore store, String imageName);
 	
 	/**
+	 * Build library files of store path that can be used by image servlet
+	 * utility for getting the physical image
+	 * @param store
+	 * @param imageName
+	 * @return
+	 */
+	public String buildLibraryFileUtils(MerchantStore store, String imageName);
+	
+	/**
 	 * Builds a static content image file path that can be used by image servlet
 	 * utility for getting the physical image by specifying the image type
 	 * @param store

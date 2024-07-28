@@ -52,6 +52,28 @@ public class CloudFilePathUtils extends AbstractimageFilePath {
 		return imgName.toString();
 
 	}
+	
+	/**
+	 * Build library files of store path that can be used by image servlet
+	 * utility for getting the physical image
+	 * @param store
+	 * @param imageName
+	 * @return
+	 */
+	@Override
+	public String buildLibraryFileUtils(MerchantStore store, String imageName) {
+		StringBuilder imgName = new StringBuilder()
+				.append(getBasePath(store))
+				.append(Constants.FILES_URI)
+				.append(Constants.SLASH)
+				.append(store.getCode())
+				.append(Constants.SLASH);
+				if(!StringUtils.isBlank(imageName)) {
+					imgName.append(imageName);
+				}
+		return imgName.toString();
+				
+	}
 
 
 	/**

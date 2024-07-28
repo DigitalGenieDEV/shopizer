@@ -41,6 +41,22 @@ public class LocalImageFilePathUtils extends AbstractimageFilePath{
 	}
 	
 	/**
+	 * Build library files of path that can be used by image servlet
+	 * utility for getting the physical image
+	 * @param store
+	 * @param imageName
+	 * @return
+	 */
+	public String buildLibraryFileUtils(MerchantStore store, String imageName) {
+		StringBuilder imgName = new StringBuilder().append(getBasePath(store)).append(Constants.FILES_URI).append(Constants.SLASH).append(store.getCode()).append("/").append(FileContentType.IMAGE.name()).append("/");
+				if(!StringUtils.isBlank(imageName)) {
+					imgName.append(imageName);
+				}
+		return imgName.toString();
+				
+	}
+	
+	/**
 	 * Builds a static content image file path that can be used by image servlet
 	 * utility for getting the physical image
 	 * @param store

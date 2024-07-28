@@ -137,6 +137,8 @@ public interface ContentFacade {
 	 */
 	void addContentFiles(List<ContentFile> file, String merchantStoreCode);
 	
+	String addLibraryFile(ContentFile file, String merchantStoreCode, FileContentType fileContentType);
+	
 	/**
 	 * Creates content page
 	 * @param page

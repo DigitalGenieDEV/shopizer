@@ -608,7 +608,34 @@ public class ContentFacadeImpl implements ContentFacade {
 		}
 	}
 
+	@Override
+	public String addLibraryFile(ContentFile file, String merchantStoreCode, FileContentType fileType) {
+		String fileName = null;
+		try {
+			byte[] payload = file.getFile();
+			fileName = java.util.UUID.randomUUID() + file.getName().substring(file.getName().indexOf("."));
+			
+			try (InputStream targetStream = new ByteArrayInputStream(payload)) {
 
+				if (fileType == null){
+					String type = file.getContentType().split(FILE_CONTENT_DELIMETER)[0];
+					fileType = getFileContentType(type);
+				}
+
+				InputContentFile cmsContent = new InputContentFile();
+				cmsContent.setFileName(fileName);
+				cmsContent.setMimeType(file.getContentType());
+				cmsContent.setFile(targetStream);
+				cmsContent.setFileContentType(fileType);
+
+				contentService.addContentFile(merchantStoreCode, cmsContent);
+			}
+		} catch (ServiceException | IOException e) {
+			throw new ServiceRuntimeException(e);
+		}
+		
+		return fileName;
+	}
 
 	private FileContentType getFileContentType(String type) {
 		FileContentType fileType = FileContentType.STATIC_FILE;
