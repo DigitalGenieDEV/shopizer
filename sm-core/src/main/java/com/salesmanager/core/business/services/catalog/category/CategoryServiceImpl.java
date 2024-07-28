@@ -402,11 +402,11 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 
 	@Override
 	public Page<Category> getListByDepth(MerchantStore store, Language language, String name, int depth, int page,
-			int count) {
+			int count, String type) {
 
 		Pageable pageRequest = PageRequest.of(page, count);
 
-		return pageableCategoryRepository.listByStore(store.getId(), language.getId(), name, pageRequest);
+		return pageableCategoryRepository.listByStore(type, store.getId(), language.getId(), name, pageRequest);
 	}
 
 	@Override
