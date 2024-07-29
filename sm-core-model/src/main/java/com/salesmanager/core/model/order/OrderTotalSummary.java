@@ -2,6 +2,7 @@ package com.salesmanager.core.model.order;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -10,15 +11,15 @@ import java.util.List;
  *
  */
 public class OrderTotalSummary implements Serializable {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private BigDecimal subTotal = new BigDecimal(0);//one time price for items
 	private BigDecimal total = new BigDecimal(0);//final price
 	private BigDecimal taxTotal = new BigDecimal(0);//total of taxes
-	
+
 	private List<OrderTotal> totals;//all other fees (tax, shipping ....)
 
 	public BigDecimal getSubTotal() {
@@ -26,7 +27,7 @@ public class OrderTotalSummary implements Serializable {
 	}
 
 	public void setSubTotal(BigDecimal subTotal) {
-		this.subTotal = subTotal;
+		this.subTotal = subTotal != null ? subTotal.setScale(2, RoundingMode.HALF_UP) : null;
 	}
 
 	public BigDecimal getTotal() {
@@ -34,7 +35,7 @@ public class OrderTotalSummary implements Serializable {
 	}
 
 	public void setTotal(BigDecimal total) {
-		this.total = total;
+		this.total = total != null ? total.setScale(2, RoundingMode.HALF_UP) : null;
 	}
 
 	public List<OrderTotal> getTotals() {
@@ -50,7 +51,7 @@ public class OrderTotalSummary implements Serializable {
 	}
 
 	public void setTaxTotal(BigDecimal taxTotal) {
-		this.taxTotal = taxTotal;
+		this.taxTotal = taxTotal != null ? taxTotal.setScale(2, RoundingMode.HALF_UP) : null;
 	}
 
 }
