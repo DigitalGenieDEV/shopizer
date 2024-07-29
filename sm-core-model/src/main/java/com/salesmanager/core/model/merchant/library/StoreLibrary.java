@@ -65,7 +65,7 @@ public class StoreLibrary extends SalesManagerEntity<Long, StoreLibrary> impleme
 	private String fileExt;
 	
 	@Column(name = "DELETE_YN", length = 1, nullable = true)
-	@ColumnDefault("N")
+	@ColumnDefault("'N'")
 	private String deleteYn;
 	
 	public StoreLibrary(Integer storeId, String fileName, String fileType, String userName, Long fileSize) {
