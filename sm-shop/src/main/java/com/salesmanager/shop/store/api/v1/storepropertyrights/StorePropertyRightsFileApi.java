@@ -72,9 +72,9 @@ public class StorePropertyRightsFileApi {
 	@Inject
 	private ContentFacade contentFacade;
 	
-//	@Inject
-//	@Qualifier("certificationFile")
-//	private CertificationFilePath certificationFilePathUtils;
+	@Inject
+	@Qualifier("certificationFile")
+	private CertificationFilePath certificationFilePathUtils;
 	
 	@Inject
 	private AesUtil aesUtil;
@@ -195,7 +195,7 @@ public class StorePropertyRightsFileApi {
 															 , merchantStore.getCode()
 															 , FileContentType.valueOf(fileContentType));
 				
-//				entity.setFileUrl(certificationFilePathUtils.buildCertificationFileUtils(merchantStore, fileName));
+				entity.setFileUrl(certificationFilePathUtils.buildCertificationFileUtils(merchantStore, fileName));
 				fileFacade.registerFiles(entity);
 			
 			}
