@@ -495,7 +495,7 @@ public class ShippingFacadeImpl implements ShippingFacade {
 		target.setName(source.getName());
 		target.setKey(source.getKey());
 		target.setActive(source.getShippingOrigin().isActive());
-		target.setDefaultShipping(source.getShippingOrigin().isActive());
+		target.setDefaultShipping(source.isDefaultShipping());
 		target.setValue(source.getValue());
 		target.setShippingTypeList(ShippingType.convertStringToShippingTypes(source.getShippingType()));
 		target.setShippingWayList(ShippingWay.convertStringToShippingWays(source.getShippingWay()));
