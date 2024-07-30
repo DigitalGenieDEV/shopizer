@@ -98,7 +98,7 @@ public class StoreCertificationFileApi {
 	private StoreFacade storeFacade;
 	
 	// templete list
-	@GetMapping(value = {"/auth/storeCettificationFile/templetes", "/private/storeCettificationFile/templetes"}, produces ={ "application/json" })
+	@GetMapping(value = {"/auth/store/certification/templetes", "/private/store/certification/templetes"}, produces ={ "application/json" })
 	public ReadableCertificationConfigList templeteList(HttpServletRequest request,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws Exception {
@@ -115,7 +115,7 @@ public class StoreCertificationFileApi {
 		return certificationConfigList;
 	}
 	
-	@PostMapping(value = {"/auth/storeCettificationFile/templete", "/private/storeCettificationFile/templete"}, produces ={ "application/json" })
+	@PostMapping(value = {"/auth/store/certification/templete", "/private/store/certification/templete"}, produces ={ "application/json" })
 	@ApiOperation(httpMethod = "Post", value = "Sends request to create Certification Document's Templete", notes = "")
 	public ResponseEntity<?> registerTemplete(HttpServletRequest request, 
 			@Valid @RequestBody PersistableCertificationConfig persistableCertificationConfig, 
@@ -138,7 +138,7 @@ public class StoreCertificationFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@PutMapping(value = {"/auth/storeCettificationFile/templete/{id}", "/private/storeCettificationFile/templete/{id}"}, produces ={ "application/json" })
+	@PutMapping(value = {"/auth/store/certification/templete/{id}", "/private/store/certification/templete/{id}"}, produces ={ "application/json" })
 	public ResponseEntity<?> updateTemplete(HttpServletRequest request,
 			@RequestBody PersistableCertificationConfig persistableCertificationConfig,
 			@ApiIgnore MerchantStore merchantStore,
@@ -156,7 +156,7 @@ public class StoreCertificationFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@DeleteMapping(value = {"/auth/storeCettificationFile/templete/{id}", "/private/storeCettificationFile/templete/{id}"}, produces ={ "application/json" })
+	@DeleteMapping(value = {"/auth/store/certification/templete/{id}", "/private/store/certification/templete/{id}"}, produces ={ "application/json" })
 	public ResponseEntity<?> deleteTemplete(HttpServletRequest request,
 			@PathVariable("id") Long id,
 			@ApiIgnore MerchantStore merchantStore) throws Exception {
@@ -174,7 +174,7 @@ public class StoreCertificationFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@PostMapping(value = {"/auth/storeCettificationFile/files", "/private/storeCettificationFile/files"}, produces ={ "application/json" })
+	@PostMapping(value = {"/auth/store/certification/templete/files", "/private/store/certification/templete/files"}, produces ={ "application/json" })
 	public ResponseEntity<?> registerFiles(HttpServletRequest request
             , @RequestPart(value = "param") PersistableCertificationConfig persistableCertificationConfig
             , @RequestPart(value = "fileContentType") String fileContentType
@@ -218,7 +218,7 @@ public class StoreCertificationFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@GetMapping(value = {"/auth/storeCettificationFile/files", "/private/storeCettificationFile/files"}, produces ={ "application/json" })
+	@GetMapping(value = {"/auth/store/certification/templete/files", "/private/store/certification/templete/files"}, produces ={ "application/json" })
 	public ReadableCertificationFileList fileList(HttpServletRequest request, 
 			@RequestParam(value = "templeteId", required = false) Long templeteId,
 			@ApiIgnore MerchantStore merchantStore,
@@ -237,7 +237,7 @@ public class StoreCertificationFileApi {
 		return certificationFileList;
 	}
 		
-	@PutMapping(value = {"/auth/storeCettificationFile/files", "/private/storeCettificationFile/files"}, produces ={ "application/json" })
+	@PutMapping(value = {"/auth/store/certification/templete/files", "/private/store/certification/templete/files"}, produces ={ "application/json" })
 	public ResponseEntity<?> updateFiles(HttpServletRequest request, 
 			@RequestBody List<PersistableCertificationFile> persistableFileList,
 			@ApiIgnore MerchantStore merchantStore,

@@ -85,7 +85,7 @@ public class StorePropertyRightsFileApi {
 	@Inject
 	private StoreFacade storeFacade;
 	
-	@GetMapping(value = {"/auth/storePropertyRightsFile/templetes", "/private/storePropertyRightsFile/templetes"}, produces ={ "application/json" })
+	@GetMapping(value = {"/auth/store/property-rights/templetes", "/private/store/property-rights/templetes"}, produces ={ "application/json" })
 	public ReadablePropertyRightsConfigList templeteList(HttpServletRequest request,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws Exception {
@@ -103,7 +103,7 @@ public class StorePropertyRightsFileApi {
 		return configList;
 	}
 	
-	@PostMapping(value = {"/auth/storePropertyRightsFile/templete", "/private/storePropertyRightsFile/templete"}, produces ={ "application/json" })
+	@PostMapping(value = {"/auth/store/property-rights/templete", "/private/store/property-rights/templete"}, produces ={ "application/json" })
 	public ResponseEntity<?> registerTemplete(HttpServletRequest request, 
 			@Valid @RequestBody PersistablePropertyRightsConfig persistableConfig,
 			@ApiIgnore MerchantStore merchantStore) throws Exception {
@@ -126,7 +126,7 @@ public class StorePropertyRightsFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@PutMapping(value = {"/auth/storePropertyRightsFile/templete/{id}", "/private/storePropertyRightsFile/templete/{id}"}, produces ={ "application/json" })
+	@PutMapping(value = {"/auth/store/property-rights/templete/{id}", "/private/store/property-rights/templete/{id}"}, produces ={ "application/json" })
 	public ResponseEntity<?> updateTemplete(HttpServletRequest request, 
 			@RequestBody PersistablePropertyRightsConfig persistableConfig,
 			@ApiIgnore MerchantStore merchantStore,
@@ -146,7 +146,7 @@ public class StorePropertyRightsFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@DeleteMapping(value = {"/auth/storePropertyRightsFile/templete/{id}", "/private/storePropertyRightsFile//templete/{id}"}, produces ={ "application/json" })
+	@DeleteMapping(value = {"/auth/store/property-rights/templete/{id}", "/private/store/property-rights/templete/{id}"}, produces ={ "application/json" })
 	public ResponseEntity<?> deleteTemplete(HttpServletRequest request, 
 			@PathVariable("id") Long id,
 			@ApiIgnore MerchantStore merchantStore) throws Exception {
@@ -165,7 +165,7 @@ public class StorePropertyRightsFileApi {
 	}
 	
 	// save documents
-	@PostMapping(value = {"/auth/storePropertyRightsFile/files", "/private/storePropertyRightsFile/files"}, produces ={ "application/json" })
+	@PostMapping(value = {"/auth/store/property-rights/templete/files", "/private/store/property-rights/templete/files"}, produces ={ "application/json" })
 	public ResponseEntity<?> registerFiles(HttpServletRequest request
             , @RequestPart(value = "param") PersistablePropertyRightsConfig persistableConfig
             , @RequestPart(value = "fileContentType") String fileContentType
@@ -209,7 +209,7 @@ public class StorePropertyRightsFileApi {
 		return ResponseEntity.ok(Void.class);
 	}
 	
-	@GetMapping(value = {"/auth/storePropertyRightsFile/files", "/private/storePropertyRightsFile/files"}, produces ={ "application/json" })
+	@GetMapping(value = {"/auth/store/property-rights/templete/files", "/private/store/property-rights/templete/files"}, produces ={ "application/json" })
 	public ReadablePropertyRightsFileList fileList(HttpServletRequest request,
 			@RequestParam(value = "templeteId", required = false) Long templeteId,
 			@ApiIgnore MerchantStore merchantStore, 
@@ -229,7 +229,7 @@ public class StorePropertyRightsFileApi {
 	}
 		
 	// update document's base state
-	@PutMapping(value = {"/auth/storePropertyRightsFile/files", "/private/storePropertyRightsFile/files"}, produces ={ "application/json" })
+	@PutMapping(value = {"/auth/store/property-rights/templete/files", "/private/store/property-rights/templete/files"}, produces ={ "application/json" })
 	public ResponseEntity<?> updateFiles(HttpServletRequest request,
 			@RequestBody List<PersistablePropertyRightsFile> persistableFileList,
 			@ApiIgnore MerchantStore merchantStore,
