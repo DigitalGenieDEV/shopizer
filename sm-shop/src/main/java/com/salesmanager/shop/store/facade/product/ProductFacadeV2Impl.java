@@ -160,6 +160,12 @@ public class ProductFacadeV2Impl implements ProductFacade {
 
 		ReadableProduct readableProduct = readableProductMapper.convert(product, product.getMerchantStore(), language);
 
+		List<ProductFeature> listByProductId = productFeatureService.findListByProductId(id);
+		if (!CollectionUtils.isEmpty(listByProductId)){
+			List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
+			readableProduct.setTags(collect);
+		}
+
 		List<ProductAnnouncementAttribute> productAnnouncementAttribute = productAnnouncementAttributeService.getByProductId(id);
 
 		readableProduct.setProductAnnouncement(readableProductAnnouncementAttributeMapper.convert(
