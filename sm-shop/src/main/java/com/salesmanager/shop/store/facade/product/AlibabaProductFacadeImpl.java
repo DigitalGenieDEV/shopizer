@@ -266,6 +266,9 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         for (int i = 0;i<images.length;i++){
             String image = images[i];
             PersistableImage persistableImage = new PersistableImage();
+            if (i == 0){
+                persistableImage.setDefaultImage(true);
+            }
             persistableImage.setImageUrl(image);
             persistableImage.setImageType(1);
             persistableImages.add(persistableImage);

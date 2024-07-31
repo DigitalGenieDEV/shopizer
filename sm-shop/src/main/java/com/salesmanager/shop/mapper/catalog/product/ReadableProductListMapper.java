@@ -160,7 +160,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 
 			List<ReadableImage> imageList = images.stream().map(i -> this.convertImage(source, i, source.getMerchantStore()))
 					.collect(Collectors.toList());
-//			destination.setImages(imageList);
+			destination.setImages(imageList);
 			imageList.forEach(image->{
 				if(image.isDefaultImage()){
 					destination.setImage(image);
