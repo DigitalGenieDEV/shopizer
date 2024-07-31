@@ -11,6 +11,8 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.search.ReadableAttrFiltAttrKv;
 import com.salesmanager.shop.model.search.ReadableAttrFiltKv;
 import com.salesmanager.shop.model.search.ReadableAttrForFilt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Component("searchAttrFiltUtils")
 public class SearchAttrFiltUtils {
+
+    protected final Logger LOG = LoggerFactory.getLogger(SearchAttrFiltUtils.class);
 
     @Inject
     private CategoryService categoryService;
@@ -134,19 +138,6 @@ public class SearchAttrFiltUtils {
         for (Map.Entry<String, List<String>> entry : entrySets) {
             if (entry.getKey().startsWith(FILT_KEY_ATTR_PREFIX)) {
                 attrIdsWithPrefix.add(entry.getKey());
-//                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
-//
-//                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(entry.getKey(), merchantStore, language);
-//
-//                List<ReadableAttrFiltKv> attrValues = entry.getValue().stream()
-//                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
-//                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-//                        .collect(Collectors.toList());
-//
-//                attrKv.setAttrName(attrName);
-//                attrKv.setAttrValues(attrValues);
-//
-//                kvs.add(attrKv);
             }
         }
 
@@ -156,18 +147,22 @@ public class SearchAttrFiltUtils {
         List<ProductAttribute> productAttributes = productAttributeService.getByIdList(attrIds);
 
         for (ProductAttribute productAttribute : productAttributes) {
-            ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
+            try {
+                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
 
-            List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId()).stream()
-                    .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
-                    .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-                    .collect(Collectors.toList());
-            ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
+                List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId()).stream()
+                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
+                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
+                        .collect(Collectors.toList());
+                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
 
-            attrKv.setAttrName(attrName);
-            attrKv.setAttrValues(attrValues);
+                attrKv.setAttrName(attrName);
+                attrKv.setAttrValues(attrValues);
 
-            kvs.add(attrKv);
+                kvs.add(attrKv);
+            } catch (Exception e) {
+                LOG.error("attr kv exception, product attribute Id = [" + productAttribute.getId() + "]", e);
+            }
         }
 
         return kvs;
@@ -192,6 +187,7 @@ public class SearchAttrFiltUtils {
 
             return kv;
         } catch (Exception e) {
+            LOG.error("get category attr filt kv exception", e);
         }
 
         return null;
@@ -215,8 +211,8 @@ public class SearchAttrFiltUtils {
 
             return kv;
         } catch (Exception e) {
+            LOG.error("get option value attr filt exception, option value id = [" + optionValueId +  "]", e);
         }
-
 
         return null;
     }
@@ -239,6 +235,7 @@ public class SearchAttrFiltUtils {
 
             return kv;
         } catch (Exception e) {
+            LOG.error("get product  attr filt kv exception", e);
         }
 
 
