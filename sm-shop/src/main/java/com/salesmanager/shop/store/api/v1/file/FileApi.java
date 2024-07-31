@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.salesmanager.core.model.content.FileContentType;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
+import com.salesmanager.core.model.merchant.propertyrights.PropertyRightsFileEntity;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
 import com.salesmanager.shop.store.controller.cetificationfile.facade.CetificationFileFacade;
 import com.salesmanager.shop.store.controller.file.facade.FileFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
+import com.salesmanager.shop.store.controller.propertyrightsconfig.facade.PropertyRightsConfigFacade;
+import com.salesmanager.shop.store.controller.propertyrightsfile.facade.PropertyRightsFileFacade;
 import com.salesmanager.shop.utils.AesUtil;
 
 import io.swagger.annotations.Api;
@@ -37,6 +40,9 @@ public class FileApi {
 	
 	@Inject
 	private CetificationFileFacade cetificationFileFacade;
+	
+	@Inject
+	private PropertyRightsFileFacade propertyRightsFileFacade;
 	
 	@Inject
 	private ManagerFacade managerFacade;
@@ -58,6 +64,21 @@ public class FileApi {
 		byte[] bytes = cetificationFileFacade.getContent(merchantStore, fileType, certificationFile.getStoragePath());
 		if(bytes != null) {
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + certificationFile.getReadFileName() + "\"");
+			response.setHeader("content-type", "application/octet-stream");
+		} 
+		return bytes;
+	}
+	
+	@GetMapping(value = {"/auth/property-rights/file/{id}", "/private/property-rights/file/{id}"})
+	@ApiOperation(httpMethod = "GET", value = "Certification Download With AES", notes = "CommonFile ")
+	public @ResponseBody byte[] getPropertyRights(@PathVariable(name = "id") Long id,@ApiIgnore MerchantStore merchantStore,
+			 HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		PropertyRightsFileEntity propertyRightsFileEntity = propertyRightsFileFacade.getById(id,merchantStore);
+		FileContentType fileType = FileContentType.CERTIFICATION_INFORMATION;
+		byte[] bytes = cetificationFileFacade.getContent(merchantStore, fileType, propertyRightsFileEntity.getStoragePath());
+		if(bytes != null) {
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + propertyRightsFileEntity.getReadFileName() + "\"");
 			response.setHeader("content-type", "application/octet-stream");
 		} 
 		return bytes;

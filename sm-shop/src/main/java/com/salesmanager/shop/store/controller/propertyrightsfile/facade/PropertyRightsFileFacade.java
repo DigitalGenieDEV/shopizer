@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
 import com.salesmanager.core.model.merchant.propertyrights.PersistablePropertyRightsFile;
 import com.salesmanager.core.model.merchant.propertyrights.PropertyRightsFileEntity;
 import com.salesmanager.core.model.reference.language.Language;
@@ -16,4 +17,5 @@ public interface PropertyRightsFileFacade {
 	ReadablePropertyRightsFileList listByTempletId(Language language, Integer storeId, Long templetId);
 	void updateFiles(String userName, MerchantStore merchantStore,
 	List<PersistablePropertyRightsFile> persistableFileList) throws Exception;
+	PropertyRightsFileEntity getById(Long id, MerchantStore merchantStore);
 }

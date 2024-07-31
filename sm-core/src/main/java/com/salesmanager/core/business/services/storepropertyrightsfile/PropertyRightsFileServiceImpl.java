@@ -49,5 +49,11 @@ public class PropertyRightsFileServiceImpl extends SalesManagerEntityServiceImpl
 		// TODO Auto-generated method stub
 		fileRepository.updateFileState(file.getId(), file.getBaseYn(), file.getAuditSection().getModifiedBy(), file.getAuditSection().getDateModified());
 	}
+	
+	@Override
+	public PropertyRightsFileEntity getById(Long id) {
+		// TODO Auto-generated method stub
+		return fileRepository.getById(id);
+	}
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.salesmanager.core.business.services.storepropertyrightsfile.PropertyRightsFileService;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
 import com.salesmanager.core.model.merchant.propertyrights.PersistablePropertyRightsFile;
 import com.salesmanager.core.model.merchant.propertyrights.PropertyRightsFileEntity;
 import com.salesmanager.core.model.reference.language.Language;
@@ -79,6 +80,12 @@ public class PropertyRightsFileFacadeImpl implements PropertyRightsFileFacade {
 			file.setAuditSection(auditSection);
 			propertyRightsFileService.updateFileState(file);
 		}
+	}
+
+	@Override
+	public PropertyRightsFileEntity getById(Long id, MerchantStore merchantStore) {
+		// TODO Auto-generated method stub
+		return propertyRightsFileService.getById(id);
 	}
 
 }
