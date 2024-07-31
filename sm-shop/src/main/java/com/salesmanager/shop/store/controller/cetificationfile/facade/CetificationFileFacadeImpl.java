@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.controller.cetificationfile.facade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -10,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.content.ContentService;
 import com.salesmanager.core.business.services.storecertificationfile.CertificationConfigService;
 import com.salesmanager.core.business.services.storecertificationfile.CertificationFileService;
 import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.content.FileContentType;
+import com.salesmanager.core.model.content.OutputContentFile;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
 import com.salesmanager.core.model.merchant.certificationfile.PersistableCertificationConfig;
@@ -23,6 +28,7 @@ import com.salesmanager.shop.populator.storecertificationfile.ReadableCertificat
 import com.salesmanager.shop.populator.storecertificationfile.ReadableCertificationFilePopulator;
 import com.salesmanager.shop.populator.storecertificationfile.ReadableCertificationConfigPopulator;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
+import com.salesmanager.shop.utils.AesUtil;
 
 @Service("cetificationFileFacade")
 public class CetificationFileFacadeImpl implements CetificationFileFacade {
@@ -32,6 +38,12 @@ public class CetificationFileFacadeImpl implements CetificationFileFacade {
 	
 	@Inject
 	private CertificationFileService cetificationFileService;
+	
+	@Inject
+	private AesUtil aesUtil;
+	
+	@Inject
+	private ContentService contentService;
 	
 	@Override
 	public void registerFiles(CertificationFileEntity entity) throws Exception {
@@ -82,6 +94,22 @@ public class CetificationFileFacadeImpl implements CetificationFileFacade {
 			file.setAuditSection(auditSection);
 			cetificationFileService.updateFileState(file);
 		}
+	}
+
+	@Override
+	public CertificationFileEntity getById(Long id, MerchantStore merchantStore) throws Exception {
+		// TODO Auto-generated method stub
+		return cetificationFileService.getById(id);
+	}
+
+	@Override
+	public byte[] getContent(MerchantStore merchantStore, FileContentType fileType, String fileName) throws Exception {
+		// TODO Auto-generated method stub
+		OutputContentFile file = contentService.getContentFile(merchantStore.getCode(), fileType, fileName);
+		if(file != null) {
+			return aesUtil.decode(file.getFile().toByteArray());
+		}
+		return null;
 	}
 
 }

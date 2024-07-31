@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.services.storecertificationfile;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
@@ -13,5 +14,7 @@ public interface CertificationFileService {
 	List<CertificationFileEntity> listByTempletId(Long templetId);
 
 	void updateFileState(PersistableCertificationFile file);
+
+	CertificationFileEntity getById(Long id);
 
 }
