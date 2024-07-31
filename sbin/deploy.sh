@@ -6,5 +6,5 @@ targetpath="$dockerbasepath/target"
 
 sh $dockerbuild
 
-scp -i ckbsvshopizer_key.pem $targetpath/shopizer.jar ec2-user@54.180.87.211:~/devops/sm-shop/target/shopizer.jar
-ssh -i ckbsvshopizer_key.pem -t ec2-user@54.180.87.211 "sh ./devops/startdeploy.sh"
+scp -i ckbsvshopizer_key.pem $targetpath/shopizer.jar ec2-user@13.125.162.112:~/devops/sm-shop/target/shopizer.jar
+ssh -i ckbsvshopizer_key.pem -t ec2-user@13.125.162.112 "sh ./devops/startdeploy.sh"

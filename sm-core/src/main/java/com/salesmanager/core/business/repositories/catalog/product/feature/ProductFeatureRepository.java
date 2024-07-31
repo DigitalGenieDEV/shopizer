@@ -43,4 +43,11 @@ public interface ProductFeatureRepository extends JpaRepository<ProductFeature, 
 
 
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM ProductFeature p WHERE p.productId = :id")
+    void deleteByProductId(@Param("id") Long id);
+
+
+
 }

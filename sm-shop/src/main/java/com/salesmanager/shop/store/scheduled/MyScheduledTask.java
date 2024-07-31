@@ -5,7 +5,9 @@ import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.alibaba.fenxiao.crossborder.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAnnouncementAttributeRepository;
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAttributeRepository;
+import com.salesmanager.core.business.repositories.catalog.product.feature.ProductFeatureRepository;
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
@@ -40,6 +42,12 @@ public class MyScheduledTask {
     private AlibabaProductService alibabaProductService;
     @Inject
     protected MerchantStoreService merchantService;
+
+    @Autowired
+    private ProductFeatureRepository productFeatureRepository;
+
+    @Autowired
+    private ProductAnnouncementAttributeRepository productAnnouncementAttributeRepository;
 
     @Autowired
     private ProductService productService;
@@ -109,11 +117,15 @@ public class MyScheduledTask {
             Optional<Product> byId = productRepository.findById(id);
             if (byId.isPresent()) {
                 Product product = byId.get();
+                productAnnouncementAttributeRepository.deleteByProductId(product.getId());
+
                 List<ProductAttribute> attributes = productAttributeRepository.findByProductId(product.getId());
 
                 List<Long> collect = attributes.stream().map(ProductAttribute::getId).collect(Collectors.toList());
 
                 productAttributeRepository.deleteProductAttributesByIds(collect);
+
+                productFeatureRepository.deleteByProductId(product.getId());
 
                 productService.delete(product);
             }
