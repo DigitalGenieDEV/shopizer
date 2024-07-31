@@ -64,6 +64,7 @@ public class CetificationConfigFacadeImpl implements CetificationConfigFacade {
 				readableCertificationConfigs.add(convertCertificationConfigEntityToReadableCertificationConfig(language, entity)); 
 		}
 		
+		readableCertificationConfigList.setRecordsTotal(list.size());
 		readableCertificationConfigList.setData(readableCertificationConfigs);
 		
 		return readableCertificationConfigList;

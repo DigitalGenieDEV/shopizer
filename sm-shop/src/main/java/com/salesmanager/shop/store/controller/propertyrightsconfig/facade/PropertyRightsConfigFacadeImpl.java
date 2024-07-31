@@ -64,6 +64,7 @@ public class PropertyRightsConfigFacadeImpl implements PropertyRightsConfigFacad
 				readableCertificationConfigs.add(convertCertificationConfigEntityToReadableCertificationConfig(language, entity)); 
 		}
 		
+		readableConfigList.setRecordsTotal(list.size());
 		readableConfigList.setData(readableCertificationConfigs);
 		
 		return readableConfigList;

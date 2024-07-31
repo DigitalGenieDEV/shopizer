@@ -3,6 +3,7 @@ package com.salesmanager.core.business.services.storepropertyrightsfile;
 import java.util.List;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.model.merchant.certificationfile.CertificationFileEntity;
 import com.salesmanager.core.model.merchant.propertyrights.PersistablePropertyRightsFile;
 import com.salesmanager.core.model.merchant.propertyrights.PropertyRightsFileEntity;
 
@@ -13,5 +14,7 @@ public interface PropertyRightsFileService {
 	List<PropertyRightsFileEntity> listByTempletId(Long templetId);
 
 	void updateFileState(PersistablePropertyRightsFile file);
+
+	PropertyRightsFileEntity getById(Long id);
 
 }

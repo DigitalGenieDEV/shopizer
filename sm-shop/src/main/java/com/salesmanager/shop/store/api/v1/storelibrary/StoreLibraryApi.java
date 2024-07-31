@@ -92,7 +92,7 @@ public class StoreLibraryApi {
 	private ImageFilePath imageUtils;
 	
 	
-	@GetMapping({"/private/storeLibrary/files", "/auth/storeLibrary/files"})
+	@GetMapping({"/private/store/library/files", "/auth/store/library/files"})
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "id", dataType = "Long")
 	  , @ApiImplicitParam(name = "keywordType", dataType = "String")
@@ -124,7 +124,7 @@ public class StoreLibraryApi {
 		return list;
 	}
 	
-	@PostMapping(value = {"/auth/storeLibrary/files", "/private/storeLibrary/files"}, produces ={ "application/json" })
+	@PostMapping(value = {"/auth/store/library/files", "/private/store/library/files"}, produces ={ "application/json" })
 	@ApiOperation(httpMethod = "POST", value = "Sends a request to insert libarary images", notes = "Image Library insert request is {\"username\":\"test@email.com\"}",response = ResponseEntity.class)
 	public ResponseEntity<?> register(HttpServletRequest request
                                               , @RequestPart(value = "param") PersistableStoreLibrary persistableStoreLibrary
@@ -169,7 +169,7 @@ public class StoreLibraryApi {
 	
 	
 	
-	@DeleteMapping({"/private/storeLibrary/files/{ids}", "/auth/storeLibrary/files/{ids}"})
+	@DeleteMapping({"/private/store/library/files/{ids}", "/auth/store/library/files/{ids}"})
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "id", dataType = "Long")
 	})

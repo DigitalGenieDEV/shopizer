@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.services.storecertificationfile;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,12 @@ public class CertificationFileServiceImpl extends SalesManagerEntityServiceImpl<
 	public void updateFileState(PersistableCertificationFile file) {
 		// TODO Auto-generated method stub
 		certificationFileRepository.updateFileState(file.getId(), file.getBaseYn(), file.getAuditSection().getModifiedBy(), file.getAuditSection().getDateModified());
+	}
+
+	@Override
+	public CertificationFileEntity getById(Long id) {
+		// TODO Auto-generated method stub
+		return certificationFileRepository.getById(id);
 	}
 
 }
