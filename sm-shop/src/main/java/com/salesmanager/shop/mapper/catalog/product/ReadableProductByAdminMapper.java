@@ -98,6 +98,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
 		destination.setId(source.getId());
+		destination.setHsCode(source.getHsCode());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
 		destination.setMinOrderQuantity(source.getMinOrderQuantity());
