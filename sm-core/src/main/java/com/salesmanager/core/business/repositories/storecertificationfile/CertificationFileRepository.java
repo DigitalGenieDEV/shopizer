@@ -12,13 +12,13 @@ import com.salesmanager.core.model.merchant.certificationfile.CertificationFileE
 public interface CertificationFileRepository extends JpaRepository<CertificationFileEntity, Long> {
 	
 	@Query(value = "select *\r\n"
-			+ "from certification_file cf \r\n"
+			+ "from CERTIFICATION_FILE cf \r\n"
 			+ "where 1 = 1\r\n"
 			+ "and TEMPLETE_ID = ?1", nativeQuery = true)
 	List<CertificationFileEntity> listByTempletId(Long templetId);
 	
 	@Modifying
-	@Query(value = "update certification_file "
+	@Query(value = "update CERTIFICATION_FILE "
 			+ "set BASE_YN = ?2 "
 			+ ", DATE_MODIFIED = ?4 "
 			+ ", UPDT_ID = ?3 "

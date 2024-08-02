@@ -13,7 +13,7 @@ import com.salesmanager.core.model.merchant.certificationfile.CertificationConfi
 public interface CertificationConfigRepository extends JpaRepository<CertificationConfigEntity, Long> {
 	
 	@Modifying
-	@Query(value = "update certification_config "
+	@Query(value = "update CERTIFICATION_CONFIG "
 			+ "set DATE_MODIFIED = now(), "
 			+ "	UPDT_ID = ?2, "
 			+ "	DELETE_YN = 'Y' "
@@ -22,7 +22,7 @@ public interface CertificationConfigRepository extends JpaRepository<Certificati
 	void deleteTemplete(Long id, String modifiedBy);
 	
 	@Query(value = "select * "
-			+ "from certification_config "
+			+ "from CERTIFICATION_CONFIG "
 			+ "where 1 = 1 "
 			+ "and DELETE_YN = 'N'  "
 			+ "and MERCHANT_ID = ?1 ", nativeQuery = true)
