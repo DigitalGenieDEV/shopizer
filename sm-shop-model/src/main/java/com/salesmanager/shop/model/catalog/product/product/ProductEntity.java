@@ -23,6 +23,11 @@ public class ProductEntity extends Product implements Serializable {
 	/**
 	 * 
 	 */
+
+	private String hsCode;
+
+	private String sellerOpenId;
+
 	private static final long serialVersionUID = 1L;
 
 	private String certificationDocument;

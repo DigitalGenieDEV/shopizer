@@ -112,6 +112,8 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
 		destination.setId(source.getId());
+		destination.setHsCode(source.getHsCode());
+		destination.setSellerOpenId(source.getSellerOpenId());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
 		destination.setMinOrderQuantity(source.getMinOrderQuantity());

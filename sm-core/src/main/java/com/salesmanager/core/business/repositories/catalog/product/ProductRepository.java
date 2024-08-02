@@ -62,6 +62,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	void updateProductCategory(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
 
 
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p SET p.hsCode = :hsCode WHERE p.id = :productId")
+	void updateProductHsCode(@Param("productId") Long productId, @Param("hsCode") String hsCode);
+
 	@Query(value="SELECT " +
 			"CASE WHEN COUNT(*) > 0 THEN true ELSE false END " +
 			"FROM " +

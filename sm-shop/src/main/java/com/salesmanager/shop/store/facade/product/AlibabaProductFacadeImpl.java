@@ -259,7 +259,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         persistableProduct.setId(productId);
         persistableProduct.setAvailable(true);
         persistableProduct.setCategories(categoryList);
-
+        persistableProduct.setSellerOpenId(productDetailModel.getSellerOpenId());
         ProductSearchQueryProductDetailModelProductImage productImage = productDetailModel.getProductImage();
         String[] images = productImage.getImages();
         List<PersistableImage> persistableImages =  new ArrayList<>();

@@ -1039,5 +1039,21 @@ public class ProductApiV2 {
 	}
 
 
+	@PutMapping(value = { "/private/update/hscode"})
+	public @ResponseBody CommonResultDTO<Void> updateProductHsCodeByProductId(
+			@Valid @RequestBody ProductUpdateReqDTO productUpdateReqDTO,
+			HttpServletRequest request) {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			productService.updateProductHsCode(productUpdateReqDTO.getProductId(),
+					productUpdateReqDTO.getHsCode(), customer.getMerchantStore());
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
 
 }

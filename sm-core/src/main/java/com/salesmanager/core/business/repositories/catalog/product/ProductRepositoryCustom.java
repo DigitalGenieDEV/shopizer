@@ -43,7 +43,7 @@ public interface ProductRepositoryCustom {
 	Product getProductForLocale(long productId, Language language,
 								Locale locale);
 
-	Product getById(Long productId);
+	Product getByProductId(Long productId);
 	Product getById(Long productId, MerchantStore merchant);
 
 	/**
