@@ -248,6 +248,16 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public void updateProductHsCode(Long productId, String hsCode, MerchantStore merchantStore) throws ServiceException {
+		Product product = productRepository.getByProductId(productId);
+		if (merchantStore!= null && product.getMerchantStore().getCode().equals(merchantStore.getCode())){
+			productRepository.updateProductHsCode(productId, hsCode);
+		}else {
+			throw new ServiceException("productId is not in user merchantStore");
+		}
+	}
+
+	@Override
 	public void updateProductPrice(Long productId, BigDecimal price) {
 		productRepository.updateProductPrice(productId, price);
 	}

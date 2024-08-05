@@ -97,7 +97,8 @@ public class OrderProductPopulator extends
 			target.setProductName(source.getProduct().getDescriptions().iterator().next().getName());
 			target.setProductQuantity(source.getQuantity());
 			target.setSku(source.getSku());
-			
+			target.setProductId(source.getProductId());
+
 			FinalPrice finalPrice = source.getFinalPrice();
 			if(finalPrice==null) {
 				throw new ConversionException("Object final price not populated in shoppingCartItem (source)");

@@ -259,7 +259,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         persistableProduct.setId(productId);
         persistableProduct.setAvailable(true);
         persistableProduct.setCategories(categoryList);
-
+        persistableProduct.setSellerOpenId(productDetailModel.getSellerOpenId());
         ProductSearchQueryProductDetailModelProductImage productImage = productDetailModel.getProductImage();
         String[] images = productImage.getImages();
         List<PersistableImage> persistableImages =  new ArrayList<>();
@@ -296,14 +296,24 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             persistableProduct.setMixAmount(productDetailModel.getSellerMixSetting().getMixAmount());
         }
 
-        if (productDetailModel != null && productDetailModel.getProductShippingInfo() != null) {
-            ProductSpecification productSpecification = new ProductSpecification();
-            ProductSearchQueryProductDetailModelProductShippingInfo shippingInfo = productDetailModel.getProductShippingInfo();
-            productSpecification.setHeight(convertToBigDecimal(shippingInfo.getHeight()));
-            productSpecification.setLength(convertToBigDecimal(shippingInfo.getLength()));
-            productSpecification.setWeight(convertToBigDecimal(shippingInfo.getWeight()));
-            productSpecification.setWidth(convertToBigDecimal(shippingInfo.getWidth()));
-            persistableProduct.setProductSpecifications(productSpecification);
+        if (productDetailModel != null ) {
+            if (productDetailModel.getProductShippingInfo().getSkuShippingInfoList() != null&& productDetailModel.getProductShippingInfo().getSkuShippingInfoList().length >0 ){
+                ComAlibabaCbuOfferModelSkuShippingInfo[] skuShippingInfoList = productDetailModel.getProductShippingInfo().getSkuShippingInfoList();
+                ComAlibabaCbuOfferModelSkuShippingInfo comAlibabaCbuOfferModelSkuShippingInfo = skuShippingInfoList[0];
+                ProductSpecification productSpecification = new ProductSpecification();
+                productSpecification.setHeight(convertToBigDecimal(comAlibabaCbuOfferModelSkuShippingInfo.getHeight()));
+                productSpecification.setLength(convertToBigDecimal(comAlibabaCbuOfferModelSkuShippingInfo.getLength()));
+                productSpecification.setWeight(gramsToKilograms(comAlibabaCbuOfferModelSkuShippingInfo.getWeight()));
+                productSpecification.setWidth(convertToBigDecimal(comAlibabaCbuOfferModelSkuShippingInfo.getWidth()));
+                persistableProduct.setProductSpecifications(productSpecification);
+            }else{
+                ProductSpecification productSpecification = new ProductSpecification();
+                productSpecification.setHeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getHeight()));
+                productSpecification.setLength(convertToBigDecimal(productDetailModel.getProductShippingInfo().getLength()));
+                productSpecification.setWeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWeight()));
+                productSpecification.setWidth(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWidth()));
+                persistableProduct.setProductSpecifications(productSpecification);
+            }
         }
 
         persistableProduct.setMinOrderQuantity(productDetailModel.getMinOrderQuantity());
@@ -636,5 +646,20 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         return value != null ? BigDecimal.valueOf(value) : BigDecimal.ZERO;
     }
 
+
+    public static BigDecimal gramsToKilograms(Long grams) {
+        if (grams == null) {
+            throw new IllegalArgumentException("Input grams value cannot be null");
+        }
+
+        // Convert Long to BigDecimal
+        BigDecimal gramsBigDecimal = new BigDecimal(grams);
+
+        // Define the conversion factor from grams to kilograms
+        BigDecimal conversionFactor = new BigDecimal(1000);
+
+        // Perform the conversion
+        return gramsBigDecimal.divide(conversionFactor);
+    }
 
 }

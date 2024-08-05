@@ -16,6 +16,9 @@ import com.salesmanager.core.model.customer.order.CustomerOrderTotalSummary;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.customer.ReadableCustomerShoppingCartMapper;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartData;
@@ -318,6 +321,15 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         item.setSku(customerShoppingCartItem.getSku());
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
+
+        item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
+        item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
+        item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+        item.setTruckModel(customerShoppingCartItem.getTruckModel());
+        item.setTruckType(customerShoppingCartItem.getTruckType());
+        item.setInternationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getInternationalTransportationMethod()));
+        item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
+
 
         if (instance != null) {
             item.setVariant(instance.getId());

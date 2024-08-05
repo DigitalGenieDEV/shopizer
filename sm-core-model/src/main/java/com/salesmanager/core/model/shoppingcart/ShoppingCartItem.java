@@ -6,29 +6,20 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 
 
 @Entity
@@ -95,6 +86,61 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	private boolean obsolete = false;
 
 
+	/**
+	 * 增值服务Id list列表用逗号分隔
+	 * The value-added service ID list is separated by commas.
+	 */
+	@Column(name = "ADDITIONAL_SERVICES_IDS")
+	private String additionalServicesIds;
+
+
+
+	/**
+	 * 国内运输还是国外运输
+	 */
+	@Column(name = "SHIPPING_TYPE")
+	private ShippingType shippingType;
+
+	/**
+	 * 国际运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "INTERNATIONAL_TRANSPORTATION_METHOD")
+	private TransportationMethod internationalTransportationMethod;
+
+	/**
+	 * 国内运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "NATIONAL_TRANSPORTATION_METHOD")
+	@Enumerated(EnumType.STRING)
+	private TransportationMethod nationalTransportationMethod;
+
+
+	/**
+	 * 委托配送还是自提
+	 */
+	@Column(name = "SHIPPING_TRANSPORTATION_TYPE")
+	@Enumerated(EnumType.STRING)
+	private ShippingTransportationType shippingTransportationType;
+
+
+
+	/**
+	 * 货车型号
+	 * @see TruckModelEnums
+	 */
+	@Column(name = "TRUCK_MODEL")
+	private String truckModel;
+
+
+	/**
+	 * 货车类型
+	 * @see TruckTypeEnums
+	 */
+	@Column(name = "TRUCK_TYPE")
+	private String truckType;
+
 
 
 	public ShoppingCartItem(ShoppingCart shoppingCart, Product product) {
@@ -134,6 +180,14 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	public void setId(Long id) {
 		this.id = id;
 
+	}
+
+	public String getAdditionalServicesIds() {
+		return additionalServicesIds;
+	}
+
+	public void setAdditionalServicesIds(String additionalServicesIds) {
+		this.additionalServicesIds = additionalServicesIds;
 	}
 
 	public void setAttributes(Set<ShoppingCartAttributeItem> attributes) {
@@ -247,4 +301,51 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 		this.variant = variant;
 	}
 
+	public ShippingType getShippingType() {
+		return shippingType;
+	}
+
+	public void setShippingType(ShippingType shippingType) {
+		this.shippingType = shippingType;
+	}
+
+	public TransportationMethod getInternationalTransportationMethod() {
+		return internationalTransportationMethod;
+	}
+
+	public void setInternationalTransportationMethod(TransportationMethod internationalTransportationMethod) {
+		this.internationalTransportationMethod = internationalTransportationMethod;
+	}
+
+	public TransportationMethod getNationalTransportationMethod() {
+		return nationalTransportationMethod;
+	}
+
+	public void setNationalTransportationMethod(TransportationMethod nationalTransportationMethod) {
+		this.nationalTransportationMethod = nationalTransportationMethod;
+	}
+
+	public ShippingTransportationType getShippingTransportationType() {
+		return shippingTransportationType;
+	}
+
+	public void setShippingTransportationType(ShippingTransportationType shippingTransportationType) {
+		this.shippingTransportationType = shippingTransportationType;
+	}
+
+	public String getTruckModel() {
+		return truckModel;
+	}
+
+	public void setTruckModel(String truckModel) {
+		this.truckModel = truckModel;
+	}
+
+	public String getTruckType() {
+		return truckType;
+	}
+
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
 }

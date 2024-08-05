@@ -116,6 +116,15 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
         shoppingCartItem.setObsolete(customerShoppingCartItem.isObsolete());
         shoppingCartItem.setProduct(customerShoppingCartItem.getProduct());
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
+
+        shoppingCartItem.setTruckType(customerShoppingCartItem.getTruckType());
+        shoppingCartItem.setTruckModel(customerShoppingCartItem.getTruckModel());
+        shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());
+        shoppingCartItem.setShippingTransportationType(customerShoppingCartItem.getShippingTransportationType());
+        shoppingCartItem.setNationalTransportationMethod(customerShoppingCartItem.getNationalTransportationMethod());
+        shoppingCartItem.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+        shoppingCartItem.setInternationalTransportationMethod(customerShoppingCartItem.getInternationalTransportationMethod());
+
         return shoppingCartItem;
     }
 

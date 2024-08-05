@@ -111,6 +111,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	void updateProductDiscount(Long productId, Integer discount);
 
+	void updateProductHsCode(Long productId, String hsCode, MerchantStore merchantStore) throws ServiceException;
+
 	void updateProductPrice(Long productId, BigDecimal price);
 
 	void updateProductPriceRange(Long productId, String priceRange);

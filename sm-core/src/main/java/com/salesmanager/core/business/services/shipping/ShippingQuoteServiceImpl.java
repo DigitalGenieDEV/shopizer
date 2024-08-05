@@ -1,9 +1,11 @@
 package com.salesmanager.core.business.services.shipping;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +74,11 @@ public class ShippingQuoteServiceImpl extends SalesManagerEntityServiceImpl<Long
 		
 		return quote;
 		
+	}
+
+	@Override
+	public ShippingSummary getShippingSummary(Long quoteId, MerchantStore store, Set<ShoppingCartItem> shoppingCartItems) throws ServiceException {
+		return null;
 	}
 
 

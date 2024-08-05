@@ -55,7 +55,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	private Set<ProductDescription> descriptions = new HashSet<ProductDescription>();
 
 
-
 	/**
 	 * Inventory
 	 */
@@ -77,6 +76,12 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@Column(name = "sellerTextInfoId")
 	private Long sellerTextInfoId;
+
+	@Column(name = "HS_CODE")
+	private String hsCode;
+
+	@Column(name = "SELLER_OPENID")
+	private String sellerOpenId;
 
 	/**
 	 * Related items / product groups
@@ -691,5 +696,21 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setLeftCategoryId(Long leftCategoryId) {
 		this.leftCategoryId = leftCategoryId;
+	}
+
+	public String getHsCode() {
+		return hsCode;
+	}
+
+	public void setHsCode(String hsCode) {
+		this.hsCode = hsCode;
+	}
+
+	public String getSellerOpenId() {
+		return sellerOpenId;
+	}
+
+	public void setSellerOpenId(String sellerOpenId) {
+		this.sellerOpenId = sellerOpenId;
 	}
 }

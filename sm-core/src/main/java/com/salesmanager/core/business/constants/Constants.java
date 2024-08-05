@@ -35,6 +35,9 @@ public class Constants {
   public final static String TRUE = "true";
   public final static String FALSE = "false";
   public final static String OT_ITEM_PRICE_MODULE_CODE = "itemprice";
+
+  public final static String OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE = "additionalServicePrice";
+
   public final static String OT_SUBTOTAL_MODULE_CODE = "subtotal";
   public final static String OT_TOTAL_MODULE_CODE = "total";
   public final static String OT_SHIPPING_MODULE_CODE = "shipping";

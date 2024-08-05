@@ -48,7 +48,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 	}
 
 	@Override
-	public Product getById(Long productId) {
+	public Product getByProductId(Long productId) {
 		return get(productId, null);
 	}
 

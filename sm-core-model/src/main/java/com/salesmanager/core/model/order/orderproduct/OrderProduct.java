@@ -19,6 +19,9 @@ import javax.persistence.TableGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 
 @Entity
 @Table (name="ORDER_PRODUCT" )
@@ -33,6 +36,60 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	@Column (name="PRODUCT_SKU")
 	private String sku;
+
+	@Column (name="PRODUCT_ID")
+	private Long productId;
+
+	/**
+	 * 国内运输还是国外运输
+	 */
+	@Column(name = "SHIPPING_TYPE")
+	private ShippingType shippingType;
+
+
+	/**
+	 * 委托配送还是自提
+	 */
+	@Column(name = "SHIPPING_TRANSPORTATION_TYPE")
+	private ShippingTransportationType shippingTransportationType;
+
+
+	/**
+	 * 国际运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "INTERNATIONAL_TRANSPORTATION_METHOD")
+	private TransportationMethod internationalTransportationMethod;
+
+	/**
+	 * 国内运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "NATIONAL_TRANSPORTATION_METHOD")
+	private TransportationMethod nationalTransportationMethod;
+
+
+
+	/**
+	 * 货车型号
+	 * @see TruckModelEnums
+	 */
+	private String truckModel;
+
+
+	/**
+	 * 货车类型
+	 * @see TruckTypeEnums
+	 */
+	private String truckType;
+
+
+	/**
+	 * 增值服务Id list列表用逗号分隔
+	 */
+	@Column(name = "ADDITIONAL_SERVICES_IDS")
+	private String additionalServicesIds;
+
 
 	@Column (name="PRODUCT_NAME" , length=64 , nullable=false)
 	private String productName;
@@ -129,6 +186,62 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 		return sku;
 	}
 
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public ShippingType getShippingType() {
+		return shippingType;
+	}
+
+	public void setShippingType(ShippingType shippingType) {
+		this.shippingType = shippingType;
+	}
+
+	public ShippingTransportationType getShippingTransportationType() {
+		return shippingTransportationType;
+	}
+
+	public void setShippingTransportationType(ShippingTransportationType shippingTransportationType) {
+		this.shippingTransportationType = shippingTransportationType;
+	}
+
+	public TransportationMethod getInternationalTransportationMethod() {
+		return internationalTransportationMethod;
+	}
+
+	public void setInternationalTransportationMethod(TransportationMethod internationalTransportationMethod) {
+		this.internationalTransportationMethod = internationalTransportationMethod;
+	}
+
+	public TransportationMethod getNationalTransportationMethod() {
+		return nationalTransportationMethod;
+	}
+
+	public void setNationalTransportationMethod(TransportationMethod nationalTransportationMethod) {
+		this.nationalTransportationMethod = nationalTransportationMethod;
+	}
+
+	public String getTruckModel() {
+		return truckModel;
+	}
+
+	public void setTruckModel(String truckModel) {
+		this.truckModel = truckModel;
+	}
+
+	public String getTruckType() {
+		return truckType;
+	}
+
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+
 	public void setOneTimeCharge(BigDecimal oneTimeCharge) {
 		this.oneTimeCharge = oneTimeCharge;
 	}
@@ -136,5 +249,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	public BigDecimal getOneTimeCharge() {
 		return oneTimeCharge;
 	}
-	
+
+
+	public String getAdditionalServicesIds() {
+		return additionalServicesIds;
+	}
+
+	public void setAdditionalServicesIds(String additionalServicesIds) {
+		this.additionalServicesIds = additionalServicesIds;
+	}
 }

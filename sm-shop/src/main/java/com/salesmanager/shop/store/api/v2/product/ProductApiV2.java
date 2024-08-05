@@ -1039,5 +1039,38 @@ public class ProductApiV2 {
 	}
 
 
+	@PutMapping(value = { "/private/update/admin/hscode"})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT")})
+	public @ResponseBody CommonResultDTO<Void> updateProductHsCodeByAdmin(
+			@Valid @RequestBody ProductUpdateReqDTO productUpdateReqDTO,
+			@ApiIgnore MerchantStore merchantStore,
+			HttpServletRequest request) {
+		try {
+			productService.updateProductHsCode(productUpdateReqDTO.getProductId(),
+					productUpdateReqDTO.getHsCode(), merchantStore);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+	@PutMapping(value = { "/auth/update/hscode"})
+	public @ResponseBody CommonResultDTO<Void> updateProductHsCodeBySeller(
+			@Valid @RequestBody ProductUpdateReqDTO productUpdateReqDTO,
+			HttpServletRequest request) {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			productService.updateProductHsCode(productUpdateReqDTO.getProductId(),
+					productUpdateReqDTO.getHsCode(), customer.getMerchantStore());
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
 
 }
