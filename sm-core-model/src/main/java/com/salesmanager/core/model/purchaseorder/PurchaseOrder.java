@@ -133,4 +133,5 @@ public class PurchaseOrder  extends SalesManagerEntity<Long, PurchaseOrder> {
     public boolean isStatusLt(PurchaseOrderStatus purchaseOrderStatus) {
         return this.status.ordinal() < purchaseOrderStatus.ordinal();
     }
+
 }

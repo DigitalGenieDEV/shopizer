@@ -439,4 +439,5 @@ public class PurchaseSupplierOrder extends SalesManagerEntity<Long, PurchaseSupp
     public boolean isPayStatusLt(PurchaseSupplierOrderPayStatus payStatus) {
         return this.status.ordinal() < payStatus.ordinal();
     }
+
 }

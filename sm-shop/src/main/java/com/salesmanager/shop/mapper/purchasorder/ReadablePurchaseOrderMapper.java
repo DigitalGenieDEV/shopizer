@@ -34,7 +34,6 @@ public class ReadablePurchaseOrderMapper implements Mapper<PurchaseOrder, Readab
                 .setPurchaseSupplierOrders(source.getPurchaseSupplierOrders().stream()
                         .map(purchaseSupplierOrder -> readablePurchaseSupplierOrderMapper.convert(purchaseSupplierOrder, store, language)).collect(Collectors.toList()));
         return destination;
-
     }
 
     @Override

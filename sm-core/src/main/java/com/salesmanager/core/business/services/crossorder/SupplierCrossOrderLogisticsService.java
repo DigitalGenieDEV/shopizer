@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+
 public interface SupplierCrossOrderLogisticsService {
 
     SupplierCrossOrderLogistics saveAndUpdate(SupplierCrossOrderLogistics supplierCrossOrderLogistics);
@@ -13,4 +14,5 @@ public interface SupplierCrossOrderLogisticsService {
     SupplierCrossOrderLogistics getByLogisticsId(String logisticsId);
 
     List<SupplierCrossOrderLogistics> getLogisticsByOrderProductId(Long orderProductId);
+
 }

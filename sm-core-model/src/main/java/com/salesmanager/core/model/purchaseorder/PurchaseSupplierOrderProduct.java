@@ -56,6 +56,7 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
     @Column(name = "SPEC_ID")
     private String specId;
 
+
     @Column(name = "SKU_INFO")
     private String skuInfo;
 
@@ -197,6 +198,7 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
         this.specId = specId;
     }
 
+
     public String getSku() {
         return sku;
     }
@@ -236,6 +238,7 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
 //    public void setCrossOrderProduct(SupplierCrossOrderProduct crossOrderProduct) {
 //        this.crossOrderProduct = crossOrderProduct;
 //    }
+
 
     public Date getCreatedTime() {
         return createdTime;

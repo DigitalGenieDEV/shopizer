@@ -171,4 +171,5 @@ public class ReadablePurchaseSupplierOrderProduct extends Entity implements Seri
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
+
 }

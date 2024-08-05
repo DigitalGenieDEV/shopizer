@@ -5,9 +5,11 @@ import com.salesmanager.core.business.alibaba.param.AlibabaLogisticsOpenPlatform
 import com.salesmanager.core.business.alibaba.param.AlibabaTradeGetLogisticsInfosBuyerViewParam;
 import com.salesmanager.core.business.alibaba.param.AlibabaTradeGetLogisticsTraceInfoBuyerViewParam;
 
+
 public interface AlibabaLogisticsService {
 
     AlibabaLogisticsOpenPlatformLogisticsOrder[] getLogisticsInfosBuyerView(AlibabaTradeGetLogisticsInfosBuyerViewParam param);
 
     AlibabaLogisticsOpenPlatformLogisticsTrace[] getLogisticsTraceInfoBuyerView(AlibabaTradeGetLogisticsTraceInfoBuyerViewParam param);
+
 }

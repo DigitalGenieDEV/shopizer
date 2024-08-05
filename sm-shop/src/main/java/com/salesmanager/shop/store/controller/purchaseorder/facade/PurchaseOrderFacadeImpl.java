@@ -27,6 +27,7 @@ import com.salesmanager.shop.model.purchaseorder.ReadablePurchaseOrderList;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -384,6 +385,7 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
         product.setShip(false);
         product.setSku(purchaseOrderProductInfo.getOrderProduct().getSku());
         product.setSpecId(productVariant.getSpecId());
+
         product.setStatus(PurchaseSupplierOrderProductStatus.PENDING);
         product.setPsoOrder(purchaseSupplierOrder);
         product.setOrderProduct(purchaseOrderProductInfo.getOrderProduct());

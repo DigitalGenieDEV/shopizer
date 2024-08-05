@@ -31,4 +31,5 @@ public interface SupplierCrossOrderFacade {
     ReadableSupplierCrossOrder processOrderBuyerClose(OrderBuyerViewOrderBuyerCloseMsg msg) throws ServiceException;
 
     List<ReadableSupplierCrossOrder> processLogisticsBuyerViewTraceMsg(LogisticsBuyerViewTraceMsg msg) throws ServiceException;
+
 }

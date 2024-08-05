@@ -220,4 +220,5 @@ public class ReadableSupplierCrossOrderProduct extends Entity implements Seriali
     public void setSubItemIdStr(String subItemIdStr) {
         this.subItemIdStr = subItemIdStr;
     }
+
 }

@@ -31,4 +31,5 @@ public class SupplierCrossOrderLogisticsServiceImpl extends SalesManagerEntitySe
     public List<SupplierCrossOrderLogistics> getLogisticsByOrderProductId(Long orderProductId) {
         return repository.findLogisticsByOrderProductId(orderProductId);
     }
+
 }

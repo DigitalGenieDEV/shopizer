@@ -16,7 +16,6 @@ public interface SupplierCrossOrderLogisticsRepository extends JpaRepository<Sup
 
     SupplierCrossOrderLogistics findByLogisticsBillNo(String logisticsBillNo);
 
-
     @Query("SELECT scl FROM SupplierCrossOrderLogistics scl " +
             "JOIN scl.supplierCrossOrders sco " +
             "JOIN sco.products scp " +
@@ -26,4 +25,5 @@ public interface SupplierCrossOrderLogisticsRepository extends JpaRepository<Sup
 
 //    @Query("SELECT s FROM SupplierCrossOrderLogistics s WHERE :orderId MEMBER OF s.orderEntryIds")
 //    List<SupplierCrossOrderLogistics> findByOrderEntryIdContaining(@Param("orderId") String orderId);
+
 }

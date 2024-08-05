@@ -5,6 +5,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.purchaseorder.PurchaseSupplierOrder;
 import org.hibernate.annotations.Cascade;
 
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -312,6 +313,7 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
         supplierCrossOrderLogistics.getSupplierCrossOrders().add(this);
     }
 
+
     public void setProducts(Set<SupplierCrossOrderProduct> products) {
         this.products = products;
     }
@@ -323,7 +325,6 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
     public void setPsoOrder(PurchaseSupplierOrder psoOrder) {
         this.psoOrder = psoOrder;
     }
-
     public boolean isStatusGte(String referenceStatus) {
         int currentIndex = getStatusIndex(status);
         int referenceIndex = getStatusIndex(referenceStatus);
@@ -366,4 +367,5 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
         }
         return -1; // If status is not found, return -1
     }
+
 }

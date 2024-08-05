@@ -238,4 +238,5 @@ public class ReadableSupplierCrossOrder extends Entity implements Serializable {
     public void setProducts(List<ReadableSupplierCrossOrderProduct> products) {
         this.products = products;
     }
+
 }

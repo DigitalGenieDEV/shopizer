@@ -111,7 +111,6 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
     }
 
 
-
     @Override
     public ReadableSupplierCrossOrderLogistics processSupplierCrossOrderLogisticsStatusChangeMsg(SupplierCrossOrderLogisticsStatusChangeMsg msg) throws ServiceException {
         SupplierCrossOrderLogistics supplierCrossOrderLogistics = supplierCrossOrderLogisticsService.getByLogisticsId(msg.getLogisticsId());
@@ -605,6 +604,7 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
         }
 
         purchaseOrderService.saveAndUpdate(purchaseOrder);
+
     }
 
     private PurchaseSupplierOrderProductStatus getPurchaseSupplierOrderProductStatus(String statusChanged) {
@@ -638,6 +638,7 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
         target.setRemarks(source.getRemarks());
         target.setServiceFeature(source.getServiceFeature());
         target.setGmtSystemSend(source.getGmtSystemSend());
+
 
         // Convert Receiver
         if (source.getReceiver() != null) {
@@ -688,6 +689,7 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
                 targetLogisticsOrderSendGood.setUnit(logisticsOrderSendGood.getUnit());
                 targetLogisticsOrderSendGood.setProductName(logisticsOrderSendGood.getProductName());
                 targetLogisticsOrderSendGood.setSupplierCrossOrderLogistics(target);
+
                 logisticsOrderGoodsList.add(targetLogisticsOrderSendGood);
             }
             target.setLogisticsOrderGoods(logisticsOrderGoodsList);
@@ -749,4 +751,5 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
 
         return steps;
     }
+
 }
