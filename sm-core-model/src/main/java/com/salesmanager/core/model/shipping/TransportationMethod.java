@@ -5,7 +5,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public enum TransportationMethod {
-	EXPRESS ,FREIGHT , EXPRESS_SERVICE , DIRECT_DELIVERY;
+
+	SHIPPING,
+	AIR_TRANSPORTATION ,
+	/**
+	 * 货运
+	 */
+	TRUCK,
+	/**
+	 * 物流
+	 */
+	LOGISTICS,
+	/**
+	 * 急送
+	 */
+	URGENT_DELIVERY,
+	/**
+	 * 自取
+	 */
+	DIRECT_DELIVERY;
 
 
 	public static List<TransportationMethod> convertStringsToTransportationMethods(List<String> stringMethods) {

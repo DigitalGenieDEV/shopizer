@@ -412,8 +412,7 @@ public class CustomerShoppingCartApi {
             @Valid @RequestBody PersistableCustomerOrder persistableCustomerOrder, // order
             @ApiIgnore Language language,
             HttpServletRequest request,
-            HttpServletResponse response, Locale locale
-    ) {
+            HttpServletResponse response, Locale locale) {
         long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
         try {
             Principal principal = request.getUserPrincipal();

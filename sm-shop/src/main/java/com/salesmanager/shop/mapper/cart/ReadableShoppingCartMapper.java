@@ -13,9 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.entity.ReadableDescription;
+import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -78,6 +80,9 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 	
 	@Autowired
 	private ReadableProductVariationMapper readableProductVariationMapper;
+
+	@Autowired
+	private AdditionalServicesFacade additionalServicesFacade;
 
 	@Autowired
 	@Qualifier("img")
@@ -169,6 +174,15 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 						shoppingCartItem.setImage(shoppingCartItem.getImages().get(0));
 					}
 
+
+					shoppingCartItem.setTruckType(item.getTruckType());
+					shoppingCartItem.setTruckModel(item.getTruckModel());
+					shoppingCartItem.setShippingType(item.getShippingType() == null? null : item.getShippingType().name());
+					shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType()== null? null : item.getShippingTransportationType().name());
+					shoppingCartItem.setNationalTransportationMethod(item.getNationalTransportationMethod()== null? null : item.getNationalTransportationMethod().name());
+
+					shoppingCartItem.setAdditionalServices(additionalServicesFacade.queryAdditionalServicesByIds(item.getAdditionalServicesIds(), language));
+					shoppingCartItem.setInternationalTransportationMethod(item.getInternationalTransportationMethod()== null? null : item.getInternationalTransportationMethod().name());
 
 					LOG.debug("[ReadableShoppingCartMapper/merge] calculate price");
 					shoppingCartItem.setPrice(item.getItemPrice());

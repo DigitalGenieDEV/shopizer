@@ -6,8 +6,10 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.shipping.Quote;
 import com.salesmanager.core.model.shipping.ShippingSummary;
+import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Saves and retrieves various shipping quotes done by the system
@@ -34,5 +36,18 @@ public interface ShippingQuoteService extends SalesManagerEntityService<Long, Qu
 	 * @throws ServiceException
 	 */
 	ShippingSummary getShippingSummary(Long quoteId, MerchantStore store) throws ServiceException;
+
+
+
+
+	/**
+	 * Each quote asked for a given shopping cart creates individual Quote object
+	 * in the table ShippingQuote. This method allows the creation of a ShippingSummary
+	 * object to work with in the services and in the api.
+	 * @param quoteId
+	 * @return
+	 * @throws ServiceException
+	 */
+	ShippingSummary getShippingSummary(Long quoteId, MerchantStore store, Set<ShoppingCartItem> shoppingCartItems) throws ServiceException;
 
 }

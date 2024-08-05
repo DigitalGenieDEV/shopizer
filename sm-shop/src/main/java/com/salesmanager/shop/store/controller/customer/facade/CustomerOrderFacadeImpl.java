@@ -201,7 +201,6 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistablePayment.setTransactionType(TransactionType.COMBINESTAMP.name());
                 persistableOrder.setPayment(persistablePayment);
 
-
                 // 创建商户订单
                 LOGGER.info("[processCustomerOrder] create order, [store id: " + store.getId() + "]");
                 Order order = orderFacade.processOrder(persistableOrder, customer, store, language, locale);

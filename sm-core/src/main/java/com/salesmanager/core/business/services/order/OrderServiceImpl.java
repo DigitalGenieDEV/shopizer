@@ -18,13 +18,20 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
+import com.salesmanager.core.enmus.AdditionalServiceEnums;
+import com.salesmanager.core.model.fulfillment.AddidtionalServicesDescription;
+import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.order.*;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.constants.Constants;
@@ -91,6 +98,9 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     private OrderTotalService orderTotalService;
 
     private final OrderRepository orderRepository;
+
+    @Autowired
+    private AdditionalServicesService additionalServicesService;
 
     @Inject
     public OrderServiceImpl(OrderRepository orderRepository) {
@@ -265,6 +275,113 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     }
                 }
             }
+            ShippingType shippingType = item.getShippingType();
+            BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+            //跨境运费处理
+            if (shippingType != null && shippingType == shippingType.INTERNATIONAL){
+                BigDecimal shippingPrice = new BigDecimal(100);
+                switch(item.getNationalTransportationMethod()){
+                    case SHIPPING:
+                        //todo 计算价格
+                        break;
+                    case AIR_TRANSPORTATION:
+                        //todo 计算价格
+                        break;
+                }
+                //todo 先写死了
+                OrderTotal shippingSubTotal = new OrderTotal();
+                shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+                shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+                shippingSubTotal.setOrderTotalCode("order.total.shipping");
+                shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+                shippingSubTotal.setSortOrder(100);
+
+                orderTotals.add(shippingSubTotal);
+                grandTotal= grandTotal.add(shippingPrice);
+                shippingSubTotal.setValue(shippingPrice);
+            }
+            //国内运费处理逻辑
+            if (shippingType != null && shippingType == shippingType.NATIONAL){
+                BigDecimal shippingPrice = new BigDecimal(10);
+                //委托配送价格
+                if (ShippingTransportationType.COMMISSIONED_DELIVERY == item.getShippingTransportationType()
+                    && item.getNationalTransportationMethod() !=null){
+                    switch(item.getNationalTransportationMethod()){
+                        case TRUCK:
+                            String truckModel = item.getTruckModel();
+                            String truckType = item.getTruckType();
+                            //todo计算金额
+                            break;
+                        case SHIPPING:
+                            break;
+
+                        case LOGISTICS:
+                            break;
+
+                        case URGENT_DELIVERY:
+                            break;
+
+                        case DIRECT_DELIVERY:
+                            break;
+                    }
+                    //todo 先写死了
+                    OrderTotal shippingSubTotal = new OrderTotal();
+                    shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+                    shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+                    shippingSubTotal.setOrderTotalCode("order.total.shipping");
+                    shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+                    shippingSubTotal.setSortOrder(100);
+
+                    orderTotals.add(shippingSubTotal);
+                    grandTotal= grandTotal.add(shippingPrice);
+                    shippingSubTotal.setValue(shippingPrice);
+                }
+            }
+
+            //additionalServicePrice
+            String additionalServicesIds = item.getAdditionalServicesIds();
+            if (StringUtils.isNotEmpty(additionalServicesIds)){
+                BigDecimal totalAdditionalServices = new BigDecimal(0);
+                totalAdditionalServices.setScale(2, RoundingMode.HALF_UP);
+                String[] split = additionalServicesIds.split(",");
+                for(String id : split){
+                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
+                    Set<AddidtionalServicesDescription> descriptions = additionalServices.getDescriptions();
+                    String additionalServicesDescriptionByLanguage = null;
+                    for (AddidtionalServicesDescription additionalServicesDescription : descriptions){
+                        if (additionalServicesDescription.getLanguage().getCode().equals(language.getCode())){
+                            additionalServicesDescriptionByLanguage = additionalServicesDescription.getName();
+                        }
+                    }
+
+                    String price = "0";
+
+                    if (AdditionalServiceEnums.QUANTITY_CONFIRMATION.name().equals(additionalServices.getCode()) ||
+                            AdditionalServiceEnums.DAMAGE_CONFIRMATION.name().equals(additionalServices.getCode())){
+                        price = buildAdditionalSpecialPrice(item.getQuantity(), additionalServices.getPrice());
+                    }else {
+                        price = additionalServices.getPrice();
+                    }
+
+                    BigDecimal additionalServicesPrice = new BigDecimal(price);
+                    additionalServicesPrice.setScale(2, RoundingMode.HALF_UP);
+
+                    OrderTotal additionalServicesLine = new OrderTotal();
+                    additionalServicesLine.setModule(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+                    additionalServicesLine.setOrderTotalType(OrderTotalType.ADDITIONAL_SERVICE);
+                    additionalServicesLine.setOrderTotalCode("order.total.additionalServices");
+                    additionalServicesLine.setSortOrder(99);
+                    additionalServicesLine.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+                    additionalServicesLine.setText(additionalServicesDescriptionByLanguage);
+                    additionalServicesLine.setValue(additionalServicesPrice);
+
+                    totalAdditionalServices = totalAdditionalServices.add(additionalServicesPrice);
+                    orderTotals.add(additionalServicesLine);
+                }
+                grandTotal = grandTotal.add(totalAdditionalServices);
+                totalSummary.setTaxTotal(totalAdditionalServices);
+            }
+
         }
 
         LOGGER.debug("[caculateOrder] calculate order total");
@@ -308,43 +425,28 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         LOGGER.debug("[caculateOrder] calculate order shipping");
         //shipping
-        if(summary.getShippingSummary()!=null) {
+//        if(summary.getShippingSummary()!=null) {
 
 
-            OrderTotal shippingSubTotal = new OrderTotal();
-            shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
-            shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
-            shippingSubTotal.setOrderTotalCode("order.total.shipping");
-            shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
-            shippingSubTotal.setSortOrder(100);
 
-            orderTotals.add(shippingSubTotal);
 
-            if(!summary.getShippingSummary().isFreeShipping()) {
-                shippingSubTotal.setValue(summary.getShippingSummary().getShipping());
-                grandTotal=grandTotal.add(summary.getShippingSummary().getShipping());
-            } else {
-                shippingSubTotal.setValue(new BigDecimal(0));
-                grandTotal=grandTotal.add(new BigDecimal(0));
-            }
-
-            //check handling fees
-            shippingConfiguration = shippingService.getShippingConfiguration(store);
-            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {
-                if(shippingConfiguration.getHandlingFees()!=null && shippingConfiguration.getHandlingFees().doubleValue()>0) {
-                    OrderTotal handlingubTotal = new OrderTotal();
-                    handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
-                    handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
-                    handlingubTotal.setOrderTotalCode("order.total.handling");
-                    handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
-                    //handlingubTotal.setText("order.total.handling");
-                    handlingubTotal.setSortOrder(120);
-                    handlingubTotal.setValue(summary.getShippingSummary().getHandling());
-                    orderTotals.add(handlingubTotal);
-                    grandTotal=grandTotal.add(summary.getShippingSummary().getHandling());
-                }
-            }
-        }
+//            //check handling fees
+//            shippingConfiguration = shippingService.getShippingConfiguration(store);
+//            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {
+//                if(shippingConfiguration.getHandlingFees()!=null && shippingConfiguration.getHandlingFees().doubleValue()>0) {
+//                    OrderTotal handlingubTotal = new OrderTotal();
+//                    handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
+//                    handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
+//                    handlingubTotal.setOrderTotalCode("order.total.handling");
+//                    handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
+//                    //handlingubTotal.setText("order.total.handling");
+//                    handlingubTotal.setSortOrder(120);
+//                    handlingubTotal.setValue(summary.getShippingSummary().getHandling());
+//                    orderTotals.add(handlingubTotal);
+//                    grandTotal=grandTotal.add(summary.getShippingSummary().getHandling());
+//                }
+//            }
+//        }
 
         LOGGER.info("[caculateOrder] calculate order tax");
         //tax
@@ -391,6 +493,23 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
         LogPermUtil.end("OrderService/caculateOrder", start);
         return totalSummary;
+
+    }
+
+
+
+    private static String buildAdditionalSpecialPrice(Integer quantity, String price) {
+        if (quantity <= 100){
+            return "0";
+        }
+        int basePriceInt = Integer.parseInt(price);
+        int priceIncrement = ((quantity - 100) / 100) * 100;
+        return String.valueOf(basePriceInt + priceIncrement);
+    }
+
+
+    static void buildShippingSummary(List<OrderTotal> orderTotals, BigDecimal grandTotal,
+                              Boolean isFreeShipping, BigDecimal shippingPrice){
 
     }
 
@@ -687,6 +806,22 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         }
 
         return returnOrders;
+    }
+
+
+    public static void main(String[] args) {
+
+        List<OrderTotal> orderTotals = new ArrayList<>();
+        BigDecimal grandTotal = new BigDecimal(10);
+        BigDecimal shippingPrice = new BigDecimal(20);
+        buildShippingSummary(orderTotals, grandTotal, false, shippingPrice);
+
+        grandTotal.add(new BigDecimal(33));
+        System.out.println(grandTotal.toString());
+
+
+        String s = buildAdditionalSpecialPrice(102, "102");
+        System.out.println(s);
     }
 
 

@@ -372,6 +372,16 @@ public class ShippingServiceImpl implements ShippingService {
 		return shippingSummary;
 	}
 
+	/**
+	 * 查询运费报价并保存一个价格
+	 * @param shoppingCartId
+	 * @param store
+	 * @param delivery
+	 * @param products
+	 * @param language
+	 * @return
+	 * @throws ServiceException
+	 */
 	@Override
 	public ShippingQuote getShippingQuote(Long shoppingCartId, MerchantStore store, Delivery delivery, List<ShippingProduct> products, Language language) throws ServiceException  {
 		

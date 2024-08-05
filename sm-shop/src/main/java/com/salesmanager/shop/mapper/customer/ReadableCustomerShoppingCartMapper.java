@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.customer;
 
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
@@ -60,6 +61,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
 
     @Autowired
     private ReadableProductVariationMapper readableProductVariationMapper;
+
+    @Autowired
+    private AdditionalServicesService additionalServicesService;
 
     @Autowired
     @Qualifier("img")
@@ -232,6 +236,15 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setMixAmount(readableShoppingCartItem.getMixAmount());
         readableCustomerShoppingCartItem.setMixNumber(readableShoppingCartItem.getMixNumber());
         readableCustomerShoppingCartItem.setProductShipeable(readableShoppingCartItem.isProductShipeable());
+
+        readableCustomerShoppingCartItem.setTruckType(readableShoppingCartItem.getTruckType());
+        readableCustomerShoppingCartItem.setTruckModel(readableShoppingCartItem.getTruckModel());
+        readableCustomerShoppingCartItem.setShippingType(readableShoppingCartItem.getShippingType());
+        readableCustomerShoppingCartItem.setShippingTransportationType(readableShoppingCartItem.getShippingTransportationType());
+        readableCustomerShoppingCartItem.setNationalTransportationMethod(readableShoppingCartItem.getNationalTransportationMethod());
+
+        readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getAdditionalServices());
+        readableCustomerShoppingCartItem.setInternationalTransportationMethod(readableShoppingCartItem.getInternationalTransportationMethod());
 
         return readableCustomerShoppingCartItem;
     }
