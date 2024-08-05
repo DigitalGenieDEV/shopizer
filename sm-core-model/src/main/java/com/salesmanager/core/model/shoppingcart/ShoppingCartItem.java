@@ -130,7 +130,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 * 货车型号
 	 * @see TruckModelEnums
 	 */
-	@Column(name = "TRUCK_MODEL", unique=true, nullable=true)
+	@Column(name = "TRUCK_MODEL")
 	private String truckModel;
 
 
@@ -138,7 +138,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 * 货车类型
 	 * @see TruckTypeEnums
 	 */
-	@Column(name = "TRUCK_TYPE", unique=true, nullable=true)
+	@Column(name = "TRUCK_TYPE")
 	private String truckType;
 
 
