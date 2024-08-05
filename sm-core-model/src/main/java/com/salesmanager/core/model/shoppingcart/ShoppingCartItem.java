@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.common.audit.AuditListener;
@@ -128,7 +130,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 * 货车型号
 	 * @see TruckModelEnums
 	 */
-	@Column(name = "TRUCK_MODEL", unique=true, nullable=false)
+	@Column(name = "TRUCK_MODEL", unique=true, nullable=true)
 	private String truckModel;
 
 
@@ -136,7 +138,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 * 货车类型
 	 * @see TruckTypeEnums
 	 */
-	@Column(name = "TRUCK_TYPE", unique=true, nullable=false)
+	@Column(name = "TRUCK_TYPE", unique=true, nullable=true)
 	private String truckType;
 
 
