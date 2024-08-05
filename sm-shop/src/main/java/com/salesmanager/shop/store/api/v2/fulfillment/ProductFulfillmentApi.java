@@ -63,7 +63,7 @@ public class ProductFulfillmentApi {
 
 
 
-    @PostMapping(value = { "/auth/product/fulfillment/invoice_packing", "" +
+    @PostMapping(value = { "/auth/product/fulfillment/invoice_packing",
             "/private/product/fulfillment/invoice_packing"})
     public @ResponseBody CommonResultDTO<Void> saveInvoicePackingFormByOrderId(
             @Valid @RequestBody PersistableInvoicePackingForm persistableInvoicePackingForm) {
@@ -77,8 +77,7 @@ public class ProductFulfillmentApi {
     }
 
 
-    @RequestMapping(value = {"/auth/product/fulfillment/invoice_packing/{orderId}, " +
-            "/private/product/fulfillment/invoice_packing/{orderId}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/auth/product/fulfillment/invoice_packing/{orderId}" ,"/private/product/fulfillment/invoice_packing/{orderId}"}, method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET", value = "query invoice packing by order id ", notes = "query invoice packing by order id ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "query invoice packing by order id ", response = ReadableProduct.class) })

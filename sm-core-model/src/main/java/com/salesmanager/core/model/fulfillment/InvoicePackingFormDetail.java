@@ -38,7 +38,7 @@ public class InvoicePackingFormDetail extends SalesManagerEntity<Long, InvoicePa
     private String cartonQty;
 
     @Column(name = "UNIT_QTY")
-    private String unitQTY;
+    private String unitQty;
 
     @Column(name = "UNIT")
     private String unit;

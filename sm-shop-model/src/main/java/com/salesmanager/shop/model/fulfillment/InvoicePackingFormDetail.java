@@ -20,7 +20,7 @@ public class InvoicePackingFormDetail{
 
     private String cartonQty;
 
-    private String unitQTY;
+    private String unitQty;
 
     private String unit;
 
