@@ -53,6 +53,9 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
     @Column(name = "SKU")
     private String sku;
 
+    @Column(name = "SPEC_ID")
+    private String specId;
+
     @Column(name = "SKU_INFO")
     private String skuInfo;
 
@@ -64,9 +67,9 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
     @JoinColumn(name = "PSO_ORDER_ID")
     private PurchaseSupplierOrder psoOrder;
 
-    @OneToOne
-    @JoinColumn(name = "CROSS_ORDER_PRODUCT_ID")
-    private SupplierCrossOrderProduct crossOrderProduct;
+//    @OneToOne
+//    @JoinColumn(name = "CROSS_ORDER_PRODUCT_ID")
+//    private SupplierCrossOrderProduct crossOrderProduct;
 
     @OneToOne
     @JoinColumn(name = "ORDER_PRODUCT_ID")
@@ -186,6 +189,14 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
         this.unit = unit;
     }
 
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
+    }
+
     public String getSku() {
         return sku;
     }
@@ -218,13 +229,13 @@ public class PurchaseSupplierOrderProduct extends SalesManagerEntity<Long, Purch
         this.psoOrder = psoOrder;
     }
 
-    public SupplierCrossOrderProduct getCrossOrderProduct() {
-        return crossOrderProduct;
-    }
-
-    public void setCrossOrderProduct(SupplierCrossOrderProduct crossOrderProduct) {
-        this.crossOrderProduct = crossOrderProduct;
-    }
+//    public SupplierCrossOrderProduct getCrossOrderProduct() {
+//        return crossOrderProduct;
+//    }
+//
+//    public void setCrossOrderProduct(SupplierCrossOrderProduct crossOrderProduct) {
+//        this.crossOrderProduct = crossOrderProduct;
+//    }
 
     public Date getCreatedTime() {
         return createdTime;

@@ -83,7 +83,7 @@ public class SupplierCrossOrderProduct extends SalesManagerEntity<Long, Supplier
     @JoinColumn(name = "SUPPLIER_CROSS_ORDER_ID", referencedColumnName = "ID")
     private SupplierCrossOrder supplierCrossOrder;
 
-    @OneToOne(mappedBy = "crossOrderProduct")
+    @OneToOne
     @JoinColumn(name = "PSO_ORDER_PRODUCT_ID")
     private PurchaseSupplierOrderProduct psoOrderProduct;
 

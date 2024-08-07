@@ -17,6 +17,11 @@ public class SupplierCrossOrderServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
+    public SupplierCrossOrder saveAndUpdate(SupplierCrossOrder supplierCrossOrder) {
+        return saveAndFlush(supplierCrossOrder);
+    }
+
+    @Override
     public SupplierCrossOrder getByOrderIdStr(String orderId) {
         return repository.findByOrderIdStr(orderId);
     }

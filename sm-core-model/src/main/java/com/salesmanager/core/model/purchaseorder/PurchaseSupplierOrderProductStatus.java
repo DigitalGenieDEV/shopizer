@@ -6,5 +6,7 @@ public enum PurchaseSupplierOrderProductStatus {
     SHIPPED, // 已发货
     RECEIVED, // 已收货
     CANCELED, // 已取消
-    RETURNED; // 已退货
+    RETURNED,// 已退货
+    ERROR // 异常
+    ;
 }

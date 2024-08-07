@@ -103,7 +103,7 @@ public class PurchaseSupplierOrder extends SalesManagerEntity<Long, PurchaseSupp
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ORDER_STATUS")
-    private PurchaseSupplierOrderStatus status = PurchaseSupplierOrderStatus.NEW;
+    private PurchaseSupplierOrderStatus status = PurchaseSupplierOrderStatus.PENDING_PAY;
 
     @ManyToOne
     @JoinColumn(name = "PO_ORDER_ID")
@@ -406,5 +406,37 @@ public class PurchaseSupplierOrder extends SalesManagerEntity<Long, PurchaseSupp
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public boolean isStatusGte(PurchaseSupplierOrderStatus purchaseSupplierOrderStatus) {
+        return this.status.ordinal() >= purchaseSupplierOrderStatus.ordinal();
+    }
+
+    public boolean isStatusGt(PurchaseSupplierOrderStatus purchaseSupplierOrderStatus) {
+        return this.status.ordinal() > purchaseSupplierOrderStatus.ordinal();
+    }
+
+    public boolean isStatusLte(PurchaseSupplierOrderStatus purchaseSupplierOrderStatus) {
+        return this.status.ordinal() <= purchaseSupplierOrderStatus.ordinal();
+    }
+
+    public boolean isStatusLt(PurchaseSupplierOrderStatus purchaseSupplierOrderStatus) {
+        return this.status.ordinal() < purchaseSupplierOrderStatus.ordinal();
+    }
+
+    public boolean isPayStatusGte(PurchaseSupplierOrderPayStatus payStatus) {
+        return this.status.ordinal() >= payStatus.ordinal();
+    }
+
+    public boolean isPayStatusLte(PurchaseSupplierOrderPayStatus payStatus) {
+        return this.status.ordinal() <= payStatus.ordinal();
+    }
+
+    public boolean isPayStatusGt(PurchaseSupplierOrderPayStatus payStatus) {
+        return this.status.ordinal() > payStatus.ordinal();
+    }
+
+    public boolean isPayStatusLt(PurchaseSupplierOrderPayStatus payStatus) {
+        return this.status.ordinal() < payStatus.ordinal();
     }
 }

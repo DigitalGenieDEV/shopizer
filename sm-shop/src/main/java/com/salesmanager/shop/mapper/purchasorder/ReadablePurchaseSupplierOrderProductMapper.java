@@ -11,7 +11,20 @@ import org.springframework.stereotype.Component;
 public class ReadablePurchaseSupplierOrderProductMapper implements Mapper<PurchaseSupplierOrderProduct, ReadablePurchaseSupplierOrderProduct> {
     @Override
     public ReadablePurchaseSupplierOrderProduct convert(PurchaseSupplierOrderProduct source, MerchantStore store, Language language) {
-        return null;
+        ReadablePurchaseSupplierOrderProduct destination = new ReadablePurchaseSupplierOrderProduct();
+        destination.setId(source.getId());
+        destination.setProductId(source.getProductId());
+        destination.setProductName(source.getProductName());
+        destination.setProductImage(source.getProductImage());
+        destination.setProductSnapshotUrl(source.getProductSnapshotUrl());
+        destination.setQuantity(source.getQuantity());
+        destination.setPrice(source.getPrice());
+        destination.setUnitPrice(source.getUnitPrice());
+        destination.setUnit(source.getUnit());
+        destination.setStatus(source.getStatus().name());
+        destination.setCreatedTime(source.getCreatedTime());
+        destination.setUpdatedTime(source.getUpdatedTime());
+        return destination;
     }
 
     @Override

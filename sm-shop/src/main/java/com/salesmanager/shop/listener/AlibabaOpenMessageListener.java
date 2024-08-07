@@ -4,18 +4,54 @@ import com.alibaba.tuna.client.api.MessageProcessException;
 import com.alibaba.tuna.client.httpcb.HttpCbMessage;
 import com.alibaba.tuna.client.httpcb.HttpCbMessageHandler;
 import com.alibaba.tuna.client.httpcb.TunaHttpCbClient;
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsMsg;
+import com.salesmanager.shop.store.controller.crossorder.facade.SupplierCrossOrderFacade;
+import com.salesmanager.shop.store.controller.purchaseorder.facade.PurchaseOrderFacade;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Map;
+
 import static com.salesmanager.core.constants.ApiFor1688Constants.SECRET_KEY;
 
-@Component
+//@Component
 public class AlibabaOpenMessageListener {
     TunaHttpCbClient client = new TunaHttpCbClient(8018, false);
 
+    @Autowired
+    private PurchaseOrderFacade purchaseOrderFacade;
+
+    @Autowired
+    private SupplierCrossOrderFacade supplierCrossOrderFacade;
+
+
     public boolean doSth(HttpCbMessage message) {
+        try {
+            if (StringUtils.equalsIgnoreCase(message.getType(), "ORDER_BUYER_VIEW_ANNOUNCE_SENDGOODS")) {
+                processSupplierCrossOrderLogisticsMsg(message);
+            }
+
+        } catch (ServiceException e) {
+
+        }
+
+
         return false;
+    }
+
+    private void processSupplierCrossOrderLogisticsMsg(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        SupplierCrossOrderLogisticsMsg supplierCrossOrderLogisticsMsg = new SupplierCrossOrderLogisticsMsg();
+        supplierCrossOrderLogisticsMsg.setOrderId((Long) data.get("orderId"));
+        supplierCrossOrderLogisticsMsg.setCurrentStatus((String)data.get("currentStatus"));
+        supplierCrossOrderLogisticsMsg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        supplierCrossOrderLogisticsMsg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        supplierCrossOrderFacade.processSupplierCrossOrderLogisticsMsg(supplierCrossOrderLogisticsMsg);
     }
 
     @PostConstruct

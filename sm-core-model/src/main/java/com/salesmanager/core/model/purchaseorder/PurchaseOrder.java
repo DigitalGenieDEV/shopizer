@@ -117,4 +117,20 @@ public class PurchaseOrder  extends SalesManagerEntity<Long, PurchaseOrder> {
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
+
+    public boolean isStatusGte(PurchaseOrderStatus purchaseOrderStatus) {
+        return this.status.ordinal() >= purchaseOrderStatus.ordinal();
+    }
+
+    public boolean isStatusGt(PurchaseOrderStatus purchaseOrderStatus) {
+        return this.status.ordinal() > purchaseOrderStatus.ordinal();
+    }
+
+    public boolean isStatusLte(PurchaseOrderStatus purchaseOrderStatus) {
+        return this.status.ordinal() <= purchaseOrderStatus.ordinal();
+    }
+
+    public boolean isStatusLt(PurchaseOrderStatus purchaseOrderStatus) {
+        return this.status.ordinal() < purchaseOrderStatus.ordinal();
+    }
 }

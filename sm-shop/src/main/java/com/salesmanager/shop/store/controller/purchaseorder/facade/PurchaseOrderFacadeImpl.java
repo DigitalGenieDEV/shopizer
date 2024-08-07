@@ -5,6 +5,7 @@ import com.salesmanager.core.business.alibaba.param.*;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.alibaba.payment.AlibabaPaymentService;
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
+import com.salesmanager.core.business.services.alibaba.product.impl.AlibabaProductServiceImpl;
 import com.salesmanager.core.business.services.alibaba.trade.AlibabaTradeOrderService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
@@ -24,6 +25,8 @@ import com.salesmanager.shop.model.purchaseorder.PurchaseOrderProductInfo;
 import com.salesmanager.shop.model.purchaseorder.ReadablePurchaseOrder;
 import com.salesmanager.shop.model.purchaseorder.ReadablePurchaseOrderList;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +40,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseOrderFacadeImpl.class);
 
     @Autowired
     private PurchaseOrderService purchaseOrderService;
@@ -105,7 +110,7 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
 
                 purchaseSupplierOrderService.saveAndUpdate(purchaseSupplierOrder);
             } catch (ServiceException e) {
-
+                LOGGER.error("create purchase supplier cross orders exception", e);
             }
         });
 
@@ -274,7 +279,7 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
         PurchaseSupplierOrderProduct purchaseSupplierOrderProduct = getPurchaseSupplierOrderProduct(purchaseSupplierOrder, itemInfo);
         supplierCrossOrderProduct.setPsoOrderProduct(purchaseSupplierOrderProduct);
 
-        purchaseSupplierOrderProduct.setCrossOrderProduct(supplierCrossOrderProduct);
+//        purchaseSupplierOrderProduct.setCrossOrderProduct(supplierCrossOrderProduct);
 
         return supplierCrossOrderProduct;
     }
@@ -282,7 +287,7 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
     private PurchaseSupplierOrderProduct getPurchaseSupplierOrderProduct(PurchaseSupplierOrder purchaseSupplierOrder, AlibabaOpenplatformTradeModelProductItemInfo itemInfo) {
         return
                 purchaseSupplierOrder.getOrderProducts().stream()
-                        .filter(purchaseSupplierOrderProduct -> purchaseSupplierOrderProduct.getSku().equals(String.valueOf(itemInfo.getSkuID())))
+                        .filter(purchaseSupplierOrderProduct -> purchaseSupplierOrderProduct.getSpecId().equals(String.valueOf(itemInfo.getSpecId())))
                         .findFirst().orElse(null);
     }
 
@@ -368,6 +373,8 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
         ProductDescription productDescription = purchaseOrderProductInfo.getProduct().getProductDescription();
         ProductImage productImage = purchaseOrderProductInfo.getProduct().getProductImage();
 
+        ProductVariant productVariant = getProductVariantBySku(purchaseOrderProductInfo.getProduct(), purchaseOrderProductInfo.getOrderProduct().getSku());
+
         product.setProductName(productDescription.getName());
         product.setProductImage(productImage.getProductImage());
         product.setQuantity(purchaseOrderProductInfo.getOrderProduct().getProductQuantity());
@@ -376,6 +383,7 @@ public class PurchaseOrderFacadeImpl implements PurchaseOrderFacade {
 //        product.setLogisticsStatus("0");
         product.setShip(false);
         product.setSku(purchaseOrderProductInfo.getOrderProduct().getSku());
+        product.setSpecId(productVariant.getSpecId());
         product.setStatus(PurchaseSupplierOrderProductStatus.PENDING);
         product.setPsoOrder(purchaseSupplierOrder);
         product.setOrderProduct(purchaseOrderProductInfo.getOrderProduct());

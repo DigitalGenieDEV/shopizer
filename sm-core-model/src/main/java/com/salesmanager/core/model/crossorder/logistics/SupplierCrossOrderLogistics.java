@@ -2,9 +2,12 @@ package com.salesmanager.core.model.crossorder.logistics;
 
 import com.salesmanager.core.model.crossorder.SupplierCrossOrder;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "SUPPLIER_CROSS_ORDER_LOGISTICS")
@@ -24,6 +27,15 @@ public class SupplierCrossOrderLogistics extends SalesManagerEntity<Long, Suppli
     @Column(name = "ORDER_ENTRY_IDS")
     private String orderEntryIds;
 
+    /**
+     *  WAITACCEPT:未受理;
+     *  CANCEL:已撤销;
+     *  ACCEPT:已受理;
+     *  TRANSPORT:运输中;
+     *  NOGET:揽件失败;
+     *  SIGN:已签收;
+     *  UNSIGN:签收异常
+     */
     @Column(name = "STATUS")
     private String status;
 
@@ -51,16 +63,21 @@ public class SupplierCrossOrderLogistics extends SalesManagerEntity<Long, Suppli
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "supplierCrossOrderLogistics", cascade = CascadeType.ALL)
     private List<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods;
 
-    @ManyToOne
-    @JoinColumn(name = "SUPPLIER_CROSS_ORDER_ID")
-    private SupplierCrossOrder supplierCrossOrder;
 
-    public SupplierCrossOrder getSupplierCrossOrder() {
-        return supplierCrossOrder;
+    @ManyToMany(mappedBy = "logistics")
+    private Set<SupplierCrossOrder> supplierCrossOrders = new HashSet<>();
+
+    public Set<SupplierCrossOrder> getSupplierCrossOrders() {
+        return supplierCrossOrders;
     }
 
-    public void setSupplierCrossOrder(SupplierCrossOrder supplierCrossOrder) {
-        this.supplierCrossOrder = supplierCrossOrder;
+    public void setSupplierCrossOrders(Set<SupplierCrossOrder> supplierCrossOrders) {
+        this.supplierCrossOrders = supplierCrossOrders;
+    }
+
+    public void addSupplierCrossOrder(SupplierCrossOrder supplierCrossOrder) {
+        supplierCrossOrders.add(supplierCrossOrder);
+        supplierCrossOrder.getLogistics().add(this);
     }
 
     public Long getId() {
@@ -165,5 +182,9 @@ public class SupplierCrossOrderLogistics extends SalesManagerEntity<Long, Suppli
 
     public void setLogisticsOrderGoods(List<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods) {
         this.logisticsOrderGoods = logisticsOrderGoods;
+    }
+
+    public boolean hasSupplierCrossOrder(SupplierCrossOrder supplierCrossOrder) {
+       return supplierCrossOrders.stream().filter(so -> so.getOrderIdStr().equals(supplierCrossOrder.getOrderIdStr())).findFirst().isPresent();
     }
 }

@@ -3,6 +3,7 @@ package com.salesmanager.core.model.crossorder;
 import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogistics;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.purchaseorder.PurchaseSupplierOrder;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -22,6 +23,15 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
     @Column(name = "ORDER_ID_STR")
     private String orderIdStr;
 
+    /**
+     * waitbuyerpay:等待买家付款;
+     * waitsellersend:等待卖家发货;
+     * waitbuyerreceive:等待买家收货;
+     * confirm_goods:已收货;
+     * success:交易成功;
+     * cancel:交易取消;
+     * terminated:交易终止;
+     */
     @Column(name = "STATUS")
     private String status;
 
@@ -85,7 +95,24 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "supplierCrossOrder")
     private Set<SupplierCrossOrderProduct> products = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "supplierCrossOrder")
+    @ManyToMany(fetch=FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "PRODUCT_CATEGORY", joinColumns = {
+            @JoinColumn(name = "SUPPLIER_CROSS_ORDER_ID", nullable = false, updatable = false) }
+            ,
+            inverseJoinColumns = { @JoinColumn(name = "SUPPLIER_CROSS_ORDER_LOGISTICS_ID",
+                    nullable = false, updatable = false) },
+            uniqueConstraints = @UniqueConstraint(columnNames = {"SUPPLIER_CROSS_ORDER_ID", "SUPPLIER_CROSS_ORDER_LOGISTICS_ID"})
+    )
+    @Cascade({
+            org.hibernate.annotations.CascadeType.DETACH,
+            org.hibernate.annotations.CascadeType.LOCK,
+            org.hibernate.annotations.CascadeType.REFRESH,
+            org.hibernate.annotations.CascadeType.REPLICATE,
+            org.hibernate.annotations.CascadeType.PERSIST,
+            org.hibernate.annotations.CascadeType.MERGE,
+
+
+    })
     private Set<SupplierCrossOrderLogistics> logistics = new HashSet<>();
 
     @ManyToOne
@@ -282,6 +309,11 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
         return products;
     }
 
+    public void addLogistics(SupplierCrossOrderLogistics supplierCrossOrderLogistics) {
+        this.logistics.add(supplierCrossOrderLogistics);
+        supplierCrossOrderLogistics.getSupplierCrossOrders().add(this);
+    }
+
     public void setProducts(Set<SupplierCrossOrderProduct> products) {
         this.products = products;
     }
@@ -292,5 +324,48 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
 
     public void setPsoOrder(PurchaseSupplierOrder psoOrder) {
         this.psoOrder = psoOrder;
+    }
+
+    public boolean isStatusGte(String referenceStatus) {
+        int currentIndex = getStatusIndex(status);
+        int referenceIndex = getStatusIndex(referenceStatus);
+
+        if (currentIndex == -1 || referenceIndex == -1) {
+            return false;
+        }
+
+        return currentIndex >= referenceIndex;
+    }
+
+    public boolean isStatusGt(String referenceStatus) {
+        int currentIndex = getStatusIndex(status);
+        int referenceIndex = getStatusIndex(referenceStatus);
+
+        if (currentIndex == -1 || referenceIndex == -1) {
+            return false;
+        }
+
+        return currentIndex > referenceIndex;
+    }
+
+
+
+    private int getStatusIndex(String status) {
+        String[] statusOrders = {
+                "waitbuyerpay",    // 等待买家付款
+                "waitsellersend",  // 等待卖家发货
+                "waitbuyerreceive",// 等待买家收货
+                "confirm_goods",   // 已收货
+                "success",         // 交易成功
+                "cancel",          // 交易取消
+                "terminated"       // 交易终止
+        };
+
+        for (int i = 0; i < statusOrders.length; i++) {
+            if (statusOrders[i].equalsIgnoreCase(status)) {
+                return i;
+            }
+        }
+        return -1; // If status is not found, return -1
     }
 }
