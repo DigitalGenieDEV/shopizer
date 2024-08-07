@@ -30,6 +30,9 @@ public class ProductPriceEntity extends ProductPrice implements Serializable {
 
 	private BigDecimal consignSupplyPrice;
 
+
+	private String currency;
+
 	/**
 	 * 阶梯价
 	 */
@@ -107,9 +110,12 @@ public class ProductPriceEntity extends ProductPrice implements Serializable {
 		this.price = price;
 	}
 
-	
-	
-	
 
+	public String getCurrency() {
+		return currency;
+	}
 
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 }

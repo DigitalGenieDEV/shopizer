@@ -63,7 +63,7 @@ public class PersistableCategoryPopulator extends
 		target.setVisible(source.isVisible());
 		target.setFeatured(source.isFeatured());
 		target.setCategoryImage(source.getImageUrl());
-
+		target.setHandlingFee(source.getHandlingFee());
 		//children
 		if(!CollectionUtils.isEmpty(source.getChildren())) {
 		  //no modifications to children category

@@ -1,9 +1,13 @@
 package com.salesmanager.shop.populator.catalog;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import org.apache.commons.lang3.Validate;
 
 import com.salesmanager.core.business.exception.ConversionException;
@@ -16,12 +20,16 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPriceFull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
-
+@Component
 public class ReadableProductPricePopulator extends
 		AbstractDataPopulator<ProductPrice, ReadableProductPrice> {
-	
+
+	@Autowired
+	private ExchangeRateConfig examRateConfig;
 	
 	private PricingService pricingService;
 
@@ -59,7 +67,13 @@ public class ReadableProductPricePopulator extends
 			}else {
 				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability().getProduct());
 			}
-			target.setOriginalPrice(pricingService.getDisplayAmount(source.getProductPriceAmount(), store));
+			if (source.getCurrency().equals("CNY") && source.getProductPriceAmount() != null){
+				BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(source.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+				target.setOriginalPrice(pricingService.getDisplayAmount(productPriceAmount, store));
+			}else {
+				target.setOriginalPrice(pricingService.getDisplayAmount(source.getProductPriceAmount(), store));
+			}
+
 			if(finalPrice.isDiscounted()) {
 				target.setDiscounted(true);
 				target.setFinalPrice(pricingService.getDisplayAmount(source.getProductPriceSpecialAmount(), store));

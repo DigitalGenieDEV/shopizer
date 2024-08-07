@@ -93,6 +93,17 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
     private String type;
 
 
+    @Column(name="HANDLING_FEE")
+    private String handlingFee;
+
+    public String getHandlingFee() {
+        return handlingFee;
+    }
+
+    public void setHandlingFee(String handlingFee) {
+        this.handlingFee = handlingFee;
+    }
+
     /**
      * admin/user
      */

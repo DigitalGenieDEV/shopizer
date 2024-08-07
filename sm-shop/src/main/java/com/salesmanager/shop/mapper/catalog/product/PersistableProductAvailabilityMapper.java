@@ -42,7 +42,7 @@ public class PersistableProductAvailabilityMapper implements Mapper<PersistableP
 				price.setProductAvailability(destination);
 				price.setDefaultPrice(source.getPrice().isDefaultPrice());
 				price.setProductPriceAmount(source.getPrice().getPrice());
-
+				price.setCurrency(source.getPrice().getCurrency());
 				price.setPriceRangeList(CollectionUtils.isEmpty(source.getPrice().getPriceRangeList())? null :
 						JSON.toJSONString(source.getPrice().getPriceRangeList()));
 				price.setConsignPrice(source.getPrice().getConsignSupplyPrice() == null? null :

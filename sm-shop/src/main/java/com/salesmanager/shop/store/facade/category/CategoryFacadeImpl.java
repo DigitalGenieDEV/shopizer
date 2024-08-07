@@ -220,7 +220,6 @@ public class CategoryFacadeImpl implements CategoryFacade {
 																										// lineage
 		}
 		category.setMerchantStore(store);
-
 		// remove children
 		List<Category> children = category.getCategories();
 		List<Category> saveAfter = children.stream().filter(c -> c.getId() == null || c.getId().longValue()==0).collect(Collectors.toList());

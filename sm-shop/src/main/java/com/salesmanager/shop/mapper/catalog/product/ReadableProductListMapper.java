@@ -1,11 +1,15 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
@@ -49,6 +53,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,6 +71,9 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 	@Autowired
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
+
+	@Autowired
+	private ExchangeRateConfig examRateConfig;
 
 	@Autowired
 	private ProductFeatureService productFeatureService;
@@ -171,21 +180,35 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		destination.setSku(source.getSku());
 
 		try {
-			destination.setPrice(source.getPrice());
-			destination.setFinalPrice(pricingService.getDisplayAmount(source.getPrice(), source.getMerchantStore()));
-			destination.setOriginalPrice(pricingService.getDisplayAmount(source.getPrice(), source.getMerchantStore()));
-			destination.setPriceRangeList(StringUtils.isEmpty(source.getPriceRangeList())? null :
-					JSON.parseArray(source.getPriceRangeList(), PriceRange.class));
-//
-//			FinalPrice price = pricingService.calculateProductPrice(source);
-//			if (price != null) {
-//				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
-//				destination.setPrice(price.getFinalPrice());
-//				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));
-//				if (price.isDiscounted()) {
-//					destination.setDiscounted(true);
-//				}
-//			}
+			BigDecimal price = source.getPrice();
+			List<PriceRange> priceRanges = StringUtils.isEmpty(source.getPriceRangeList()) ? null :
+					JSON.parseObject(source.getPriceRangeList(), new TypeReference<List<PriceRange>>() {});
+
+			if (source.getPublishWay() !=null && source.getPublishWay() == PublishWayEnums.IMPORT_BY_1688){
+				BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
+
+				if (price != null){
+					price =  rate.multiply(price).setScale(2, RoundingMode.HALF_UP);
+				}
+				if (CollectionUtils.isNotEmpty(priceRanges)){
+					priceRanges.forEach(priceRange -> {
+						if (StringUtils.isNotEmpty(priceRange.getPromotionPrice())){
+							priceRange.setPromotionPrice(
+									rate.multiply(new BigDecimal(priceRange.getPromotionPrice()))
+											.setScale(2, RoundingMode.HALF_UP)
+											.toString());
+						}
+						priceRange.setPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
+								.setScale(2, RoundingMode.HALF_UP)
+								.toString());
+					});
+				}
+			}
+			destination.setPrice(price);
+			destination.setFinalPrice(pricingService.getDisplayAmount(price, source.getMerchantStore()));
+			destination.setOriginalPrice(pricingService.getDisplayAmount(price, source.getMerchantStore()));
+			destination.setPriceRangeList(priceRanges);
+
 
 			List<ProductFeature> productFeatures = productFeatureService.findListByProductId(source.getId());
 			List<String> tags = productFeatures.stream().filter(productFeature -> "1".equals(productFeature.getValue())).map(ProductFeature::getKey).collect(Collectors.toList());

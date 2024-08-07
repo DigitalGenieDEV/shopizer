@@ -241,7 +241,7 @@ public class ProductApiV2 {
 
 
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value = { "/private/product/{id}" }, method = RequestMethod.DELETE)
+	@PostMapping(value = { "/product/delete/{id}" })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public void deleteV2(@PathVariable Long id, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {

@@ -65,7 +65,7 @@ public class ReadableCategoryPopulator extends
         target.setSortOrder(source.getSortOrder());
         target.setVisible(source.isVisible());
         target.setFeatured(source.isFeatured());
-
+        target.setHandlingFee(source.getHandlingFee());
         return target;
 
     }

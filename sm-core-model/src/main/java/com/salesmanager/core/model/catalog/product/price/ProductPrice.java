@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.utils.CloneUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "PRODUCT_PRICE")
@@ -72,6 +73,9 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 
 	@Column(name = "DISCOUNT_PERCENT")
 	private Integer discountPercent;
+
+	@Column(name = "CURRENCY")
+	private String currency;
 
 	@JsonIgnore
 	@ManyToOne(targetEntity = ProductAvailability.class)
@@ -251,6 +255,13 @@ public class ProductPrice extends SalesManagerEntity<Long, ProductPrice> {
 		return productPriceType;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
 	public Integer getDiscountPercent() {
 		return discountPercent;

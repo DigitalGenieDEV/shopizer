@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.exchangeRate.ExchangeRateRepository;
 import com.salesmanager.core.model.catalog.product.ExchangeRate;
 import com.salesmanager.core.model.catalog.product.ExchangeRatePOJO;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -49,6 +51,9 @@ public class ProductPriceUtils {
 	@Autowired
 	private ExchangeRateRepository exchangeRateRepository;
 
+	@Autowired
+	private ExchangeRateConfig examRateConfig;
+
 	private final static char DECIMALCOUNT = '2';
 	private final static char DECIMALPOINT = '.';
 	private final static char THOUSANDPOINT = ',';
@@ -75,7 +80,11 @@ public class ProductPriceUtils {
 			for (ProductPrice price : prices) {
 
 				if (price.isDefaultPrice()) {
-					defaultPrice = price.getProductPriceAmount();
+					if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+						defaultPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+					}else {
+						defaultPrice = price.getProductPriceAmount();
+					}
 				}
 			}
 		}
@@ -624,7 +633,23 @@ public class ProductPriceUtils {
 					"No inventory available to calculate the price. Availability should contain at least a region set to *");
 		}
 		if (!CollectionUtils.isEmpty(finalPrice.getPriceRanges())){
-			product.setPriceRangeList(JSON.toJSONString(finalPrice.getPriceRanges()));
+
+			List<PriceRange> priceRanges = finalPrice.getPriceRanges();
+			if (product.getPublishWay() != null && product.getPublishWay() == PublishWayEnums.IMPORT_BY_1688){
+				priceRanges.forEach(priceRange -> {
+					BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
+					if (StringUtils.isNotEmpty(priceRange.getPromotionPrice())){
+						priceRange.setPromotionPrice(
+								rate.multiply(new BigDecimal(priceRange.getPromotionPrice()))
+										.setScale(2, RoundingMode.HALF_UP)
+										.toString());
+					}
+					priceRange.setPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
+							.setScale(2, RoundingMode.HALF_UP)
+							.toString());
+				});
+			}
+			product.setPriceRangeList(JSON.toJSONString(priceRanges));
 		}
 		return finalPrice;
 
@@ -673,6 +698,12 @@ public class ProductPriceUtils {
 		BigDecimal fPrice = price.getProductPriceAmount();
 		BigDecimal oPrice = price.getProductPriceAmount();
 
+		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+			fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+			oPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+		}
+
+
 		Date today = new Date();
 		// calculate discount price
 		boolean hasDiscount = false;
@@ -685,6 +716,11 @@ public class ProductPriceUtils {
 							hasDiscount = true;
 							fPrice = price.getProductPriceSpecialAmount();
 							finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
+
+							if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+								fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+							}
+
 						}
 					}
 
@@ -696,6 +732,9 @@ public class ProductPriceUtils {
 				if (price.getProductPriceSpecialEndDate().after(today)) {
 					hasDiscount = true;
 					fPrice = price.getProductPriceSpecialAmount();
+					if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+						fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+					}
 					finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 				}
 			}
@@ -704,8 +743,17 @@ public class ProductPriceUtils {
 					&& price.getProductPriceSpecialAmount().doubleValue() > 0) {
 				hasDiscount = true;
 				fPrice = price.getProductPriceSpecialAmount();
+
+				if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+					fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+				}
 				finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 			}
+		}
+
+		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+			BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+			price.setProductPriceAmount(productPriceAmount);
 		}
 
 		finalPrice.setProductPrice(price);
@@ -726,14 +774,33 @@ public class ProductPriceUtils {
 			if (minStartQuantityPriceRange.isPresent()) {
 				PriceRange priceRange = minStartQuantityPriceRange.get();
 				finalPrice.setDefaultPrice(true);
-				finalPrice.setStringPrice(priceRange.getPrice());
-				finalPrice.setFinalPrice(new BigDecimal(priceRange.getPrice()));
+				if (price.getCurrency().equals("CNY") && priceRange.getPrice() != null){
+					BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
+
+					finalPrice.setStringPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
+							.setScale(2, RoundingMode.HALF_UP)
+							.toString());
+
+					finalPrice.setFinalPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
+							.setScale(2, RoundingMode.HALF_UP));
+				}else {
+					finalPrice.setStringPrice(priceRange.getPrice());
+					finalPrice.setFinalPrice(new BigDecimal(priceRange.getPrice()));
+				}
+
+
 			}
 		}
 
 		if (hasDiscount) {
 			finalPrice.setDiscountPercent(price.getDiscountPercent() == null? 0 : price.getDiscountPercent());
-			finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
+
+			if (price.getCurrency().equals("CNY") && finalPrice.getProductPrice().getProductPriceSpecialAmount() != null){
+				BigDecimal specialAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(finalPrice.getProductPrice().getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+				finalPrice.setDiscountedPrice(specialAmount);
+			}else {
+				finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
+			}
 		}
 
 		return finalPrice;

@@ -123,6 +123,8 @@ public class PersistableProductPriceMapper implements Mapper<PersistableProductP
 			destination.setProductAvailability(availability);
 			destination.setDefaultPrice(source.isDefaultPrice());
 			destination.setProductPriceAmount(source.getPrice());
+			destination.setCurrency(source.getCurrency());
+
 			destination.setCode(source.getCode());
 			destination.setProductPriceSpecialAmount(source.getDiscountedPrice());
 			if (source.getDiscountStartDate() != null) {

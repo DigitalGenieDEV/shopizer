@@ -5,18 +5,26 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAnnouncementAttributeRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAttributeRepository;
+import com.salesmanager.core.business.repositories.catalog.product.feature.ProductFeatureRepository;
+import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAnnouncementAttributeService;
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.catalog.product.image.ProductImageService;
 import com.salesmanager.core.business.services.catalog.product.type.ProductTypeService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.shop.mapper.catalog.PersistableProductAnnouncementAttributeMapper;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableAnnouncement;
 import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
+import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -81,6 +89,19 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Inject
 	private ProductService productService;
+
+
+	@Autowired
+	private ProductFeatureRepository productFeatureRepository;
+
+	@Autowired
+	private ProductAnnouncementAttributeRepository productAnnouncementAttributeRepository;
+
+	@Autowired
+	private ProductAttributeRepository productAttributeRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Inject
 	private PricingService pricingService;
@@ -472,13 +493,27 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		}
 
 		try {
-			productService.delete(p);
+			deleteProductsInParallel(p);
 		} catch (ServiceException e) {
 			throw new ServiceRuntimeException("Error while deleting ptoduct with id [" + id + "]", e);
 		}
 
 	}
 
+	@Transactional
+	public void deleteProductsInParallel(Product product) throws ServiceException {
+		productAnnouncementAttributeRepository.deleteByProductId(product.getId());
+
+		List<ProductAttribute> attributes = productAttributeRepository.findByProductId(product.getId());
+
+		List<Long> collect = attributes.stream().map(ProductAttribute::getId).collect(Collectors.toList());
+
+		productAttributeRepository.deleteProductAttributesByIds(collect);
+
+		productFeatureRepository.deleteByProductId(product.getId());
+
+		productService.delete(product);
+	}
 
 
 	@Override

@@ -20,6 +20,8 @@ public class PersistableCategory extends CategoryEntity implements Serializable 
 	 */
 	private String categoryType;
 
+
+
 	public List<CategoryDescription> getDescriptions() {
 		return descriptions;
 	}

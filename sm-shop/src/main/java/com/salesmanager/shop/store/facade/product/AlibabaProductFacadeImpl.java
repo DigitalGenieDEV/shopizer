@@ -76,8 +76,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlibabaProductFacadeImpl.class);
 
-    @Autowired
-    private ExchangeRateConfig examRateConfig;
 
     @Autowired
     private LanguageService languageService;
@@ -459,7 +457,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             PersistableProductInventory productInventory = new PersistableProductInventory();
 
             PersistableProductPrice price = new PersistableProductPrice();
-
+            price.setCurrency("CNY");
             if (productDetailModel.getProductSaleInfo().getQuoteType() != null && productDetailModel.getProductSaleInfo().getQuoteType() == 2){
                 ProductSearchQueryProductDetailModelPriceRangeV[] priceRangeList = productDetailModel.getProductSaleInfo().getPriceRangeList();
                 List<PriceRange> ranges = new ArrayList<>();
@@ -467,10 +465,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     ProductSearchQueryProductDetailModelPriceRangeV productSearchQueryProductDetailModelPriceRangeV = priceRangeList[p];
                     PriceRange priceRange = new PriceRange();
                     priceRange.setPrice(
-                            examRateConfig.getRate(ExchangeRateEnums.CNY_KRW)
-                                    .multiply(new BigDecimal(productSearchQueryProductDetailModelPriceRangeV.getPrice()))
-                                    .setScale(2, RoundingMode.HALF_UP)
-                                    .toString()
+                            productSearchQueryProductDetailModelPriceRangeV.getPrice()
                     );
                     priceRange.setStartQuantity(productSearchQueryProductDetailModelPriceRangeV.getStartQuantity());
                     ranges.add(priceRange);
@@ -481,16 +476,16 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             } else {
                 BigDecimal skuPrice = new BigDecimal(StringUtils.isEmpty(productSkuInfo.getPromotionPrice())?
                         productSkuInfo.getPrice() : productSkuInfo.getPromotionPrice());
-                skuPrice =  examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(skuPrice);
                 price.setPrice(skuPrice);
                 if (skuPrice.compareTo(defaultPrice) < 0) {
                     defaultPrice = skuPrice;
                 }
                 productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
             }
+            productInventory.setPrice(price);
+
             product.setQuoteType(productDetailModel.getProductSaleInfo().getQuoteType());
             ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes = productSkuInfo.getSkuAttributes();
-            productInventory.setPrice(price);
             List<PersistableVariation> persistableVariationList = new ArrayList<>();
             for (int s =0; s<skuAttributes.length; s++){
                 PersistableProductVariation productVariant = new PersistableProductVariation();

@@ -18,6 +18,17 @@ public class CategoryEntity extends Category implements Serializable {
 	private String lineage;
 	private int depth;
 	private Category parent;
+
+
+	private String handlingFee;
+
+	public String getHandlingFee() {
+		return handlingFee;
+	}
+
+	public void setHandlingFee(String handlingFee) {
+		this.handlingFee = handlingFee;
+	}
 	
 
 	public int getSortOrder() {

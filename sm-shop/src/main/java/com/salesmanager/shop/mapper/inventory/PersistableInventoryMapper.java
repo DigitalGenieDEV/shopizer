@@ -169,6 +169,8 @@ public class PersistableInventoryMapper implements Mapper<PersistableInventory, 
 				price.setProductAvailability(destination);
 				price.setDefaultPrice(priceEntity.isDefaultPrice());
 				price.setProductPriceAmount(priceEntity.getPrice());
+				price.setCurrency(priceEntity.getCurrency());
+
 				price.setDefaultPrice(priceEntity.isDefaultPrice());
 				price.setCode(priceEntity.getCode());
 				price.setProductPriceSpecialAmount(priceEntity.getDiscountedPrice());

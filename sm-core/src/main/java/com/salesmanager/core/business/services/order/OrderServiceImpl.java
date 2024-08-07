@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.enmus.AdditionalServiceEnums;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.fulfillment.AddidtionalServicesDescription;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.order.*;
@@ -275,6 +276,32 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     }
                 }
             }
+
+            //手续费
+            BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+            Set<Category> categories = item.getProduct().getCategories();
+            List<Category> sortedCategories = new ArrayList<>(categories);
+            sortedCategories.sort((c1, c2) -> c2.getDepth().compareTo(c1.getDepth()));
+
+            for (Category category : sortedCategories) {
+                if (category != null && StringUtils.isNotEmpty(category.getHandlingFee())) {
+                    BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(2, RoundingMode.HALF_UP);
+                    totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                }
+            }
+            //加价费用
+            OrderTotal handlingubTotal = new OrderTotal();
+            handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
+            handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
+            handlingubTotal.setOrderTotalCode("order.total.handling");
+            handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
+            handlingubTotal.setText("order.total.handling");
+            handlingubTotal.setSortOrder(120);
+            handlingubTotal.setValue(totalProductHandlingFeePrice);
+            orderTotals.add(handlingubTotal);
+            grandTotal=grandTotal.add(totalProductHandlingFeePrice);
+
+            //运费
             ShippingType shippingType = item.getShippingType();
             BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
             //跨境运费处理
@@ -298,8 +325,12 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
                 orderTotals.add(shippingSubTotal);
                 grandTotal= grandTotal.add(shippingPrice);
+
                 shippingSubTotal.setValue(shippingPrice);
             }
+
+
+
             //国内运费处理逻辑
             if (shippingType != null && shippingType == shippingType.NATIONAL){
                 BigDecimal shippingPrice = new BigDecimal(10);
@@ -434,16 +465,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 //            shippingConfiguration = shippingService.getShippingConfiguration(store);
 //            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {
 //                if(shippingConfiguration.getHandlingFees()!=null && shippingConfiguration.getHandlingFees().doubleValue()>0) {
-//                    OrderTotal handlingubTotal = new OrderTotal();
-//                    handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
-//                    handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
-//                    handlingubTotal.setOrderTotalCode("order.total.handling");
-//                    handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
-//                    //handlingubTotal.setText("order.total.handling");
-//                    handlingubTotal.setSortOrder(120);
-//                    handlingubTotal.setValue(summary.getShippingSummary().getHandling());
-//                    orderTotals.add(handlingubTotal);
-//                    grandTotal=grandTotal.add(summary.getShippingSummary().getHandling());
+//
 //                }
 //            }
 //        }
