@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.catalog.category.Category;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.fulfillment.AddidtionalServicesDescription;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.order.*;
@@ -284,9 +285,17 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             sortedCategories.sort((c1, c2) -> c2.getDepth().compareTo(c1.getDepth()));
 
             for (Category category : sortedCategories) {
-                if (category != null && StringUtils.isNotEmpty(category.getHandlingFee())) {
-                    BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(2, RoundingMode.HALF_UP);
-                    totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                if (category != null ) {
+                    if (StringUtils.isNotEmpty(category.getHandlingFeeFor1688())
+                            && item.getProduct().getPublishWay() != null
+                            && item.getProduct().getPublishWay() == PublishWayEnums.IMPORT_BY_1688 ){
+                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(2, RoundingMode.HALF_UP);
+                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                    }
+                    if (StringUtils.isNotEmpty(category.getHandlingFee())){
+                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(2, RoundingMode.HALF_UP);
+                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                    }
                 }
             }
             //加价费用

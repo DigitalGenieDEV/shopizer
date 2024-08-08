@@ -66,6 +66,7 @@ public class ReadableCategoryPopulator extends
         target.setVisible(source.isVisible());
         target.setFeatured(source.isFeatured());
         target.setHandlingFee(source.getHandlingFee());
+        target.setHandlingFeeFor1688(source.getHandlingFeeFor1688());
         return target;
 
     }

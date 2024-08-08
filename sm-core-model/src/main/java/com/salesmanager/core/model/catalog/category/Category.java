@@ -104,6 +104,17 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
         this.handlingFee = handlingFee;
     }
 
+
+    @Column(name="HANDLING_FEE_FOR_1688")
+    private String handlingFeeFor1688;
+
+    public String getHandlingFeeFor1688() {
+        return handlingFeeFor1688;
+    }
+
+    public void setHandlingFeeFor1688(String handlingFeeFor1688) {
+        this.handlingFeeFor1688 = handlingFeeFor1688;
+    }
     /**
      * admin/user
      */
