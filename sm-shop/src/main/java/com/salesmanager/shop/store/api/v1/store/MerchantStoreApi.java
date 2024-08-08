@@ -252,13 +252,57 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/auth/store", "/store"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Creates a new store", notes = "", response = ReadableMerchantStore.class)
-	public void create(@Valid @RequestBody PersistableMerchantStore store, HttpServletRequest request) throws Exception  {
+	public void create(@RequestPart(name = "param") PersistableMerchantStore store, 
+			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
+			HttpServletRequest request) throws Exception  {
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 		
 		storeFacade.create(store, authenticatedManager);
+		
+		MerchantStore merchantStore = storeFacade.get(store.getCode());
+		
+		// 파일저장
+		if(storeImages != null) { // 파일이 안 넘어 올 경우도 있음.
+			for(MultipartFile file : storeImages) {
+				
+				ContentFile f = new ContentFile();
+				f.setContentType(file.getContentType());
+				f.setName(file.getOriginalFilename());
+				
+				try {
+					f.setFile(file.getBytes());
+				} catch (IOException e) {
+					throw new ServiceRuntimeException("Error while getting file bytes");
+				}
+				
+				String fileName = contentFacade.addLibraryFile(f
+		                   , store.getCode()
+		                   , FileContentType.valueOf("STORE_IMAGE")
+				);
+				
+				String fileUrl = imageUtils.buildStoreImageFilePath(merchantStore, fileName);
+				System.out.println(fileUrl);
+				
+				for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+					if(persistableMerchantStoreImage.getFileName() != null && persistableMerchantStoreImage.getFileName().equals(file.getOriginalFilename())) {
+						persistableMerchantStoreImage.setMerchantImageUrl(fileUrl);
+						break;
+					}
+				}
+			}
+		}
+		
+		// 스토어 이미지 전체 삭제... 
+		storeImageFacade.deleteByStoreId(merchantStore.getId());
+		
+		for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+			persistableMerchantStoreImage.setMerchantStore(merchantStore);
+			storeImageFacade.save(persistableMerchantStoreImage);	
+		}
+		
 	}
 
 	@ResponseStatus(HttpStatus.OK)
