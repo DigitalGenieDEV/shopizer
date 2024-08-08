@@ -185,8 +185,10 @@ public class LocalImageFilePathUtils extends AbstractimageFilePath{
 		this.contentUrl = contentUrl;
 	}
 
-	
-
-
+	@Override
+	public String buildStoreImageFilePath(MerchantStore store, String fileName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

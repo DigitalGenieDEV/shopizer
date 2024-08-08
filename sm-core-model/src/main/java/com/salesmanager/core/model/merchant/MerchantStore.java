@@ -1,6 +1,7 @@
 package com.salesmanager.core.model.merchant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import com.salesmanager.core.constants.MeasureUnit;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.image.MerchantStoreImage;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.core.model.reference.language.Language;
@@ -208,6 +210,9 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	
 	@Column(name="DESCRIPTION", length = 255, nullable=true)
 	private String description;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "merchantStore", cascade = CascadeType.ALL)
+	private Set<MerchantStoreImage> storeImages = Collections.emptySet();
 	
 	public Boolean isRetailer() {
 		return retailer;

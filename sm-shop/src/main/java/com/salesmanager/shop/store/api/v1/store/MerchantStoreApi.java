@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,18 +41,24 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.merchant.MerchantStoreCriteria;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.model.entity.EntityExists;
 import com.salesmanager.shop.model.store.PersistableBrand;
 import com.salesmanager.shop.model.store.PersistableMerchantStore;
+import com.salesmanager.shop.model.store.PersistableMerchantStoreImage;
 import com.salesmanager.shop.model.store.ReadableBrand;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
 import com.salesmanager.shop.model.store.ReadableMerchantStoreList;
 import com.salesmanager.shop.store.api.exception.RestApiException;
+import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.api.exception.UnauthorizedException;
+import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
+import com.salesmanager.shop.store.controller.store.facade.StoreImageFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
+import com.salesmanager.shop.utils.ImageFilePath;
 import com.salesmanager.shop.utils.ServiceRequestCriteriaBuilderUtils;
 
 import io.swagger.annotations.Api;
@@ -75,6 +83,9 @@ public class MerchantStoreApi {
 
 	@Inject
 	private StoreFacade storeFacade;
+	
+	@Inject
+	private StoreImageFacade storeImageFacade;
 
 	@Inject
 	private UserFacade userFacade;
@@ -84,6 +95,13 @@ public class MerchantStoreApi {
 	
 	@Inject
 	private CustomerFacade customerFacade;
+	
+	@Inject
+	private ContentFacade contentFacade;
+	
+	@Inject
+	@Qualifier("img")
+	private ImageFilePath imageUtils;
 
 	@GetMapping(value = { "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get merchant store", notes = "", response = ReadableMerchantStore.class)
@@ -246,7 +264,9 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = { "/private/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
-	public void update(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
+	public void update(@PathVariable String code, 
+			@RequestPart(name = "param") PersistableMerchantStore store,
+			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
 			HttpServletRequest request) throws Exception {
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
@@ -257,15 +277,56 @@ public class MerchantStoreApi {
 		storeFacade.update(store);
 	}
 	
-
+	
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = { "/auth/store/{code}", "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
-	public void updateByAuth(@PathVariable String code, @Valid @RequestBody PersistableMerchantStore store,
+	public void updateByAuth(@PathVariable String code, 
+			@RequestPart(name = "param") PersistableMerchantStore store,
+			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
 			HttpServletRequest request) throws Exception {
 		store.setCode(code);
-		storeFacade.update(store);
+		MerchantStore merchantStore = storeFacade.get(code);
+		// 파일저장
+		if(storeImages != null) { // 파일이 안 넘어 올 경우도 있음.
+			for(MultipartFile file : storeImages) {
+				
+				ContentFile f = new ContentFile();
+				f.setContentType(file.getContentType());
+				f.setName(file.getOriginalFilename());
+				
+				try {
+					f.setFile(file.getBytes());
+				} catch (IOException e) {
+					throw new ServiceRuntimeException("Error while getting file bytes");
+				}
+				
+				String fileName = contentFacade.addLibraryFile(f
+		                   , code
+		                   , FileContentType.valueOf("STORE_IMAGE")
+				);
+				
+				String fileUrl = imageUtils.buildStoreImageFilePath(merchantStore, fileName);
+				System.out.println(fileUrl);
+				
+				for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+					if(persistableMerchantStoreImage.getFileName() != null && persistableMerchantStoreImage.getFileName().equals(file.getOriginalFilename())) {
+						persistableMerchantStoreImage.setMerchantImageUrl(fileUrl);
+						break;
+					}
+				}
+			}
+		}
 		
+		// 스토어 이미지 전체 삭제... 
+		storeImageFacade.deleteByStoreId(merchantStore.getId());
+		
+		for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+			persistableMerchantStoreImage.setMerchantStore(merchantStore);
+			storeImageFacade.save(persistableMerchantStoreImage);	
+		}
+		
+		storeFacade.update(store);
 	}
 
 	private String getUserFromRequest(HttpServletRequest request) {

@@ -19,6 +19,7 @@ import com.salesmanager.core.business.services.reference.language.LanguageServic
 import com.salesmanager.core.business.services.reference.zone.ZoneService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.merchant.image.MerchantStoreImage;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.reference.zone.Zone;
@@ -29,6 +30,7 @@ import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.references.ReadableLanguage;
 import com.salesmanager.shop.model.references.WeightUnit;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
+import com.salesmanager.shop.model.store.image.ReadableMerchantStoreImage;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 
@@ -199,6 +201,18 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 		if (StringUtils.isBlank(target.getBusinessRegistration())) {
 			target.setBusinessRegistration(source.getBusinessRegistration());
 		}
+		
+		List<ReadableMerchantStoreImage> storeImages = new ArrayList<ReadableMerchantStoreImage>();
+		for(MerchantStoreImage image : source.getStoreImages()) {
+			ReadableMerchantStoreImage readableMerchantStoreImage = new ReadableMerchantStoreImage();
+			readableMerchantStoreImage.setId(image.getId());
+			readableMerchantStoreImage.setMerchantImage(image.getMerchantImage());
+			readableMerchantStoreImage.setMerchantImageUrl(image.getMerchantImageUrl());
+			readableMerchantStoreImage.setMerchantStore(image.getMerchantStore());
+			readableMerchantStoreImage.setSortOrder(image.getSortOrder());
+			storeImages.add(readableMerchantStoreImage);
+		}
+		target.setStoreImages(storeImages);
 		
 		// end
 

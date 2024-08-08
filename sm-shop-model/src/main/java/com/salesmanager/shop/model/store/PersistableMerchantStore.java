@@ -14,6 +14,7 @@ public class PersistableMerchantStore extends MerchantStoreEntity {
 	//code of parent store (can be null if retailer)
 	private String retailerStore;
 	private List<String> supportedLanguages;
+	private List<PersistableMerchantStoreImage> merchantStoreImages;
 
 	public List<String> getSupportedLanguages() {
 		return supportedLanguages;
@@ -31,12 +32,22 @@ public class PersistableMerchantStore extends MerchantStoreEntity {
 		this.address = address;
 	}
 
-  public String getRetailerStore() {
-    return retailerStore;
-  }
+	public String getRetailerStore() {
+		return retailerStore;
+	}
 
-  public void setRetailerStore(String retailerStore) {
-    this.retailerStore = retailerStore;
-  }
+	public void setRetailerStore(String retailerStore) {
+		this.retailerStore = retailerStore;
+	}
+
+	public List<PersistableMerchantStoreImage> getMerchantStoreImages() {
+		return merchantStoreImages;
+	}
+
+	public void setMerchantStoreImages(List<PersistableMerchantStoreImage> merchantStoreImages) {
+		this.merchantStoreImages = merchantStoreImages;
+	}
+
+	
 
 }

@@ -8,6 +8,7 @@ import com.salesmanager.shop.model.entity.ReadableAudit;
 import com.salesmanager.shop.model.entity.ReadableAuditable;
 import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.references.ReadableLanguage;
+import com.salesmanager.shop.model.store.image.ReadableMerchantStoreImage;
 
 public class ReadableMerchantStore extends MerchantStoreEntity implements ReadableAuditable, Serializable {
 
@@ -21,6 +22,7 @@ public class ReadableMerchantStore extends MerchantStoreEntity implements Readab
 	private ReadableImage logo;
 	private ReadableAudit audit;
 	private ReadableMerchantStore parent;
+	private List<ReadableMerchantStoreImage> storeImages;
 
 	private List<ReadableLanguage> supportedLanguages;
 
@@ -71,6 +73,14 @@ public class ReadableMerchantStore extends MerchantStoreEntity implements Readab
 
 	public void setSupportedLanguages(List<ReadableLanguage> supportedLanguages) {
 		this.supportedLanguages = supportedLanguages;
+	}
+
+	public List<ReadableMerchantStoreImage> getStoreImages() {
+		return storeImages;
+	}
+
+	public void setStoreImages(List<ReadableMerchantStoreImage> storeImages) {
+		this.storeImages = storeImages;
 	}
 
 

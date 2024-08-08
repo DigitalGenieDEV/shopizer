@@ -74,8 +74,7 @@ public class CloudFilePathUtils extends AbstractimageFilePath {
 		return imgName.toString();
 				
 	}
-
-
+	
 	/**
 	 * Builds a static content image file path that can be used by image servlet
 	 * utility for getting the physical image by specifying the image type
@@ -100,6 +99,23 @@ public class CloudFilePathUtils extends AbstractimageFilePath {
 	public void setContentUrlPath(String contentUrl) {
 		this.contentUrl = contentUrl;
 		
+	}
+
+	@Override
+	public String buildStoreImageFilePath(MerchantStore store, String fileName) {
+		// TODO Auto-generated method stub
+		StringBuilder imgName = new StringBuilder()
+				.append(getBasePath(store))
+				.append(Constants.FILES_URI)
+				.append(Constants.SLASH)
+				.append(store.getCode())
+				.append(Constants.SLASH)
+				.append("STORE_IMAGE")
+				.append(Constants.SLASH);
+				if(!StringUtils.isBlank(fileName)) {
+					imgName.append(fileName);
+				}
+		return imgName.toString();
 	}
 
 }
