@@ -48,59 +48,61 @@ public class Product1688Api {
 	@ApiOperation(httpMethod = "POST", value = "search product by keywords", notes = "search product by keywords", produces = "application/json", response = ReadableProductPageInfo.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public Map<String, Object> searchProductByKeywords(@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language,
-			@Valid @RequestBody Product1688AddEntity paramData) throws ServiceException {
-		Map<String, Object> resultMap =  new HashMap<String, Object> ();
+	public Map<String, Object> searchProductByKeywords(@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language, @Valid @RequestBody Product1688AddEntity paramData) throws ServiceException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+	
+		int totalPage = 0;
 		try {
 			if (paramData.getKeywordList().size() > 0) {
 				for (Product1688ListEntity keyword : paramData.getKeywordList()) {
+					List<Long> offersId = new ArrayList<Long>();
 					AlibabaProductSearchKeywordQueryParam alibabaProductSearchKeywordQueryParam = new AlibabaProductSearchKeywordQueryParam();
 					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
 					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
-					ReadableProductPageInfo searchData = alibabaProductFacade.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
-				
-					System.out.println("searchOtherData"+ paramData.getBeginPage());
+					ReadableProductPageInfo searchData = alibabaProductFacade
+							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
+					totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
+					System.out.println("totalPage:" + totalPage);
+
 					if (searchData.getData().size() > 0) {
 						for (AlibabaProductSearchQueryModelProduct data : searchData.getData()) {
-							List<Long> longs = alibabaProductFacade.importProduct( Lists.newArrayList(data.getOfferId()),language.getCode(), merchantStore,keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
+							offersId.add(data.getOfferId());
 						}
-						
-						int totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
-						System.out.println("totalPage"+totalPage);
-						for (int i = 2; i <= totalPage; i++) {
-							AlibabaProductSearchKeywordQueryParam insertAddParam = new AlibabaProductSearchKeywordQueryParam();
-							insertAddParam.setBeginPage(i);
-							insertAddParam.setPageSize(paramData.getPageSize());
-							insertAddParam.setCountry(paramData.getCountry());
-							insertAddParam.setKeyword(keyword.getKeyword());
-
-							ReadableProductPageInfo searchOtherData = alibabaProductFacade.searchProductByKeywords(insertAddParam);
-							System.out.println("searchOtherData"+ i);
-							List<Long> offerIdsOthers = new 	ArrayList<Long> ();
-							if (searchOtherData.getData() != null && searchOtherData.getData().size() > 0) {
-								for (AlibabaProductSearchQueryModelProduct data2 : searchOtherData.getData()) {
-									List<Long> longs2 = alibabaProductFacade.importProduct(Lists.newArrayList(data2.getOfferId()), language.getCode(), merchantStore,insertAddParam.getCategoryId() == null ? null: Lists.newArrayList(insertAddParam.getCategoryId()));
-								}
-								
-						
+					}
+					for (int i = 2; i <= totalPage; i++) {
+						System.out.println("page:" + i);
+						AlibabaProductSearchKeywordQueryParam insertAddParam = new AlibabaProductSearchKeywordQueryParam();
+						insertAddParam.setBeginPage(i);
+						insertAddParam.setPageSize(paramData.getPageSize());
+						insertAddParam.setCountry(paramData.getCountry());
+						insertAddParam.setKeyword(keyword.getKeyword());
+						ReadableProductPageInfo searchOtherData = alibabaProductFacade
+								.searchProductByKeywords(insertAddParam);
+						if (searchOtherData.getData() != null && searchOtherData.getData().size() > 0) {
+							for (AlibabaProductSearchQueryModelProduct data2 : searchOtherData.getData()) {
+								offersId.add(data2.getOfferId());
 							}
 						}
 					}
+					System.out.println("offersIdCount"+offersId.size());
+					List<Long> longs = alibabaProductFacade.importProduct(offersId, language.getCode(), merchantStore,
+							keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
 				}
-			
+			}
+
+			resultMap.put("resultCode", 200);
+			resultMap.put("errMsg", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			resultMap.put("resultCode", 200);
+			resultMap.put("errMsg", e.getMessage());
 		}
-		resultMap.put("resultCode", 200);
-		resultMap.put("errMsg", "");
-	}catch(Exception e) {
-		e.printStackTrace();
-		resultMap.put("resultCode", 200);
-		resultMap.put("errMsg", e.getMessage());
-	}
-	
+
 		return resultMap;
-		
+
 	}
 
 }
