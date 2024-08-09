@@ -252,19 +252,43 @@ public class MerchantStoreApi {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = {"/auth/store", "/store"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "POST", value = "Creates a new store", notes = "", response = ReadableMerchantStore.class)
-	public void create(@RequestPart(name = "param") PersistableMerchantStore store, 
+	public ResponseEntity<?> create(@RequestPart(name = "param") PersistableMerchantStore store,
+			@RequestPart(name = "businessRegistrationFile", required = false) MultipartFile businessRegistrationFile,
 			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
 			HttpServletRequest request) throws Exception  {
+		
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
 		}
 		
 		storeFacade.create(store, authenticatedManager);
-		
 		MerchantStore merchantStore = storeFacade.get(store.getCode());
 		
-		// 파일저장
+		// 첨부된 사업자 등록증 처리
+		if(businessRegistrationFile != null) {
+			ContentFile f = new ContentFile();
+			f.setContentType(businessRegistrationFile.getContentType());
+			f.setName(businessRegistrationFile.getOriginalFilename());
+			
+			try {
+				f.setFile(businessRegistrationFile.getBytes());
+			} catch (IOException e) {
+				throw new ServiceRuntimeException("Error while getting file bytes");
+			}
+			
+			String fileName = contentFacade.addLibraryFile(f
+	                   , merchantStore.getCode()
+	                   , FileContentType.valueOf("STATIC_FILE")
+			);
+			
+			String fileUrl = imageUtils.buildStaticImageUtils(merchantStore, fileName);
+			System.out.println(fileUrl);
+			
+			store.setBusinessRegistration(fileUrl);
+		}
+				
+		// 첨부된 스토어 이미지 처리
 		if(storeImages != null) { // 파일이 안 넘어 올 경우도 있음.
 			for(MultipartFile file : storeImages) {
 				
@@ -279,7 +303,7 @@ public class MerchantStoreApi {
 				}
 				
 				String fileName = contentFacade.addLibraryFile(f
-		                   , store.getCode()
+		                   , merchantStore.getCode()
 		                   , FileContentType.valueOf("STORE_IMAGE")
 				);
 				
@@ -303,13 +327,19 @@ public class MerchantStoreApi {
 			storeImageFacade.save(persistableMerchantStoreImage);	
 		}
 		
+		// 사업자등록증 때문에 업데이트 필요.
+		store.setCode(merchantStore.getCode());
+		storeFacade.update(store);
+		
+		return ResponseEntity.ok(Void.class);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = { "/private/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
-	public void update(@PathVariable String code, 
+	public ResponseEntity<?> update(@PathVariable String code, 
 			@RequestPart(name = "param") PersistableMerchantStore store,
+			@RequestPart(name = "businessRegistrationFile", required = false) MultipartFile businessRegistrationFile,
 			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
 			HttpServletRequest request) throws Exception {
 		String authenticatedManager = managerFacade.authenticatedManager();
@@ -317,21 +347,32 @@ public class MerchantStoreApi {
 			throw new UnauthorizedException();
 		}
 		
-		store.setCode(code);
-		storeFacade.update(store);
-	}
-	
-	
-	@ResponseStatus(HttpStatus.OK)
-	@PutMapping(value = { "/auth/store/{code}", "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
-	public void updateByAuth(@PathVariable String code, 
-			@RequestPart(name = "param") PersistableMerchantStore store,
-			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
-			HttpServletRequest request) throws Exception {
-		store.setCode(code);
 		MerchantStore merchantStore = storeFacade.get(code);
-		// 파일저장
+		
+		// 첨부된 사업자 등록증 처리
+		if(businessRegistrationFile != null) {
+			ContentFile f = new ContentFile();
+			f.setContentType(businessRegistrationFile.getContentType());
+			f.setName(businessRegistrationFile.getOriginalFilename());
+			
+			try {
+				f.setFile(businessRegistrationFile.getBytes());
+			} catch (IOException e) {
+				throw new ServiceRuntimeException("Error while getting file bytes");
+			}
+			
+			String fileName = contentFacade.addLibraryFile(f
+	                   , code
+	                   , FileContentType.valueOf("STATIC_FILE")
+			);
+			
+			String fileUrl = imageUtils.buildStaticImageUtils(merchantStore, fileName);
+			System.out.println(fileUrl);
+			
+			store.setBusinessRegistration(fileUrl);
+		}
+		
+		// 첨부된 스토어 이미지 처리
 		if(storeImages != null) { // 파일이 안 넘어 올 경우도 있음.
 			for(MultipartFile file : storeImages) {
 				
@@ -370,7 +411,90 @@ public class MerchantStoreApi {
 			storeImageFacade.save(persistableMerchantStoreImage);	
 		}
 		
+		store.setCode(code);
 		storeFacade.update(store);
+		
+		return ResponseEntity.ok(Void.class);
+	}
+	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping(value = { "/auth/store/{code}", "/store/{code}" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "PUT", value = "Updates a store", notes = "", response = ReadableMerchantStore.class)
+	public ResponseEntity<?> updateByAuth(@PathVariable String code, 
+			@RequestPart(name = "param") PersistableMerchantStore store,
+			@RequestPart(name = "businessRegistrationFile", required = false) MultipartFile businessRegistrationFile,
+			@RequestPart(name = "storeImages", required = false) List<MultipartFile> storeImages,
+			HttpServletRequest request) throws Exception {
+		
+		MerchantStore merchantStore = storeFacade.get(code);
+		
+		// 첨부된 사업자 등록증 처리
+		if(businessRegistrationFile != null) {
+			ContentFile f = new ContentFile();
+			f.setContentType(businessRegistrationFile.getContentType());
+			f.setName(businessRegistrationFile.getOriginalFilename());
+			
+			try {
+				f.setFile(businessRegistrationFile.getBytes());
+			} catch (IOException e) {
+				throw new ServiceRuntimeException("Error while getting file bytes");
+			}
+			
+			String fileName = contentFacade.addLibraryFile(f
+	                   , code
+	                   , FileContentType.valueOf("STATIC_FILE")
+			);
+			
+			String fileUrl = imageUtils.buildStaticImageUtils(merchantStore, fileName);
+			System.out.println(fileUrl);
+			
+			store.setBusinessRegistration(fileUrl);
+		}
+				
+		// 첨부된 스토어 이미지 처리
+		if(storeImages != null) { // 파일이 안 넘어 올 경우도 있음.
+			for(MultipartFile file : storeImages) {
+				
+				ContentFile f = new ContentFile();
+				f.setContentType(file.getContentType());
+				f.setName(file.getOriginalFilename());
+				
+				try {
+					f.setFile(file.getBytes());
+				} catch (IOException e) {
+					throw new ServiceRuntimeException("Error while getting file bytes");
+				}
+				
+				String fileName = contentFacade.addLibraryFile(f
+		                   , code
+		                   , FileContentType.valueOf("STORE_IMAGE")
+				);
+				
+				String fileUrl = imageUtils.buildStoreImageFilePath(merchantStore, fileName);
+				System.out.println(fileUrl);
+				
+				for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+					if(persistableMerchantStoreImage.getFileName() != null && persistableMerchantStoreImage.getFileName().equals(file.getOriginalFilename())) {
+						persistableMerchantStoreImage.setMerchantImageUrl(fileUrl);
+						break;
+					}
+				}
+			}
+		}
+		
+		// 스토어 이미지 전체 삭제... 
+		storeImageFacade.deleteByStoreId(merchantStore.getId());
+		
+		for(PersistableMerchantStoreImage persistableMerchantStoreImage : store.getMerchantStoreImages()) {
+			persistableMerchantStoreImage.setMerchantStore(merchantStore);
+			storeImageFacade.save(persistableMerchantStoreImage);	
+		}
+		
+		store.setCode(code);
+		storeFacade.update(store);
+		
+		return ResponseEntity.ok(Void.class);
 	}
 
 	private String getUserFromRequest(HttpServletRequest request) {
