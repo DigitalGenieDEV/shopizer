@@ -103,7 +103,7 @@ public class PurchaseSupplierOrder extends SalesManagerEntity<Long, PurchaseSupp
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ORDER_STATUS")
-    private PurchaseSupplierOrderStatus status = PurchaseSupplierOrderStatus.PENDING_PAY;
+    private PurchaseSupplierOrderStatus status = PurchaseSupplierOrderStatus.NEW;
 
     @ManyToOne
     @JoinColumn(name = "PO_ORDER_ID")

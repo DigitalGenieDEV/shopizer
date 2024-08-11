@@ -21,12 +21,12 @@ public class PurchaseOrderApi {
     @Autowired
     private PurchaseOrderFacade purchaseOrderFacade;
 
-    @PostMapping("/purchase_orders")
+    @PostMapping("/private/purchase_orders")
     public ReadablePurchaseOrder create(@RequestBody PersistablePurchaseOrder persistablePurchaseOrder) throws ServiceException {
         return purchaseOrderFacade.createPurchaseOrder(persistablePurchaseOrder);
     }
 
-    @PostMapping("/purchase_orders/{id}/confirm")
+    @PostMapping("/private/purchase_orders/{id}/confirm")
     public ReadablePurchaseOrder confirm(@PathVariable("id") Long id) throws ServiceException {
         return  purchaseOrderFacade.confirmPurchaseOrder(id);
     }

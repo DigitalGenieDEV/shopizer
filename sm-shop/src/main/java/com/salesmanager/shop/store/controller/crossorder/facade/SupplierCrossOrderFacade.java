@@ -18,6 +18,8 @@ public interface SupplierCrossOrderFacade {
 
     ReadableSupplierCrossOrder processOrderPayedMsg(OrderBuyerViewOrderPayMsg msg) throws ServiceException;
 
+    List<ReadableSupplierCrossOrder> processOrderBatchPayMsg(OrderBatchPayMsg msg) throws ServiceException;
+
     ReadableSupplierCrossOrder processAnnounceSendGoodsMsg(OrderBuyerViewAnnounceSendGoodsMsg msg) throws ServiceException;
 
     ReadableSupplierCrossOrder processPartPartSendGoodsMsg(OrderBuyerViewPartPartSendGoodsMsg msg) throws ServiceException;

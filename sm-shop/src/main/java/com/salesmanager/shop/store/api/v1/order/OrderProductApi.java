@@ -5,6 +5,8 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderProductCriteria;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
+import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogisticsTrace;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
 import com.salesmanager.shop.store.controller.order.facade.OrderProductFacade;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -108,5 +111,19 @@ public class OrderProductApi {
             return null;
         }
         return readableOrderProduct;
+    }
+
+    @RequestMapping(value = { "/private/order_products/{id}/logistics" }, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    private List<ReadableSupplierCrossOrderLogistics> getLogistics(@PathVariable final Long id) {
+        return orderProductFacade.getLogisticsInfo(id);
+    }
+
+    @RequestMapping(value = { "/private/order_products/{id}/logistics_trace" }, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    private List<ReadableSupplierCrossOrderLogisticsTrace> getLogisticsTrace(@PathVariable final Long id) {
+        return orderProductFacade.getLogisticsTrace(id);
     }
 }

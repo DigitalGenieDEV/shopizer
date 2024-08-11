@@ -38,7 +38,7 @@ public class SupplierCrossOrderLogisticsOrderGoods extends SalesManagerEntity<Lo
     private String productName;
 
     @ManyToOne
-    @JoinColumn(name = "LOGISTICS_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "SUPPLIE_CROSS_ORDER_LOGISTICS_ID")
     private SupplierCrossOrderLogistics supplierCrossOrderLogistics;
 
     public Long getId() {

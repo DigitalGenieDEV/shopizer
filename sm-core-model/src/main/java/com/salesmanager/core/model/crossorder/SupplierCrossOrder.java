@@ -96,7 +96,7 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
     private Set<SupplierCrossOrderProduct> products = new HashSet<>();
 
     @ManyToMany(fetch=FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinTable(name = "PRODUCT_CATEGORY", joinColumns = {
+    @JoinTable(name = "SUPPLIER_CROSS_ORDER_JOIN_LOGISTICS", joinColumns = {
             @JoinColumn(name = "SUPPLIER_CROSS_ORDER_ID", nullable = false, updatable = false) }
             ,
             inverseJoinColumns = { @JoinColumn(name = "SUPPLIER_CROSS_ORDER_LOGISTICS_ID",
@@ -110,8 +110,6 @@ public class SupplierCrossOrder extends SalesManagerEntity<Long, SupplierCrossOr
             org.hibernate.annotations.CascadeType.REPLICATE,
             org.hibernate.annotations.CascadeType.PERSIST,
             org.hibernate.annotations.CascadeType.MERGE,
-
-
     })
     private Set<SupplierCrossOrderLogistics> logistics = new HashSet<>();
 

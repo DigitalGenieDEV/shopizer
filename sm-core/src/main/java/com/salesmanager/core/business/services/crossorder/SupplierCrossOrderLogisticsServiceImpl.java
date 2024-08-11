@@ -5,6 +5,8 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogistics;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SupplierCrossOrderLogisticsServiceImpl extends SalesManagerEntityServiceImpl<Long, SupplierCrossOrderLogistics> implements SupplierCrossOrderLogisticsService {
 
@@ -17,11 +19,16 @@ public class SupplierCrossOrderLogisticsServiceImpl extends SalesManagerEntitySe
 
     @Override
     public SupplierCrossOrderLogistics saveAndUpdate(SupplierCrossOrderLogistics supplierCrossOrderLogistics) {
-        return saveAndUpdate(supplierCrossOrderLogistics);
+        return saveAndFlush(supplierCrossOrderLogistics);
     }
 
     @Override
     public SupplierCrossOrderLogistics getByLogisticsId(String logisticsId) {
         return repository.findByLogisticsId(logisticsId);
+    }
+
+    @Override
+    public List<SupplierCrossOrderLogistics> getLogisticsByOrderProductId(Long orderProductId) {
+        return repository.findLogisticsByOrderProductId(orderProductId);
     }
 }

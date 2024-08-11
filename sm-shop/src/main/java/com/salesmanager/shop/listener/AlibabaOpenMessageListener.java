@@ -6,20 +6,31 @@ import com.alibaba.tuna.client.httpcb.HttpCbMessageHandler;
 import com.alibaba.tuna.client.httpcb.TunaHttpCbClient;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsMsg;
+import com.salesmanager.shop.model.purchaseorder.*;
 import com.salesmanager.shop.store.controller.crossorder.facade.SupplierCrossOrderFacade;
+import com.salesmanager.shop.store.controller.purchaseorder.facade.PurchaseOrderAlibabaMsgerFacade;
 import com.salesmanager.shop.store.controller.purchaseorder.facade.PurchaseOrderFacade;
+import com.salesmanager.shop.store.facade.product.AlibabaProductFacadeImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.salesmanager.core.constants.ApiFor1688Constants.SECRET_KEY;
 
 //@Component
 public class AlibabaOpenMessageListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlibabaOpenMessageListener.class);
+
+
     TunaHttpCbClient client = new TunaHttpCbClient(8018, false);
 
     @Autowired
@@ -28,31 +39,196 @@ public class AlibabaOpenMessageListener {
     @Autowired
     private SupplierCrossOrderFacade supplierCrossOrderFacade;
 
+    @Autowired
+    private PurchaseOrderAlibabaMsgerFacade purchaseOrderAlibabaMsgerFacade;
+
+    private final static String ORDER_BUYER_VIEW_ORDER_PAY = "ORDER_BUYER_VIEW_ORDER_PAY";
+
+    private final static String ORDER_BUYER_VIEW_ANNOUNCE_SENDGOODS = "ORDER_BUYER_VIEW_ANNOUNCE_SENDGOODS";
+
+    private final static String ORDER_BUYER_VIEW_PART_PART_SENDGOODS = "ORDER_BUYER_VIEW_PART_PART_SENDGOODS";
+
+    private final static String ORDER_BUYER_VIEW_ORDER_COMFIRM_RECEIVEGOODS = "ORDER_BUYER_VIEW_ORDER_COMFIRM_RECEIVEGOODS";
+
+    private final static String ORDER_BUYER_VIEW_ORDER_SUCCESS = "ORDER_BUYER_VIEW_ORDER_SUCCESS";
+
+    private final static String ORDER_BUYER_VIEW_ORDER_BUYER_CLOSE = "ORDER_BUYER_VIEW_ORDER_BUYER_CLOSE";
+
+    private final static String ORDER_BATCH_PAY = "ORDER_BATCH_PAY";
+
+    private final static String LOGISTICS_BUYER_VIEW_TRACE = "LOGISTICS_BUYER_VIEW_TRACE";
+
+//    private Long orderId = Long.valueOf("3971108739576581101");
 
     public boolean doSth(HttpCbMessage message) {
         try {
-            if (StringUtils.equalsIgnoreCase(message.getType(), "ORDER_BUYER_VIEW_ANNOUNCE_SENDGOODS")) {
-                processSupplierCrossOrderLogisticsMsg(message);
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_ORDER_PAY)) {
+                orderBuyerViewOrderPay(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BATCH_PAY)) {
+                orderBatchPay(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_ANNOUNCE_SENDGOODS)) {
+                orderBuyerViewAnnounceSendGoods(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_PART_PART_SENDGOODS)) {
+                orderBuyerViewPartPartSendGoods(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_ORDER_COMFIRM_RECEIVEGOODS)) {
+                orderBuyerViewOrderConfirmReceiveGoods(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_ORDER_SUCCESS)) {
+                orderBuyerViewOrderSuccess(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), ORDER_BUYER_VIEW_ORDER_BUYER_CLOSE)) {
+                orderBuyerViewOrderBuyerClose(message);
+            }
+
+            if (StringUtils.equalsIgnoreCase(message.getType(), LOGISTICS_BUYER_VIEW_TRACE)) {
+                logisticsBuyerViewTrace(message);
             }
 
         } catch (ServiceException e) {
-
+            LOGGER.error("handle http cb message exception", e);
+            return true;
         }
 
 
         return false;
     }
 
-    private void processSupplierCrossOrderLogisticsMsg(HttpCbMessage message) throws ServiceException {
+    public void orderBuyerViewOrderPay(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
-        SupplierCrossOrderLogisticsMsg supplierCrossOrderLogisticsMsg = new SupplierCrossOrderLogisticsMsg();
-        supplierCrossOrderLogisticsMsg.setOrderId((Long) data.get("orderId"));
-        supplierCrossOrderLogisticsMsg.setCurrentStatus((String)data.get("currentStatus"));
-        supplierCrossOrderLogisticsMsg.setBuyerMemberId((String)data.get("buyerMemberId"));
-        supplierCrossOrderLogisticsMsg.setSellerMemberId((String)data.get("sellerMemberId"));
+        OrderBuyerViewOrderPayMsg msg = new OrderBuyerViewOrderPayMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
 
-        supplierCrossOrderFacade.processSupplierCrossOrderLogisticsMsg(supplierCrossOrderLogisticsMsg);
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewOrderPay(msg);
     }
+
+    public void orderBuyerViewAnnounceSendGoods(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBuyerViewAnnounceSendGoodsMsg msg = new OrderBuyerViewAnnounceSendGoodsMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+//        msg.setOrderId(orderId);
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewAnnounceSendGoods(msg);
+    }
+
+    public void orderBuyerViewPartPartSendGoods(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBuyerViewPartPartSendGoodsMsg msg = new OrderBuyerViewPartPartSendGoodsMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewPartPartSendGoods(msg);
+    }
+
+    public void orderBuyerViewOrderConfirmReceiveGoods(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBuyerViewOrderConfirmReceiveGoodsMsg msg = new OrderBuyerViewOrderConfirmReceiveGoodsMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+//        msg.setOrderId(orderId);
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewOrderConfirmReceiveGoods(msg);
+    }
+
+    public void orderBuyerViewOrderSuccess(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBuyerViewOrderSuccessMsg msg = new OrderBuyerViewOrderSuccessMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+//        msg.setOrderId(orderId);
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewOrderSuccess(msg);
+    }
+
+    public void orderBuyerViewOrderBuyerClose(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBuyerViewOrderBuyerCloseMsg msg = new OrderBuyerViewOrderBuyerCloseMsg();
+        msg.setOrderId((Long) data.get("orderId"));
+        msg.setCurrentStatus((String)data.get("currentStatus"));
+        msg.setBuyerMemberId((String)data.get("buyerMemberId"));
+        msg.setSellerMemberId((String)data.get("sellerMemberId"));
+
+        purchaseOrderAlibabaMsgerFacade.orderBuyerViewOrderBuyerClose(msg);
+    }
+
+    public void orderBatchPay(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        OrderBatchPayMsg msg = new OrderBatchPayMsg();
+        List<Map<String, Object>> batchPay = (List<Map<String, Object>>) data.get("batchPay");
+
+        List<OrderBatchPayMsg.OrderPayResult> orderPayResults = new ArrayList<>();
+
+        for (Map<String, Object> itemMap : batchPay) {
+            OrderBatchPayMsg.OrderPayResult orderPayResult = new OrderBatchPayMsg.OrderPayResult();
+            orderPayResult.setOrderId((String)itemMap.get("orderId"));
+            orderPayResult.setStatus((String)itemMap.get("status"));
+
+            orderPayResults.add(orderPayResult);
+        }
+
+        msg.setBatchPay(orderPayResults);
+
+        purchaseOrderAlibabaMsgerFacade.orderBatchPay(msg);
+    }
+
+    public void logisticsBuyerViewTrace(HttpCbMessage message) throws ServiceException {
+        Map<String, Object> data = message.getData();
+        LogisticsBuyerViewTraceMsg msg = new LogisticsBuyerViewTraceMsg();
+        Map<String, Object> modelMap = (Map<String, Object>)data.get("OrderLogisticsTracingModel");
+
+        msg.setLogisticsId((String)modelMap.get("logisticsId"));
+        msg.setCpCode((String)modelMap.get("cpCode"));
+        msg.setMailNo((String)modelMap.get("mailNo"));
+        msg.setStatusChanged((String)modelMap.get("statusChanged"));
+
+        List<Map<String, Object>> orderLogsItemsMapList = (List<Map<String, Object>>) modelMap.get("orderLogsItems");
+        List<LogisticsBuyerViewTraceMsg.OrderLogsItem> orderLogsItems = new ArrayList<>();
+
+        for (Map<String, Object> itemMap : orderLogsItemsMapList) {
+            LogisticsBuyerViewTraceMsg.OrderLogsItem orderLogsItem = new LogisticsBuyerViewTraceMsg.OrderLogsItem();
+            orderLogsItem.setOrderId(((Number) itemMap.get("orderId")).longValue());
+            orderLogsItem.setOrderEntryId(((Number) itemMap.get("orderEntryId")).longValue());
+//            orderLogsItem.setOrderId(orderId);
+//            orderLogsItem.setOrderEntryId(orderId);
+            orderLogsItems.add(orderLogsItem);
+        }
+
+        msg.setOrderLogsItems(orderLogsItems);
+
+        purchaseOrderAlibabaMsgerFacade.logisticsBuyerViewTrace(msg);
+    }
+
+//    private void processSupplierCrossOrderLogisticsMsg(HttpCbMessage message) throws ServiceException {
+//        Map<String, Object> data = message.getData();
+//        SupplierCrossOrderLogisticsMsg supplierCrossOrderLogisticsMsg = new SupplierCrossOrderLogisticsMsg();
+//        supplierCrossOrderLogisticsMsg.setOrderId((Long) data.get("orderId"));
+//        supplierCrossOrderLogisticsMsg.setCurrentStatus((String)data.get("currentStatus"));
+//        supplierCrossOrderLogisticsMsg.setBuyerMemberId((String)data.get("buyerMemberId"));
+//        supplierCrossOrderLogisticsMsg.setSellerMemberId((String)data.get("sellerMemberId"));
+//
+//        supplierCrossOrderFacade.processSupplierCrossOrderLogisticsMsg(supplierCrossOrderLogisticsMsg);
+//    }
 
     @PostConstruct
     public void init() {
@@ -78,7 +254,7 @@ public class AlibabaOpenMessageListener {
              * 	调用 {@link #onMessage(Object)} 方法；否则直接返回状态码 401。
              */
             public boolean continueOnSignatureValidationFailed(String clientSign, String serverSign) {
-                return false;
+                return true;
             }
 
             /**
@@ -94,6 +270,7 @@ public class AlibabaOpenMessageListener {
                         throw new MessageProcessException("process alibaba open message error");
                     }
                 } catch(Exception e) {
+                    LOGGER.error("process alibaba open message error", e);
                     throw new MessageProcessException("process alibaba open message error");
                 }
                 return null;

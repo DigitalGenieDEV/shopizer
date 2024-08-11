@@ -61,7 +61,7 @@ public class SupplierCrossOrderLogistics extends SalesManagerEntity<Long, Suppli
     private Sender sender;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "supplierCrossOrderLogistics", cascade = CascadeType.ALL)
-    private List<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods;
+    private Set<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods = new HashSet<>();
 
 
     @ManyToMany(mappedBy = "logistics")
@@ -176,11 +176,11 @@ public class SupplierCrossOrderLogistics extends SalesManagerEntity<Long, Suppli
         this.sender = sender;
     }
 
-    public List<SupplierCrossOrderLogisticsOrderGoods> getLogisticsOrderGoods() {
+    public Set<SupplierCrossOrderLogisticsOrderGoods> getLogisticsOrderGoods() {
         return logisticsOrderGoods;
     }
 
-    public void setLogisticsOrderGoods(List<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods) {
+    public void setLogisticsOrderGoods(Set<SupplierCrossOrderLogisticsOrderGoods> logisticsOrderGoods) {
         this.logisticsOrderGoods = logisticsOrderGoods;
     }
 

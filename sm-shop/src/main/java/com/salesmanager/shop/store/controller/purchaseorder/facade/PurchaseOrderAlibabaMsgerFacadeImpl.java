@@ -26,6 +26,12 @@ public class PurchaseOrderAlibabaMsgerFacadeImpl implements PurchaseOrderAlibaba
     }
 
     @Override
+    public void orderBatchPay(OrderBatchPayMsg msg) throws ServiceException {
+        // 1688跨境订单批量支付处理
+        supplierCrossOrderFacade.processOrderBatchPayMsg(msg);
+    }
+
+    @Override
     public void orderBuyerViewAnnounceSendGoods(OrderBuyerViewAnnounceSendGoodsMsg msg) throws ServiceException {
         // 1688跨境订单卖家发货处理
         supplierCrossOrderFacade.processAnnounceSendGoodsMsg(msg);

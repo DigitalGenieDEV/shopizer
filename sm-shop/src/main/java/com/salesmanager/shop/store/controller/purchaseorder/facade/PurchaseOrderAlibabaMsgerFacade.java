@@ -7,6 +7,8 @@ public interface PurchaseOrderAlibabaMsgerFacade {
 
     void orderBuyerViewOrderPay(OrderBuyerViewOrderPayMsg msg) throws ServiceException;
 
+    void orderBatchPay(OrderBatchPayMsg msg) throws ServiceException;
+
     void orderBuyerViewAnnounceSendGoods(OrderBuyerViewAnnounceSendGoodsMsg msg) throws ServiceException;
 
     void orderBuyerViewPartPartSendGoods(OrderBuyerViewPartPartSendGoodsMsg msg) throws ServiceException;
