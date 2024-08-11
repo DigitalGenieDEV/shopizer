@@ -22,6 +22,17 @@ public class CategoryEntity extends Category implements Serializable {
 
 	private String handlingFee;
 
+
+	private String handlingFeeFor1688;
+
+	public String getHandlingFeeFor1688() {
+		return handlingFeeFor1688;
+	}
+
+	public void setHandlingFeeFor1688(String handlingFeeFor1688) {
+		this.handlingFeeFor1688 = handlingFeeFor1688;
+	}
+
 	public String getHandlingFee() {
 		return handlingFee;
 	}

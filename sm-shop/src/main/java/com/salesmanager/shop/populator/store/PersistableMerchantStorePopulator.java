@@ -2,9 +2,11 @@ package com.salesmanager.shop.populator.store;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.merchant.BusinessType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -155,12 +157,14 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 			target.setStoreTemplate(source.getTemplate());
 		
 		// added by BE 2024.05.28
-		if(source.getCategories() != null) {
-			target.setCategories(source.getCategories());
+		if(CollectionUtils.isNotEmpty(source.getMerchantStoreCategories())) {
+			target.setCategories(source.getMerchantStoreCategories());
 		}
 		
-		if(source.getTypes() != null) { 
-			target.setTypes(source.getTypes());
+		if(source.getTypes() != null) {
+			target.setTypes(source.getTypes().stream().map(type -> {
+				return BusinessType.valueOf(type);
+			}).collect(Collectors.toList()));
 		}
 		
 		if(source.getHeadcount() != null) {
