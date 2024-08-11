@@ -2,6 +2,7 @@ package com.salesmanager.shop.populator.store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -174,12 +175,12 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 		}
 
 		// added by BE 2024.05.28
-		if (source.getCategories() != null) {
-			target.setCategories(source.getCategories());
+		if (!CollectionUtils.isEmpty(source.getCategories())) {
+			target.setMerchantStoreCategories(source.getCategories());
 		}
 
-		if (source.getTypes() != null) {
-			target.setTypes(source.getTypes());
+		if (!CollectionUtils.isEmpty(source.getTypes())) {
+			target.setTypes(source.getTypes().stream().map(type-> type.name()).collect(Collectors.toList()));
 		}
 
 		if (source.getHeadcount() != null) {
