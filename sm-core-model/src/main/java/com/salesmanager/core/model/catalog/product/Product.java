@@ -201,9 +201,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Enumerated(value = EnumType.STRING)
 	private PublishWayEnums publishWay;
 
-	@Column(name="SELLER_OPEN_ID", nullable = true)
-	private String sellerOpenId;
-
 	@Column(name="MIN_ORDER_QUANTITY", nullable = true)
 	private Integer minOrderQuantity;
 
@@ -327,14 +324,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Override
 	public void setAuditSection(AuditSection auditSection) {
 		this.auditSection = auditSection;
-	}
-
-	public String getSellerOpenId() {
-		return sellerOpenId;
-	}
-
-	public void setSellerOpenId(String sellerOpenId) {
-		this.sellerOpenId = sellerOpenId;
 	}
 
 	public Set<ProductFeature> getFeatures() {
