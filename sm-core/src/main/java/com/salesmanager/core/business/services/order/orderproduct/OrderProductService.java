@@ -11,4 +11,6 @@ public interface OrderProductService {
     OrderProductList getOrderProducts(final OrderProductCriteria criteria, MerchantStore store);
 
     OrderProduct getOrderProduct(final Long id, MerchantStore store);
+
+    OrderProduct getOrderProduct(final Long id);
 }

@@ -2,13 +2,21 @@ package com.salesmanager.shop.store.controller.order.facade;
 
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsService;
+import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsTraceService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
+import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogistics;
+import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogisticsTrace;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderProductCriteria;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsMapper;
+import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsTraceMapper;
+import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
+import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogisticsTrace;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
 import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
@@ -23,6 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("orderProductFacade")
 public class OrderProductFacadeImpl implements OrderProductFacade{
@@ -32,6 +41,18 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
 
     @Inject
     private ProductService productService;
+
+    @Inject
+    private SupplierCrossOrderLogisticsTraceService supplierCrossOrderLogisticsTraceService;
+
+    @Inject
+    private SupplierCrossOrderLogisticsService supplierCrossOrderLogisticsService;
+
+    @Inject
+    private ReadableSupplierCrossOrderLogisticsTraceMapper readableSupplierCrossOrderLogisticsTraceMapper;
+
+    @Inject
+    private ReadableSupplierCrossOrderLogisticsMapper readableSupplierCrossOrderLogisticsMapper;
 
     @Inject
     private PricingService pricingService;
@@ -112,5 +133,21 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
         }
 
         return readableOrderProduct;
+    }
+
+    @Override
+    public List<ReadableSupplierCrossOrderLogistics> getLogisticsInfo(Long id) {
+        return supplierCrossOrderLogisticsService.getLogisticsByOrderProductId(id).stream()
+                .map(logistics -> readableSupplierCrossOrderLogisticsMapper.convert(logistics, null, null))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReadableSupplierCrossOrderLogisticsTrace> getLogisticsTrace(Long id) {
+        return supplierCrossOrderLogisticsTraceService
+                .getLogisticsTraceByOrderProductId(id)
+                .stream()
+                .map(trace -> readableSupplierCrossOrderLogisticsTraceMapper.convert(trace, null, null))
+                .collect(Collectors.toList());
     }
 }

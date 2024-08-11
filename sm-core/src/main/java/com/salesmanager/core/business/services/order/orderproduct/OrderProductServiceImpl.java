@@ -32,4 +32,9 @@ public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long,
         Validate.notNull(store, "Store cannot be null");
         return orderProductRepository.findOne(orderProductId, store.getId());
     }
+
+    @Override
+    public OrderProduct getOrderProduct(Long id) {
+        return orderProductRepository.getById(id);
+    }
 }

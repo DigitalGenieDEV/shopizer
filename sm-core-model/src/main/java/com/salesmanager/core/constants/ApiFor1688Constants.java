@@ -14,5 +14,4 @@ public class ApiFor1688Constants {
     public static final String SECRET_KEY = "X6XsX3CSWQFS";
 
 
-
 }
