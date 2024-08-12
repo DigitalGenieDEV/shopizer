@@ -42,7 +42,7 @@ public class MerchantStoreEntity implements Serializable {
 	private WeightUnit weight;
 	
 	private List<String> types;
-	private List<String> merchantStoreCategories;
+	private List<String> categories;
 	private Integer headcount;
 	private String description;
 	private String continueShoppingUrl;
