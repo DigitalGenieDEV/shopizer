@@ -323,13 +323,33 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
 
-        item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
-        item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
+
+        if (customerShoppingCartItem.getShippingType() != null) {
+            item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
+        }
+
+        if (customerShoppingCartItem.getShippingTransportationType() != null) {
+            item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
+        }
+
         item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
-        item.setTruckModel(customerShoppingCartItem.getTruckModel());
-        item.setTruckType(customerShoppingCartItem.getTruckType());
-        item.setInternationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getInternationalTransportationMethod()));
-        item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
+
+        if (customerShoppingCartItem.getTruckModel() != null) {
+            item.setTruckModel(customerShoppingCartItem.getTruckModel());
+        }
+
+        if (customerShoppingCartItem.getTruckType() != null) {
+            item.setTruckType(customerShoppingCartItem.getTruckType());
+        }
+
+        if (customerShoppingCartItem.getInternationalTransportationMethod() != null) {
+            item.setInternationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getInternationalTransportationMethod()));
+        }
+
+        if (customerShoppingCartItem.getNationalTransportationMethod() != null) {
+            item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
+        }
+
 
 
         if (instance != null) {

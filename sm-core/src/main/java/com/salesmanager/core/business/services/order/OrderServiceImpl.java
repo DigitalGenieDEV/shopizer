@@ -239,6 +239,9 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         BigDecimal subTotal = new BigDecimal(0);
         subTotal.setScale(2, RoundingMode.HALF_UP);
         for(ShoppingCartItem item : summary.getProducts()) {
+            if (item.getItemPrice() == null) {
+                throw new ServiceException("shopping cart item sku = [" +item.getSku()+"] price is null");
+            }
 
             BigDecimal st = item.getItemPrice().multiply(new BigDecimal(item.getQuantity()));
             item.setSubTotal(st);
