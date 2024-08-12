@@ -57,6 +57,8 @@ public class ReadableCategoryMapper implements Mapper<Category, ReadableCategory
 		target.setSortOrder(source.getSortOrder());
 		target.setVisible(source.isVisible());
 		target.setFeatured(source.isFeatured());
+		target.setHandlingFeeFor1688(source.getHandlingFeeFor1688());
+		target.setHandlingFee(source.getHandlingFee());
 	}
 
 	private com.salesmanager.shop.model.catalog.category.CategoryDescription convertDescription(
