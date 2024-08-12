@@ -219,7 +219,7 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
         // 查询更新物流状态
         getAndUpdateSupplierCrossOrderLogisticsList(supplierCrossOrder);
 
-        // 查询更逊物流追踪信息
+        // 查询更新物流追踪信息
         getAndUpdateSupplierCrossOrderLogisticsTrace(supplierCrossOrder);
 
         supplierCrossOrderService.saveAndUpdate(supplierCrossOrder);
@@ -373,11 +373,10 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
             // 更新物流追踪信息
             getAndUpdateSupplierCrossOrderLogisticsTrace(supplierCrossOrder);
 
-            // 更新跨境订单商品状态
+            // 更新跨境订单商品关联的采购单商品状态
             supplierCrossOrder.getProducts().stream().forEach(crossOrderProduct -> {
                 PurchaseSupplierOrderProduct purchaseSupplierOrderProduct = crossOrderProduct.getPsoOrderProduct();
                 purchaseSupplierOrderProduct.setStatus(purchaseSupplierOrderProductStatus);
-
 
                 purchaseSupplierOrderProductService.saveAndUpdate(purchaseSupplierOrderProduct);
             });

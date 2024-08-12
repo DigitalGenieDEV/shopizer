@@ -360,6 +360,34 @@ public class CustomerShoppingCartApi {
         }
     }
 
+    @DeleteMapping(value = "/auth/customer_cart/product/{sku}/exclusive_select", produces = { APPLICATION_JSON_VALUE })
+    @ApiOperation(httpMethod = "DELETE", value = "Remove a product from a specific cart", notes = "If body set to true returns remaining cart in body, empty cart gives empty body. If body set to false no body ", produces = "application/json", response = ReadableShoppingCart.class)
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko"),
+            @ApiImplicitParam(name = "body", dataType = "boolean", defaultValue = "false"), })
+    public ResponseEntity<ReadableCustomerShoppingCart> exclusiveSelectCartItem(
+            @PathVariable("sku")  String sku,
+            @ApiIgnore Language language,
+            @ApiIgnore MerchantStore store,
+            @RequestParam(defaultValue = "false") boolean body,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws Exception {
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            response.sendError(401, "Error while performing checkout customer not authorized");
+            return null;
+        }
+
+        ReadableCustomerShoppingCart readableCustomerShoppingCart = customerShoppingCartFacade.exclusiveSelectCartItem(customer, sku, store, language);
+
+        return new ResponseEntity<>(readableCustomerShoppingCart, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/auth/customer_cart/del_multi", produces = { APPLICATION_JSON_VALUE })
     @ApiOperation(httpMethod = "DELETE", value = "Remove a product from a specific cart", notes = "If body set to true returns remaining cart in body, empty cart gives empty body. If body set to false no body ", produces = "application/json", response = ReadableShoppingCart.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),

@@ -43,6 +43,8 @@ public interface CustomerShoppingCartFacade {
 
     ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception;;
 
+    ReadableCustomerShoppingCart exclusiveSelectCartItem(Customer customer, String sku, MerchantStore store, Language language) throws Exception;;
+
     ReadableCustomerShoppingCart removeCartItemMulti(Customer customer, List<PersistableCustomerShoppingCartItem> items, MerchantStore store, Language language, boolean returnCart) throws Exception;
 
     ReadableCustomerShoppingCart cleanCart(Customer customer, MerchantStore store, Language language) throws Exception;

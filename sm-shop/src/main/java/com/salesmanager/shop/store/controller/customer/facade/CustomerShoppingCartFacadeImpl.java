@@ -12,6 +12,7 @@ import com.salesmanager.core.model.catalog.product.availability.ProductAvailabil
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.order.CustomerOrderTotalSummary;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -826,6 +827,29 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             return this.getByCustomer(customer, store, language);
         }
         return null;
+    }
+
+    @Override
+    public ReadableCustomerShoppingCart exclusiveSelectCartItem(Customer customer, String sku, MerchantStore store, Language language) throws Exception {
+        try {
+            CustomerShoppingCart cartModel = getCustomerShoppingCartModel(customer);
+            Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> items = cartModel.getLineItems();
+
+            for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem anItem: items) {
+                if (StringUtils.equals(anItem.getSku(), sku)) {
+                    anItem.setChecked(true);
+                } else {
+                    anItem.setChecked(false);
+                }
+
+            }
+
+            customerShoppingCartService.saveOrUpdate(cartModel);
+
+            return this.getByCustomer(customer, store, language);
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
