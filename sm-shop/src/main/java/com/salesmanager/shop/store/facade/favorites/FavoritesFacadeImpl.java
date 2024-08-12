@@ -124,7 +124,7 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
                 if (!collect.isEmpty()) {
                     readableFavorites.setOrigin(collect.get(0));
                 }
-                FinalPrice price = pricingService.calculateProductPrice(productById);
+                FinalPrice price = pricingService.calculateProductPrice(productById, false);
                 readableFavorites.setPrice(price.getStringPrice());
             }
         } catch (ServiceException e) {

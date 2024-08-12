@@ -61,7 +61,7 @@ public class ProductVariantGroupFacadeImpl implements ProductVariantGroupFacade 
 	public ReadableProductVariantGroup get(Long instanceGroupId, MerchantStore store, Language language) {
 		
 		ProductVariantGroup group = this.group(instanceGroupId, store);
-		return readableProductVariantGroupMapper.convert(group, store, language);
+		return readableProductVariantGroupMapper.convert(group, store, language, false);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class ProductVariantGroupFacadeImpl implements ProductVariantGroupFacade 
 		Page<ProductVariantGroup> groups = productVariantGroupService.getByProductId(store, productId, language, page, count);
 		
 		List<ReadableProductVariantGroup> readableInstances = groups.stream()
-				.map(rp -> this.readableProductVariantGroupMapper.convert(rp, store, language)).collect(Collectors.toList());
+				.map(rp -> this.readableProductVariantGroupMapper.convert(rp, store, language, false)).collect(Collectors.toList());
 
 	    return createReadableList(groups, readableInstances);
 

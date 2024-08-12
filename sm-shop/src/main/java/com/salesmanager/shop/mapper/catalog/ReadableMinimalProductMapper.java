@@ -92,7 +92,7 @@ public class ReadableMinimalProductMapper implements Mapper<Product, ReadableMin
 		//price
 
 		try {
-			FinalPrice price = pricingService.calculateProductPrice(source);
+			FinalPrice price = pricingService.calculateProductPrice(source, false);
 			if(price != null) {
 
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));

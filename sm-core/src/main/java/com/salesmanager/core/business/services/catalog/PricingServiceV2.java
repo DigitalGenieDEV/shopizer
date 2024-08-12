@@ -1,8 +1,4 @@
-package com.salesmanager.core.business.services.catalog.pricing;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Locale;
+package com.salesmanager.core.business.services.catalog;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -14,13 +10,17 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.currency.Currency;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Locale;
+
 
 /**
  * Services for Product item price calculation. 
  * @author Carl Samson
  *
  */
-public interface PricingService {
+public interface PricingServiceV2 {
 
 	/**
 	 * Calculates the FinalPrice of a Product taking into account

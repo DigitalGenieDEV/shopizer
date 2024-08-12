@@ -230,7 +230,7 @@ public class ShoppingCartTest extends com.salesmanager.test.common.AbstractSales
 	    item.setSku(product.getSku());
 	    item.setShoppingCart(shoppingCart);
 	    
-	    FinalPrice price = pricingService.calculateProductPrice(product);
+	    FinalPrice price = pricingService.calculateProductPrice(product, false);
 
 	    item.setItemPrice(price.getFinalPrice());
 	    item.setQuantity(1);

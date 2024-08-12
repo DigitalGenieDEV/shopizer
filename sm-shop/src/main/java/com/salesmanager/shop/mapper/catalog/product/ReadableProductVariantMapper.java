@@ -33,7 +33,7 @@ import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 
 @Component
-public class ReadableProductVariantMapper implements Mapper<ProductVariant, ReadableProductVariant> {
+public class ReadableProductVariantMapper  {
 
 	
 	@Autowired
@@ -46,15 +46,13 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 	@Qualifier("img")
 	private ImageFilePath imagUtils;
 
-	@Override
-	public ReadableProductVariant convert(ProductVariant source, MerchantStore store, Language language) {
+	public ReadableProductVariant convert(ProductVariant source, MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		ReadableProductVariant readableproductVariant = new ReadableProductVariant();
-		return this.merge(source, readableproductVariant, store, language);
+		return this.merge(source, readableproductVariant, store, language, isShowProductPriceCurrencyCode);
 	}
 
-	@Override
 	public ReadableProductVariant merge(ProductVariant source, ReadableProductVariant destination,
-			MerchantStore store, Language language) {
+			MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		Validate.notNull(source, "Product instance cannot be null");
 		Validate.notNull(source.getProduct(), "Product cannot be null");
 		
@@ -91,7 +89,7 @@ public class ReadableProductVariantMapper implements Mapper<ProductVariant, Read
 
 
 		if(source.getAvailabilities() != null) {
-			List<ReadableInventory> inventories = source.getAvailabilities().stream().filter(Objects::nonNull).map(i -> readableInventoryMapper.convert(i, store, language)).collect(Collectors.toList());
+			List<ReadableInventory> inventories = source.getAvailabilities().stream().filter(Objects::nonNull).map(i -> readableInventoryMapper.convert(i, store, language, isShowProductPriceCurrencyCode)).collect(Collectors.toList());
 			destination.setInventory(inventories);
 		}
 		

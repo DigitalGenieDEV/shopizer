@@ -181,7 +181,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         Language en = languageService.getByCode("en");
 
-
         Language ko = languageService.getByCode(language);
 
         List<com.salesmanager.shop.model.catalog.category.Category> categoryList =  new ArrayList<>();
@@ -222,24 +221,30 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         ProductSearchQueryProductDetailModelProductAttribute[] productAttribute = productDetailModel.getProductAttribute();
         Manufacturer manufacturers = null;
-        for(int i =0; i<productAttribute.length ;i++){
-            ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute = productAttribute[i];
-            if ("2176".equals(productSearchQueryProductDetailModelProductAttribute.getAttributeId())){
-                manufacturers =  manufacturerService.getByCode(store, productSearchQueryProductDetailModelProductAttribute.getValue());
-                if (manufacturers == null){
+        for (ProductSearchQueryProductDetailModelProductAttribute attribute : productAttribute) {
+            if ("2176".equals(attribute.getAttributeId())) {
+                manufacturers = manufacturerService.getByCode(store, attribute.getValue());
+
+                if (manufacturers == null) {
                     manufacturers = new Manufacturer();
                     manufacturers.setMerchantStore(store);
-                    manufacturers.setCode(productSearchQueryProductDetailModelProductAttribute.getValue());
+                    manufacturers.setCode(attribute.getValue());
 
                     ManufacturerDescription manufacturersDescription = new ManufacturerDescription();
                     manufacturersDescription.setLanguage(ko);
-                    manufacturersDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
+                    manufacturersDescription.setName(attribute.getValueTrans());
                     manufacturersDescription.setManufacturer(manufacturers);
-                    manufacturers.getDescriptions().add(manufacturersDescription);
+
+                    Set<ManufacturerDescription> descriptions = new HashSet<>();
+                    descriptions.add(manufacturersDescription);
+                    manufacturers.setDescriptions(descriptions);
+
                     manufacturerService.create(manufacturers);
                 }
+                break;  // 找到后立即退出循环，提高效率
             }
         }
+
 
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
         productDefinition.setOutProductId(productDetailModel.getOfferId());

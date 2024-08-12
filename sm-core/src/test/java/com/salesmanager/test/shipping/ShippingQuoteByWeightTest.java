@@ -207,7 +207,7 @@ public class ShippingQuoteByWeightTest extends com.salesmanager.test.common.Abst
 	    
 	    //now create ShippingProduct
 	    ShippingProduct shippingProduct1 = new ShippingProduct(product);
-	    FinalPrice price = pricingService.calculateProductPrice(product);
+	    FinalPrice price = pricingService.calculateProductPrice(product, false);
 	    shippingProduct1.setFinalPrice(price);
 	    
 	    List<ShippingProduct> shippingProducts = new ArrayList<ShippingProduct>();

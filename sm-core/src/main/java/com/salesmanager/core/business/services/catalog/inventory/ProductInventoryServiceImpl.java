@@ -30,7 +30,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 		Validate.notNull(product.getAvailabilities());
 		
 		ProductAvailability availability = defaultAvailability(product.getAvailabilities());
-		FinalPrice finalPrice = pricingService.calculateProductPrice(product);
+		FinalPrice finalPrice = pricingService.calculateProductPrice(product, false);
 		
 		ProductInventory inventory = inventory(availability, finalPrice);
 		inventory.setSku(product.getSku());
@@ -51,7 +51,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 		FinalPrice finalPrice = pricingService.calculateProductPrice(variant);
 		
 		if(finalPrice==null) {
-			finalPrice = pricingService.calculateProductPrice(variant.getProduct());
+			finalPrice = pricingService.calculateProductPrice(variant.getProduct(), false);
 		}
 		
 		ProductInventory inventory = inventory(availability, finalPrice);

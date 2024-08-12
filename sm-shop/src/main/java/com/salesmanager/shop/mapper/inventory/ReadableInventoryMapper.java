@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.business.services.catalog.PricingServiceV2;
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import org.drools.core.util.StringUtils;
 import org.jsoup.helper.Validate;
@@ -28,10 +29,10 @@ import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
 
 @Component
-public class ReadableInventoryMapper implements Mapper<ProductAvailability, ReadableInventory> {
+public class ReadableInventoryMapper  {
 
 	@Autowired
-	private PricingService pricingService;
+	private PricingServiceV2 pricingServiceV2;
 
 	@Autowired
 	private ProductAvailabilityService productAvailabilityService;
@@ -39,15 +40,14 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 	@Autowired
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
-	@Override
-	public ReadableInventory convert(ProductAvailability source, MerchantStore store, Language language) {
+
+	public ReadableInventory convert(ProductAvailability source, MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		ReadableInventory availability = new ReadableInventory();
-		return merge(source, availability, store, language);
+		return merge(source, availability, store, language, isShowProductPriceCurrencyCode);
 	}
 
-	@Override
 	public ReadableInventory merge(ProductAvailability source, ReadableInventory destination, MerchantStore store,
-			Language language) {
+			Language language, Boolean isShowProductPriceCurrencyCode) {
 		Validate.notNull(destination, "Destination Product availability cannot be null");
 		Validate.notNull(source, "Source Product availability cannot be null");
 
@@ -86,7 +86,7 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 				destination.setSku(source.getProduct().getSku());
 			}
 
-			FinalPrice price = pricingService.calculateProductPrice(source);
+			FinalPrice price = pricingServiceV2.calculateProductPrice(source, isShowProductPriceCurrencyCode);
 			destination.setPrice(price.getStringPrice());
 
 		} catch (Exception e) {
@@ -109,26 +109,6 @@ public class ReadableInventoryMapper implements Mapper<ProductAvailability, Read
 		return readableMerchantStorePopulator.populate(store, new ReadableMerchantStore(), store, language);
 	}
 
-	private List<ReadableProductPrice> prices(ProductAvailability source, MerchantStore store, Language language)
-			throws ConversionException {
 
-		ReadableProductPricePopulator populator = null;
-		List<ReadableProductPrice> prices = new ArrayList<ReadableProductPrice>();
-
-		if (source.getPrices() == null){
-			ProductAvailability productAvailability = productAvailabilityService.getById(source.getId());
-			source.setPrices(productAvailability.getPrices());
-		}
-
-		for (ProductPrice price : source.getPrices()) {
-
-			populator = new ReadableProductPricePopulator();
-			populator.setPricingService(pricingService);
-			ReadableProductPrice p = populator.populate(price, new ReadableProductPrice(), store, language);
-			prices.add(p);
-
-		}
-		return prices;
-	}
 
 }

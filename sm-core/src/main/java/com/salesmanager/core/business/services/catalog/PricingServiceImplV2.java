@@ -1,43 +1,41 @@
-package com.salesmanager.core.business.services.catalog.pricing;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
+package com.salesmanager.core.business.services.catalog;
 
 import com.salesmanager.core.business.constants.Constants;
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.exchangeRate.ExchangeRateRepository;
-import com.salesmanager.core.model.catalog.product.ExchangeRate;
+import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.utils.ProductPriceUtils;
 import com.salesmanager.core.model.catalog.product.ExchangeRatePOJO;
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
+import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
+import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.reference.currency.Currency;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.salesmanager.core.business.exception.ServiceException;
-import com.salesmanager.core.business.utils.ProductPriceUtils;
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
-import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
-import com.salesmanager.core.model.catalog.product.price.FinalPrice;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
-import com.salesmanager.core.model.customer.Customer;
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.reference.currency.Currency;
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Contains all the logic required to calculate product price
  * @author Carl Samson
  *
  */
-@Service("pricingService")
-public class PricingServiceImpl implements PricingService {
+@Service("pricingServiceV2")
+public class PricingServiceImplV2 implements PricingServiceV2 {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(PricingServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PricingServiceImplV2.class);
 
 	@Autowired
 	private ExchangeRateRepository exchangeRateRepository;

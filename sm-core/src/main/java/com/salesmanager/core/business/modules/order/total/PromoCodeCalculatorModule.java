@@ -93,7 +93,7 @@ public class PromoCodeCalculatorModule implements OrderTotalPostProcessorModule 
 					orderTotal.setText(summary.getPromoCode());
 					
 					//calculate discount that will be added as a negative value
-					FinalPrice productPrice = pricingService.calculateProductPrice(product);
+					FinalPrice productPrice = pricingService.calculateProductPrice(product, false);
 					
 					Double discount = resp.getDiscount();
 					BigDecimal reduction = productPrice.getFinalPrice().multiply(new BigDecimal(discount));

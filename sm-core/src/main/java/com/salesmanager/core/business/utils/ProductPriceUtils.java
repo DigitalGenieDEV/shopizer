@@ -69,7 +69,7 @@ public class ProductPriceUtils {
 	 * @return
 	 */
 	// Pricer
-	public BigDecimal getPrice(MerchantStore store, Product product, Locale locale) {
+	public BigDecimal getPrice(MerchantStore store, Product product, Locale locale, Boolean isShowProductPriceCurrencyCode) {
 
 		BigDecimal defaultPrice = new BigDecimal(0);
 
@@ -80,7 +80,7 @@ public class ProductPriceUtils {
 			for (ProductPrice price : prices) {
 
 				if (price.isDefaultPrice()) {
-					if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+					if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 						defaultPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
 					}else {
 						defaultPrice = price.getProductPriceAmount();
@@ -98,14 +98,12 @@ public class ProductPriceUtils {
 	 * the product object. The calculation is based on the default price. Attributes
 	 * may be null
 	 * 
-	 * @param Product
-	 * @param List<ProductAttribute>
 	 * @return FinalPrice
 	 */
 	// Pricer
 	public FinalPrice getFinalPrice(Product product, List<ProductAttribute> attributes) throws ServiceException {
 
-		FinalPrice finalPrice = calculateFinalPrice(product);
+		FinalPrice finalPrice = calculateFinalPrice(product, false);
 
 
 		// attributes
@@ -147,15 +145,13 @@ public class ProductPriceUtils {
 	 * possibles discounts. This price does not calculate the attributes or other
 	 * prices than the default one
 	 * 
-	 * @param store
 	 * @param product
-	 * @param locale
 	 * @return
 	 */
 	// Pricer
-	public FinalPrice getFinalPrice(Product product) throws ServiceException {
+	public FinalPrice getFinalPrice(Product product, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 
-		FinalPrice finalPrice = calculateFinalPrice(product);
+		FinalPrice finalPrice = calculateFinalPrice(product, isShowProductPriceCurrencyCode);
 
 		finalPrice.setStringPrice(getStringAmount(finalPrice.getFinalPrice()));
 		if (finalPrice.isDiscounted()) {
@@ -182,7 +178,7 @@ public class ProductPriceUtils {
 				Set<ProductPrice> prices = availability.getPrices();
 				for (ProductPrice price : prices) {
 
-					FinalPrice p = finalPrice(price);
+					FinalPrice p = finalPrice(price, false);
 					if (price.isDefaultPrice()) {
 						finalPrice = p;
 					} else {
@@ -212,9 +208,9 @@ public class ProductPriceUtils {
 
 	}
 
-	public FinalPrice getFinalPrice(ProductAvailability availability) throws ServiceException {
+	public FinalPrice getFinalPrice(ProductAvailability availability, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 
-		FinalPrice finalPrice = calculateFinalPrice(availability);
+		FinalPrice finalPrice = calculateFinalPrice(availability, isShowProductPriceCurrencyCode);
 
 		if (finalPrice == null) {
 			throw new ServiceException(ServiceException.EXCEPTION_ERROR,
@@ -443,7 +439,6 @@ public class ProductPriceUtils {
 	 * inserted as a BigDecimal in the database
 	 * 
 	 * @param amount
-	 * @param locale
 	 * @return
 	 * @throws Exception
 	 */
@@ -575,7 +570,7 @@ public class ProductPriceUtils {
 				.filter(a -> !CollectionUtils.isEmpty(a.getPrices())).collect(Collectors.toList()));
 	}
 
-	private FinalPrice calculateFinalPrice(Product product) throws ServiceException {
+	private FinalPrice calculateFinalPrice(Product product, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 
 		FinalPrice finalPrice = null;
 		List<FinalPrice> otherPrices = null;
@@ -606,7 +601,7 @@ public class ProductPriceUtils {
 		for (ProductAvailability availability : availabilities) {
 			Set<ProductPrice> prices = availability.getPrices();
 			for (ProductPrice price : prices) {
-				FinalPrice p = finalPrice(price);
+				FinalPrice p = finalPrice(price, isShowProductPriceCurrencyCode);
 
 
 				if (price.isDefaultPrice()) {
@@ -635,7 +630,8 @@ public class ProductPriceUtils {
 		if (!CollectionUtils.isEmpty(finalPrice.getPriceRanges())){
 
 			List<PriceRange> priceRanges = finalPrice.getPriceRanges();
-			if (product.getPublishWay() != null && product.getPublishWay() == PublishWayEnums.IMPORT_BY_1688){
+			if (product.getPublishWay() != null && product.getPublishWay() == PublishWayEnums.IMPORT_BY_1688
+					&& (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 				priceRanges.forEach(priceRange -> {
 					BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
 					if (StringUtils.isNotEmpty(priceRange.getPromotionPrice())){
@@ -655,7 +651,7 @@ public class ProductPriceUtils {
 
 	}
 
-	private FinalPrice calculateFinalPrice(ProductAvailability availability) throws ServiceException {
+	private FinalPrice calculateFinalPrice(ProductAvailability availability, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 
 		FinalPrice finalPrice = null;
 		List<FinalPrice> otherPrices = null;
@@ -663,7 +659,7 @@ public class ProductPriceUtils {
 		Set<ProductPrice> prices = availability.getPrices();
 		for (ProductPrice price : prices) {
 
-			FinalPrice p = finalPrice(price);
+			FinalPrice p = finalPrice(price, isShowProductPriceCurrencyCode);
 			if (price.isDefaultPrice()) {
 				finalPrice = p;
 			} else {
@@ -692,13 +688,13 @@ public class ProductPriceUtils {
 
 	}
 
-	private FinalPrice finalPrice(ProductPrice price) {
+	private FinalPrice finalPrice(ProductPrice price, Boolean isShowProductPriceCurrencyCode) {
 
 		FinalPrice finalPrice = new FinalPrice();
 		BigDecimal fPrice = price.getProductPriceAmount();
 		BigDecimal oPrice = price.getProductPriceAmount();
 
-		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 			fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
 			oPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
 		}
@@ -717,7 +713,7 @@ public class ProductPriceUtils {
 							fPrice = price.getProductPriceSpecialAmount();
 							finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 
-							if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+							if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 								fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
 							}
 
@@ -732,7 +728,7 @@ public class ProductPriceUtils {
 				if (price.getProductPriceSpecialEndDate().after(today)) {
 					hasDiscount = true;
 					fPrice = price.getProductPriceSpecialAmount();
-					if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+					if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 						fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
 					}
 					finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
@@ -744,14 +740,14 @@ public class ProductPriceUtils {
 				hasDiscount = true;
 				fPrice = price.getProductPriceSpecialAmount();
 
-				if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null){
+				if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 					fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
 				}
 				finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 			}
 		}
 
-		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null){
+		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 			BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
 			price.setProductPriceAmount(productPriceAmount);
 		}
@@ -774,7 +770,7 @@ public class ProductPriceUtils {
 			if (minStartQuantityPriceRange.isPresent()) {
 				PriceRange priceRange = minStartQuantityPriceRange.get();
 				finalPrice.setDefaultPrice(true);
-				if (price.getCurrency().equals("CNY") && priceRange.getPrice() != null){
+				if (price.getCurrency().equals("CNY") && priceRange.getPrice() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 					BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
 
 					finalPrice.setStringPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
@@ -795,7 +791,7 @@ public class ProductPriceUtils {
 		if (hasDiscount) {
 			finalPrice.setDiscountPercent(price.getDiscountPercent() == null? 0 : price.getDiscountPercent());
 
-			if (price.getCurrency().equals("CNY") && finalPrice.getProductPrice().getProductPriceSpecialAmount() != null){
+			if (price.getCurrency().equals("CNY") && finalPrice.getProductPrice().getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
 				BigDecimal specialAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(finalPrice.getProductPrice().getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
 				finalPrice.setDiscountedPrice(specialAmount);
 			}else {

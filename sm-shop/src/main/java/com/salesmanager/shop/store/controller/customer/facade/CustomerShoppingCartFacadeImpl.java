@@ -242,7 +242,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         // TODO attributes
         // set item price
-        FinalPrice price = pricingService.calculateProductPrice(product);
+        FinalPrice price = pricingService.calculateProductPrice(product, false);
         item.setItemPrice(price.getFinalPrice());
         item.setFinalPrice(price);
 
@@ -337,7 +337,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
         // TODO attributes
         // set item price
-        FinalPrice price = pricingService.calculateProductPrice(product);
+        FinalPrice price = pricingService.calculateProductPrice(product, false);
         item.setItemPrice(price.getFinalPrice());
         item.setFinalPrice(price);
         item.setChecked(customerShoppingCartItem.isChecked());

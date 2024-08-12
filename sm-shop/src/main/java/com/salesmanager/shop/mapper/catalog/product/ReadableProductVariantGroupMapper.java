@@ -27,7 +27,7 @@ import com.salesmanager.shop.model.catalog.product.product.variantGroup.Readable
 import com.salesmanager.shop.utils.ImageFilePath;
 
 @Component
-public class ReadableProductVariantGroupMapper implements Mapper<ProductVariantGroup, ReadableProductVariantGroup> {
+public class ReadableProductVariantGroupMapper  {
 
 	
 	@Autowired
@@ -37,17 +37,15 @@ public class ReadableProductVariantGroupMapper implements Mapper<ProductVariantG
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
 	
-	@Override
-	public ReadableProductVariantGroup convert(ProductVariantGroup source, MerchantStore store, Language language) {
+	public ReadableProductVariantGroup convert(ProductVariantGroup source, MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		Validate.notNull(source, "productVariantGroup cannot be null");
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(language, "Language cannot be null");
-		return this.merge(source, new ReadableProductVariantGroup(), store, language);
+		return this.merge(source, new ReadableProductVariantGroup(), store, language, isShowProductPriceCurrencyCode);
 	}
 
-	@Override
 	public ReadableProductVariantGroup merge(ProductVariantGroup source, ReadableProductVariantGroup destination,
-			MerchantStore store, Language language) {
+			MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		Validate.notNull(source, "productVariantGroup cannot be null");
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(language, "Language cannot be null");
@@ -58,7 +56,7 @@ public class ReadableProductVariantGroupMapper implements Mapper<ProductVariantG
 		destination.setId(source.getId());
 		
 		Set<ProductVariant> instances = source.getProductVariants();
-		destination.setproductVariants(instances.stream().map(i -> this.instance(i, store, language)).collect(Collectors.toList()));
+		destination.setproductVariants(instances.stream().map(i -> this.instance(i, store, language, isShowProductPriceCurrencyCode)).collect(Collectors.toList()));
 		
 		//image id should be unique in the list
 		
@@ -74,9 +72,9 @@ public class ReadableProductVariantGroupMapper implements Mapper<ProductVariantG
 		return destination;
 	}
 	
-	private ReadableProductVariant instance(ProductVariant instance, MerchantStore store, Language language) {
+	private ReadableProductVariant instance(ProductVariant instance, MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode) {
 		
-		return readableProductVariantMapper.convert(instance, store, language);
+		return readableProductVariantMapper.convert(instance, store, language, isShowProductPriceCurrencyCode);
 	}
 	
 	private ReadableImage image(Map<Long,ReadableImage> finalList , ProductVariantImage img, MerchantStore store, Language language) {

@@ -104,7 +104,6 @@ public class MyScheduledTask {
             }
         }
 
-        // Log completion
         System.out.println("Processing completed. Total records processed: " + processedRecords);
 
     }

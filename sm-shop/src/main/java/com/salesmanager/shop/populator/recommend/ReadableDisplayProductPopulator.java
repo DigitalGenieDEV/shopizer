@@ -459,7 +459,7 @@ public class ReadableDisplayProductPopulator extends
 //                }
 //            }
 
-            FinalPrice price = pricingService.calculateProductPrice(source);
+            FinalPrice price = pricingService.calculateProductPrice(source, false);
 
             if(price != null) {
                 target.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));

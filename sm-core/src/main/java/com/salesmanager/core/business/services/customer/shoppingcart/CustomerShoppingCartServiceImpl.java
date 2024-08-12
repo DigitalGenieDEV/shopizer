@@ -181,7 +181,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
         // TODO attributes
         // set item price
-        FinalPrice price = pricingService.calculateProductPrice(product);
+        FinalPrice price = pricingService.calculateProductPrice(product, false);
         item.setItemPrice(price.getFinalPrice());
         item.setFinalPrice(price);
 
@@ -199,7 +199,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         customerShoppingCartItem.setSku(product.getSku());
 
         // set item price
-        FinalPrice price = pricingService.calculateProductPrice(product);
+        FinalPrice price = pricingService.calculateProductPrice(product, false);
         customerShoppingCartItem.setItemPrice(price.getFinalPrice());
 
         // set store
