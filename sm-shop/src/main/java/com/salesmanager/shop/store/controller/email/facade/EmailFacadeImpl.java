@@ -35,7 +35,7 @@ public class EmailFacadeImpl implements EmailFacade{
 		try {
 			Customer result = customerService.getByNick(to);
 			if(result != null)
-				throw new GenericRuntimeException("409", "Customer with email [" + result.getEmailAddress() + "] is already registered");
+				throw new GenericRuntimeException("409", "Customer with email [" + result.getNick()+ "] is already registered");
 			
 			String code = createCode();
 			emailService.sendVerificationEmail(to, code);

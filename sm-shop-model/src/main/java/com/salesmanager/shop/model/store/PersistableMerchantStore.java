@@ -14,7 +14,7 @@ public class PersistableMerchantStore extends MerchantStoreEntity {
 	//code of parent store (can be null if retailer)
 	private String retailerStore;
 	private List<String> supportedLanguages;
-	private List<PersistableMerchantStoreImage> merchantStoreImages;
+	private List<PersistableMerchantStoreImage> merchantStoreImages = null;
 
 	public List<String> getSupportedLanguages() {
 		return supportedLanguages;
