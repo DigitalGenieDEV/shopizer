@@ -176,7 +176,7 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 
 		// added by BE 2024.05.28
 		if (!CollectionUtils.isEmpty(source.getCategories())) {
-			target.setMerchantStoreCategories(source.getCategories());
+			target.setCategories(source.getCategories());
 		}
 
 		if (!CollectionUtils.isEmpty(source.getTypes())) {
