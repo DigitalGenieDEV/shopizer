@@ -74,7 +74,7 @@ public class ProductVariantFacadeImpl implements ProductVariantFacade {
 		
 		
 		ProductVariant model =  productVariant.get();
-		return readableProductVariantMapper.convert(model, store, language);
+		return readableProductVariantMapper.convert(model, store, language, false);
 		
 		
 	}
@@ -192,7 +192,7 @@ public class ProductVariantFacadeImpl implements ProductVariantFacade {
 		
 		
 		List<ReadableProductVariant> readableInstances = instances.stream()
-				.map(rp -> this.readableProductVariantMapper.convert(rp, store, language)).collect(Collectors.toList());
+				.map(rp -> this.readableProductVariantMapper.convert(rp, store, language, false)).collect(Collectors.toList());
 
 	    
 	    return createReadableList(instances, readableInstances);

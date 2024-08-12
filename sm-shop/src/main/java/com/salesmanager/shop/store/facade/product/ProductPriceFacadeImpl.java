@@ -139,7 +139,7 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade {
 	private ReadableProductPrice readablePrice (ProductPrice price, MerchantStore store, Language language) throws ConversionException {
 		ReadableProductPricePopulator populator = new ReadableProductPricePopulator();
 		populator.setPricingService(pricingService);
-		return populator.populate(price, store, language);
+		return populator.populate(price, new ReadableProductPrice(),  store, language , false);
 	}
 
 

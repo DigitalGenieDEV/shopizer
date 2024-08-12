@@ -315,7 +315,7 @@ public class UserReadableProductMapper  {
 
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
-					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
+					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage, false)).collect(Collectors.toList());
 			long endTime1 = System.currentTimeMillis();
 
 			System.out.println("Variants convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");

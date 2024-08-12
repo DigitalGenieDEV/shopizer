@@ -166,7 +166,7 @@ public class ReadableProductDefinitionMapper implements Mapper<Product, Readable
 		
 		if(availability != null) {
 			returnDestination.setCanBePurchased(availability.getProductStatus());
-			ReadableInventory inventory = readableInventoryMapper.convert(availability, store, language);
+			ReadableInventory inventory = readableInventoryMapper.convert(availability, store, language, false);
 			returnDestination.setInventory(inventory);
 		}
 		

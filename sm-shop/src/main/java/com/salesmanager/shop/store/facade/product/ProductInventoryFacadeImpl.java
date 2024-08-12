@@ -146,7 +146,7 @@ public class ProductInventoryFacadeImpl implements ProductInventoryFacade {
 		//add inventory to the product
 		
 		saveOrUpdate(availability);
-		return readableInventoryMapper.convert(availability, store, language);
+		return readableInventoryMapper.convert(availability, store, language, false);
 	}
 
 	private void saveOrUpdate(ProductAvailability availability) {
@@ -169,7 +169,7 @@ public class ProductInventoryFacadeImpl implements ProductInventoryFacade {
 
 		ProductAvailability availability = productAvailabilityService.getById(inventoryId, store)
 				.orElseThrow(() -> new ResourceNotFoundException("Inventory with id [" + inventoryId + "] not found"));
-		return readableInventoryMapper.convert(availability, store, language);
+		return readableInventoryMapper.convert(availability, store, language, false);
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class ProductInventoryFacadeImpl implements ProductInventoryFacade {
 			}
 		}
 		
-		List<ReadableInventory> returnList = availabilities.getContent().stream().map(i -> this.readableInventoryMapper.convert(i, store, language))
+		List<ReadableInventory> returnList = availabilities.getContent().stream().map(i -> this.readableInventoryMapper.convert(i, store, language, false))
 				.collect(Collectors.toList());
 
 		return createReadableList(availabilities, returnList);
@@ -253,7 +253,7 @@ public class ProductInventoryFacadeImpl implements ProductInventoryFacade {
 		
 		Page<ProductAvailability> availabilities = productAvailabilityService.listByProduct(productId, store, page, count);
 		
-		List<ReadableInventory> returnList = availabilities.getContent().stream().map(i -> this.readableInventoryMapper.convert(i, store, language))
+		List<ReadableInventory> returnList = availabilities.getContent().stream().map(i -> this.readableInventoryMapper.convert(i, store, language, false))
 				.collect(Collectors.toList());
 
 		return createReadableList(availabilities, returnList);

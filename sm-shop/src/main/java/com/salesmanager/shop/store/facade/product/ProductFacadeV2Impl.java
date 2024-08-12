@@ -217,7 +217,7 @@ public class ProductFacadeV2Impl implements ProductFacade {
 	
 	private ReadableProductVariant productVariant(ProductVariant instance, MerchantStore store, Language language) {
 		
-		return readableProductVariantMapper.convert(instance, store, language);
+		return readableProductVariantMapper.convert(instance, store, language, false);
 		
 	}
 

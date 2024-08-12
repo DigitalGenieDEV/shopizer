@@ -25,8 +25,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class ReadableProductPricePopulator extends
-		AbstractDataPopulator<ProductPrice, ReadableProductPrice> {
+public class ReadableProductPricePopulator  {
 
 	@Autowired
 	private ExchangeRateConfig examRateConfig;
@@ -41,9 +40,8 @@ public class ReadableProductPricePopulator extends
 		this.pricingService = pricingService;
 	}
 
-	@Override
 	public ReadableProductPrice populate(ProductPrice source,
-			ReadableProductPrice target, MerchantStore store, Language language)
+			ReadableProductPrice target, MerchantStore store, Language language, Boolean isShowProductPriceCurrencyCode)
 			throws ConversionException {
 		Validate.notNull(pricingService,"pricingService must be set");
 		Validate.notNull(source.getProductAvailability(),"productPrice.availability cannot be null");
@@ -63,11 +61,12 @@ public class ReadableProductPricePopulator extends
 
 			FinalPrice finalPrice = null;
 			if (source.getProductAvailability() != null && source.getProductAvailability().getProductVariant() !=null){
-				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability());
+				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability(), isShowProductPriceCurrencyCode);
 			}else {
-				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability().getProduct());
+				finalPrice = pricingService.calculateProductPrice(source.getProductAvailability().getProduct(), isShowProductPriceCurrencyCode);
 			}
-			if (source.getCurrency().equals("CNY") && source.getProductPriceAmount() != null){
+			if (source.getCurrency().equals("CNY") && source.getProductPriceAmount() != null
+					&& (isShowProductPriceCurrencyCode == null || !isShowProductPriceCurrencyCode)){
 				BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(source.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
 				target.setOriginalPrice(pricingService.getDisplayAmount(productPriceAmount, store));
 			}else {
@@ -116,7 +115,6 @@ public class ReadableProductPricePopulator extends
 		return target;
 	}
 
-	@Override
 	protected ReadableProductPrice createTarget() {
 		// TODO Auto-generated method stub
 		return null;

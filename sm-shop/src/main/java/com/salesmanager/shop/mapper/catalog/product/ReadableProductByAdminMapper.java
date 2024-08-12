@@ -318,7 +318,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 			System.out.println("variants size"+ source.getVariants().size());
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
-					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
+					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage, true)).collect(Collectors.toList());
 			long endTime1 = System.currentTimeMillis();
 
 			System.out.println("getVariants convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
@@ -377,9 +377,9 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setSku(source.getSku());
 
 		try {
-			FinalPrice price = pricingService.calculateProductPrice(source);
+			FinalPrice price = pricingService.calculateProductPrice(source, true);
 			if (price != null) {
-
+				destination.setPriceRangeList(price.getPriceRanges());
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
 				destination.setPrice(price.getFinalPrice());
 				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));

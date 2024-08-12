@@ -290,7 +290,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 //		item.setSku(product.getSku());//already in the constructor
 
 		// set item price
-		FinalPrice price = pricingService.calculateProductPrice(product);
+		FinalPrice price = pricingService.calculateProductPrice(product, false);
 		item.setItemPrice(price.getFinalPrice());
 		return item;
 

@@ -237,7 +237,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 						/**
 						 * Returns a list of ReadableProductOptions
-						 * 
+						 *
 						 * name lang type code List ReadableProductOptionValueEntity name description
 						 * image order default
 						 */
@@ -329,24 +329,26 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			System.out.println("variants size"+ source.getVariants().size());
 			List<ReadableProductVariant> instances = source
 					.getVariants().stream()
-					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage)).collect(Collectors.toList());
+					.map(i -> readableProductVariantMapper.convert(i, store, finalLanguage, false)).collect(Collectors.toList());
+
+
 			long endTime1 = System.currentTimeMillis();
 
 			System.out.println("getVariants convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
 
 			destination.setVariants(instances);
-			
+
 			/**
 			 * When an item has instances
 			 * Take default instance
-			 * 
+			 *
 			 * - Set item price as default instance price
 			 * - Set default image as default instance image
 			 */
-			
+
 			//get default instance
 			defaultInstance = instances.stream().filter(i -> i.isDefaultSelection()).findAny().orElse(null);
-			
+
 
 			/**
 			 * variants options list variation color
@@ -354,7 +356,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 			/**
 			 * Returns a list of ReadableProductOptions
-			 * 
+			 *
 			 * name lang type code List ReadableProductOptionValueEntity name description
 			 * image order default
 			 */
@@ -373,7 +375,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			List<ReadableProductOption> options = new ArrayList<ReadableProductOption>(selectableOptions.values());
 			destination.setOptions(options);
 		}
-		
+
 		// availability
 		ProductAvailability availability = null;
 		for (ProductAvailability a : source.getAvailabilities()) {
@@ -385,14 +387,14 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			 * instance null
 			 * region variant null
 			 */
-			
-			
+
+
 			availability = a;
 			destination.setQuantity(availability.getProductQuantity() == null ? 1 : availability.getProductQuantity());
 			if (availability.getProductQuantity().intValue() > 0 && destination.isAvailable()) {
 				destination.setCanBePurchased(true);
 			}
-			
+
 			if(a.getProductVariant()==null && StringUtils.isEmpty(a.getRegionVariant())) {
 				break;
 			}
@@ -407,7 +409,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		destination.setSku(source.getSku());
 
 		try {
-			FinalPrice price = pricingService.calculateProductPrice(source);
+			FinalPrice price = pricingService.calculateProductPrice(source, false);
 			if (price != null) {
 				destination.setPriceRangeList(price.getPriceRanges());
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
