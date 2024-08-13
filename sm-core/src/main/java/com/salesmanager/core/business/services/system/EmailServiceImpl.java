@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
 		
 		Email email = new Email();
 		email.setFrom("Sourcing Root");
-		email.setFromEmail("ckbridge.Dev1@gmail.com");
+		email.setFromEmail("info@sourcingroot.com");
 		email.setSubject("소싱루트에서 보낸 인증번호입니다.");
 		email.setTo(to);
 		email.setTemplateName("email_template_mail_auth.ftl");
