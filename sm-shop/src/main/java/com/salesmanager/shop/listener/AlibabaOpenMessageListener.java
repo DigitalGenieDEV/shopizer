@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +28,8 @@ import java.util.Map;
 
 import static com.salesmanager.core.constants.ApiFor1688Constants.SECRET_KEY;
 
-//@Component
-public class AlibabaOpenMessageListener {
+@Component
+public class AlibabaOpenMessageListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlibabaOpenMessageListener.class);
 
@@ -231,7 +233,7 @@ public class AlibabaOpenMessageListener {
 //        supplierCrossOrderFacade.processSupplierCrossOrderLogisticsMsg(supplierCrossOrderLogisticsMsg);
 //    }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         // 2. 创建 消息处理 Handler
         HttpCbMessageHandler messageHandler = new HttpCbMessageHandler<HttpCbMessage, Void>() {
@@ -263,7 +265,7 @@ public class AlibabaOpenMessageListener {
              * @throws MessageProcessException 消息消费不成功，如未达重试次数上限，开放平台将会择机重发消息
              */
             public Void onMessage(HttpCbMessage message) throws MessageProcessException {
-                System.out.println("message: " + message);
+                LOGGER.info("receive 1688 open message: " + message);
                 // 真正的业务逻辑在这。如果消费失败或异常，请抛出 MessageProcessException 异常
                 try {
                     boolean ret = doSth(message);
@@ -282,5 +284,10 @@ public class AlibabaOpenMessageListener {
 
         // 3. 启动 Client
         client.start();
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        init();
     }
 }

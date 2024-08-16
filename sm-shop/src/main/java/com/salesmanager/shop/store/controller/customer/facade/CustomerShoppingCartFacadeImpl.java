@@ -811,6 +811,47 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         return readableCustomerShoppingCartMapper.convert(cartModel, store, language);
     }
 
+    private ReadableCustomerShoppingCart readableCustomerShoppingCartDirectCheckout(Customer customer, CustomerShoppingCart cartModel, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception {
+//        MerchantStore store = merchantStoreService.getById(item.getMerchantId());
+//
+//        if (store == null) {
+//            throw new ServiceException("merchant store " + item.getMerchantId() + " missing exception");
+//        }
+        com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem itemModel = createCartItem(cartModel, item);
+
+        // need to check if the item is already in the cart
+        boolean duplicateFound = false;
+//        if (CollectionUtils.isEmpty(item.getAttributes())) {
+        Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> cartModelItems = cartModel.getLineItems();
+        for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem cartItem : cartModelItems) {
+            if (cartItem.getSku().equals(item.getSku())) {
+                cartItem.setQuantity(item.getQuantity());
+                cartItem.setChecked(true);
+                duplicateFound = true;
+            } else {
+                cartItem.setChecked(false);
+            }
+        }
+//        }
+
+        if (!duplicateFound) {
+            itemModel.setChecked(true);
+            cartModel.getLineItems().add(itemModel);
+        }
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] save cart model");
+        customerShoppingCartCalculationService.calculate(cartModel, customer, language);
+
+        saveCustomerShoppingCart(cartModel);
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] get cart model");
+//        cartModel = customerShoppingCartService.getById(cartModel.getId());
+        cartModel = customerShoppingCartService.getCustomerShoppingCart(customer);
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] mapper convert");
+        return readableCustomerShoppingCartMapper.convert(cartModel, store, language);
+    }
+
     @Override
     public ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception {
 //        Validate.notNull(cartCode, "Shopping cart code must not be null");
@@ -870,6 +911,17 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         } catch (Exception e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public ReadableCustomerShoppingCart directCheckoutCartItem(Customer customer, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception {
+        Validate.notNull(customer, "Customer cannot be null");
+        Validate.notNull(customer.getId(), "Customer.id cannot be null or empty");
+
+        CustomerShoppingCart cartModel = customerShoppingCartService.getCustomerShoppingCart(customer);
+        ReadableCustomerShoppingCart readableCustomerShoppingCart = readableCustomerShoppingCartDirectCheckout(customer, cartModel, item, store, language);
+
+        return readableCustomerShoppingCart;
     }
 
     @Override

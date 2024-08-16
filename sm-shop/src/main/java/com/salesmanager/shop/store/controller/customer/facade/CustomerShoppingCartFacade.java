@@ -4,6 +4,7 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.customer.order.PersistableDirectCustomerOrder;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartData;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
@@ -43,7 +44,9 @@ public interface CustomerShoppingCartFacade {
 
     ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception;;
 
-    ReadableCustomerShoppingCart exclusiveSelectCartItem(Customer customer, String sku, MerchantStore store, Language language) throws Exception;;
+    ReadableCustomerShoppingCart exclusiveSelectCartItem(Customer customer, String sku, MerchantStore store, Language language) throws Exception;
+
+    ReadableCustomerShoppingCart directCheckoutCartItem(Customer customer,PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception;;
 
     ReadableCustomerShoppingCart removeCartItemMulti(Customer customer, List<PersistableCustomerShoppingCartItem> items, MerchantStore store, Language language, boolean returnCart) throws Exception;
 
