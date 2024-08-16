@@ -312,9 +312,9 @@ public class CustomerShoppingCartApi {
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-    public ReadableCustomerOrderConfirmation directCheckout(
+    public ResponseEntity<ReadableCustomerShoppingCart> directCheckout(
             @PathVariable("sku")  String sku,
-            @Valid @RequestBody PersistableDirectCustomerOrder persistableDirectCustomerOrder, // order
+            @Valid @RequestBody PersistableCustomerShoppingCartItem persistableCustomerShoppingCartItem, // order
             @ApiIgnore MerchantStore store,
             @ApiIgnore Language language,
             HttpServletRequest request,
@@ -323,33 +323,26 @@ public class CustomerShoppingCartApi {
 
         long start = LogPermUtil.start("CustomerShoppingCartApi/directCheckout");
         try {
+
             Principal principal = request.getUserPrincipal();
-            String userName = principal.getName();
-
-            Customer customer = customerService.getByNick(userName);
-
-            if (customer == null) {
-                response.sendError(401, "Error while performing checkout customer not authorized");
-                return null;
-            }
-
-            CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
-            if (cart == null) {
-                throw new ResourceNotFoundException("Cusotmer Cart [" + customer.getId() + "] does not exist");
-            }
-
-            persistableDirectCustomerOrder.setSku(sku);
-            persistableDirectCustomerOrder.setCustomerId(customer.getId());
-            persistableDirectCustomerOrder.setCurrency("CAD");
-
-            CustomerOrder modelCustomerOrder = customerOrderFacade.processDirectCustomerOrder(persistableDirectCustomerOrder, customer, store, language, locale);
-            Long customerOrderId = modelCustomerOrder.getId();
-            modelCustomerOrder.setId(customerOrderId);
-
-            ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
-
+            Customer customer = customerService.getByNick(principal.getName());
+            persistableCustomerShoppingCartItem.setSku(sku);
+            ReadableCustomerShoppingCart cart = customerShoppingCartFacade.directCheckoutCartItem(customer, persistableCustomerShoppingCartItem, store, language);
             LogPermUtil.end("CustomerShoppingCartApi/directCheckout", start);
-            return readableCustomerOrderConfirmation;
+            return new ResponseEntity<>(cart, HttpStatus.CREATED);
+
+//            persistableCustomerShoppingCartItem.setSku(sku);
+//            persistableCustomerShoppingCartItem.setCustomerId(customer.getId());
+//            persistableCustomerShoppingCartItem.setCurrency("CAD");
+//
+//            CustomerOrder modelCustomerOrder = customerOrderFacade.processDirectCustomerOrder(persistableDirectCustomerOrder, customer, store, language, locale);
+//            Long customerOrderId = modelCustomerOrder.getId();
+//            modelCustomerOrder.setId(customerOrderId);
+//
+//            ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+
+
+//            return readableCustomerOrderConfirmation;
         } catch (Exception e) {
             LOGGER.error("Error while processing direct checkout", e);
             try {
