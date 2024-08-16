@@ -123,12 +123,12 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
         for (Order order : orders) {
             OrderStatusHistory orderHistory = new OrderStatusHistory();
             orderHistory.setOrder(order);
-            orderHistory.setStatus(OrderStatus.PROCESSED);
+            orderHistory.setStatus(OrderStatus.PAYMENT_COMPLETED);
             orderHistory.setDateAdded(new Date());
 
             orderService.addOrderStatusHistory(order, orderHistory);
 
-            order.setStatus(OrderStatus.PROCESSED);
+            order.setStatus(OrderStatus.PAYMENT_COMPLETED);
             orderService.saveOrUpdate(order);
         }
     }

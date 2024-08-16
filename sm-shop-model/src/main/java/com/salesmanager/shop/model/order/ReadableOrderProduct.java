@@ -4,6 +4,7 @@ import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.ShippingOption;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
+import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingForm;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
 
 import java.io.Serializable;
@@ -24,6 +25,9 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	
 	private List<ReadableOrderProductAttribute> attributes = null;
 
+	private String hsCode;
+
+	private ReadableInvoicePackingForm invoicePackingForm;
 
 	private ReadableBilling billing;
 	private ReadableDelivery delivery;
@@ -103,6 +107,22 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public String getPaymentModule() {
 		return paymentModule;
+	}
+
+	public ReadableInvoicePackingForm getInvoicePackingForm() {
+		return invoicePackingForm;
+	}
+
+	public void setInvoicePackingForm(ReadableInvoicePackingForm invoicePackingForm) {
+		this.invoicePackingForm = invoicePackingForm;
+	}
+
+	public String getHsCode() {
+		return hsCode;
+	}
+
+	public void setHsCode(String hsCode) {
+		this.hsCode = hsCode;
 	}
 
 	public void setPaymentModule(String paymentModule) {

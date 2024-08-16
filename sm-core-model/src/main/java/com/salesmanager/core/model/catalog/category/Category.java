@@ -92,6 +92,8 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
     @Column(name="TYPE")
     private String type;
 
+    @Column(name="CATEGORY_ID_BY_1688")
+    private String categoryIdBy1688;
 
     @Column(name="HANDLING_FEE")
     private String handlingFee;
@@ -176,6 +178,14 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public String getCategoryIdBy1688() {
+        return categoryIdBy1688;
+    }
+
+    public void setCategoryIdBy1688(String categoryIdBy1688) {
+        this.categoryIdBy1688 = categoryIdBy1688;
     }
 
     public boolean isCategoryStatus() {

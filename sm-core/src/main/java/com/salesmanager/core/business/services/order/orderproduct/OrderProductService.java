@@ -5,6 +5,8 @@ import com.salesmanager.core.model.order.OrderProductCriteria;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 
+import java.util.List;
+
 public interface OrderProductService {
 
 
@@ -13,4 +15,6 @@ public interface OrderProductService {
     OrderProduct getOrderProduct(final Long id, MerchantStore store);
 
     OrderProduct getOrderProduct(final Long id);
+
+    List<OrderProduct> getOrderProducts(Long orderId);
 }

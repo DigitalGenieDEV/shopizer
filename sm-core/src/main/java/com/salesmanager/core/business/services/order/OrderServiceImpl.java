@@ -118,6 +118,11 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
     @Override
+    public void updateOrderStatus(Long orderId, OrderStatus status) {
+        orderRepository.updateOrderStatus(orderId, status);
+    }
+
+    @Override
     public Order processOrder(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, MerchantStore store) throws ServiceException {
 
         return process(order, customer, items, summary, payment, null, store);
@@ -293,11 +298,15 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                             && item.getProduct().getPublishWay() != null
                             && item.getProduct().getPublishWay() == PublishWayEnums.IMPORT_BY_1688 ){
                         BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(2, RoundingMode.HALF_UP);
-                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                        BigDecimal itemPrice = item.getItemPrice();
+                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFee).setScale(2, RoundingMode.HALF_UP);
+                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
                     }
                     if (StringUtils.isNotEmpty(category.getHandlingFee())){
                         BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(2, RoundingMode.HALF_UP);
-                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(handlingFee);
+                        BigDecimal itemPrice = item.getItemPrice();
+                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFee).setScale(2, RoundingMode.HALF_UP);
+                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
                     }
                 }
             }
@@ -702,8 +711,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     @Override
     public Order getOrder(final Long orderId, MerchantStore store ) {
         Validate.notNull(orderId, "Order id cannot be null");
-        Validate.notNull(store, "Store cannot be null");
-        return orderRepository.findOne(orderId, store.getId());
+        return orderRepository.findOne(orderId);
     }
 
     @Override

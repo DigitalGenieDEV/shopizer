@@ -9,6 +9,7 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.*;
+import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.Transaction;
@@ -22,6 +23,8 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 
 	void addOrderStatusHistory(Order order, OrderStatusHistory history)
 			throws ServiceException;
+
+	void updateOrderStatus(Long orderId, OrderStatus status);
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in checkout page

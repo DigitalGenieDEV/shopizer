@@ -11,6 +11,8 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("orderProductService")
 public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long, OrderProduct> implements OrderProductService {
 
@@ -25,6 +27,13 @@ public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long,
     public OrderProductList getOrderProducts(OrderProductCriteria criteria, MerchantStore store) {
         return orderProductRepository.listOrderProducts(store, criteria);
     }
+
+
+    @Override
+    public List<OrderProduct> getOrderProducts(Long orderId) {
+        return orderProductRepository.findListByOrderId(orderId);
+    }
+
 
     @Override
     public OrderProduct getOrderProduct(Long orderProductId, MerchantStore store) {

@@ -37,6 +37,8 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.feature.ProductFeatureType;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.shop.model.catalog.PersistableMaterial;
+import com.salesmanager.shop.model.catalog.ReadableMaterial;
 import com.salesmanager.shop.model.catalog.product.*;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariantPrice;
@@ -49,6 +51,7 @@ import com.salesmanager.shop.model.catalog.product.product.alibaba.ReadableProdu
 import com.salesmanager.shop.model.references.ReadableAddress;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
+import com.salesmanager.shop.store.controller.erp.facade.ErpFacade;
 import com.salesmanager.shop.store.controller.product.facade.*;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
@@ -120,6 +123,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private PricingService pricingService;
+
+	@Autowired
+	private ErpFacade erpFacade;
 
 	@Autowired
 	private ProductVariantService productVariantService;
@@ -450,6 +456,28 @@ public class ProductApiV2 {
 			AlibabaProductSearchKeywordQueryParam queryParam) {
 		return alibabaProductFacade.searchProductByKeywords(queryParam);
 	}
+
+
+
+	@RequestMapping(value = "/private/exist/product/{productIdBy1688}", method = RequestMethod.GET)
+	@ApiOperation(httpMethod = "GET", value = "1688 product is exist", notes = "1688 product is exist")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Single product found", response = Boolean.class) })
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public CommonResultDTO<Boolean> productExistBy1688ProductId( @PathVariable Long productIdBy1688) {
+		try {
+			Product byOutId = productService.findByOutId(productIdBy1688);
+			if (byOutId == null){
+				return CommonResultDTO.ofSuccess(false);
+			}
+			return CommonResultDTO.ofSuccess(true);
+		}catch (Exception e){
+			LOGGER.error("importAlibabaProduct error", e);
+			return CommonResultDTO.ofFailed("20001", "importAlibabaProduct error");
+		}
+	}
+
 
 
 	@ResponseStatus(HttpStatus.OK)
@@ -1070,6 +1098,35 @@ public class ProductApiV2 {
 		}catch (Exception e){
 			LOGGER.error("productSimpleUpdate error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping(value = { "/private/save/material"})
+	public @ResponseBody CommonResultDTO<Void> saveMaterial(@Valid @RequestBody PersistableMaterial material) {
+		try {
+			erpFacade.saveMaterial(material);
+			return CommonResultDTO.ofSuccess();
+		}catch(Exception e){
+			LOGGER.error("saveMaterial error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(),
+					ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+	@RequestMapping(value = {"/private/materials/list","/auth/materials/list"}, method = RequestMethod.GET)
+	@ResponseBody
+	public CommonResultDTO<List<ReadableMaterial>> getMaterials() throws Exception {
+		try {
+			List<ReadableMaterial> materials = erpFacade.getMaterials();
+			return CommonResultDTO.ofSuccess(materials);
+		}catch(Exception e){
+			LOGGER.error("getMaterials error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(),
+					ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
 

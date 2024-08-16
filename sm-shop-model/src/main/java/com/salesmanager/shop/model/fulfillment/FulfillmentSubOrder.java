@@ -1,17 +1,16 @@
 package com.salesmanager.shop.model.fulfillment;
 
-import com.salesmanager.core.enmus.AdditionalServiceEnums;
-import com.salesmanager.core.enmus.TruckModelEnums;
-import com.salesmanager.core.enmus.TruckTypeEnums;
-import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.enmus.*;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
 
+import javax.persistence.Column;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Data
 public class FulfillmentSubOrder {
-
-    private static final long serialVersionUID = 1L;
 
     private Long id;
 
@@ -20,16 +19,16 @@ public class FulfillmentSubOrder {
      */
     private Long orderId;
 
-    /**
-     * 履约主单id
-     */
-    private Long fulfillmentMainOrderId;
 
+    /**
+     * 交易单商品id
+     */
+    private Long orderProductId;
 
     /**
      * 国内运输还是国外运输
      */
-    private ShippingType shippingType;
+    private String shippingType;
 
     /**
      * 国际运输方式
@@ -50,6 +49,27 @@ public class FulfillmentSubOrder {
     private String shippingTransportationType;
 
 
+    /**
+     * 国内司机名字
+     */
+    private String nationalDriverName;
+
+
+    /**
+     * 国内司机电话
+     */
+    private String nationalDriverPhone;
+
+    /**
+     * 物流公司
+     */
+    private String nationalLogisticsCompany;
+
+
+    /**
+     * 发货时间
+     */
+    private Date nationalShippingTime;
 
     /**
      * 货车型号
@@ -64,13 +84,20 @@ public class FulfillmentSubOrder {
      */
     private String truckType;
 
-    /**
-     * 报关单号
-     */
-    private String customsDeclarationNumber;
 
     /**
-     * 物流单号
+     * 1688单号
+     */
+    private String logisticsNumberBy1688;
+
+
+    /**
+     * 运输信息
+     */
+    private String  transportInformation;
+
+    /**
+     * 韩国境内快递单号
      */
     private String logisticsNumber;
 
@@ -79,15 +106,6 @@ public class FulfillmentSubOrder {
      */
     private String crossBorderTransportationLogisticsNumber;
 
-    /**
-     * 运输信息
-     */
-    private String  transportInformation;
-
-    /**
-     * 送货单
-     */
-    private String  deliveryOrder;
 
 
     /**
@@ -101,12 +119,42 @@ public class FulfillmentSubOrder {
      */
     private String fulfillmentSubTypeEnums;
 
-
     /**
      * 增值服务Id list列表用逗号分隔
      * @see AdditionalServiceEnums
      */
-    private String additionalServicesIds;
+    private List<String> additionalServicesIds;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FulfillmentSubOrder that = (FulfillmentSubOrder) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(orderId, that.orderId) &&
+                Objects.equals(orderProductId, that.orderProductId) &&
+                Objects.equals(shippingType, that.shippingType) &&
+                Objects.equals(internationalTransportationMethod, that.internationalTransportationMethod) &&
+                Objects.equals(nationalTransportationMethod, that.nationalTransportationMethod) &&
+                Objects.equals(shippingTransportationType, that.shippingTransportationType) &&
+                Objects.equals(truckModel, that.truckModel) &&
+                Objects.equals(truckType, that.truckType) &&
+                Objects.equals(logisticsNumber, that.logisticsNumber) &&
+                Objects.equals(crossBorderTransportationLogisticsNumber, that.crossBorderTransportationLogisticsNumber) &&
+                Objects.equals(transportInformation, that.transportInformation) &&
+                Objects.equals(fulfillmentMainType, that.fulfillmentMainType) &&
+                Objects.equals(fulfillmentSubTypeEnums, that.fulfillmentSubTypeEnums) &&
+                Objects.equals(additionalServicesIds, that.additionalServicesIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderId, orderProductId, shippingType, internationalTransportationMethod,
+                nationalTransportationMethod, shippingTransportationType, truckModel, truckType,
+                 logisticsNumber, crossBorderTransportationLogisticsNumber,
+                transportInformation, fulfillmentMainType, fulfillmentSubTypeEnums,
+                additionalServicesIds);
+    }
 
 }

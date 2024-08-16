@@ -43,13 +43,6 @@ public class InvoicePackingForm {
     private String vessel;
 
 
-    private Set<InvoicePackingFormDetail> invoicePackingFormDetails = new HashSet<>();
-
-    /**
-     * 履约子单号
-     */
-    private List<FulfillmentSubOrder> fulfillmentSubOrders;
-
     /**
      * 交易单id
      */

@@ -2,8 +2,16 @@ package com.salesmanager.core.model.order;
 
 import com.salesmanager.core.model.common.Criteria;
 
+import java.util.Date;
+
 public class OrderCriteria extends Criteria {
-	
+
+	private String shippingStatus;
+
+	private Long startTime;
+
+	private Long endTime;
+
 	private String customerName = null;
 	private String customerPhone = null;
 	private String status = null;
@@ -55,9 +63,28 @@ public class OrderCriteria extends Criteria {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-   
-	
-	
-	
 
+	public String getShippingStatus() {
+		return shippingStatus;
+	}
+
+	public void setShippingStatus(String shippingStatus) {
+		this.shippingStatus = shippingStatus;
+	}
+
+	public Long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Long startTime) {
+		this.startTime = startTime;
+	}
+
+	public Long getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Long endTime) {
+		this.endTime = endTime;
+	}
 }

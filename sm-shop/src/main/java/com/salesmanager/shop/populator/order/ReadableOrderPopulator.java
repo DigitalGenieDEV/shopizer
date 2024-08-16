@@ -1,11 +1,28 @@
 package com.salesmanager.shop.populator.order;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
-
+import com.salesmanager.core.business.fulfillment.service.FulfillmentMainOrderService;
+import com.salesmanager.core.business.fulfillment.service.FulfillmentSubOrderService;
+import com.salesmanager.core.business.fulfillment.service.GeneralDocumentService;
+import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.model.fulfillment.*;
+import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
+import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
+import com.salesmanager.core.model.fulfillment.GeneralDocument;
+import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
+import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
+import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.model.fulfillment.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,19 +62,61 @@ public class ReadableOrderPopulator extends
 	@Autowired
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
+	@Autowired
+	private FulfillmentSubOrderService fulfillmentSubOrderService;
+
+	@Autowired
+	private GeneralDocumentService generalDocumentService;
+
+	@Autowired
+	private InvoicePackingFormService invoicePackingFormService;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderPopulator.class);
 
 	@Override
 	public ReadableOrder populate(Order source, ReadableOrder target,
 			MerchantStore store, Language language) throws ConversionException {
-		
-		
 		
 		target.setId(source.getId());
 		target.setDatePurchased(source.getDatePurchased());
 		target.setOrderStatus(source.getStatus());
 		target.setCurrency(source.getCurrency().getCode());
 		//target.setCurrencyModel(source.getCurrency());
-		
+
+		if (source.getFulfillmentMainOrder() != null) {
+			FulfillmentMainOrder fulfillmentMainOrder = source.getFulfillmentMainOrder();
+
+			ReadableFulfillmentMainOrder readableFulfillmentMainOrder = ObjectConvert.convert(fulfillmentMainOrder, ReadableFulfillmentMainOrder.class);
+
+			List<FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(source.getId());
+
+			if (fulfillmentSubOrders != null) {
+				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.stream()
+						.map(this::convertToReadableFulfillmentSubOrder)
+						.filter(Objects::nonNull)
+						.collect(Collectors.toSet());
+
+				readableFulfillmentMainOrder.setFulfillSubOrders(collect);
+			}
+
+			List<GeneralDocument> generalDocuments = generalDocumentService.queryGeneralDocumentByOrderId(source.getId());
+
+			if (CollectionUtils.isNotEmpty(generalDocuments)) {
+				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.stream()
+						.map(generalDocument -> {
+							ReadableGeneralDocument readableGeneralDocument = ObjectConvert.convert(generalDocument, ReadableGeneralDocument.class);
+							readableGeneralDocument.setDocumentType(generalDocument.getDocumentType()==null? null : generalDocument.getDocumentType().name());
+							return readableGeneralDocument;
+						})
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+				readableFulfillmentMainOrder.setGeneralDocuments(readableGeneralDocuments);
+			}
+
+			target.setFulfillmentMainOrder(readableFulfillmentMainOrder);
+		}
+
+
 		target.setPaymentType(source.getPaymentType());
 		target.setPaymentModule(source.getPaymentModuleCode());
 		target.setShippingModule(source.getShippingModuleCode());
@@ -71,8 +130,7 @@ public class ReadableOrderPopulator extends
 			readableMerchantStorePopulator.populate(source.getMerchant(), null, store, source.getMerchant().getDefaultLanguage());
 			target.setStore(readableStore);
 		}
-		
-		
+
 		if(source.getCustomerAgreement()!=null) {
 			target.setCustomerAgreed(source.getCustomerAgreement());
 		}
@@ -82,7 +140,6 @@ public class ReadableOrderPopulator extends
 		
 		com.salesmanager.shop.model.order.total.OrderTotal taxTotal = null;
 		com.salesmanager.shop.model.order.total.OrderTotal shippingTotal = null;
-		
 		
 		if(source.getBilling()!=null) {
 			ReadableBilling address = new ReadableBilling();
@@ -209,5 +266,56 @@ public class ReadableOrderPopulator extends
 
 		return null;
 	}
+
+
+	private ReadableFulfillmentSubOrder convertToReadableFulfillmentSubOrder(FulfillmentSubOrder fulfillmentSubOrder) {
+		if (fulfillmentSubOrder == null) {
+			return null;
+		}
+
+		ReadableFulfillmentSubOrder readableFulfillmentSubOrder = new ReadableFulfillmentSubOrder();
+		try {
+			readableFulfillmentSubOrder.setLogisticsNumberBy1688(fulfillmentSubOrder.getLogisticsNumberBy1688());
+			readableFulfillmentSubOrder.setLogisticsNumber(fulfillmentSubOrder.getLogisticsNumber());
+			readableFulfillmentSubOrder.setNationalLogisticsCompany(fulfillmentSubOrder.getNationalLogisticsCompany());
+			readableFulfillmentSubOrder.setNationalShippingTime(fulfillmentSubOrder.getNationalShippingTime());
+			readableFulfillmentSubOrder.setNationalDriverName(fulfillmentSubOrder.getNationalDriverName());
+			readableFulfillmentSubOrder.setNationalDriverPhone(fulfillmentSubOrder.getNationalDriverPhone());
+
+			readableFulfillmentSubOrder.setId(fulfillmentSubOrder.getId());
+
+			if (fulfillmentSubOrder.getFulfillmentMainType() != null) {
+				readableFulfillmentSubOrder.setFulfillmentMainType(fulfillmentSubOrder.getFulfillmentMainType().name());
+			}
+
+			if (fulfillmentSubOrder.getFulfillmentSubTypeEnums() != null) {
+				readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
+			}
+
+			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesIds())){
+				String[] split = fulfillmentSubOrder.getAdditionalServicesIds().split(",");
+				readableFulfillmentSubOrder.setAdditionalServicesIds(List.of(split));
+			}
+
+			if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
+				readableFulfillmentSubOrder.setInternationalTransportationMethod(fulfillmentSubOrder.getInternationalTransportationMethod().name());
+			}
+
+			if (fulfillmentSubOrder.getNationalTransportationMethod() != null) {
+				readableFulfillmentSubOrder.setNationalTransportationMethod(fulfillmentSubOrder.getNationalTransportationMethod().name());
+			}
+
+			if (fulfillmentSubOrder.getShippingType() != null) {
+				readableFulfillmentSubOrder.setShippingType(fulfillmentSubOrder.getShippingType().name());
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("convertToReadableFulfillmentSubOrder error", e);
+			return null;
+		}
+
+		return readableFulfillmentSubOrder;
+	}
+
 
 }

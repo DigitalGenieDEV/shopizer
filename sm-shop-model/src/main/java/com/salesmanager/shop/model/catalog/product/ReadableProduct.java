@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
@@ -59,6 +60,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private List<ReadableProductProperty> properties = new ArrayList<ReadableProductProperty>();
 	private List<ReadableCategory> categories = new ArrayList<ReadableCategory>();
 	private ReadableProductType type;
+
+	private List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials = new ArrayList<>();
 
 
 	private ReadableProductAnnouncement  productAnnouncement = new ReadableProductAnnouncement();
@@ -260,5 +263,13 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setSellerProductShippingTextInfo(SellerProductShippingTextInfo sellerProductShippingTextInfo) {
 		this.sellerProductShippingTextInfo = sellerProductShippingTextInfo;
+	}
+
+	public List<com.salesmanager.shop.model.catalog.ProductMaterial> getProductMaterials() {
+		return productMaterials;
+	}
+
+	public void setProductMaterials(List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials) {
+		this.productMaterials = productMaterials;
 	}
 }

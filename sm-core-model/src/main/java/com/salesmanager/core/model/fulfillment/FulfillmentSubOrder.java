@@ -3,16 +3,19 @@ package com.salesmanager.core.model.fulfillment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.*;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
+import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.reference.zone.Zone;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,12 +44,12 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     @Column(name = "ORDER_ID")
     private Long orderId;
 
-    /**
-     * 履约主单id
-     */
-    @Column(name = "FULFILLMENT_MAIN_ORDER_ID")
-    private Long fulfillmentMainOrderId;
 
+    /**
+     * 交易单商品id
+     */
+    @Column(name = "ORDER_PRODUCT_ID")
+    private Long orderProductId;
 
     /**
      * 国内运输还是国外运输
@@ -100,10 +103,10 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
 
 
     /**
-     * 报关单号
+     * 1688物流单号
      */
-    @Column(name = "CUSTOMS_DECLARATION_NUMBER")
-    private String customsDeclarationNumber;
+    @Column(name = "LOGISTICS_NUMBER_1688")
+    private String logisticsNumberBy1688;
 
     /**
      * 物流单号
@@ -111,17 +114,41 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     @Column(name = "LOGISTICS_NUMBER")
     private String logisticsNumber;
 
+
     /**
-     * 跨境运输单号
+     * 物流公司
      */
-    @Column(name = "CROSS_BORDER_TRANSPORTATION_LOGISTICS_NUMBER")
-    private String crossBorderTransportationLogisticsNumber;
+    @Column(name = "NATIONAL_LOGISTICS_COMPANY")
+    private String nationalLogisticsCompany;
+
+
+    /**
+     * 发货时间
+     */
+    @Column(name = "NATIONAL_SHIPPING_TIME")
+    private Date nationalShippingTime;
 
     /**
      * 运输信息
      */
     @Column(name = "TRANSPORT_INFORMATION")
     private String  transportInformation;
+
+
+    @Column(name = "NATIONAL_DRIVER_NAME")
+    private String nationalDriverName;
+
+
+    @Column(name = "NATIONAL_DRIVER_PHONE")
+    private String nationalDriverPhone;
+
+    /**
+     * 跨境运输单号
+     */
+    @Column(name = "CROSS_BORDER_TRANSPORTATION_LOGISTICS_NUMBER")
+    private String crossBorderTransportationLogisticsNumber;
+
+
 
     /**
      * 送货单
@@ -154,15 +181,11 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     private String additionalServicesIds;
 
 
-    @JsonIgnore
-    @ManyToOne(targetEntity = GeneralDocument.class)
-    @JoinColumn(name = "GENERAL_DOCUMENT_ID", nullable = true)
-    private GeneralDocument generalDocument;
 
     @JsonIgnore
-    @ManyToOne(targetEntity = InvoicePackingForm.class)
-    @JoinColumn(name = "INVOICE_PACKING_FORM_ID", nullable = true)
-    private InvoicePackingForm invoicePackingForm;
+    @ManyToOne(targetEntity = FulfillmentMainOrder.class)
+    @JoinColumn(name = "FULFILLMENT_MAIN_ORDER_ID", nullable = false)
+    private FulfillmentMainOrder fulfillmentMainOrder;
 
 
     @Embedded

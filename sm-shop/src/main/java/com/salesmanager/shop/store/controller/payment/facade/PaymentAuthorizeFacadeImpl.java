@@ -85,7 +85,7 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PROCESSED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         //查询该笔订单下所有商家订单
         List<Order> orders = customerOrder.getOrders();

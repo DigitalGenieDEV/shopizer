@@ -14,6 +14,10 @@ public class ProductVariant extends Product {
 	/** use product id or sku **/
 	private Long productId;
 	private String sku;
+
+
+	private String alias;
+
 	/** **/
 	private boolean available;
 	private String dateAvailable;
@@ -62,6 +66,14 @@ public class ProductVariant extends Product {
 	}
 	public void setSortOrder(int sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public String getSpecId() {

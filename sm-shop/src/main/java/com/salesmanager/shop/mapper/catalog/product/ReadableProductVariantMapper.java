@@ -70,6 +70,7 @@ public class ReadableProductVariantMapper  {
 		destination.setSortOrder(source.getSortOrder());
 		destination.setCode(source.getCode());
 		destination.setSpecId(source.getSpecId());
+		destination.setAlias(source.getAlias());
 		//get product
 		Product baseProduct = source.getProduct();
 		if(baseProduct == null) {

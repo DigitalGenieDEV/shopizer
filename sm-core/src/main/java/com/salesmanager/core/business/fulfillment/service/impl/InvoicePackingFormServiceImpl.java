@@ -29,8 +29,8 @@ public class InvoicePackingFormServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId) {
-        return invoicePackingFormRepository.queryInvoicePackingFormByOrderId(orderId);
+    public InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId) {
+        return invoicePackingFormRepository.queryInvoicePackingFormByOrderIdAndProductId(orderId, productId);
     }
 }
 

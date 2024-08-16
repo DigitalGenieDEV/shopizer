@@ -7,6 +7,7 @@ import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service("generalDocumentService")
 public class GeneralDocumentServiceImpl extends SalesManagerEntityServiceImpl<Long, GeneralDocument> implements GeneralDocumentService {
@@ -27,8 +28,13 @@ public class GeneralDocumentServiceImpl extends SalesManagerEntityServiceImpl<Lo
     }
 
     @Override
-    public GeneralDocument queryGeneralDocumentByOrderId(Long orderId, String documentType) {
-        return generalDocumentRepository.queryGeneralDocumentByOrderId(orderId, DocumentTypeEnums.valueOf(documentType));
+    public GeneralDocument queryGeneralDocumentByOrderIdAndType(Long orderId, String documentType) {
+        return generalDocumentRepository.queryGeneralDocumentByOrderIdAndType(orderId, DocumentTypeEnums.valueOf(documentType));
     }
+
+    public List<GeneralDocument> queryGeneralDocumentByOrderId(Long orderId) {
+        return generalDocumentRepository.queryGeneralDocumentByOrderId(orderId);
+    }
+
 }
 

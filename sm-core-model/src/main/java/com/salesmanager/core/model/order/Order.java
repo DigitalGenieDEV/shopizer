@@ -6,25 +6,12 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.Valid;
 
 import com.salesmanager.core.model.customer.order.CustomerOrder;
+import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
+import com.salesmanager.core.model.reference.zone.Zone;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
@@ -117,6 +104,10 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	@Column(name = "CONFIRMED_ADDRESS")
 	private Boolean confirmedAddress = false;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="FULFILLMENT_MAIN_ORDER_ID", nullable=true)
+	private FulfillmentMainOrder fulfillmentMainOrder;
+
 	@Embedded
 	private Delivery delivery = null;
 	
@@ -127,6 +118,7 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	@Embedded
 	@Deprecated
 	private CreditCard creditCard = null;
+
 
 
 	@ManyToOne(targetEntity = Currency.class)
@@ -407,4 +399,12 @@ public class Order extends SalesManagerEntity<Long, Order> {
 		this.shoppingCartCode = shoppingCartCode;
 	}
 
+
+	public FulfillmentMainOrder getFulfillmentMainOrder() {
+		return fulfillmentMainOrder;
+	}
+
+	public void setFulfillmentMainOrder(FulfillmentMainOrder fulfillmentMainOrder) {
+		this.fulfillmentMainOrder = fulfillmentMainOrder;
+	}
 }

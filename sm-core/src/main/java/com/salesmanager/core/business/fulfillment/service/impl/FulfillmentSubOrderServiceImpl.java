@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service("fulfillmentSubOrderService")
 public class FulfillmentSubOrderServiceImpl extends SalesManagerEntityServiceImpl<Long, FulfillmentSubOrder> implements FulfillmentSubOrderService {
@@ -31,6 +32,17 @@ public class FulfillmentSubOrderServiceImpl extends SalesManagerEntityServiceImp
     @Transactional
     public void updateFulfillmentMainOrder(FulfillmentSubOrder fulfillmentSubOrder) {
         fulfillmentSubOrderRepository.save(fulfillmentSubOrder);
+    }
+
+    @Override
+    public List<FulfillmentSubOrder> queryFulfillmentSubOrderListByOrderId(Long orderId) {
+        return fulfillmentSubOrderRepository.queryFulfillmentSubOrderListByOrderId(orderId);
+    }
+
+
+    @Override
+    public FulfillmentSubOrder queryFulfillmentSubOrderByProductOrderId(Long productOrderId) {
+        return fulfillmentSubOrderRepository.queryFulfillmentSubOrderByProductOrderId(productOrderId);
     }
 
 }

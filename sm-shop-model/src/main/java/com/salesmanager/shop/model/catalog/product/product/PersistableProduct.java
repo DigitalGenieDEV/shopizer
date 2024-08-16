@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
+import com.salesmanager.shop.model.catalog.ProductMaterial;
 import com.salesmanager.shop.model.catalog.category.Category;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
 import com.salesmanager.shop.model.catalog.product.ProductDescription;
@@ -45,6 +46,8 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 	private PersistableProductInventory inventory;
 
 	private List<PersistableProductVariant> variants = new ArrayList<PersistableProductVariant>();
+
+	private List<ProductMaterial> productMaterials;
 
 	private String type;
 

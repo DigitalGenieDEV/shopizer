@@ -112,6 +112,7 @@ public class PersistableProductVariantMapper  {
 		destination.setAvailable(source.isAvailable());
 		destination.setDefaultSelection(source.isDefaultSelection());
 		destination.setSku(source.getSku());
+		destination.setAlias(source.getAlias());
 		destination.setSpecId(source.getSpecId());
 		if (StringUtils.isBlank(source.getDateAvailable())) {
 			source.setDateAvailable(DateUtil.formatDate(new Date()));

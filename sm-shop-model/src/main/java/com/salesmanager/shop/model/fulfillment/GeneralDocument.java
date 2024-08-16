@@ -25,11 +25,6 @@ public class GeneralDocument  {
 
     private String documentUrl;
 
-    /**
-     * 履约子单号
-     */
-    private List<FulfillmentSubOrder> fulfillSubOrders;
-
 
     private Long orderId;
 

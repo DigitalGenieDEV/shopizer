@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.api.v1.order;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +14,9 @@ import javax.validation.Valid;
 
 import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
@@ -220,37 +224,55 @@ public class OrderApi {
 	@RequestMapping(value = { "/private/orders" }, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public ReadableOrderList list(
+	public CommonResultDTO<ReadableOrderList> list(
 			@RequestParam(value = "count", required = false, defaultValue = DEFAULT_ORDER_LIST_COUNT) Integer count,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "status", required = false) String status,
-			@RequestParam(value = "phone", required = false) String phone,
-			@RequestParam(value = "email", required = false) String email,
-			@ApiIgnore MerchantStore merchantStore,
+			@RequestParam(value = "orderStatus", required = false) String orderStatus,
+			@RequestParam(value = "shippingStatus", required = false) String shippingStatus,
+			@RequestParam(value = "startTime", required = false) Long startTime,
+			@RequestParam(value = "endTime", required = false) Long endTime,
+			@RequestParam(value = "queryType", required = false) String queryType,
+			@RequestParam(value = "queryValue", required = false) String queryValue,
 			@ApiIgnore Language language) {
 
 		OrderCriteria orderCriteria = new OrderCriteria();
 		orderCriteria.setPageSize(count);
 		orderCriteria.setStartPage(page);
 
-		orderCriteria.setCustomerName(name);
-		orderCriteria.setCustomerPhone(phone);
-		orderCriteria.setStatus(status);
-		orderCriteria.setEmail(email);
-		orderCriteria.setId(id);
+		if (queryType.equals("ID")){
+			orderCriteria.setId(Long.valueOf(queryValue));
+		}
+		if (queryType.equals("NAME")){
+			orderCriteria.setCustomerName(queryValue);
+		}
+		if (queryType.equals("PHONE")){
+			orderCriteria.setCustomerPhone(queryValue);
+		}
+		if (queryType.equals("PAYMENT_METHOD")){
+			orderCriteria.setPaymentMethod(queryValue);
+		}
+		if (queryType.equals("EMAIL")){
+			orderCriteria.setEmail(queryValue);
+		}
+		if (queryType.equals("HS_CODE")){
 
+		}
+		if (queryType.equals("STORE_CODE")){
 
-		String user = authorizationUtils.authenticatedUser();
-		authorizationUtils.authorizeUser(user, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_ORDER, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()), merchantStore);
+		}
+		orderCriteria.setStatus(orderStatus);
+		orderCriteria.setStartTime(startTime);
+		orderCriteria.setEndTime(endTime);
+		orderCriteria.setShippingStatus(shippingStatus);
 
-		ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, merchantStore);
+		try {
+			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, null);
+			return CommonResultDTO.ofSuccess(orders);
+		}catch (Exception e){
+			LOGGER.error("admin query order list error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 
-
-		return orders;
-
+		}
 	}
 
 	/**
@@ -263,21 +285,19 @@ public class OrderApi {
 	@RequestMapping(value = { "/private/orders/{id}" }, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+	@ApiImplicitParams({
 			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public ReadableOrder get(
+	public CommonResultDTO<ReadableOrder> get(
 			@PathVariable final Long id,
-			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) {
+		try {
+			ReadableOrder order = orderFacade.getReadableOrder(id, null, language);
+			return CommonResultDTO.ofSuccess(order);
+		}catch (Exception e){
+			LOGGER.error("updateAdminOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 
-		String user = authorizationUtils.authenticatedUser();
-		authorizationUtils.authorizeUser(user, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_ORDER, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()), merchantStore);
-
-
-		ReadableOrder order = orderFacade.getReadableOrder(id, merchantStore, language);
-
-		return order;
+		}
 	}
 
 	/**
@@ -491,30 +511,128 @@ public class OrderApi {
 		return;
 	}
 
+
 	@RequestMapping(value = { "/private/orders/{id}/status" }, method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public void updateOrderStatus(
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
+	public CommonResultDTO<Void> updateOrderStatus(
 			@PathVariable final Long id,
 			@Valid @RequestBody String status,
-			@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language) {
-
-		String user = authorizationUtils.authenticatedUser();
-		authorizationUtils.authorizeUser(user, Stream.of(Constants.GROUP_SUPERADMIN, Constants.GROUP_ADMIN,
-				Constants.GROUP_ADMIN_ORDER, Constants.GROUP_ADMIN_RETAIL).collect(Collectors.toList()), merchantStore);
-
-		Order order = orderService.getOrder(id, merchantStore);
-		if (order == null) {
-			throw new GenericRuntimeException("412", "Order not found [" + id + "]");
+			@ApiIgnore MerchantStore merchantStore) {
+		try {
+			Order order = orderService.getOrder(id, merchantStore);
+			if (order == null) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
+			}
+			OrderStatus statusEnum = OrderStatus.valueOf(status);
+			orderFacade.updateOrderStatus(order, statusEnum, merchantStore);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("updateAdminOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
-
-		OrderStatus statusEnum = OrderStatus.valueOf(status);
-
-		orderFacade.updateOrderStatus(order, statusEnum, merchantStore);
-		return;
 	}
+
+
+	@RequestMapping(value = { "/auth/orders/{id}/status" }, method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> updateSellerOrderStatus(
+			@PathVariable final Long id,
+			@Valid @RequestBody String status, HttpServletRequest request) {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			Order order = orderService.getOrder(id, customer.getMerchantStore());
+			if (order == null) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
+			}
+			OrderStatus statusEnum = OrderStatus.valueOf(status);
+			orderFacade.updateOrderStatus(order, statusEnum, customer.getMerchantStore());
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+
+	@RequestMapping(value = { "/auth/order/products/{id}" }, method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> queryOrderProductsByOrderId(
+			@PathVariable final Long id, HttpServletRequest request,
+			@ApiIgnore Language language) {
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+			Customer customer = customerService.getByNick(userName);
+			Order order = orderService.getOrder(id, customer.getMerchantStore());
+			if (order == null) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
+			}
+			orderFacade.queryOrderProductsByOrderId(id, language);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+
+
+	@RequestMapping(value = { "/auth/order/details/{id}" }, method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+	public CommonResultDTO<ReadableOrder> getSellerOrderDetails(
+			@PathVariable final Long id,
+			@ApiIgnore Language language,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+		try {
+			Principal principal = request.getUserPrincipal();
+			String userName = principal.getName();
+
+			Customer customer = customerService.getByNick(userName);
+
+			if (customer == null) {
+				response.sendError(401, "Error while performing checkout customer not authorized");
+				return null;
+			}
+			ReadableOrder readableOrder = orderFacade.getReadableOrder(id, customer.getMerchantStore(), language);
+			return CommonResultDTO.ofSuccess(readableOrder);
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+
+	@RequestMapping(value = { "/private/order/details/{id}" }, method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+	public CommonResultDTO<ReadableOrder> getAdminOrderDetails(
+			@PathVariable final Long id,
+			@ApiIgnore Language language,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			ReadableOrder readableOrder = orderFacade.getReadableOrder(id, null, language);
+			return CommonResultDTO.ofSuccess(readableOrder);
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
 }

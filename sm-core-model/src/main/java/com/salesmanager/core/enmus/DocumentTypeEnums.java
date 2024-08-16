@@ -23,6 +23,10 @@ public enum DocumentTypeEnums {
     /**
      * 报关费用结算单
      */
-    DECLARATION_FEE_SETTLEMENT;
+    DECLARATION_FEE_SETTLEMENT,
+
+
+
+    ;
 
 }

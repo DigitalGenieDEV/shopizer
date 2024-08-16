@@ -5,22 +5,16 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.fulfillment.service.FulfillmentHistoryService;
+import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
+import com.salesmanager.core.model.fulfillment.FulfillmentHistory;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
@@ -115,10 +109,15 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderFacadeImpl.class);
 
+	@Autowired
+	private OrderProductService orderProductService;
+
 	@Inject
 	private OrderService orderService;
 	@Inject
 	private ProductService productService;
+	@Inject
+	private InvoicePackingFormService invoicePackingFormService;
 	@Inject
 	private ProductAttributeService productAttributeService;
 	@Inject
@@ -165,6 +164,9 @@ public class OrderFacadeImpl implements OrderFacade {
 	
 	@Autowired
 	private ProductPriceUtils productPriceUtils;
+
+	@Autowired
+	private FulfillmentHistoryService fulfillmentHistoryService;
 
 	@Inject
 	@Qualifier("img")
@@ -963,10 +965,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
 				readableOrderPopulator.populate(order, readableOrder, null, null);
 				readableOrders.add(readableOrder);
-
 			}
 			returnList.setOrders(readableOrders);
-
 			returnList.setRecordsTotal(orderList.getTotalCount());
 			returnList.setTotalPages(orderList.getTotalPages());
 			returnList.setNumber(orderList.getOrders().size());
@@ -1146,17 +1146,17 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Override
 	public com.salesmanager.shop.model.order.v0.ReadableOrder getReadableOrder(Long orderId, MerchantStore store,
 			Language language) {
-		Validate.notNull(store, "MerchantStore cannot be null");
 		Order modelOrder = orderService.getOrder(orderId, store);
 		if (modelOrder == null) {
 			throw new ResourceNotFoundException("Order not found with id " + orderId);
 		}
 
 		com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
-
+		MerchantStore merchant = modelOrder.getMerchant();
 		Long customerId = modelOrder.getCustomerId();
 		if (customerId != null) {
-			ReadableCustomer readableCustomer = customerFacade.getCustomerById(customerId, store, language);
+			ReadableCustomer readableCustomer = customerFacade.getCustomerById(customerId,
+					store == null? merchant : store, language);
 			if (readableCustomer == null) {
 				LOGGER.warn("Customer id " + customerId + " not found in order " + orderId);
 			} else {
@@ -1719,10 +1719,42 @@ public class OrderFacadeImpl implements OrderFacade {
 		history.setDateAdded(new Date() );
 
 		try {
+			orderService.updateOrderStatus(order.getId(), newStatus);
 			orderService.addOrderStatusHistory(order, history);
+
+			Set<OrderProduct> orderProducts = order.getOrderProducts();
+			orderProducts.forEach(orderProduct -> {
+				fulfillmentHistoryService.saveFulfillmentHistory(order.getId(),
+						orderProduct.getProductId(), newStatus.name(), oldStatus.name() );
+			});
+
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public List<ReadableOrderProduct> queryOrderProductsByOrderId(Long orderId, Language language) {
+		List<OrderProduct> orderProducts = orderProductService.getOrderProducts(orderId);
+
+		orderProducts.stream().map(orderProduct -> {
+			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
+			orderProductPopulator.setProductService(productService);
+			orderProductPopulator.setPricingService(pricingService);
+			orderProductPopulator.setimageUtils(imageUtils);
+			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
+
+			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
+			try {
+				orderProductPopulator.populate(orderProduct, readableOrderProduct, null, language);
+			} catch (ConversionException e) {
+				return null;
+			}
+			return readableOrderProduct;
+		}).filter(Objects::nonNull).collect(Collectors.toList());
+
+
+		return null;
 	}
 }

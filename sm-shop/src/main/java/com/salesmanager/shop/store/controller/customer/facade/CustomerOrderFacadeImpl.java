@@ -419,7 +419,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PROCESSED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -434,7 +434,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PROCESSED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
