@@ -165,13 +165,14 @@ public class CategoryApi {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
+			@RequestParam(value = "type", required = false, defaultValue = "USER") String type
 	) {
 
 		ListCriteria criteria = new ListCriteria();
 		criteria.setName(name);
 		return categoryFacade
-				.getCategoryHierarchy(merchantStore, criteria, DEFAULT_CATEGORY_DEPTH, language, filter, page, count, "USER");
+				.getCategoryHierarchy(merchantStore, criteria, DEFAULT_CATEGORY_DEPTH, language, filter, page, count, type);
 	}
 
 	@GetMapping(value = "/category/product/{ProductId}", produces = { APPLICATION_JSON_VALUE })
