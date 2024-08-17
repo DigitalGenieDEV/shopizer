@@ -139,6 +139,8 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
 					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
+					System.out.println("keyword.getCategoryId1688()"+keyword.getCategoryId1688());
+					System.out.println("alibabaProductSearchKeywordQueryParam.setCategoryId()"+alibabaProductSearchKeywordQueryParam.getCategoryId());
 					ReadableProductPageInfo searchData = alibabaProductFacade
 							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
 					totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
