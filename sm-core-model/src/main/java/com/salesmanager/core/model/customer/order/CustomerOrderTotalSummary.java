@@ -13,6 +13,18 @@ public class CustomerOrderTotalSummary implements Serializable  {
     private BigDecimal total = new BigDecimal(0);//final price
     private BigDecimal taxTotal = new BigDecimal(0);//total of taxes
 
+    //手续费
+    private BigDecimal productHandlingFeePriceTotal = new BigDecimal(0);//total of taxes
+    //运费
+    private BigDecimal shippingPriceTotal = new BigDecimal(0);//total of taxes
+
+    //增值服务费
+    private BigDecimal additionalServicesPriceTotal = new BigDecimal(0);//total of taxes
+
+    //erp费用
+    private BigDecimal erpPriceTotal = new BigDecimal(0);//total of taxes
+
+
     public BigDecimal getSubTotal() {
         return subTotal;
     }
@@ -47,5 +59,37 @@ public class CustomerOrderTotalSummary implements Serializable  {
 
     public void addTaxTotal(BigDecimal taxTotal) {
         this.taxTotal = this.taxTotal.add(taxTotal);
+    }
+
+    public BigDecimal getProductHandlingFeePriceTotal() {
+        return productHandlingFeePriceTotal;
+    }
+
+    public void setProductHandlingFeePriceTotal(BigDecimal productHandlingFeePriceTotal) {
+        this.productHandlingFeePriceTotal = productHandlingFeePriceTotal;
+    }
+
+    public BigDecimal getShippingPriceTotal() {
+        return shippingPriceTotal;
+    }
+
+    public void setShippingPriceTotal(BigDecimal shippingPriceTotal) {
+        this.shippingPriceTotal = shippingPriceTotal;
+    }
+
+    public BigDecimal getAdditionalServicesPriceTotal() {
+        return additionalServicesPriceTotal;
+    }
+
+    public void setAdditionalServicesPriceTotal(BigDecimal additionalServicesPriceTotal) {
+        this.additionalServicesPriceTotal = additionalServicesPriceTotal;
+    }
+
+    public BigDecimal getErpPriceTotal() {
+        return erpPriceTotal;
+    }
+
+    public void setErpPriceTotal(BigDecimal erpPriceTotal) {
+        this.erpPriceTotal = erpPriceTotal;
     }
 }

@@ -234,8 +234,10 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
 	private Set<ProductFeature> features = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY,  mappedBy = "product")
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
 	private Set<ProductMaterial> productMaterialList =  new HashSet<>();
+
 
 	@Column(name="PRODUCT_STATUS", nullable = true)
 	@Enumerated(value = EnumType.STRING)

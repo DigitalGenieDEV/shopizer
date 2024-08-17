@@ -6,12 +6,14 @@ import java.util.List;
 
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
+import lombok.Data;
 
 /**
  * Compatible with v1 + v2
  * @author c.samson
  *
  */
+@Data
 public class ReadableShoppingCart extends ShoppingCartEntity {
 
 	/**
@@ -21,6 +23,30 @@ public class ReadableShoppingCart extends ShoppingCartEntity {
 	
 	private String code;
 	private BigDecimal subtotal;
+
+
+	//手续费
+	private BigDecimal productHandlingFeePriceTotal ;//total of taxes
+	//运费
+	private BigDecimal shippingPriceTotal ;//total of taxes
+
+	//增值服务费
+	private BigDecimal additionalServicesPriceTotal ;//total of taxes
+
+	//erp费用
+	private BigDecimal erpPriceTotal ;//total of taxes
+
+
+	//手续费
+	private String displayProductHandlingFeePriceTotal ;
+	//运费
+	private String displayShippingPriceTotal ;
+
+	//增值服务费
+	private String displayAdditionalServicesPriceTotal ;
+
+	//erp费用
+	private String displayErpPriceTotal ;
 
 
 	private String displaySubTotal;

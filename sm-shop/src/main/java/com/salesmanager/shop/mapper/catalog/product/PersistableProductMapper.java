@@ -295,20 +295,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setVariants(variants);
 			}
 
-			if(!CollectionUtils.isEmpty(source.getProductMaterials())) {
-				Set<ProductMaterial> collect = source.getProductMaterials().stream().map(productMaterial -> {
-					ProductMaterial pm = new ProductMaterial();
-					Long materialId = productMaterial.getMaterialId();
-					if (materialId == null) {
-						return null;
-					}
-					pm.setMaterial(erpService.getById(materialId));
-					pm.setWeight(productMaterial.getWeight());
-					pm.setProduct(destination);
-					return pm;
-				}).filter(Objects::nonNull).collect(Collectors.toSet());
-				destination.setProductMaterialList(collect);
-			}
+
 			/**
 			 * Default inventory
 			 */

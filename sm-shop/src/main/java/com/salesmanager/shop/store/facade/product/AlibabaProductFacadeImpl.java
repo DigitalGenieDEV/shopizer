@@ -33,6 +33,7 @@ import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.catalog.ProductMaterial;
 import com.salesmanager.shop.model.catalog.category.CategoryDescription;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
 import com.salesmanager.shop.model.catalog.product.PersistableProductPrice;
@@ -328,12 +329,12 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         persistableAnnouncement.setProductId(productId);
 
 
-        PersistableAnnouncement.AnnouncementField annotationField = new PersistableAnnouncement.AnnouncementField();
-        annotationField.setComment("3333");
-        annotationField.setField("222");
-        annotationField.setValue("1111");
-        persistableAnnouncement.setAnnouncementFields(Lists.newArrayList(annotationField));
-        persistableProduct.setAnnouncement(persistableAnnouncement);
+//        PersistableAnnouncement.AnnouncementField annotationField = new PersistableAnnouncement.AnnouncementField();
+//        annotationField.setComment("3333");
+//        annotationField.setField("222");
+//        annotationField.setValue("1111");
+//        persistableAnnouncement.setAnnouncementFields(Lists.newArrayList(annotationField));
+//        persistableProduct.setAnnouncement(persistableAnnouncement);
 //        persistableAnnouncement.setAnnouncementFields();
 //        persistableProduct.setAnnouncementAttributes();
         productCommonFacade.saveProduct(store, persistableProduct, ko);

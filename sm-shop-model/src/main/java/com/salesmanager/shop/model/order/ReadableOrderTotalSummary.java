@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
+import lombok.Data;
 
+@Data
 public class ReadableOrderTotalSummary implements Serializable {
 	
 	/**
@@ -15,6 +17,18 @@ public class ReadableOrderTotalSummary implements Serializable {
 	private String subTotal;//one time price for items
 	private String total;//final price
 	private String taxTotal;//total of taxes
+
+
+	//手续费
+	private String productHandlingFeePriceTotal ;
+	//运费
+	private String shippingPriceTotal ;
+
+	//增值服务费
+	private String additionalServicesPriceTotal ;
+
+	//erp费用
+	private String erpPriceTotal ;
 	
 	private List<ReadableOrderTotal> totals = new ArrayList<ReadableOrderTotal>();//all other fees (tax, shipping ....)
 

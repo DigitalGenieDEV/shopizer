@@ -64,6 +64,10 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
             customerOrderTotalSummary.addTotal(orderTotalSummary.getTotal());
             customerOrderTotalSummary.addSubTotal(orderTotalSummary.getSubTotal());
             customerOrderTotalSummary.addTaxTotal(orderTotalSummary.getTaxTotal());
+            customerOrderTotalSummary.setAdditionalServicesPriceTotal(orderTotalSummary.getAdditionalServicesPriceTotal());
+            customerOrderTotalSummary.setProductHandlingFeePriceTotal(orderTotalSummary.getProductHandlingFeePriceTotal());
+            customerOrderTotalSummary.setErpPriceTotal(orderTotalSummary.getErpPriceTotal());
+            customerOrderTotalSummary.setShippingPriceTotal(orderTotalSummary.getShippingPriceTotal());
         }
 //        BigDecimal subTotal = orderSummaries.stream().reduce()
         return customerOrderTotalSummary;

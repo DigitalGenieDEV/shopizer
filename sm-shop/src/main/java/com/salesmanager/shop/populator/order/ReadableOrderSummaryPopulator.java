@@ -49,6 +49,18 @@ public class ReadableOrderSummaryPopulator extends AbstractDataPopulator<OrderTo
 			if(source.getTotal() != null) {
 				target.setTotal(pricingService.getDisplayAmount(source.getTotal(), store));
 			}
+			if(source.getAdditionalServicesPriceTotal() != null) {
+				target.setAdditionalServicesPriceTotal(pricingService.getDisplayAmount(source.getAdditionalServicesPriceTotal(), store));
+			}
+			if(source.getProductHandlingFeePriceTotal()!=null) {
+				target.setProductHandlingFeePriceTotal(pricingService.getDisplayAmount(source.getProductHandlingFeePriceTotal(), store));
+			}
+			if(source.getErpPriceTotal() != null) {
+				target.setErpPriceTotal(pricingService.getDisplayAmount(source.getErpPriceTotal(), store));
+			}
+			if(source.getShippingPriceTotal() != null) {
+				target.setShippingPriceTotal(pricingService.getDisplayAmount(source.getShippingPriceTotal(), store));
+			}
 			
 			if(!CollectionUtils.isEmpty(source.getTotals())) {
 				ReadableOrderTotalPopulator orderTotalPopulator = new ReadableOrderTotalPopulator();

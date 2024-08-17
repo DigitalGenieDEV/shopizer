@@ -32,17 +32,13 @@ public class ProductMaterial extends SalesManagerEntity<Long, ProductMaterial> i
     @Embedded
     private AuditSection auditSection = new AuditSection();
 
+    @Column(name = "product_id",  nullable = false)
+    private Long productId;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", nullable = false)
-    private Product product;
+    @Column(name = "MATERIAL_ID",  nullable = false)
+    private Long materialId;
 
-    @ManyToOne
-    @JoinColumn(name = "material_id", nullable = false)
-    private Material material;
-
-
-    @Column(name = "WEIGHT", unique = true, nullable = false)
+    @Column(name = "WEIGHT",  nullable = false)
     private Long weight;
 
 

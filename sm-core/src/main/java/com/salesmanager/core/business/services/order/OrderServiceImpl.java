@@ -19,8 +19,12 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
+import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.catalog.category.Category;
+import com.salesmanager.core.model.catalog.product.Material;
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.fulfillment.AddidtionalServicesDescription;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
@@ -103,6 +107,15 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
     @Autowired
     private AdditionalServicesService additionalServicesService;
+
+
+    @Autowired
+    private ProductMaterialService productMaterialService;
+
+
+
+    @Autowired
+    private ErpService erpService;
 
     @Inject
     public OrderServiceImpl(OrderRepository orderRepository) {
@@ -242,6 +255,21 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
          * subtotal
          */
         BigDecimal subTotal = new BigDecimal(0);
+
+        //手续费
+        BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+        //运费
+        BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+        //增值服务费
+        BigDecimal additionalServicesPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+        //erp费用
+        BigDecimal erpPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+
+
         subTotal.setScale(2, RoundingMode.HALF_UP);
         for(ShoppingCartItem item : summary.getProducts()) {
             if (item.getItemPrice() == null) {
@@ -286,8 +314,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                 }
             }
 
-            //手续费
-            BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
             Set<Category> categories = item.getProduct().getCategories();
             List<Category> sortedCategories = new ArrayList<>(categories);
             sortedCategories.sort((c1, c2) -> c2.getDepth().compareTo(c1.getDepth()));
@@ -310,24 +337,12 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     }
                 }
             }
-            //加价费用
-            OrderTotal handlingubTotal = new OrderTotal();
-            handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
-            handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
-            handlingubTotal.setOrderTotalCode("order.total.handling");
-            handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
-            handlingubTotal.setText("order.total.handling");
-            handlingubTotal.setSortOrder(120);
-            handlingubTotal.setValue(totalProductHandlingFeePrice);
-            orderTotals.add(handlingubTotal);
-            grandTotal=grandTotal.add(totalProductHandlingFeePrice);
+
 
             //运费
             ShippingType shippingType = item.getShippingType();
-            BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
             //跨境运费处理
             if (shippingType != null && shippingType == shippingType.INTERNATIONAL){
-                BigDecimal shippingPrice = new BigDecimal(100);
                 switch(item.getNationalTransportationMethod()){
                     case SHIPPING:
                         //todo 计算价格
@@ -336,25 +351,11 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                         //todo 计算价格
                         break;
                 }
-                //todo 先写死了
-                OrderTotal shippingSubTotal = new OrderTotal();
-                shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
-                shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
-                shippingSubTotal.setOrderTotalCode("order.total.shipping");
-                shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
-                shippingSubTotal.setSortOrder(100);
 
-                orderTotals.add(shippingSubTotal);
-                grandTotal= grandTotal.add(shippingPrice);
-
-                shippingSubTotal.setValue(shippingPrice);
             }
-
-
 
             //国内运费处理逻辑
             if (shippingType != null && shippingType == shippingType.NATIONAL){
-                BigDecimal shippingPrice = new BigDecimal(10);
                 //委托配送价格
                 if (ShippingTransportationType.COMMISSIONED_DELIVERY == item.getShippingTransportationType()
                     && item.getNationalTransportationMethod() !=null){
@@ -376,63 +377,41 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                         case DIRECT_DELIVERY:
                             break;
                     }
-                    //todo 先写死了
-                    OrderTotal shippingSubTotal = new OrderTotal();
-                    shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
-                    shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
-                    shippingSubTotal.setOrderTotalCode("order.total.shipping");
-                    shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
-                    shippingSubTotal.setSortOrder(100);
-
-                    orderTotals.add(shippingSubTotal);
-                    grandTotal= grandTotal.add(shippingPrice);
-                    shippingSubTotal.setValue(shippingPrice);
+                    //todo 计算费用
                 }
             }
 
             //additionalServicePrice
             String additionalServicesIds = item.getAdditionalServicesIds();
             if (StringUtils.isNotEmpty(additionalServicesIds)){
-                BigDecimal totalAdditionalServices = new BigDecimal(0);
-                totalAdditionalServices.setScale(2, RoundingMode.HALF_UP);
                 String[] split = additionalServicesIds.split(",");
                 for(String id : split){
                     AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
-                    Set<AddidtionalServicesDescription> descriptions = additionalServices.getDescriptions();
-                    String additionalServicesDescriptionByLanguage = null;
-                    for (AddidtionalServicesDescription additionalServicesDescription : descriptions){
-                        if (additionalServicesDescription.getLanguage().getCode().equals(language.getCode())){
-                            additionalServicesDescriptionByLanguage = additionalServicesDescription.getName();
-                        }
-                    }
-
                     String price = "0";
-
                     if (AdditionalServiceEnums.QUANTITY_CONFIRMATION.name().equals(additionalServices.getCode()) ||
                             AdditionalServiceEnums.DAMAGE_CONFIRMATION.name().equals(additionalServices.getCode())){
                         price = buildAdditionalSpecialPrice(item.getQuantity(), additionalServices.getPrice());
                     }else {
                         price = additionalServices.getPrice();
                     }
-
-                    BigDecimal additionalServicesPrice = new BigDecimal(price);
-                    additionalServicesPrice.setScale(2, RoundingMode.HALF_UP);
-
-                    OrderTotal additionalServicesLine = new OrderTotal();
-                    additionalServicesLine.setModule(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
-                    additionalServicesLine.setOrderTotalType(OrderTotalType.ADDITIONAL_SERVICE);
-                    additionalServicesLine.setOrderTotalCode("order.total.additionalServices");
-                    additionalServicesLine.setSortOrder(99);
-                    additionalServicesLine.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
-                    additionalServicesLine.setText(additionalServicesDescriptionByLanguage);
-                    additionalServicesLine.setValue(additionalServicesPrice);
-
-                    totalAdditionalServices = totalAdditionalServices.add(additionalServicesPrice);
-                    orderTotals.add(additionalServicesLine);
+                    additionalServicesPrice = additionalServicesPrice.add(new BigDecimal(price).setScale(2, RoundingMode.HALF_UP));
                 }
-                grandTotal = grandTotal.add(totalAdditionalServices);
-                totalSummary.setTaxTotal(totalAdditionalServices);
             }
+
+
+            //erp
+            List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(item.getProductId());
+            if (CollectionUtils.isNotEmpty(productMaterials)){
+                for (ProductMaterial productMaterial : productMaterials ){
+                    Long materialId = productMaterial.getMaterialId();
+                    Material material  = erpService.getById(materialId);
+                    BigDecimal price = material.getPrice();
+                    Long weight = productMaterial.getWeight();
+                    BigDecimal productErpPrice = price.multiply(BigDecimal.valueOf(weight)).setScale(2, RoundingMode.HALF_UP);
+                    erpPrice = erpPrice.add(productErpPrice);
+                }
+            }
+
 
         }
 
@@ -457,13 +436,13 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     subTotal = subTotal.subtract(variation.getValue());
                 }
             }
-
         }
 
 
         totalSummary.setSubTotal(subTotal);
-        grandTotal=grandTotal.add(subTotal);
 
+
+        //商品费用
         OrderTotal orderTotalSubTotal = new OrderTotal();
         orderTotalSubTotal.setModule(Constants.OT_SUBTOTAL_MODULE_CODE);
         orderTotalSubTotal.setOrderTotalType(OrderTotalType.SUBTOTAL);
@@ -471,17 +450,69 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         orderTotalSubTotal.setTitle(Constants.OT_SUBTOTAL_MODULE_CODE);
         orderTotalSubTotal.setSortOrder(5);
         orderTotalSubTotal.setValue(subTotal);
-
         orderTotals.add(orderTotalSubTotal);
 
+        //这个是总价+商品费用
+        grandTotal=grandTotal.add(subTotal);
+
+
+        //加价费用
+        OrderTotal handlingubTotal = new OrderTotal();
+        handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
+        handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
+        handlingubTotal.setOrderTotalCode("order.total.handling");
+        handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
+        handlingubTotal.setText("order.total.handling");
+        handlingubTotal.setSortOrder(100);
+        handlingubTotal.setValue(totalProductHandlingFeePrice);
+        orderTotals.add(handlingubTotal);
+
+        //这个是总价+加价
+        grandTotal=grandTotal.add(totalProductHandlingFeePrice);
+
+        //运费
+        OrderTotal shippingSubTotal = new OrderTotal();
+        shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+        shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+        shippingSubTotal.setOrderTotalCode("order.total.shipping");
+        shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+        shippingSubTotal.setSortOrder(103);
+        shippingSubTotal.setText("order.total.shipping");
+        shippingSubTotal.setValue(totalShippingPrice);
+        orderTotals.add(shippingSubTotal);
+
+        //这个是总价+加运费
+        grandTotal=grandTotal.add(totalShippingPrice);
+
+
+        //增值服务费用
+        OrderTotal additionalServicesSubTotal = new OrderTotal();
+        additionalServicesSubTotal.setModule(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+        additionalServicesSubTotal.setOrderTotalType(OrderTotalType.ADDITIONAL_SERVICE);
+        additionalServicesSubTotal.setOrderTotalCode("order.total.additionalServices");
+        additionalServicesSubTotal.setSortOrder(102);
+        additionalServicesSubTotal.setText("order.total.additionalServices");
+        additionalServicesSubTotal.setValue(additionalServicesPrice);
+        additionalServicesSubTotal.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+        grandTotal=grandTotal.add(additionalServicesPrice);
+
+
+
+
+        //增值服务费用
+        OrderTotal erpSubTotal = new OrderTotal();
+        erpSubTotal.setModule(Constants.OT_ERP_MODULE_CODE);
+        erpSubTotal.setOrderTotalType(OrderTotalType.ERP);
+        erpSubTotal.setOrderTotalCode("order.total.erp");
+        erpSubTotal.setSortOrder(102);
+        erpSubTotal.setText("order.total.erp");
+        erpSubTotal.setValue(erpPrice);
+        erpSubTotal.setTitle(Constants.OT_ERP_MODULE_CODE);
+        grandTotal=grandTotal.add(erpPrice);
 
         LOGGER.debug("[caculateOrder] calculate order shipping");
         //shipping
 //        if(summary.getShippingSummary()!=null) {
-
-
-
-
 //            //check handling fees
 //            shippingConfiguration = shippingService.getShippingConfiguration(store);
 //            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {

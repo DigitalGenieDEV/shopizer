@@ -2,6 +2,7 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
@@ -65,6 +66,9 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 	@Autowired
 	private ReadableCategoryMapper readableCategoryMapper;
+
+	@Autowired
+	private ProductMaterialService productMaterialService;
 
 	@Autowired
 	private ReadableProductTypeMapper readableProductTypeMapper;
@@ -344,12 +348,12 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 		}
 
-		Set<ProductMaterial> productMaterialList = source.getProductMaterialList();
+		List<ProductMaterial> productMaterialList = productMaterialService.queryByProductId(source.getId());
 		if (CollectionUtils.isNotEmpty(productMaterialList)){
 			List<com.salesmanager.shop.model.catalog.ProductMaterial> collect = productMaterialList.stream().map(productMaterial -> {
 				com.salesmanager.shop.model.catalog.ProductMaterial pm = new com.salesmanager.shop.model.catalog.ProductMaterial();
 				pm.setProductId(source.getId());
-				pm.setMaterialId(productMaterial.getMaterial().getId());
+				pm.setMaterialId(productMaterial.getMaterialId());
 				pm.setWeight(productMaterial.getWeight());
 				pm.setId(productMaterial.getId());
 				return pm;

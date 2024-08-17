@@ -3,6 +3,7 @@ package com.salesmanager.core.business.services.catalog.product.erp.impl;
 import com.salesmanager.core.business.repositories.material.MaterialRepository;
 import com.salesmanager.core.business.repositories.material.ProductMaterialRepository;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.catalog.product.Material;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
@@ -13,22 +14,15 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Service
-public class ErpServiceImpl extends SalesManagerEntityServiceImpl<Long, Material> implements ErpService {
+public class ProductMaterialServiceImpl extends SalesManagerEntityServiceImpl<Long, ProductMaterial> implements ProductMaterialService {
 
-    private MaterialRepository materialRepository;
 
-    @Autowired
     private ProductMaterialRepository productMaterialRepository;
 
     @Inject
-    public ErpServiceImpl(MaterialRepository materialRepository) {
-        super(materialRepository);
-        this.materialRepository = materialRepository;
-    }
-
-    @Override
-    public List<Material> queryList() {
-        return materialRepository.queryList();
+    public ProductMaterialServiceImpl(ProductMaterialRepository productMaterialRepository) {
+        super(productMaterialRepository);
+        this.productMaterialRepository = productMaterialRepository;
     }
 
     @Override

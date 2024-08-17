@@ -12,11 +12,14 @@ import com.salesmanager.core.business.repositories.catalog.product.feature.Produ
 import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAnnouncementAttributeService;
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
+import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.catalog.product.image.ProductImageService;
 import com.salesmanager.core.business.services.catalog.product.type.ProductTypeService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
@@ -90,6 +93,11 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Inject
 	private ProductService productService;
 
+	@Autowired
+	private ErpService erpService;
+
+	@Autowired
+	private ProductMaterialService productMaterialService;
 
 	@Autowired
 	private ProductFeatureRepository productFeatureRepository;
@@ -176,6 +184,27 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			List<ProductFeature> listByProductId = productFeatureService.findListByProductId(target.getId());
 			processProductFeatureDiff(listByProductId, product.getProductTag(), target.getId());
 		}
+		if(!CollectionUtils.isEmpty(product.getProductMaterials())) {
+			List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(target.getId());
+			if (CollectionUtils.isNotEmpty(productMaterials)){
+				productMaterialService.deleteProductMaterialByProductId(target.getId());
+			}
+
+			Set<ProductMaterial> collect = new HashSet<>();
+			for (com.salesmanager.shop.model.catalog.ProductMaterial productMaterial : product.getProductMaterials()) {
+				ProductMaterial pm = new ProductMaterial();
+				Long materialId = productMaterial.getMaterialId();
+				if (materialId == null) {
+					continue;
+				}
+				pm.setMaterialId(materialId);
+				pm.setWeight(productMaterial.getWeight());
+				pm.setProductId(target.getId());
+				collect.add(pm);
+			}
+			productMaterialService.saveAll(collect);
+		}
+
 		if (product.getAnnouncement() !=null) {
 			Boolean result = productAnnouncementAttributeService.existsByProductId(target.getId());
 			if (result){

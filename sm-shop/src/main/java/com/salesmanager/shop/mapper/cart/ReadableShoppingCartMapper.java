@@ -315,6 +315,18 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 			destination.setTotal(orderSummary.getTotal());
 			destination.setDisplayTotal(pricingService.getDisplayAmount(orderSummary.getTotal(), store));
 
+			destination.setAdditionalServicesPriceTotal(orderSummary.getAdditionalServicesPriceTotal());
+			destination.setDisplayAdditionalServicesPriceTotal(pricingService.getDisplayAmount(orderSummary.getAdditionalServicesPriceTotal(), store));
+
+			destination.setProductHandlingFeePriceTotal(orderSummary.getProductHandlingFeePriceTotal());
+			destination.setDisplayProductHandlingFeePriceTotal(pricingService.getDisplayAmount(orderSummary.getProductHandlingFeePriceTotal(), store));
+
+			destination.setShippingPriceTotal(orderSummary.getShippingPriceTotal());
+			destination.setDisplayShippingPriceTotal(pricingService.getDisplayAmount(orderSummary.getShippingPriceTotal(), store));
+
+			destination.setErpPriceTotal(orderSummary.getErpPriceTotal());
+			destination.setDisplayErpPriceTotal(pricingService.getDisplayAmount(orderSummary.getErpPriceTotal(), store));
+
 			destination.setQuantity(cartQuantity);
 			destination.setId(source.getId());
 

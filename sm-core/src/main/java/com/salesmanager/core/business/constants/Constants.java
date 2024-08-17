@@ -40,6 +40,9 @@ public class Constants {
 
   public final static String OT_SUBTOTAL_MODULE_CODE = "subtotal";
   public final static String OT_TOTAL_MODULE_CODE = "total";
+
+  public final static String OT_ERP_MODULE_CODE = "erp";
+
   public final static String OT_SHIPPING_MODULE_CODE = "shipping";
   public final static String OT_HANDLING_MODULE_CODE = "handling";
   public final static String OT_TAX_MODULE_CODE = "tax";
