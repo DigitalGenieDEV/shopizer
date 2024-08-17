@@ -154,7 +154,7 @@ public class StoreLibraryApi {
 						                   , FileContentType.valueOf(persistableStoreLibrary.getFileContentType())
 				);
 				
-				storeLibrary.setFileUrl(imageUtils.buildLibraryFileUtils(merchantStore, fileName));
+				storeLibrary.setFileUrl(imageUtils.buildLibraryFileUtils(merchantStore, fileName, persistableStoreLibrary.getFileContentType()));
 				
 				storeLibraryFacade.registerLibrary(storeLibrary);
 				

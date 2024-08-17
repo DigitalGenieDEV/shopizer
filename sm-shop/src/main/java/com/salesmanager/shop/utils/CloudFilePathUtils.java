@@ -61,12 +61,14 @@ public class CloudFilePathUtils extends AbstractimageFilePath {
 	 * @return
 	 */
 	@Override
-	public String buildLibraryFileUtils(MerchantStore store, String imageName) {
+	public String buildLibraryFileUtils(MerchantStore store, String imageName, String contentType) {
 		StringBuilder imgName = new StringBuilder()
 				.append(getBasePath(store))
 				.append(Constants.FILES_URI)
 				.append(Constants.SLASH)
 				.append(store.getCode())
+				.append(Constants.SLASH)
+				.append(contentType)
 				.append(Constants.SLASH);
 				if(!StringUtils.isBlank(imageName)) {
 					imgName.append(imageName);

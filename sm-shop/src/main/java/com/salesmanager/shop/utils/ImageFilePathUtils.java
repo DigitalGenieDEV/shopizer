@@ -45,7 +45,7 @@ public class ImageFilePathUtils extends AbstractimageFilePath{
 	}
 
 	@Override
-	public String buildLibraryFileUtils(MerchantStore store, String imageName) {
+	public String buildLibraryFileUtils(MerchantStore store, String imageName, String contentType) {
 		// TODO Auto-generated method stub
 		return null;
 	}

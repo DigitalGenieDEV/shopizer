@@ -60,6 +60,7 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
 					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
+					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
 					ReadableProductPageInfo searchData = alibabaProductFacade
 							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
@@ -136,6 +137,7 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
 					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
+					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
 					ReadableProductPageInfo searchData = alibabaProductFacade
 							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);

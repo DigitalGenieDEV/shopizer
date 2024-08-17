@@ -32,7 +32,7 @@ public interface ImageFilePath {
 	 * @param imageName
 	 * @return
 	 */
-	public String buildLibraryFileUtils(MerchantStore store, String imageName);
+	public String buildLibraryFileUtils(MerchantStore store, String imageName, String contentType);
 	
 	/**
 	 * Builds a static content image file path that can be used by image servlet
