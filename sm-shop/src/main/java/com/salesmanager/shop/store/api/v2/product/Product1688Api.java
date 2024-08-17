@@ -177,6 +177,7 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 						insertAddParam.setPageSize(paramData.getPageSize());
 						insertAddParam.setCountry(paramData.getCountry());
 						insertAddParam.setKeyword(keyword.getKeyword());
+						insertAddParam.setCategoryId(keyword.getCategoryId1688());
 						ReadableProductPageInfo searchOtherData = alibabaProductFacade
 								.searchProductByKeywords(insertAddParam);
 						if (searchOtherData.getData() != null && searchOtherData.getData().size() > 0) {
