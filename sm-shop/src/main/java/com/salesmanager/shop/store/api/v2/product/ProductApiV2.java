@@ -1119,7 +1119,7 @@ public class ProductApiV2 {
 
 	@RequestMapping(value = {"/private/materials/list","/auth/materials/list"}, method = RequestMethod.GET)
 	@ResponseBody
-	public CommonResultDTO<List<ReadableMaterial>> getMaterials() throws Exception {
+	public CommonResultDTO<List<ReadableMaterial>> getMaterials()  {
 		try {
 			List<ReadableMaterial> materials = erpFacade.getMaterials();
 			return CommonResultDTO.ofSuccess(materials);

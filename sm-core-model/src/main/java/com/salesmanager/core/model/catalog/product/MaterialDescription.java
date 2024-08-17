@@ -23,8 +23,7 @@ public class MaterialDescription extends Description {
 	@JoinColumn(name = "MATERIAL_ID", nullable = false)
 	private Material media;
 
-	@NotEmpty
-	@Column(name="SUB_NAME", nullable = false, length=1266)
+	@Column(name="SUB_NAME", length=1266)
 	private String subName;
 
 	@Column(name="SUB_TITLE", length=1266)

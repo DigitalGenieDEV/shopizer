@@ -36,7 +36,7 @@ public class ErpFacadeImpl implements ErpFacade {
             return null;
         }
         return materials.stream().map(material -> {
-            ReadableMaterial readableMaterial = ObjectConvert.convert(materials, ReadableMaterial.class);
+            ReadableMaterial readableMaterial = ObjectConvert.convert(material, ReadableMaterial.class);
             List<com.salesmanager.shop.model.catalog.MaterialDescription> readableDescriptions = new ArrayList<>();
             for(MaterialDescription desc : material.getDescriptions()) {
                 readableDescriptions.add(description(desc));

@@ -41,6 +41,7 @@ public class PersistableMaterialPopulator extends AbstractDataPopulator<Persista
 					description.setTitle(desc.getTitle());
 					description.setSubName(desc.getSubName());
 					description.setSubTitle(desc.getSubTitle());
+					description.setMedia(target);
 					descriptions.add(description);
 				}
 				target.setDescriptions(descriptions);

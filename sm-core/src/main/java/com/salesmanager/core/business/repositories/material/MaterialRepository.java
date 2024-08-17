@@ -19,7 +19,7 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 			"m " +
 			"FROM " +
 			"Material m " +
-			" group by m.type order by m.sort ")
+			" order by m.sort ")
 	List<Material> queryList();
 
 

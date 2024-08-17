@@ -7,6 +7,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,16 +33,16 @@ public class Material extends SalesManagerEntity<Long, Material> implements Audi
     private AuditSection auditSection = new AuditSection();
 
 
-    @Column(name = "CODE", nullable = false, length = 10)
-    private Long code;
+    @Column(name = "CODE", nullable = false, length = 100)
+    private String code;
 
 
-    @Column(name = "SUB_CODE", nullable = true, length = 10)
-    private Long subCode;
+    @Column(name = "SUB_CODE", nullable = true, length = 100)
+    private String subCode;
 
 
     @Column(name = "PRICE")
-    private Long price;
+    private BigDecimal  price;
 
 
     @Column(name = "SORT")

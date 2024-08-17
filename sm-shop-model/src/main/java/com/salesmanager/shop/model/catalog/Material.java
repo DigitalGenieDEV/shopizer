@@ -3,6 +3,7 @@ package com.salesmanager.shop.model.catalog;
 import com.salesmanager.core.model.catalog.product.MaterialType;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,13 @@ public class Material  {
 
     private Long id;
 
-    private Long code;
+    private String code;
 
 
-    private Long subCode;
+    private String subCode;
 
 
-    private Long price;
+    private BigDecimal price;
 
 
     private Integer sort;
