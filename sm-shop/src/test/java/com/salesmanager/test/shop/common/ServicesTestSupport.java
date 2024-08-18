@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,12 +52,20 @@ public class ServicesTestSupport {
 	@Autowired
 	protected TestRestTemplate testRestTemplate;
 
-	protected HttpHeaders getHeader() {
-		return getHeader("admin@shopizer.com", "password");
+	@Before
+	public void before() throws Exception {
 	}
 
-	protected HttpHeaders getHeader(final String userName, final String password) {
-		final ResponseEntity<AuthenticationResponse> response = testRestTemplate.postForEntity("/api/v1/customer/login",
+	protected HttpHeaders getAdminHeader() {
+		return getHeader("admin", "P@ssword1!", "/api/v1//private/login");
+	}
+
+	protected HttpHeaders getHeader() {
+		return getHeader("020@company.com", "123@1234", "/api/v1/customer/login");
+	}
+
+	protected HttpHeaders getHeader(final String userName, final String password, String url) {
+		final ResponseEntity<AuthenticationResponse> response = testRestTemplate.postForEntity(url,
 				new HttpEntity<>(new AuthenticationRequest(userName, password)), AuthenticationResponse.class);
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
