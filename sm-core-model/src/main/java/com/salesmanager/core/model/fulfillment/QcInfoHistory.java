@@ -1,6 +1,7 @@
 package com.salesmanager.core.model.fulfillment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.QcInfoHistoryCodeEnums;
+import com.salesmanager.core.enmus.QcStatusEnums;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
@@ -28,12 +29,11 @@ public class QcInfoHistory extends SalesManagerEntity<Long, QcInfoHistory> imple
     private Long id;
 
     @Column(name = "CODE")
-    private String code;
+    @Enumerated(EnumType.STRING)
+    private QcInfoHistoryCodeEnums code;
 
-    @JsonIgnore
-    @ManyToOne(targetEntity = QcInfo.class)
-    @JoinColumn(name = "QC_INFO_ID", nullable = false)
-    private QcInfo qcInfo;
+    @Column(name = "QC_INFO_ID", nullable = false)
+    private Long qcInfoId;
 
     @Embedded
     private AuditSection auditSection = new AuditSection();

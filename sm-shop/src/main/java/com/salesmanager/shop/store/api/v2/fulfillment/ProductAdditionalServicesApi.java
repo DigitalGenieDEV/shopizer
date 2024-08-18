@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.api.v2.fulfillment;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.content.ContentFolder;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
@@ -11,6 +12,7 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -45,6 +47,22 @@ public class ProductAdditionalServicesApi {
             return CommonResultDTO.ofSuccess(readableAdditionalServices);
         }catch (Exception e){
             LOGGER.error("Error  to get additionalServices By MerchantId", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
+        }
+    }
+
+
+    @GetMapping(value = {"/auth/additional/services/id/{additionalServicesId}",
+            "/private/additional/services/id/{additionalServicesId}"})
+    @ApiOperation(httpMethod = "GET", value = "Get additionalServices by id", notes = "Get additionalServices by id")
+    @ResponseBody
+    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+    public CommonResultDTO<ReadableAdditionalServices> getAdditionalServicesById(@PathVariable Long additionalServicesId,
+                                                                                               @ApiIgnore Language language) {
+        try {
+            return CommonResultDTO.ofSuccess( additionalServicesFacade.queryAdditionalServicesById(additionalServicesId, language));
+        }catch (Exception e){
+            LOGGER.error("Error  to get additionalServices By id", e);
             return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
         }
     }

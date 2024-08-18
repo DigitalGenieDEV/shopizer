@@ -3,6 +3,7 @@ package com.salesmanager.core.business.fulfillment.service.impl;
 import com.salesmanager.core.business.fulfillment.service.FulfillmentHistoryService;
 import com.salesmanager.core.business.fulfillment.service.FulfillmentMainOrderService;
 import com.salesmanager.core.business.fulfillment.service.FulfillmentSubOrderService;
+import com.salesmanager.core.business.fulfillment.service.QcInfoService;
 import com.salesmanager.core.business.repositories.fulfillment.FulfillmentMainOrderRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.enmus.FulfillmentHistoryTypeEnums;
@@ -12,7 +13,10 @@ import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.fulfillment.FulfillmentHistory;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
+import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.utils.StringUtil;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,9 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
 
     @Autowired
     private FulfillmentHistoryService fulfillmentHistoryService;
+
+    @Autowired
+    private QcInfoService qcInfoService;
 
 
     @Inject
@@ -56,6 +63,15 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         fulfillmentMainOrderRepository.save(fulfillmentMainOrder);
 
         order.getOrderProducts().forEach(orderProduct -> {
+
+            if (StringUtils.isNotEmpty(orderProduct.getAdditionalServicesIds())){
+                QcInfo qcInfo = new QcInfo();
+                qcInfo.setOrderId(order.getId());
+                qcInfo.setAdditionalServicesIds(orderProduct.getAdditionalServicesIds());
+                qcInfo.setProductId(orderProduct.getProductId());
+                qcInfoService.saveQcInfo(qcInfo);
+            }
+
             FulfillmentSubOrder fulfillmentSubOrder = new FulfillmentSubOrder();
             fulfillmentSubOrder.setAdditionalServicesIds(orderProduct.getAdditionalServicesIds());
             fulfillmentSubOrder.setFulfillmentMainType(FulfillmentTypeEnums.PAYMENT_COMPLETED);

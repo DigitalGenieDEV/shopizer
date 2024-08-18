@@ -4,12 +4,13 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.QcInfoHistory;
 
+import java.util.List;
 
-public interface QcInfoService extends SalesManagerEntityService<Long, QcInfo> {
 
-    Long saveQcInfo(QcInfo qcInfo);
+public interface QcInfoHistoryService extends SalesManagerEntityService<Long, QcInfoHistory> {
 
-    void updateQcStatusById(String qcStatus, Long id);
+
+    List<QcInfoHistory> queryByQcInfoId(Long qcInfoId);
 
 }
 

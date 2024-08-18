@@ -8,12 +8,19 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 public class QcInfoHistory {
 
-    private Long id;
-
     private String code;
+
+    private Long qcInfoId;
+
+
+    private Date dateCreated;
+
+    private Date dateModified;
+
 
 }
