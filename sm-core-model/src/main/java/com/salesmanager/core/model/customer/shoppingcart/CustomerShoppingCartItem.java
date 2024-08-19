@@ -1,6 +1,8 @@
 package com.salesmanager.core.model.customer.shoppingcart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
@@ -85,7 +87,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      * 货车型号
      * @see TruckModelEnums
      */
-    @Column(name = "TRUCK_MODEL", unique=true, nullable=false)
+    @Column(name = "TRUCK_MODEL")
     private String truckModel;
 
 
@@ -93,7 +95,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      * 货车类型
      * @see TruckTypeEnums
      */
-    @Column(name = "TRUCK_TYPE", unique=true, nullable=false)
+    @Column(name = "TRUCK_TYPE")
     private String truckType;
 
 
