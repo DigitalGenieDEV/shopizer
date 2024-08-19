@@ -4,6 +4,8 @@ package com.salesmanager.core.business.fulfillment.service;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityService;
 import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 
+import java.util.List;
+
 public interface FulfillmentSubOrderService extends SalesManagerEntityService<Long, FulfillmentSubOrder> {
 
 
@@ -12,6 +14,13 @@ public interface FulfillmentSubOrderService extends SalesManagerEntityService<Lo
 
 
     void updateFulfillmentMainOrder(FulfillmentSubOrder fulfillmentSubOrder);
+
+
+    List<FulfillmentSubOrder> queryFulfillmentSubOrderListByOrderId(Long orderId);
+
+    FulfillmentSubOrder queryFulfillmentSubOrderByProductOrderId(Long productOrderId);
+
+
 
 
 }

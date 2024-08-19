@@ -2,18 +2,25 @@ package com.salesmanager.shop.populator.order;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
+import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
+import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
+import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.shipping.ShippingOption;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
+import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingForm;
+import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingFormDetail;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
@@ -21,26 +28,39 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Use mappers
  * @author carlsamson
  *
  */
-@Deprecated
 public class ReadableOrderProductPopulator extends
 		AbstractDataPopulator<OrderProduct, ReadableOrderProduct> {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderProductPopulator.class);
+
 	private ProductService productService;
 	private PricingService pricingService;
 	private ImageFilePath imageUtils;
 
 
+	private InvoicePackingFormService invoicePackingFormService;
+
+	public InvoicePackingFormService getInvoicePackingFormService() {
+		return invoicePackingFormService;
+	}
+
+	public void setInvoicePackingFormService(InvoicePackingFormService invoicePackingFormService) {
+		this.invoicePackingFormService = invoicePackingFormService;
+	}
 
 	public ImageFilePath getimageUtils() {
 		return imageUtils;
@@ -60,6 +80,14 @@ public class ReadableOrderProductPopulator extends
 		Validate.notNull(imageUtils,"Requires imageUtils");
 		target.setId(source.getId());
 		target.setOrderedQuantity(source.getProductQuantity());
+
+		if (invoicePackingFormService != null){
+			InvoicePackingForm invoicePackingForm = invoicePackingFormService.queryInvoicePackingFormByOrderIdAndProductId(source.getId(), source.getProductId());
+			if (invoicePackingForm != null) {
+				target.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+			}
+		}
+
 		try {
 			target.setPrice(pricingService.getDisplayAmount(source.getOneTimeCharge(), store));
 		} catch(Exception e) {
@@ -67,7 +95,6 @@ public class ReadableOrderProductPopulator extends
 		}
 		target.setProductName(source.getProductName());
 		target.setSku(source.getSku());
-		
 		//subtotal = price * quantity
 		BigDecimal subTotal = source.getOneTimeCharge();
 		subTotal = subTotal.multiply(new BigDecimal(source.getProductQuantity()));
@@ -159,7 +186,7 @@ public class ReadableOrderProductPopulator extends
 					
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					target.setProduct(productProxy);
-					
+					target.setHsCode(product.getHsCode());
 					Set<ProductImage> images = product.getImages();
 					ProductImage defaultImage = null;
 					if(images!=null) {
@@ -204,4 +231,27 @@ public class ReadableOrderProductPopulator extends
 		this.pricingService = pricingService;
 	}
 
+
+	private ReadableInvoicePackingForm convertToReadableInvoicePackingForm(InvoicePackingForm invoicePackingForm) {
+		if (invoicePackingForm == null) {
+			return null;
+		}
+		try {
+			ReadableInvoicePackingForm readableInvoicePackingForm = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
+
+			Set<InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
+			if (invoicePackingFormDetails != null) {
+				List<ReadableInvoicePackingFormDetail> invoicePackingFormDetailList = invoicePackingFormDetails.stream()
+						.map(invoicePackingFormDetail -> ObjectConvert.convert(invoicePackingFormDetail, ReadableInvoicePackingFormDetail.class))
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+				readableInvoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
+			}
+
+			return readableInvoicePackingForm;
+		} catch (Exception e) {
+			LOGGER.error("convertToReadableInvoicePackingForm error", e);
+			return null;
+		}
+	}
 }

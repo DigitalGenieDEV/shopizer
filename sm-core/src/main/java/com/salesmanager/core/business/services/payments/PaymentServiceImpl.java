@@ -386,7 +386,7 @@ public class PaymentServiceImpl implements PaymentService {
 		if(transactionType == TransactionType.AUTHORIZECAPTURE)  {
 			order.setStatus(OrderStatus.ORDERED);
 			if(!payment.getPaymentType().name().equals(PaymentType.MONEYORDER.name())) {
-				order.setStatus(OrderStatus.PROCESSED);
+				order.setStatus(OrderStatus.PAYMENT_COMPLETED);
 			}
 		}
 
@@ -456,12 +456,12 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		OrderStatusHistory orderHistory = new OrderStatusHistory();
 		orderHistory.setOrder(order);
-		orderHistory.setStatus(OrderStatus.PROCESSED);
+		orderHistory.setStatus(OrderStatus.PAYMENT_COMPLETED);
 		orderHistory.setDateAdded(new Date());
 		
 		orderService.addOrderStatusHistory(order, orderHistory);
 		
-		order.setStatus(OrderStatus.PROCESSED);
+		order.setStatus(OrderStatus.PAYMENT_COMPLETED);
 		orderService.saveOrUpdate(order);
 
 		return transaction;

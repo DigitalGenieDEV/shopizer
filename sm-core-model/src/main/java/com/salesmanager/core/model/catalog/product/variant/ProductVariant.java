@@ -75,6 +75,8 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 	@Column(name="SPEC_ID")
 	private String specId;
 
+	@Column(name = "ALIAS")
+	private String alias;
 
 	@NotEmpty
 	@Column(name = "SKU")
@@ -201,5 +203,13 @@ public class ProductVariant extends SalesManagerEntity<Long, ProductVariant> imp
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 }

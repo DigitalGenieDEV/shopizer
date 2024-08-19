@@ -11,6 +11,8 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("orderProductService")
 public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long, OrderProduct> implements OrderProductService {
 
@@ -26,10 +28,22 @@ public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long,
         return orderProductRepository.listOrderProducts(store, criteria);
     }
 
+
+    @Override
+    public List<OrderProduct> getOrderProducts(Long orderId) {
+        return orderProductRepository.findListByOrderId(orderId);
+    }
+
+
     @Override
     public OrderProduct getOrderProduct(Long orderProductId, MerchantStore store) {
         Validate.notNull(orderProductId, "OrderProduct id cannot be null");
         Validate.notNull(store, "Store cannot be null");
         return orderProductRepository.findOne(orderProductId, store.getId());
+    }
+
+    @Override
+    public OrderProduct getOrderProduct(Long id) {
+        return orderProductRepository.getById(id);
     }
 }

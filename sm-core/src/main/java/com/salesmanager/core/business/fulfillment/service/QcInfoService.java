@@ -9,7 +9,7 @@ public interface QcInfoService extends SalesManagerEntityService<Long, QcInfo> {
 
     Long saveQcInfo(QcInfo qcInfo);
 
+    void updateQcStatusById(String qcStatus, Long id);
 
-    Long saveQcInfoHistory(QcInfoHistory qcInfoHistory);
 }
 

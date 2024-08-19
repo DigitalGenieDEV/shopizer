@@ -70,16 +70,12 @@ public class InvoicePackingForm extends SalesManagerEntity<Long, InvoicePackingF
     private Set<InvoicePackingFormDetail> invoicePackingFormDetails = new HashSet<>();
 
 
-    /**
-     * 履约子单号
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoicePackingForm")
-    private Set<FulfillmentSubOrder> fulfillSubOrders =  new HashSet<>();
-
-
     @Column(name = "ORDER_ID")
     private Long orderId;
 
+
+    @Column(name = "PRODUCT_ID")
+    private Long productId;
 
     @Embedded
     private AuditSection auditSection = new AuditSection();

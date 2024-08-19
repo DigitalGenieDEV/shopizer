@@ -1,5 +1,7 @@
 package com.salesmanager.core.model.fulfillment;
 
+import com.salesmanager.core.enmus.AdditionalServiceEnums;
+import com.salesmanager.core.enmus.QcStatusEnums;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
@@ -7,6 +9,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,35 +31,68 @@ public class QcInfo extends SalesManagerEntity<Long, QcInfo> implements Auditabl
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
     private Long id;
 
-    @Column(name = "CODE")
-    private String videoUrl;
-
-    /**
-     * 使用逗号分隔，最多4个
-     */
-    @Column(name = "PRODUCT_IMAGES", length = 5000 )
-    private String productImages;
-
-    /**
-     *
-     */
-    @Column(name = "PACKAGE_PICTURES")
-    private String packagePictures;
-
-    @Column(name = "BUYER_COMMENT", length = 5000)
-    private String buyerComment;
-
-    @Column(name = "PASSED_DATE")
-    private Long passedDate;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "qcInfo")
-    private Set<QcInfoHistory> descriptions = new HashSet<>();
-
     /**
      * 交易单id
      */
     @Column(name = "ORDER_ID")
     private Long orderId;
+
+
+    /**
+     * 增值服务Id list列表用逗号分隔
+     * @see AdditionalServiceEnums
+     */
+    @Column(name = "ADDITIONAL_SERVICES_IDS")
+    private String additionalServicesIds;
+
+    /**
+     * 商品id
+     */
+    @Column(name = "PRODUCT_ID")
+    private Long productId;
+
+
+
+    @Column(name = "VIDEO_URL")
+    private String videoUrl;
+
+
+    /**
+     * 逗号分隔的商品图片
+     */
+    @Column(name = "PRODUCT_IMAGES", length = 5000 )
+    private String productImages;
+
+    /**
+     * 逗号分隔的包装图片
+     */
+    @Column(name = "PACKAGE_PICTURES", length = 5000 )
+    private String packagePictures;
+
+
+    @Column(name = "BUYER_COMMENT", length = 5000)
+    private String buyerComment;
+
+
+    /**
+     * 卖家code
+     */
+    @Column(name = "MERCHANT_STORE_CODE")
+    private String merchantStoreCode;
+
+    /**
+     * QC状态
+     *
+     */
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private QcStatusEnums status;
+
+    /**
+     * 同意时间
+     */
+    @Column(name = "PASSED_DATE")
+    private Date passedDate;
 
     @Embedded
     private AuditSection auditSection = new AuditSection();

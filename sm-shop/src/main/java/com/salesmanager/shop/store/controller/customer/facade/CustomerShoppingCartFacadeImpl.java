@@ -12,6 +12,7 @@ import com.salesmanager.core.model.catalog.product.availability.ProductAvailabil
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.order.CustomerOrderTotalSummary;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -322,13 +323,33 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         item.setChecked(customerShoppingCartItem.isChecked());
         item.setProduct(product);
 
-        item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
-        item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
+
+        if (customerShoppingCartItem.getShippingType() != null) {
+            item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
+        }
+
+        if (customerShoppingCartItem.getShippingTransportationType() != null) {
+            item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
+        }
+
         item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
-        item.setTruckModel(customerShoppingCartItem.getTruckModel());
-        item.setTruckType(customerShoppingCartItem.getTruckType());
-        item.setInternationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getInternationalTransportationMethod()));
-        item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
+
+        if (customerShoppingCartItem.getTruckModel() != null) {
+            item.setTruckModel(customerShoppingCartItem.getTruckModel());
+        }
+
+        if (customerShoppingCartItem.getTruckType() != null) {
+            item.setTruckType(customerShoppingCartItem.getTruckType());
+        }
+
+        if (customerShoppingCartItem.getInternationalTransportationMethod() != null) {
+            item.setInternationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getInternationalTransportationMethod()));
+        }
+
+        if (customerShoppingCartItem.getNationalTransportationMethod() != null) {
+            item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
+        }
+
 
 
         if (instance != null) {
@@ -790,6 +811,47 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         return readableCustomerShoppingCartMapper.convert(cartModel, store, language);
     }
 
+    private ReadableCustomerShoppingCart readableCustomerShoppingCartDirectCheckout(Customer customer, CustomerShoppingCart cartModel, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception {
+//        MerchantStore store = merchantStoreService.getById(item.getMerchantId());
+//
+//        if (store == null) {
+//            throw new ServiceException("merchant store " + item.getMerchantId() + " missing exception");
+//        }
+        com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem itemModel = createCartItem(cartModel, item);
+
+        // need to check if the item is already in the cart
+        boolean duplicateFound = false;
+//        if (CollectionUtils.isEmpty(item.getAttributes())) {
+        Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> cartModelItems = cartModel.getLineItems();
+        for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem cartItem : cartModelItems) {
+            if (cartItem.getSku().equals(item.getSku())) {
+                cartItem.setQuantity(item.getQuantity());
+                cartItem.setChecked(true);
+                duplicateFound = true;
+            } else {
+                cartItem.setChecked(false);
+            }
+        }
+//        }
+
+        if (!duplicateFound) {
+            itemModel.setChecked(true);
+            cartModel.getLineItems().add(itemModel);
+        }
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] save cart model");
+        customerShoppingCartCalculationService.calculate(cartModel, customer, language);
+
+        saveCustomerShoppingCart(cartModel);
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] get cart model");
+//        cartModel = customerShoppingCartService.getById(cartModel.getId());
+        cartModel = customerShoppingCartService.getCustomerShoppingCart(customer);
+
+        LOG.debug("[CusotmerShoppingCartFacade/readableCustomerShoppingCart] mapper convert");
+        return readableCustomerShoppingCartMapper.convert(cartModel, store, language);
+    }
+
     @Override
     public ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception {
 //        Validate.notNull(cartCode, "Shopping cart code must not be null");
@@ -826,6 +888,40 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             return this.getByCustomer(customer, store, language);
         }
         return null;
+    }
+
+    @Override
+    public ReadableCustomerShoppingCart exclusiveSelectCartItem(Customer customer, String sku, MerchantStore store, Language language) throws Exception {
+        try {
+            CustomerShoppingCart cartModel = getCustomerShoppingCartModel(customer);
+            Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> items = cartModel.getLineItems();
+
+            for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem anItem: items) {
+                if (StringUtils.equals(anItem.getSku(), sku)) {
+                    anItem.setChecked(true);
+                } else {
+                    anItem.setChecked(false);
+                }
+
+            }
+
+            customerShoppingCartService.saveOrUpdate(cartModel);
+
+            return this.getByCustomer(customer, store, language);
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public ReadableCustomerShoppingCart directCheckoutCartItem(Customer customer, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception {
+        Validate.notNull(customer, "Customer cannot be null");
+        Validate.notNull(customer.getId(), "Customer.id cannot be null or empty");
+
+        CustomerShoppingCart cartModel = customerShoppingCartService.getCustomerShoppingCart(customer);
+        ReadableCustomerShoppingCart readableCustomerShoppingCart = readableCustomerShoppingCartDirectCheckout(customer, cartModel, item, store, language);
+
+        return readableCustomerShoppingCart;
     }
 
     @Override

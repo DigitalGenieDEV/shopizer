@@ -36,6 +36,9 @@ public class Delivery {
 	
 	@Column(name="DELIVERY_TELEPHONE", length=32)
 	private String telephone;
+
+	@Column(name="DELIVERY_MESSAGE")
+	private String message;
 	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
 	@JoinColumn(name="DELIVERY_COUNTRY_ID", nullable=true)
@@ -52,6 +55,13 @@ public class Delivery {
 	@Transient
 	private String longitude = null;
 
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public String getCompany() {
 		return company;

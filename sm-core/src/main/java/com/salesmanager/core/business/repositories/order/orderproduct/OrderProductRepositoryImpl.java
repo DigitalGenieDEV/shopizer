@@ -99,7 +99,7 @@ public class OrderProductRepositoryImpl implements OrderProductRepositoryCustom{
 //            String[] statuses = criteria.getStatuses().split(",");
 //            List<OrderStatus> statusList = new ArrayList<>();
 //            statusList.add(OrderStatus.ORDERED);
-//            statusList.add(OrderStatus.PROCESSED);
+//            statusList.add(OrderStatus.PAYMENT_COMPLETED);
 
             List<OrderStatus> statusList =
                     Arrays.asList(criteria.getStatuses().split(",")).stream().map(OrderStatus::valueOf).collect(Collectors.toList());

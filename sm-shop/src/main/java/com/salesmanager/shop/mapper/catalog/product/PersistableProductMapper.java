@@ -6,6 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
+import com.salesmanager.core.model.catalog.product.Material;
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
@@ -72,7 +75,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	@Autowired
 	private LanguageService languageService;
 
-	
+	@Autowired
+	private ErpService erpService;
 	
 	@Autowired
 	private ManufacturerService manufacturerService;
@@ -290,7 +294,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 
 				destination.setVariants(variants);
 			}
-			
+
+
 			/**
 			 * Default inventory
 			 */

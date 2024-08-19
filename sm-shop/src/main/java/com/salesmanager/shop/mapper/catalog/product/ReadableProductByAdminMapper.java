@@ -2,8 +2,10 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
@@ -64,6 +66,9 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 	@Autowired
 	private ReadableCategoryMapper readableCategoryMapper;
+
+	@Autowired
+	private ProductMaterialService productMaterialService;
 
 	@Autowired
 	private ReadableProductTypeMapper readableProductTypeMapper;
@@ -226,7 +231,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 						/**
 						 * Returns a list of ReadableProductOptions
-						 * 
+						 *
 						 * name lang type code List ReadableProductOptionValueEntity name description
 						 * image order default
 						 */
@@ -324,18 +329,18 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 			System.out.println("getVariants convert方法执行时长: " + (endTime1 - startTime1) + " 毫秒");
 
 			destination.setVariants(instances);
-			
+
 			/**
 			 * When an item has instances
 			 * Take default instance
-			 * 
+			 *
 			 * - Set item price as default instance price
 			 * - Set default image as default instance image
 			 */
-			
+
 			//get default instance
 			defaultInstance = instances.stream().filter(i -> i.isDefaultSelection()).findAny().orElse(null);
-			
+
 
 //			for (ProductVariant instance : source.getVariants()) {
 //				instanceToOption(selectableOptions, instance, store, language);
@@ -343,11 +348,25 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 		}
 
+		List<ProductMaterial> productMaterialList = productMaterialService.queryByProductId(source.getId());
+		if (CollectionUtils.isNotEmpty(productMaterialList)){
+			List<com.salesmanager.shop.model.catalog.ProductMaterial> collect = productMaterialList.stream().map(productMaterial -> {
+				com.salesmanager.shop.model.catalog.ProductMaterial pm = new com.salesmanager.shop.model.catalog.ProductMaterial();
+				pm.setProductId(source.getId());
+				pm.setMaterialId(productMaterial.getMaterialId());
+				pm.setWeight(productMaterial.getWeight());
+				pm.setId(productMaterial.getId());
+				return pm;
+			}).filter(Objects::nonNull).collect(Collectors.toList());
+			destination.setProductMaterials(collect);
+		}
+
+
 		if (selectableOptions != null) {
 			List<ReadableProductOption> options = new ArrayList<ReadableProductOption>(selectableOptions.values());
 			destination.setOptions(options);
 		}
-		
+
 		// availability
 		ProductAvailability availability = null;
 		for (ProductAvailability a : source.getAvailabilities()) {
@@ -359,19 +378,19 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 			 * instance null
 			 * region variant null
 			 */
-			
-			
+
+
 			availability = a;
 			destination.setQuantity(availability.getProductQuantity() == null ? 1 : availability.getProductQuantity());
 			if (availability.getProductQuantity().intValue() > 0 && destination.isAvailable()) {
 				destination.setCanBePurchased(true);
 			}
-			
+
 			if(a.getProductVariant()==null && StringUtils.isEmpty(a.getRegionVariant())) {
 				break;
 			}
 		}
-		
+
 		//if default instance
 
 		destination.setSku(source.getSku());

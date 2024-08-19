@@ -19,6 +19,7 @@ public class CategoryEntity extends Category implements Serializable {
 	private int depth;
 	private Category parent;
 
+	private String categoryIdBy1688;
 
 	private String handlingFee;
 
@@ -85,5 +86,13 @@ public class CategoryEntity extends Category implements Serializable {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getCategoryIdBy1688() {
+		return categoryIdBy1688;
+	}
+
+	public void setCategoryIdBy1688(String categoryIdBy1688) {
+		this.categoryIdBy1688 = categoryIdBy1688;
 	}
 }

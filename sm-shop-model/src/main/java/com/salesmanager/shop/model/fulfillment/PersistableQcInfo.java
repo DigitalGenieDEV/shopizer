@@ -2,8 +2,7 @@ package com.salesmanager.shop.model.fulfillment;
 
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
 
 @Data
 public class PersistableQcInfo extends QcInfo{

@@ -9,5 +9,6 @@ import java.util.Set;
 public class PersistableInvoicePackingForm extends InvoicePackingForm{
 
 
+    private Set<PersistableInvoicePackingFormDetail> invoicePackingFormDetails = new HashSet<>();
 
 }

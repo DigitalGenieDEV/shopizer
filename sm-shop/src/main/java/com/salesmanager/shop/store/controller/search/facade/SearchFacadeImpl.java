@@ -255,7 +255,10 @@ public class SearchFacadeImpl implements SearchFacade {
 		for(ProductResult productResult : searchProductResult.getProductResults()) {
 			//create new proxy product
 			ReadableDisplayProduct readProduct = getReadableDisplayProduct(Long.valueOf(productResult.getProductId()), language);
-			result.getProducts().add(readProduct);
+			if (readProduct != null) {
+				result.getProducts().add(readProduct);
+			}
+
 		}
 
 		result.setNumber(searchProductRequestV2.getNumber());

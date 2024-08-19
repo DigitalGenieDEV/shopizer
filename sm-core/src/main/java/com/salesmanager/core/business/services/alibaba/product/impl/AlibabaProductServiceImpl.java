@@ -21,7 +21,7 @@ public class AlibabaProductServiceImpl implements AlibabaProductService {
         ProductSearchKeywordQueryParam keywordQueryParam =  new  ProductSearchKeywordQueryParam();
         keywordQueryParam.setOfferQueryParam(param);
         ProductSearchKeywordQueryResult result = apiExecutor.execute(keywordQueryParam, ApiFor1688Constants.ACCESS_TOKEN).getResult();
-        LOGGER.info("AlibabaProductServiceImpl searchKeyword result" + JSON.toJSON(result));
+//        LOGGER.info("AlibabaProductServiceImpl searchKeyword result" + JSON.toJSON(result));
         if (!result.getResult().getSuccess()){
             throw new RuntimeException("AlibabaProductServiceImpl searchKeyword error" + JSON.toJSON(param));
         }
@@ -34,7 +34,7 @@ public class AlibabaProductServiceImpl implements AlibabaProductService {
         ProductSearchQueryProductDetailParam productSearchParam =  new  ProductSearchQueryProductDetailParam();
         productSearchParam.setOfferDetailParam(param);
         ProductSearchQueryProductDetailResult result = apiExecutor.execute(productSearchParam,ApiFor1688Constants.ACCESS_TOKEN).getResult();
-        LOGGER.info("AlibabaProductServiceImpl queryProductDetail result" + JSON.toJSON(result));
+//        LOGGER.info("AlibabaProductServiceImpl queryProductDetail result" + JSON.toJSON(result));
         ProductSearchQueryProductDetailResutResultModel productSearchQueryProductDetailResutResultModel = result.getResult();
         if (!productSearchQueryProductDetailResutResultModel.getSuccess()){
             throw new RuntimeException("AlibabaProductServiceImpl queryProductDetail error" + JSON.toJSON(param));

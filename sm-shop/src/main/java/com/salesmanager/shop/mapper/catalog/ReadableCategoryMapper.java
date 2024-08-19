@@ -59,6 +59,7 @@ public class ReadableCategoryMapper implements Mapper<Category, ReadableCategory
 		target.setFeatured(source.isFeatured());
 		target.setHandlingFeeFor1688(source.getHandlingFeeFor1688());
 		target.setHandlingFee(source.getHandlingFee());
+		target.setCategoryIdBy1688(source.getCategoryIdBy1688());
 	}
 
 	private com.salesmanager.shop.model.catalog.category.CategoryDescription convertDescription(

@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import org.springframework.validation.BindingResult;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -226,4 +227,8 @@ public interface OrderFacade {
 	 * Update Order status and create order_status_history record
 	 */
 	void updateOrderStatus(Order order, OrderStatus newStatus, MerchantStore store);
+
+
+	List<ReadableOrderProduct> queryOrderProductsByOrderId (Long orderId, Language language);
+
 }

@@ -42,13 +42,6 @@ public class GeneralDocument extends SalesManagerEntity<Long, GeneralDocument> i
     @Column(name = "DOCUMENT_URL")
     private String documentUrl;
 
-    /**
-     * 履约子单号
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "generalDocument")
-    private Set<FulfillmentSubOrder> fulfillmentSubOrders = new HashSet<>();
-
-
 
     @Column(name = "ORDER_ID")
     private Long orderId;

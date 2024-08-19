@@ -64,6 +64,7 @@ public class PersistableCategoryPopulator extends
 		target.setFeatured(source.isFeatured());
 		target.setCategoryImage(source.getImageUrl());
 		target.setHandlingFee(source.getHandlingFee());
+		target.setCategoryIdBy1688(source.getCategoryIdBy1688());
 		target.setHandlingFeeFor1688(source.getHandlingFeeFor1688());
 		//children
 		if(!CollectionUtils.isEmpty(source.getChildren())) {

@@ -1,9 +1,13 @@
 package com.salesmanager.core.business.repositories.order;
 
+import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.order.Order;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
@@ -16,8 +20,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     		+ "join fetch o.orderHistory oh left "
     		+ "join fetch op.downloads opd left "
     		+ "join fetch op.orderAttributes opa "
-    		+ "left join fetch op.prices opp where o.id = ?1 and om.id = ?2")
-	Order findOne(Long id, Integer merchantId);
+    		+ "left join fetch op.prices opp where o.id = ?1")
+	Order findOne(Long id);
 
 	@Query("select o from Order o join fetch o.merchant om "
 			+ "join fetch o.orderProducts op "
@@ -43,4 +47,12 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 			+ "join fetch op.orderAttributes opa "
 			+ "left join fetch op.prices opp where o.customerId = ?1")
 	Order findOrderListByCustomerOrderId(Long customerOrderId);
+
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Order o SET o.status = :status WHERE o.id = :orderId")
+	void updateOrderStatus(@Param("orderId") Long orderId, @Param("status") OrderStatus status);
+
 }

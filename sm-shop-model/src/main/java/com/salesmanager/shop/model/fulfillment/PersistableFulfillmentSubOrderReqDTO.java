@@ -4,6 +4,9 @@ import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
 
+import javax.persistence.Column;
+import java.util.Date;
+
 @Data
 public class PersistableFulfillmentSubOrderReqDTO {
 
@@ -22,20 +25,7 @@ public class PersistableFulfillmentSubOrderReqDTO {
      */
     private TransportationMethod nationalTransportationMethod;
 
-    /**
-     * 报关单号
-     */
-    private String customsDeclarationNumber;
 
-    /**
-     * 物流单号
-     */
-    private String logisticsNumber;
-
-    /**
-     * 运输信息
-     */
-    private String  transportInformation;
 
     /**
      * 送货单
@@ -66,6 +56,26 @@ public class PersistableFulfillmentSubOrderReqDTO {
     private String additionalServicesIds;
 
 
+    /**
+     * 物流单号
+     */
+    private String logisticsNumber;
 
+
+    /**
+     * 物流公司
+     */
+    private String nationalLogisticsCompany;
+
+
+    /**
+     * 发货时间
+     */
+    private Date nationalShippingTime;
+
+    /**
+     * 运输信息
+     */
+    private String  transportInformation;
 
 }

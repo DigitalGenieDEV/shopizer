@@ -1,9 +1,7 @@
 package com.salesmanager.core.model.catalog.product;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -236,6 +234,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
 	private Set<ProductFeature> features = new HashSet<>();
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+	private Set<ProductMaterial> productMaterialList =  new HashSet<>();
+
+
 	@Column(name="PRODUCT_STATUS", nullable = true)
 	@Enumerated(value = EnumType.STRING)
 	private ProductStatus productStatus;
@@ -325,7 +328,6 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	public void setAuditSection(AuditSection auditSection) {
 		this.auditSection = auditSection;
 	}
-
 
 	public Set<ProductFeature> getFeatures() {
 		return features;
@@ -712,5 +714,14 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setSellerOpenId(String sellerOpenId) {
 		this.sellerOpenId = sellerOpenId;
+	}
+
+
+	public Set<ProductMaterial> getProductMaterialList() {
+		return productMaterialList;
+	}
+
+	public void setProductMaterialList(Set<ProductMaterial> productMaterialList) {
+		this.productMaterialList = productMaterialList;
 	}
 }

@@ -11,8 +11,8 @@ public interface InvoicePackingFormRepository extends JpaRepository<InvoicePacki
 
 
     @Query("select c from InvoicePackingForm c "
-            + " where c.orderId=?1")
-    InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId);
+            + " where c.orderId=?1 and c.productId=?2")
+    InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
 
 
 }

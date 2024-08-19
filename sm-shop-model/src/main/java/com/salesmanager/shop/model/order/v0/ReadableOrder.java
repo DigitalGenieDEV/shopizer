@@ -5,6 +5,7 @@ import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.customer.address.Address;
+import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentMainOrder;
 import com.salesmanager.shop.model.order.OrderEntity;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.total.OrderTotal;
@@ -13,7 +14,6 @@ import com.salesmanager.shop.model.store.ReadableMerchantStore;
 import java.io.Serializable;
 import java.util.List;
 
-@Deprecated
 public class ReadableOrder extends OrderEntity implements Serializable {
 
 	/**
@@ -22,14 +22,19 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private ReadableCustomer customer;
 	private List<ReadableOrderProduct> products;
-	private Currency currencyModel;
-	
 	private ReadableBilling billing;
 	private ReadableDelivery delivery;
 	private ReadableMerchantStore store;
-	
-	
-	
+	private ReadableFulfillmentMainOrder fulfillmentMainOrder;
+
+	public ReadableFulfillmentMainOrder getFulfillmentMainOrder() {
+		return fulfillmentMainOrder;
+	}
+
+	public void setFulfillmentMainOrder(ReadableFulfillmentMainOrder fulfillmentMainOrder) {
+		this.fulfillmentMainOrder = fulfillmentMainOrder;
+	}
+
 	public void setCustomer(ReadableCustomer customer) {
 		this.customer = customer;
 	}
@@ -62,12 +67,6 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 		this.products = products;
 	}
 
-	//public Currency getCurrencyModel() {
-	//	return currencyModel;
-	//}
-	public void setCurrencyModel(Currency currencyModel) {
-		this.currencyModel = currencyModel;
-	}
 
 	public ReadableBilling getBilling() {
 		return billing;
@@ -90,8 +89,39 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 		this.store = store;
 	}
 
+	public OrderTotal getHandling() {
+		return handling;
+	}
+
+	public void setHandling(OrderTotal handling) {
+		this.handling = handling;
+	}
+
+	public OrderTotal getAdditionalService() {
+		return additionalService;
+	}
+
+	public void setAdditionalService(OrderTotal additionalService) {
+		this.additionalService = additionalService;
+	}
+
+	public OrderTotal getErp() {
+		return erp;
+	}
+
+	public void setErp(OrderTotal erp) {
+		this.erp = erp;
+	}
+
 	private OrderTotal total;
 	private OrderTotal tax;
 	private OrderTotal shipping;
+
+	private OrderTotal handling;
+
+	private OrderTotal additionalService;
+
+	private OrderTotal erp;
+
 
 }

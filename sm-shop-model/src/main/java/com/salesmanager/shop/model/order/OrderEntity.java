@@ -8,6 +8,7 @@ import java.util.List;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.payment.CreditCard;
 import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.shop.model.fulfillment.ReadableGeneralDocument;
 import com.salesmanager.shop.model.order.total.OrderTotal;
 import com.salesmanager.shop.model.order.v0.Order;
 
@@ -31,7 +32,8 @@ public class OrderEntity extends Order implements Serializable {
 	private boolean customerAgreed;
 	private boolean confirmedAddress;
 	private String comments;
-	
+
+
 	public void setTotals(List<OrderTotal> totals) {
 		this.totals = totals;
 	}

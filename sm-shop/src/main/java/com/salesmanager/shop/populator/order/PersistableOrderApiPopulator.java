@@ -137,6 +137,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			delivery.setPostalCode(source.getAddress().getPostalCode());
 			delivery.setTelephone(source.getAddress().getPhone());
 			delivery.setCountry(countryService.getByCode(source.getAddress().getCountryCode()));
+			delivery.setMessage(source.getAddress().getMessage());
 			target.setDelivery(delivery);
 
 

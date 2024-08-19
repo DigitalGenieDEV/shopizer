@@ -4,8 +4,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.ProductCriteria;
+import com.salesmanager.core.model.catalog.product.ProductList;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderCustomerCriteria;
+import com.salesmanager.core.model.reference.language.Language;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
@@ -15,6 +22,9 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderCriteria;
 import com.salesmanager.core.model.order.OrderList;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+
+import java.util.Date;
+import java.util.List;
 
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
@@ -136,8 +146,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		
 	}
 
-	@Override
-	public OrderList listOrders(MerchantStore store, OrderCriteria criteria) {
+	public OrderList listOrders1(MerchantStore store, OrderCriteria criteria) {
 		OrderList orderList = new OrderList();
 		StringBuilder countBuilderSelect = new StringBuilder();
 		StringBuilder objectBuilderSelect = new StringBuilder();
@@ -150,8 +159,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			}
 		}
 
-		
-		String baseQuery = "select o from Order as o left join fetch o.delivery.country left join fetch o.delivery.zone left join fetch o.billing.country left join fetch o.billing.zone left join fetch o.orderTotal ot left join fetch o.orderProducts op left join fetch o.orderAttributes oa left join fetch op.orderAttributes opo left join fetch op.prices opp";
+		String baseQuery = "select o from Order as o left join fetch o.delivery.country " +
+				"left join fetch o.delivery.zone " +
+				"left join fetch o.billing.country " +
+				"left join fetch o.billing.zone " +
+				"left join fetch o.orderTotal ot " +
+				"left join fetch o.orderProducts op " +
+				"left join fetch o.orderAttributes oa " +
+				"left join fetch op.orderAttributes opo " +
+				"left join fetch op.prices opp " +
+				"left join fetch o.fulfillmentMainOrder fm ";
+
 		String countBaseQuery = "select count(o) from Order as o";
 		
 		countBuilderSelect.append(countBaseQuery);
@@ -323,9 +341,136 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		return orderList;
 	}
 
+
+
+
+	@Override
+	public OrderList listOrders(MerchantStore store, OrderCriteria criteria) {
+		OrderList orderList = new OrderList();
+		// Step 1: Query to get total count
+		StringBuilder countBuilderWhere = new StringBuilder();
+		countBuilderWhere.append(" where 1 = 1");
+		appendSimpleConditions(store, countBuilderWhere, criteria);
+		long start = System.currentTimeMillis();
+		// Count query to get total count
+		Query countQ = this.em.createQuery("SELECT COUNT(p.id) from Order p" + countBuilderWhere.toString());
+		if (store !=null){
+			countQ.setParameter("mId", store.getId());
+		}
+		setSimpleParameters(countQ, criteria);
+
+		Long totalCount = (Long) countQ.getSingleResult();
+		orderList.setTotalCount(totalCount.intValue());
+		long end = System.currentTimeMillis();
+		System.out.println("query count time"+ (end - start));
+		if (totalCount == 0) {
+			return orderList;
+		}
+		long start1 = System.currentTimeMillis();
+		// Step 2: Query to get paginated Product IDs with sorting by modification time
+		StringBuilder countBuilderSelect = new StringBuilder();
+		countBuilderSelect.append("select p.id from Order as p");
+		//  appendComplexConditions(countBuilderWhere, criteria);
+
+		String fullQuery = countBuilderSelect.toString() + countBuilderWhere.toString() + " ORDER BY p.lastModified DESC";
+		Query orderIdsQ = this.em.createQuery(fullQuery);
+		if (store !=null){
+			orderIdsQ.setParameter("mId", store.getId());
+		}
+		setComplexParameters(orderIdsQ, criteria);
+		int firstResult = ((criteria.getStartPage()==0?0:criteria.getStartPage())) * criteria.getPageSize();
+		orderIdsQ.setFirstResult(firstResult);
+		orderIdsQ.setMaxResults(criteria.getPageSize());
+		List<Long> orderIds = orderIdsQ.getResultList();
+		long end1 = System.currentTimeMillis();
+		System.out.println("query orders  time"+ (end1 - start1));
+		// Step 3: Query to get detailed Product entities with sorting by modification time
+		if (!orderIds.isEmpty()) {
+			long start2 = System.currentTimeMillis();
+			List<Order> productByIds = getProductByIds(orderIds);
+			long end2 = System.currentTimeMillis();
+			System.out.println("query order info  time"+ (end2 - start2));
+			orderList.setOrders(productByIds);
+		}
+		return orderList;
+	}
+
+	private void appendSimpleConditions(MerchantStore store, StringBuilder queryBuilder, OrderCriteria criteria) {
+		if (store !=null){
+			queryBuilder.append(" and p.merchant.id=:mId");
+		}
+		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
+			String nameQuery =  " and o.billing.firstName like:name or o.billing.lastName like:name";
+			queryBuilder.append(nameQuery);
+		}
+
+		if(!StringUtils.isEmpty(criteria.getEmail())) {
+			String nameQuery =  " and o.customerEmailAddress like:email";
+			queryBuilder.append(nameQuery);
+		}
+		//id
+		if(criteria.getId() != null) {
+			String nameQuery =  " and str(o.id) like:id";
+			queryBuilder.append(nameQuery);
+		}
+		//phone
+		if(!StringUtils.isEmpty(criteria.getCustomerPhone())) {
+			String nameQuery =  " and o.billing.telephone like:phone or o.delivery.telephone like:phone";
+			queryBuilder.append(nameQuery);
+		}
+
+		//status
+		if(!StringUtils.isEmpty(criteria.getStatus())) {
+			String nameQuery =  " and o.status =:status";
+			queryBuilder.append(nameQuery);
+		}
+	}
+
+	private void setComplexParameters(Query query, OrderCriteria criteria) {
+		setSimpleParameters(query, criteria);
+	}
+
+	public List<Order> getProductByIds(List<Long> orderIds) {
+		final String hql = "select distinct p from Order as p " +
+				"join fetch p.merchant merch " +
+				"where p.id in :pid order by p.lastModified";
+		final Query q = this.em.createQuery(hql);
+		q.setParameter("pid", orderIds);
+		return q.getResultList();
+	}
+
+
+
+	private void setSimpleParameters(Query query, OrderCriteria criteria) {
+		//customer name
+		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
+			query.setParameter("name", like(criteria.getCustomerName()));
+		}
+
+		//email
+		if(!StringUtils.isEmpty(criteria.getEmail())) {
+			query.setParameter("email", like(criteria.getEmail()));
+		}
+
+		//id
+		if(criteria.getId() != null) {
+			query.setParameter("id", like(String.valueOf(criteria.getId())));
+		}
+
+		//phone
+		if(!StringUtils.isEmpty(criteria.getCustomerPhone())) {
+			query.setParameter("phone", like(criteria.getCustomerPhone()));
+		}
+
+		//status
+		if(!StringUtils.isEmpty(criteria.getStatus())) {
+			query.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
+		}
+
+	}
+
 	private String like(String q) {
 		return '%' + q + '%';
 	}
-
 
 }
