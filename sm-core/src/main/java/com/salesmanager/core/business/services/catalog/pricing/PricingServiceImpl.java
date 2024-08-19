@@ -28,6 +28,7 @@ import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.currency.Currency;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Contains all the logic required to calculate product price
@@ -46,11 +47,13 @@ public class PricingServiceImpl implements PricingService {
 	private ProductPriceUtils priceUtil;
 	
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(Product product, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 		return priceUtil.getFinalPrice(product, isShowProductPriceCurrencyCode);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPriceByCurrencyCode(Product product, String currencyCode) throws ServiceException {
 		FinalPrice finalPrice = priceUtil.getFinalPrice(product, false);
 

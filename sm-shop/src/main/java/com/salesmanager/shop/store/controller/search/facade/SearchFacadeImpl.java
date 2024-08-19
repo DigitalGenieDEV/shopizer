@@ -54,6 +54,7 @@ import com.salesmanager.shop.utils.ImageFilePath;
 import modules.commons.search.request.Aggregation;
 import modules.commons.search.request.SearchItem;
 import modules.commons.search.request.SearchResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("searchFacade")
 public class SearchFacadeImpl implements SearchFacade {
@@ -270,6 +271,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public ReadableDisplayProduct getReadableDisplayProduct(Long productId, Language language) {
 		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
 		populator.setPricingService(pricingService);
