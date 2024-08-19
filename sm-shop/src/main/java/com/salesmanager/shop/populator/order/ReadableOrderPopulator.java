@@ -91,7 +91,7 @@ public class ReadableOrderPopulator extends
 			List<FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(source.getId());
 
 			if (fulfillmentSubOrders != null) {
-				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.stream()
+				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.parallelStream()
 						.map(this::convertToReadableFulfillmentSubOrder)
 						.filter(Objects::nonNull)
 						.collect(Collectors.toSet());
@@ -102,7 +102,7 @@ public class ReadableOrderPopulator extends
 			List<GeneralDocument> generalDocuments = generalDocumentService.queryGeneralDocumentByOrderId(source.getId());
 
 			if (CollectionUtils.isNotEmpty(generalDocuments)) {
-				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.stream()
+				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.parallelStream()
 						.map(generalDocument -> {
 							ReadableGeneralDocument readableGeneralDocument = ObjectConvert.convert(generalDocument, ReadableGeneralDocument.class);
 							readableGeneralDocument.setDocumentType(generalDocument.getDocumentType()==null? null : generalDocument.getDocumentType().name());
@@ -140,7 +140,10 @@ public class ReadableOrderPopulator extends
 		
 		com.salesmanager.shop.model.order.total.OrderTotal taxTotal = null;
 		com.salesmanager.shop.model.order.total.OrderTotal shippingTotal = null;
-		
+		com.salesmanager.shop.model.order.total.OrderTotal handingTotal = null;
+		com.salesmanager.shop.model.order.total.OrderTotal additionalServiceTotal = null;
+		com.salesmanager.shop.model.order.total.OrderTotal erpTotal = null;
+
 		if(source.getBilling()!=null) {
 			ReadableBilling address = new ReadableBilling();
 			address.setEmail(source.getCustomerEmailAddress());
@@ -220,19 +223,41 @@ public class ReadableOrderPopulator extends
 					v = v.add(totalTotal.getValue());
 					shippingTotal.setValue(v);
 				}
-				target.setShipping(totalTotal);
+				target.setShipping(shippingTotal);
 				totals.add(totalTotal);
 			}
 			else if(t.getOrderTotalType().name().equals(OrderTotalType.HANDLING.name())) {
 				com.salesmanager.shop.model.order.total.OrderTotal totalTotal = createTotal(t);
-				if(shippingTotal==null) {
-					shippingTotal = totalTotal;
+				if(handingTotal==null) {
+					handingTotal = totalTotal;
 				} else {
-					BigDecimal v = shippingTotal.getValue();
+					BigDecimal v = handingTotal.getValue();
 					v = v.add(totalTotal.getValue());
-					shippingTotal.setValue(v);
+					handingTotal.setValue(v);
 				}
-				target.setShipping(totalTotal);
+				target.setHandling(handingTotal);
+				totals.add(totalTotal);
+			}else if(t.getOrderTotalType().name().equals(OrderTotalType.ERP.name())) {
+				com.salesmanager.shop.model.order.total.OrderTotal totalTotal = createTotal(t);
+				if(erpTotal==null) {
+					erpTotal = totalTotal;
+				} else {
+					BigDecimal v = erpTotal.getValue();
+					v = v.add(totalTotal.getValue());
+					erpTotal.setValue(v);
+				}
+				target.setErp(erpTotal);
+				totals.add(totalTotal);
+			}else if(t.getOrderTotalType().name().equals(OrderTotalType.ADDITIONAL_SERVICE.name())) {
+				com.salesmanager.shop.model.order.total.OrderTotal totalTotal = createTotal(t);
+				if(additionalServiceTotal==null) {
+					additionalServiceTotal = totalTotal;
+				} else {
+					BigDecimal v = additionalServiceTotal.getValue();
+					v = v.add(totalTotal.getValue());
+					additionalServiceTotal.setValue(v);
+				}
+				target.setAdditionalService(additionalServiceTotal);
 				totals.add(totalTotal);
 			}
 			else if(t.getOrderTotalType().name().equals(OrderTotalType.SUBTOTAL.name())) {

@@ -239,25 +239,25 @@ public class OrderApi {
 		orderCriteria.setPageSize(count);
 		orderCriteria.setStartPage(page);
 
-		if (queryType.equals("ID")){
+		if (StringUtils.isNotEmpty(queryType) &&  queryType.equals("ID")){
 			orderCriteria.setId(Long.valueOf(queryValue));
 		}
-		if (queryType.equals("NAME")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")){
 			orderCriteria.setCustomerName(queryValue);
 		}
-		if (queryType.equals("PHONE")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PHONE")){
 			orderCriteria.setCustomerPhone(queryValue);
 		}
-		if (queryType.equals("PAYMENT_METHOD")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PAYMENT_METHOD")){
 			orderCriteria.setPaymentMethod(queryValue);
 		}
-		if (queryType.equals("EMAIL")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("EMAIL")){
 			orderCriteria.setEmail(queryValue);
 		}
-		if (queryType.equals("HS_CODE")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("HS_CODE")){
 
 		}
-		if (queryType.equals("STORE_CODE")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("STORE_CODE")){
 
 		}
 		orderCriteria.setStatus(orderStatus);

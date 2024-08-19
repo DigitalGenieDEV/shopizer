@@ -89,8 +89,39 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 		this.store = store;
 	}
 
+	public OrderTotal getHandling() {
+		return handling;
+	}
+
+	public void setHandling(OrderTotal handling) {
+		this.handling = handling;
+	}
+
+	public OrderTotal getAdditionalService() {
+		return additionalService;
+	}
+
+	public void setAdditionalService(OrderTotal additionalService) {
+		this.additionalService = additionalService;
+	}
+
+	public OrderTotal getErp() {
+		return erp;
+	}
+
+	public void setErp(OrderTotal erp) {
+		this.erp = erp;
+	}
+
 	private OrderTotal total;
 	private OrderTotal tax;
 	private OrderTotal shipping;
+
+	private OrderTotal handling;
+
+	private OrderTotal additionalService;
+
+	private OrderTotal erp;
+
 
 }
