@@ -86,28 +86,33 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(Product product, Customer customer) throws ServiceException {
 		/** TODO add rules for price calculation **/
 		return priceUtil.getFinalPrice(product, false);
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(Product product, List<ProductAttribute> attributes) throws ServiceException {
 		return priceUtil.getFinalPrice(product, attributes);
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(Product product, List<ProductAttribute> attributes, Customer customer) throws ServiceException {
 		/** TODO add rules for price calculation **/
 		return priceUtil.getFinalPrice(product, attributes);
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public BigDecimal calculatePriceQuantity(BigDecimal price, int quantity) {
 		return price.multiply(new BigDecimal(quantity));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String getDisplayAmount(BigDecimal amount, MerchantStore store) throws ServiceException {
 		try {
 			return priceUtil.getStoreFormatedAmountWithCurrency(store,amount);
@@ -118,6 +123,7 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String getDisplayAmount(BigDecimal amount, MerchantStore store, String currency) throws ServiceException {
 		try {
 			return priceUtil.getStoreFormatedAmountWithCurrency(store, amount, currency);
@@ -128,6 +134,7 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String getDisplayAmount(BigDecimal amount, Locale locale,
 			Currency currency, MerchantStore store) throws ServiceException {
 		try {
@@ -139,6 +146,7 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String getStringAmount(BigDecimal amount, MerchantStore store)
 			throws ServiceException {
 		try {
@@ -150,6 +158,7 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public BigDecimal getAmount(String amount) throws ServiceException {
 
 		try {
@@ -162,12 +171,14 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(ProductAvailability availability, Boolean isShowProductPriceCurrencyCode) throws ServiceException {
 
 		return priceUtil.getFinalPrice(availability, isShowProductPriceCurrencyCode);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public FinalPrice calculateProductPrice(ProductVariant variant) throws ServiceException {
 		return priceUtil.getFinalPrice(variant);
 	}
