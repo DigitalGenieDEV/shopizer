@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.model.customer.Customer;
@@ -319,10 +320,10 @@ public class CustomerShoppingCartApi {
             @ApiIgnore Language language,
             HttpServletRequest request,
             HttpServletResponse response, Locale locale
-    ) {
+    ) throws Exception {
 
         long start = LogPermUtil.start("CustomerShoppingCartApi/directCheckout");
-        try {
+//        try {
 
             Principal principal = request.getUserPrincipal();
             Customer customer = customerService.getByNick(principal.getName());
@@ -343,14 +344,14 @@ public class CustomerShoppingCartApi {
 
 
 //            return readableCustomerOrderConfirmation;
-        } catch (Exception e) {
-            LOGGER.error("Error while processing direct checkout", e);
-            try {
-                response.sendError(503, "Error while processing direct checkout " + e.getMessage());
-            } catch (Exception ignore) {
-            }
-            return null;
-        }
+//        } catch (Exception e) {
+//            LOGGER.error("Error while processing direct checkout", e);
+//            try {
+//                response.sendError(503, "Error while processing direct checkout " + e.getMessage());
+//            } catch (Exception ignore) {
+//            }
+//            return null;
+//        }
     }
 
     @DeleteMapping(value = "/auth/customer_cart/product/{sku}/exclusive_select", produces = { APPLICATION_JSON_VALUE })
@@ -433,9 +434,8 @@ public class CustomerShoppingCartApi {
             @Valid @RequestBody PersistableCustomerOrder persistableCustomerOrder, // order
             @ApiIgnore Language language,
             HttpServletRequest request,
-            HttpServletResponse response, Locale locale) {
+            HttpServletResponse response, Locale locale) throws Exception {
         long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
-        try {
             Principal principal = request.getUserPrincipal();
             String userName = principal.getName();
 
@@ -462,14 +462,7 @@ public class CustomerShoppingCartApi {
 
             LogPermUtil.end("CustomerShoppingCartApi/checkout", start);
             return readableCustomerOrderConfirmation;
-        } catch (Exception e) {
-            LOGGER.error("Error while processing checkout", e);
-            try {
-                response.sendError(503, "Error while processing checkout " + e.getMessage());
-            } catch (Exception ignore) {
-            }
-            return null;
-        }
+
 
     }
 
