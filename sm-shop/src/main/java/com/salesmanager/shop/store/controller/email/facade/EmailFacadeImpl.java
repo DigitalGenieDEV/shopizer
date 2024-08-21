@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.email.facade;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -30,6 +31,16 @@ public class EmailFacadeImpl implements EmailFacade{
 	private final ExternalClient emailClient;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailFacadeImpl.class);
+	
+	@Override
+	public void sendEmail(
+			String to,
+			String subject,
+			String templateName,
+			Map<String, String> tokens
+	) {
+		emailService.sendEmail(to, subject, templateName, tokens);	
+	}
 	
 	@Override
 	public void emailVerification(String to) {

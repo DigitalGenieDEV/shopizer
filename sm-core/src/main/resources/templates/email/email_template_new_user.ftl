@@ -13,10 +13,10 @@
 								<tr>
 									<td align="left" valign="bottom" width="50%" height="36px">
 										<a href="https://sourcingroot.com/" target="_blank" title="새창열기">
-											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/logo.com.png" alt="소싱루트 로고" style="display:block;width:200px;height:34px;" width="200" height="34">
+											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/com_Mailing/logo.com.png" alt="소싱루트 로고" style="display:block;width:200px;height:34px;" width="200" height="34">
 										</a>
 									</td>
-									<td align="right" valign="bottom" width="50%" height="36px">2024.07.02</td>
+									<td align="right" valign="bottom" width="50%" height="36px">${EMAIL_DATE}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -112,7 +112,7 @@
 							<tbody>
 								<tr>
 									<td style="font-size:13px;letter-spacing:-.05em;text-align:center;line-height:1.5;color:#555">
-										본 메일은 정보통신망법률 등 관련규정에 의거하여 2024.07.02 기준으로<br />
+										본 메일은 정보통신망법률 등 관련규정에 의거하여 ${EMAIL_DATE} 기준으로<br />
 										메일 수신에 동의한 회원님을 대상으로 발송되었습니다. 메일 수신을 원하지 않으시면<br />
 										[ <a href="https://sourcingroot.com/login" target="_blank" title="새창열기" style="color:#1165e0;text-decoration:underline">로그인</a> > <u>마이페이지</u> > <u>나의 계정</u> > <u>구매관리</u> > <u>마케팅 정보 수신동의</u> ] 로 이동하시어<br />
 										<strong style="color:#000">마케팅 동의여부를 조정</strong>해 주세요.
@@ -155,11 +155,11 @@
 								<tr>
 									<td style="text-align:center;vertical-align:bottom;font-size:0;" valign="bottom">
 										<a href="https://www.ckbridge.co.kr/" target="_blank" title="새창열기" style="display:inline-block;vertical-align:bottom;">
-											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/logo_ck.png" alt="씨케이브릿지 주식회사 로고" style="display:block;width:110px;height:39px;" width="110" height="39">
+											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/com_Mailing/logo_ck.png" alt="씨케이브릿지 주식회사 로고" style="display:block;width:110px;height:39px;" width="110" height="39">
 										</a>
-										<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/logo_tilde.png" alt="" style="display:inline-block;width:27px;height:39px;" width="27" height="39">
+										<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/com_Mailing/logo_tilde.png" alt="" style="display:inline-block;width:27px;height:39px;" width="27" height="39">
 										<a href="https://sourcingroot.com/" target="_blank" title="새창열기" style="display:inline-block;vertical-align:bottom;">
-											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/logo_sr.png" alt="소싱루트 로고" style="display:block;width:180px;height:39px;" width="180" height="39">
+											<img src="https://sourcingroot.co.kr/data/skin/responsive_sports_activity_gl/images/design_resp/com_Mailing/logo_sr.png" alt="소싱루트 로고" style="display:block;width:180px;height:39px;" width="180" height="39">
 										</a>
 									</td>
 								</tr>

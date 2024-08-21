@@ -1,6 +1,9 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +39,7 @@ import com.salesmanager.core.model.content.FileContentType;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.constants.EmailConstants;
 import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
 import com.salesmanager.shop.store.api.exception.GenericRuntimeException;
@@ -43,6 +47,7 @@ import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
+import com.salesmanager.shop.store.controller.email.facade.EmailFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.store.controller.user.facade.UserFacade;
 import com.salesmanager.shop.store.security.AuthenticationRequest;
@@ -85,6 +90,9 @@ public class AuthenticateCustomerApi {
 
 	@Inject
 	private CustomerFacade customerFacade;
+	
+	@Inject
+	private EmailFacade emailFacade;
 	
 	@Inject
 	private ContentFacade contentFacade;
@@ -156,6 +164,21 @@ public class AuthenticateCustomerApi {
 		}
 
 		customerFacade.registerCustomer(customer, merchantStore, language);
+		
+		
+		Map<String, String> tokens = new HashMap<String, String>();
+		
+		tokens.put("EMAIL_USER_NAME", customer.getBilling().getFirstName());
+		tokens.put("EMAIL_USER_EMAIL", customer.getEmailAddress());
+		tokens.put("EMAIL_USER_COMPANY", customer.getCompany());
+		tokens.put("EMAIL_DATE", LocalDate.now().toString());
+		
+		emailFacade.sendEmail(
+				customer.getEmailAddress(),
+				"소싱루트에 가입하신 것을 진심으로 환영합니다!",
+				EmailConstants.EMAIL_NEW_USER,
+				tokens
+				);
 
 		// Perform the security
 		Authentication authentication = null;

@@ -42,7 +42,7 @@ public class DocumentationConfiguration {
 
 	public static final Contact DEFAULT_CONTACT = new Contact("Shopizer", "https://www.shopizer.com", "");
 
-		private static final String HOST = "localhost:8080";
+	private static final String HOST = "localhost:8080";
 
 //	private static final String HOST = "13.125.162.112:8080";
 
