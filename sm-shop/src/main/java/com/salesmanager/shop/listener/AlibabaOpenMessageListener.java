@@ -1,10 +1,10 @@
 package com.salesmanager.shop.listener;
 
-import com.alibaba.tuna.client.api.MessageProcessException;
-import com.alibaba.tuna.client.httpcb.HttpCbMessage;
-import com.alibaba.tuna.client.httpcb.HttpCbMessageHandler;
-import com.alibaba.tuna.client.httpcb.TunaHttpCbClient;
+import com.salesmanager.shop.listener.alibaba.tuna.client.api.MessageProcessException;
+import com.salesmanager.shop.listener.alibaba.tuna.client.httpcb.HttpCbMessage;
+import com.salesmanager.shop.listener.alibaba.tuna.client.httpcb.HttpCbMessageHandler;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.shop.listener.alibaba.tuna.client.httpcb.TunaHttpCbClient;
 import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsMsg;
 import com.salesmanager.shop.model.purchaseorder.*;
 import com.salesmanager.shop.store.controller.crossorder.facade.SupplierCrossOrderFacade;
@@ -222,18 +222,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
         purchaseOrderAlibabaMsgerFacade.logisticsBuyerViewTrace(msg);
     }
 
-//    private void processSupplierCrossOrderLogisticsMsg(HttpCbMessage message) throws ServiceException {
-//        Map<String, Object> data = message.getData();
-//        SupplierCrossOrderLogisticsMsg supplierCrossOrderLogisticsMsg = new SupplierCrossOrderLogisticsMsg();
-//        supplierCrossOrderLogisticsMsg.setOrderId((Long) data.get("orderId"));
-//        supplierCrossOrderLogisticsMsg.setCurrentStatus((String)data.get("currentStatus"));
-//        supplierCrossOrderLogisticsMsg.setBuyerMemberId((String)data.get("buyerMemberId"));
-//        supplierCrossOrderLogisticsMsg.setSellerMemberId((String)data.get("sellerMemberId"));
-//
-//        supplierCrossOrderFacade.processSupplierCrossOrderLogisticsMsg(supplierCrossOrderLogisticsMsg);
-//    }
 
-//    @PostConstruct
     public void init() {
         // 2. 创建 消息处理 Handler
         HttpCbMessageHandler messageHandler = new HttpCbMessageHandler<HttpCbMessage, Void>() {
