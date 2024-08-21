@@ -149,7 +149,13 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
 
             if (cart == null) {
-                throw new ServiceException("Shopping cart with Customer id " + customer.getId() + " does not exist");
+                throw new ServiceException("Customer Shopping cart with Customer id " + customer.getId() + " does not exist");
+            }
+
+            Set<CustomerShoppingCartItem> checkedCartItems = cart.getCheckedLineItems();
+
+            if (checkedCartItems.size() <= 0) {
+                throw new ServiceException("Customer Shopping cart with Customer id " + customer.getId() + " does not have checked cart items");
             }
 
             // 将选中商品 按商户拆分
