@@ -1,12 +1,12 @@
 package com.salesmanager.shop.store.api.v2.product;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -42,94 +42,55 @@ public class Product1688Api {
 	@Autowired
 	private AlibabaProductFacade alibabaProductFacade;
 
-public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore merchantStore,
-			@ApiIgnore Language language, @Valid @RequestBody Product1688AddEntity paramData) throws ServiceException {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		// 记录开始时间
-		long startTime = System.currentTimeMillis();
-		System.out.println("开始时间: " + startTime);
-
-
-		int totalPage = 0;
-		try {
-			if (paramData.getKeywordList().size() > 0) {
-				for (Product1688ListEntity keyword : paramData.getKeywordList()) {
-					List<Long> offersId = new ArrayList<Long>();
-					AlibabaProductSearchKeywordQueryParam alibabaProductSearchKeywordQueryParam = new AlibabaProductSearchKeywordQueryParam();
-					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
-					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
-					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
-					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
-					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
-					ReadableProductPageInfo searchData = alibabaProductFacade
-							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
-					totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
-					System.out.println("totalPage:" + totalPage);
-
-					if (searchData.getData().size() > 0) {
-						for (AlibabaProductSearchQueryModelProduct data : searchData.getData()) {
-							alibabaProductFacade.importProduct(Collections.singletonList(data.getOfferId()), language.getCode(), merchantStore,
-									keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
-						}
-					}
-					for (int i = 2; i <= totalPage; i++) {
-						System.out.println("page:" + i);
-						AlibabaProductSearchKeywordQueryParam insertAddParam = new AlibabaProductSearchKeywordQueryParam();
-						insertAddParam.setBeginPage(i);
-						insertAddParam.setPageSize(paramData.getPageSize());
-						insertAddParam.setCountry(paramData.getCountry());
-						insertAddParam.setCategoryId(keyword.getCategoryId1688());
-						insertAddParam.setKeyword(keyword.getKeyword());
-						ReadableProductPageInfo searchOtherData = alibabaProductFacade
-								.searchProductByKeywords(insertAddParam);
-						if (searchOtherData.getData() != null && searchOtherData.getData().size() > 0) {
-							for (AlibabaProductSearchQueryModelProduct data2 : searchOtherData.getData()) {
-								alibabaProductFacade.importProduct(Collections.singletonList(data2.getOfferId()), language.getCode(), merchantStore,
-										keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
-							}
-						}
-					}
-					System.out.println("offersIdCount"+offersId.size());
-
-				}
-			}
-			// 记录结束时间
-			long endTime = System.currentTimeMillis();
-			System.out.println("结束时间: " + endTime);
-			System.out.println("总耗时: " + (endTime - startTime) + " 毫秒");
-
-			resultMap.put("resultCode", 200);
-			resultMap.put("errMsg", "");
-		} catch (Exception e) {
-			e.printStackTrace();
-			resultMap.put("resultCode", 200);
-			resultMap.put("errMsg", e.getMessage());
-		}
-
-		return resultMap;
-
-	}
-
 
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@RequestMapping(value = "/product/add1688", method = RequestMethod.POST)
 	@ApiOperation(httpMethod = "POST", value = "search product by keywords", notes = "search product by keywords", produces = "application/json", response = ReadableProductPageInfo.class)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
-			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")
+	})
 	public Map<String, Object> searchProductByKeywords1(@ApiIgnore MerchantStore merchantStore,
-													   @ApiIgnore Language language, @Valid @RequestBody Product1688AddEntity paramData) throws ServiceException {
+														@ApiIgnore Language language, @Valid @RequestBody Product1688AddEntity paramData) throws ServiceException {
 
-		// 记录开始时间
 		long startTime = System.currentTimeMillis();
 		System.out.println("开始时间: " + startTime);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		ExecutorService executorService = Executors.newFixedThreadPool(10); // 创建一个固定大小的线程池
-		List<Future<?>> futures = new ArrayList<>();
 
-		int totalPage = 0;
+		int corePoolSize = 100;  // 核心线程数
+		int maxPoolSize = 100;   // 最大线程数
+		int queueCapacity = 200; // 有界队列大小
+
+		AtomicInteger importCount = new AtomicInteger();
+		AtomicInteger queryCount = new AtomicInteger();
+
+		// 存储异常的itemId和对应的错误信息
+		Map<Long, String> errorItems = new ConcurrentHashMap<>();
+
+		// 创建一个有界队列，并自定义拒绝策略
+		BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(queueCapacity);
+		RejectedExecutionHandler handler = (r, executor) -> {
+			try {
+				// 当队列满时，阻塞等待队列有空间
+				executor.getQueue().put(r);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new RejectedExecutionException("Task " + r.toString() + " rejected", e);
+			}
+		};
+
+		ExecutorService executorService = new ThreadPoolExecutor(
+				corePoolSize,
+				maxPoolSize,
+				60L,
+				TimeUnit.SECONDS,
+				queue,
+				handler
+		);
+
+		List<Future<?>> futures = new ArrayList<>();
 
 		try {
 			if (paramData.getKeywordList().size() > 0) {
@@ -140,77 +101,47 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
 					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
-					System.out.println("keyword.getCategoryId1688()"+keyword.getCategoryId1688());
-					System.out.println("alibabaProductSearchKeywordQueryParam.setCategoryId()"+alibabaProductSearchKeywordQueryParam.getCategoryId());
+
 					ReadableProductPageInfo searchData = alibabaProductFacade
 							.searchProductByKeywords(alibabaProductSearchKeywordQueryParam);
-					totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
-					System.out.println("totalPage:" + totalPage);
+					int totalPage = (int) Math.ceil((double) searchData.getTotalRecords() / searchData.getPageSize());
 
-					if (searchData.getData().size() > 0) {
-						for (AlibabaProductSearchQueryModelProduct data : searchData.getData()) {
-							Future<?> future = executorService.submit(() -> {
-								try {
-									alibabaProductFacade.importProduct(
-											Collections.singletonList(data.getOfferId()), language.getCode(), merchantStore,
-											keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
-								} catch (ServiceException e) {
-									throw new RuntimeException(e);
-								}
-							});
-							futures.add(future);
+					for (int i = 1; i <= totalPage; i++) {
+						AlibabaProductSearchKeywordQueryParam pageParam = new AlibabaProductSearchKeywordQueryParam();
+						pageParam.setBeginPage(i);
+						pageParam.setPageSize(paramData.getPageSize());
+						pageParam.setCountry(paramData.getCountry());
+						pageParam.setKeyword(keyword.getKeyword());
+						pageParam.setCategoryId(keyword.getCategoryId1688());
 
-							// 每10个任务一批处理
-							if (futures.size() == 10) {
-								for (Future<?> f : futures) {
-									f.get();  // 等待当前这批任务完成
-								}
-								futures.clear();  // 清空列表以便继续下一批任务
-							}
-						}
-					}
+						ReadableProductPageInfo searchPageData = alibabaProductFacade.searchProductByKeywords(pageParam);
 
-					for (int i = 2; i <= totalPage; i++) {
-						System.out.println("page:" + i);
-						AlibabaProductSearchKeywordQueryParam insertAddParam = new AlibabaProductSearchKeywordQueryParam();
-						insertAddParam.setBeginPage(i);
-						insertAddParam.setPageSize(paramData.getPageSize());
-						insertAddParam.setCountry(paramData.getCountry());
-						insertAddParam.setKeyword(keyword.getKeyword());
-						insertAddParam.setCategoryId(keyword.getCategoryId1688());
-						ReadableProductPageInfo searchOtherData = alibabaProductFacade
-								.searchProductByKeywords(insertAddParam);
-						if (searchOtherData.getData() != null && searchOtherData.getData().size() > 0) {
-							for (AlibabaProductSearchQueryModelProduct data2 : searchOtherData.getData()) {
+						queryCount.addAndGet(searchPageData.getPageSize());
+						System.out.println("查询数量："+queryCount.get());
+
+						if (searchPageData.getData() != null && !searchPageData.getData().isEmpty()) {
+							for (AlibabaProductSearchQueryModelProduct data : searchPageData.getData()) {
 								Future<?> future = executorService.submit(() -> {
 									try {
-										alibabaProductFacade.importProduct(
-												Collections.singletonList(data2.getOfferId()), language.getCode(), merchantStore,
-												keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()));
-									} catch (ServiceException e) {
-										throw new RuntimeException(e);
+										importCount.incrementAndGet();
+										alibabaProductFacade.adminBatchImportProduct(
+												data.getOfferId(), language.getCode(), merchantStore,
+												keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()), PublishWayEnums.BATCH_IMPORT_BY_1688);
+									} catch (Exception e) {
+										// 捕获异常并记录
+										errorItems.put(data.getOfferId(), e.getMessage());
 									}
 								});
 								futures.add(future);
-
-								// 每10个任务一批处理
-								if (futures.size() == 10) {
-									for (Future<?> f : futures) {
-										f.get();  // 等待当前这批任务完成
-									}
-									futures.clear();  // 清空列表以便继续下一批任务
-								}
 							}
 						}
 					}
 				}
 			}
 
-			// 处理最后剩下不足10个任务的批次
-			if (!futures.isEmpty()) {
-				for (Future<?> f : futures) {
-					f.get();
-				}
+			// 等待所有任务完成
+			for (Future<?> f : futures) {
+				f.get();
 			}
 
 			resultMap.put("resultCode", 200);
@@ -221,10 +152,19 @@ public Map<String, Object> oldSearchProductByKeywords(@ApiIgnore MerchantStore m
 			resultMap.put("errMsg", e.getMessage());
 		} finally {
 			executorService.shutdown();
-			// 记录结束时间
 			long endTime = System.currentTimeMillis();
 			System.out.println("结束时间: " + endTime);
 			System.out.println("总耗时: " + (endTime - startTime) + " 毫秒");
+			System.out.println("查询总数："+queryCount.get());
+			System.out.println("导入总数："+importCount.get());
+
+			// 输出所有异常的itemId和错误信息
+			if (!errorItems.isEmpty()) {
+				System.out.println("以下商品导入时发生错误：");
+				errorItems.forEach((itemId, errorMsg) -> {
+					System.out.println("商品ID: " + itemId + ", 错误信息: " + errorMsg);
+				});
+			}
 		}
 
 		return resultMap;

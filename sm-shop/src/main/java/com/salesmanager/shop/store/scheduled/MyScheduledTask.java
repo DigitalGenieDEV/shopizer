@@ -13,6 +13,7 @@ import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
@@ -83,7 +84,8 @@ public class MyScheduledTask {
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
 //                offerId = 705621031065L;
                 try {
-                    alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore, null);
+                    alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore,
+                            null, PublishWayEnums.BATCH_IMPORT_BY_1688);
                 } catch (Exception e) {
                     System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                             +offerId);

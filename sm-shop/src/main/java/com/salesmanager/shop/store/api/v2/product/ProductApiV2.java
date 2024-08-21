@@ -492,7 +492,8 @@ public class ProductApiV2 {
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language){
 		try {
-			List<Long> longs = alibabaProductFacade.importProduct(productIds, language.getCode(), merchantStore, leftCategoryId == null ? null : Lists.newArrayList(leftCategoryId));
+			List<Long> longs = alibabaProductFacade.importProduct(productIds, language.getCode(),
+					merchantStore, leftCategoryId == null ? null : Lists.newArrayList(leftCategoryId), PublishWayEnums.IMPORT_BY_1688);
 			return CommonResultDTO.ofSuccess(longs);
 		}catch (Exception e){
 			LOGGER.error("importAlibabaProduct error", e);

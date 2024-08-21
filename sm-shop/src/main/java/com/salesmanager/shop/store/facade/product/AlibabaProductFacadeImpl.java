@@ -119,7 +119,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     @Override
     public List<Long> importProduct(List<Long> productIds, String language,
-                              MerchantStore merchantStore, List<Long> categoryIds) throws ServiceException {
+                              MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws ServiceException {
         if (CollectionUtils.isEmpty(productIds)){
             throw new ServiceException(ServiceException.EXCEPTION_VALIDATION,
                     "Invalid date format","validaion.param.error");
@@ -139,7 +139,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             try {
 
                 Long itemId = saveProduct(productSearchQueryProductDetailModelProductDetailModelForEn, productSearchQueryProductDetailModelProductDetailModel,
-                        language, merchantStore, categoryIds);
+                        language, merchantStore, categoryIds, importType);
 
                 productIdList.add(itemId);
             } catch (Exception e) {
@@ -149,6 +149,24 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
             }
         });
         return productIdList;
+    }
+
+    @Override
+    public void adminBatchImportProduct(Long productId, String language, MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws Exception {
+
+
+        ProductSearchQueryProductDetailParamOfferDetailParam productSearchQueryProductDetailParamOfferDetailParam = new ProductSearchQueryProductDetailParamOfferDetailParam();
+        productSearchQueryProductDetailParamOfferDetailParam.setOfferId(productId);
+        productSearchQueryProductDetailParamOfferDetailParam.setCountry(language);
+
+        ProductSearchQueryProductDetailParamOfferDetailParam productSearchQueryProductDetailParamOfferDetailParamForEn = new ProductSearchQueryProductDetailParamOfferDetailParam();
+        productSearchQueryProductDetailParamOfferDetailParamForEn.setOfferId(productId);
+        productSearchQueryProductDetailParamOfferDetailParamForEn.setCountry("en");
+        ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModelForEn = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParamForEn);
+
+        ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModel = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParam);
+        saveProduct(productSearchQueryProductDetailModelProductDetailModelForEn, productSearchQueryProductDetailModelProductDetailModel,
+                language, merchantStore, categoryIds, importType);
     }
 
 
@@ -175,7 +193,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
     public Long saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModelForEn,ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
-                            String language, MerchantStore store, List<Long> categoryIds) throws Exception {
+                            String language, MerchantStore store, List<Long> categoryIds, PublishWayEnums importType) throws Exception {
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
         PersistableProduct persistableProduct =  new PersistableProduct();
@@ -324,7 +342,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         createProductVariant(ko, store, productDetailModel, persistableProduct);
 
         createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
-        persistableProduct.setPublishWay(PublishWayEnums.IMPORT_BY_1688.name());
+        persistableProduct.setPublishWay(importType == null ? PublishWayEnums.IMPORT_BY_1688.name() : PublishWayEnums.BATCH_IMPORT_BY_1688.name());
         PersistableAnnouncement persistableAnnouncement = new PersistableAnnouncement();
         persistableAnnouncement.setProductId(productId);
 
