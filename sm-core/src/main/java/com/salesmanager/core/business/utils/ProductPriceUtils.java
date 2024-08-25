@@ -17,6 +17,7 @@ import com.salesmanager.core.model.catalog.product.ExchangeRate;
 import com.salesmanager.core.model.catalog.product.ExchangeRatePOJO;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
+import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.validator.routines.BigDecimalValidator;
@@ -688,7 +689,9 @@ public class ProductPriceUtils {
 
 	}
 
-	private FinalPrice finalPrice(ProductPrice price, Boolean isShowProductPriceCurrencyCode) {
+	private FinalPrice finalPrice(ProductPrice productPrice, Boolean isShowProductPriceCurrencyCode) {
+
+		ProductPriceDO price = ObjectConvert.convert(productPrice, ProductPriceDO.class);
 
 		FinalPrice finalPrice = new FinalPrice();
 		BigDecimal fPrice = price.getProductPriceAmount();

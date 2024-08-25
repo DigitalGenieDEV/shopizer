@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.salesmanager.core.business.services.catalog.PricingServiceV2;
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import org.drools.core.util.StringUtils;
 import org.jsoup.helper.Validate;
@@ -32,7 +31,7 @@ import com.salesmanager.shop.utils.DateUtil;
 public class ReadableInventoryMapper  {
 
 	@Autowired
-	private PricingServiceV2 pricingServiceV2;
+	private PricingService pricingService;
 
 	@Autowired
 	private ProductAvailabilityService productAvailabilityService;
@@ -86,7 +85,7 @@ public class ReadableInventoryMapper  {
 				destination.setSku(source.getProduct().getSku());
 			}
 
-			FinalPrice price = pricingServiceV2.calculateProductPrice(source, isShowProductPriceCurrencyCode);
+			FinalPrice price = pricingService.calculateProductPrice(source, isShowProductPriceCurrencyCode);
 			destination.setPrice(price.getStringPrice());
 
 		} catch (Exception e) {

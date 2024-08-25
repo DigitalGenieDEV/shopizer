@@ -35,7 +35,9 @@ public class FinalPrice implements Serializable {
 	private List<PriceRange> productPriceRangeSpecialAmount;
 	
 	private boolean defaultPrice;
-	private ProductPrice productPrice;
+
+	private ProductPriceDO productPrice;
+
 	List<FinalPrice> additionalPrices;
 
 }

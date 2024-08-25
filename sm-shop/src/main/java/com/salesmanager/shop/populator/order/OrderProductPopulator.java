@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacadeImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -177,15 +178,15 @@ public class OrderProductPopulator extends
 		
 		OrderProductPrice orderProductPrice = new OrderProductPrice();
 		
-		ProductPrice productPrice = price.getProductPrice();
+		ProductPriceDO productPrice = price.getProductPrice();
 		
 		orderProductPrice.setDefaultPrice(productPrice.isDefaultPrice());
 
 		orderProductPrice.setProductPrice(price.getFinalPrice());
 		orderProductPrice.setProductPriceCode(productPrice.getCode());
-		if(productPrice.getDescriptions()!=null && productPrice.getDescriptions().size()>0) {
-			orderProductPrice.setProductPriceName(productPrice.getDescriptions().iterator().next().getName());
-		}
+//		if(productPrice.getDescriptions()!=null && productPrice.getDescriptions().size()>0) {
+//			orderProductPrice.setProductPriceName(productPrice.getDescriptions().iterator().next().getName());
+//		}
 		if(price.isDiscounted()) {
 			orderProductPrice.setProductPriceSpecial(productPrice.getProductPriceSpecialAmount());
 			orderProductPrice.setProductPriceSpecialStartDate(productPrice.getProductPriceSpecialStartDate());
