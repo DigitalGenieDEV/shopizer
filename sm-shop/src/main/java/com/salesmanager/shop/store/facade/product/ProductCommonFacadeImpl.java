@@ -217,6 +217,10 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		return target.getId();
 	}
 
+	@Override
+	public Long saveAllProduct(MerchantStore store, List<Product> products, Language language) throws ServiceException {
+		return null;
+	}
 
 
 	@Override

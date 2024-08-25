@@ -1,9 +1,5 @@
 package com.salesmanager.shop.listener;
 
-import com.alibaba.tuna.client.api.MessageProcessException;
-import com.alibaba.tuna.client.httpcb.HttpCbMessage;
-import com.alibaba.tuna.client.httpcb.HttpCbMessageHandler;
-import com.alibaba.tuna.client.httpcb.TunaHttpCbClient;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsMsg;
 import com.salesmanager.shop.model.purchaseorder.*;
