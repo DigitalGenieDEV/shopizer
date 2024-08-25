@@ -13,13 +13,24 @@ public class PersistableProductReview extends ProductReviewEntity implements
 	private static final long serialVersionUID = 1L;
 	@NotNull
 	private Long customerId;
+	private String fileContentType;
+	
 	public Long getCustomerId() {
 		return customerId;
 	}
+	
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-	
 
+	public String getFileContentType() {
+		return fileContentType;
+	}
+
+	public void setFileContentType(String fileContentType) {
+		this.fileContentType = fileContentType;
+	}
+	
+	
 
 }
