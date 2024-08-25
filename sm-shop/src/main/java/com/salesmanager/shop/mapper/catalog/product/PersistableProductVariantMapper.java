@@ -70,7 +70,7 @@ public class PersistableProductVariantMapper  {
 			List<PersistableVariation> persistableVariationList = source.getProductVariations();
 			persistableVariationList.forEach(persistableVariation->{
 				if (persistableVariation.getVariationId() != null && persistableVariation.getVariationId() != 0){
-					Optional<ProductVariation> productVariationOptional = productVariationService.getById(store, persistableVariation.getVariationId());
+					Optional<ProductVariation> productVariationOptional = productVariationService.findOneById(persistableVariation.getVariationId());
 					if (productVariationOptional.isPresent()){
 						variations.add(productVariationOptional.get());
 					}else {

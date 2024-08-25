@@ -66,6 +66,7 @@ public class MyScheduledTask {
         ProductSearchKeywordQueryParamOfferQueryParam productSearchKeywordQueryParamOfferQueryParam = new ProductSearchKeywordQueryParamOfferQueryParam();
         productSearchKeywordQueryParamOfferQueryParam.setPageSize(10);
         productSearchKeywordQueryParamOfferQueryParam.setCountry("ko");
+        productSearchKeywordQueryParamOfferQueryParam.setSort("{\"price\":\"asc\"}");
         int processedRecords = 0;
         int totalRecords = 0;
         int currentPage = 0;
@@ -82,10 +83,10 @@ public class MyScheduledTask {
             for (int i = 0; i < result.length; i++) {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
-//                offerId = 705621031065L;
+                offerId = 751910003116L;
                 try {
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore,
-                            null, PublishWayEnums.BATCH_IMPORT_BY_1688);
+                            Collections.singletonList(1L), PublishWayEnums.BATCH_IMPORT_BY_1688);
                 } catch (Exception e) {
                     System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                             +offerId);

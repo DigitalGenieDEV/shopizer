@@ -45,8 +45,8 @@ public class ProductVariationServiceImpl extends
 	}
 	
 	@Override
-	public Optional<ProductVariation> getByCode(MerchantStore store, String code) {
-		return productVariationRepository.findByCode(code, store.getId());
+	public Optional<ProductVariation> getByCode(String code) {
+		return productVariationRepository.findByCode(code);
 	}
 
 
@@ -62,7 +62,11 @@ public class ProductVariationServiceImpl extends
 	public Optional<ProductVariation> getById(MerchantStore store, Long id) {
 		return productVariationRepository.findOne(store.getId(), id);
 	}
-	
+
+	public Optional<ProductVariation> findOneById(Long id) {
+		return productVariationRepository.findOneById(id);
+	}
+
 	@Override
 	public void saveOrUpdate(ProductVariation entity) throws ServiceException {
 

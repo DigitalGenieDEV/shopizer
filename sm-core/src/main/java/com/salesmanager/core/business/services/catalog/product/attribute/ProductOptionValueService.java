@@ -25,7 +25,10 @@ public interface ProductOptionValueService extends SalesManagerEntityService<Lon
 			Language language) throws ServiceException;
 
 	ProductOptionValue getByCode(MerchantStore store, String optionValueCode);
-	
+
+	Long getByCode(String optionValueCode);
+
+
 	ProductOptionValue getById(MerchantStore store, Long optionValueId);
 	
 	Page<ProductOptionValue> getByMerchant(MerchantStore store, Language language, String name, int page, int count);

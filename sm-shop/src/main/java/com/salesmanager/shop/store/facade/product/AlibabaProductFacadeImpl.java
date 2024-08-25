@@ -70,6 +70,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,6 +119,25 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     @Autowired
     private ProductService productService;
 
+    private static int corePoolSize = 20;  // 核心线程数
+    private static int maxPoolSize = 20;   // 最大线程数
+    private static int queueCapacity = 100; // 有界队列大小
+    private static long keepAliveTime = 60L; // 线程保持活动时间
+
+    private static BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(queueCapacity);
+
+    // 使用 CallerRunsPolicy，当队列满时，让提交任务的线程执行任务，避免阻塞
+    private static RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
+
+    private static ExecutorService executor = new ThreadPoolExecutor(
+            corePoolSize,
+            maxPoolSize,
+            keepAliveTime,
+            TimeUnit.SECONDS,
+            queue,
+            handler
+    );
+
     @Override
     public List<Long> importProduct(List<Long> productIds, String language,
                               MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws ServiceException {
@@ -153,25 +174,51 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     @Override
     public void adminBatchImportProduct(Long productId, String language, MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws Exception {
+        // 创建一个线程池
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+        // 创建并行任务
+        CompletableFuture<ProductSearchQueryProductDetailModelProductDetailModel> futureForEn = CompletableFuture.supplyAsync(() -> {
+            try {
+                ProductSearchQueryProductDetailParamOfferDetailParam paramForEn = new ProductSearchQueryProductDetailParamOfferDetailParam();
+                paramForEn.setOfferId(productId);
+                paramForEn.setCountry("en");
+                return alibabaProductService.queryProductDetail(paramForEn);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }, executor);
 
-        ProductSearchQueryProductDetailParamOfferDetailParam productSearchQueryProductDetailParamOfferDetailParam = new ProductSearchQueryProductDetailParamOfferDetailParam();
-        productSearchQueryProductDetailParamOfferDetailParam.setOfferId(productId);
-        productSearchQueryProductDetailParamOfferDetailParam.setCountry(language);
+        CompletableFuture<ProductSearchQueryProductDetailModelProductDetailModel> futureForLanguage = CompletableFuture.supplyAsync(() -> {
+            try {
+                ProductSearchQueryProductDetailParamOfferDetailParam paramForLang = new ProductSearchQueryProductDetailParamOfferDetailParam();
+                paramForLang.setOfferId(productId);
+                paramForLang.setCountry(language);
+                return alibabaProductService.queryProductDetail(paramForLang);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }, executor);
 
-        ProductSearchQueryProductDetailParamOfferDetailParam productSearchQueryProductDetailParamOfferDetailParamForEn = new ProductSearchQueryProductDetailParamOfferDetailParam();
-        productSearchQueryProductDetailParamOfferDetailParamForEn.setOfferId(productId);
-        productSearchQueryProductDetailParamOfferDetailParamForEn.setCountry("en");
-        ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModelForEn = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParamForEn);
+        // 等待两个任务都完成
+        CompletableFuture.allOf(futureForEn, futureForLanguage).join();
 
-        ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModel = alibabaProductService.queryProductDetail(productSearchQueryProductDetailParamOfferDetailParam);
-        saveProduct(productSearchQueryProductDetailModelProductDetailModelForEn, productSearchQueryProductDetailModelProductDetailModel,
-                language, merchantStore, categoryIds, importType);
+        // 获取查询结果
+        ProductSearchQueryProductDetailModelProductDetailModel productDetailModelForEn = futureForEn.get();
+        ProductSearchQueryProductDetailModelProductDetailModel productDetailModelForLanguage = futureForLanguage.get();
+
+        // 保存产品信息
+        saveProduct(productDetailModelForEn, productDetailModelForLanguage, language, merchantStore, categoryIds, importType);
+
+        // 关闭线程池
+        executor.shutdown();
     }
 
 
     @Override
-    public ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) {
+    public ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam param = ObjectConvert.convert(queryParam, ProductSearchKeywordQueryParamOfferQueryParam.class);
         ProductSearchKeywordQueryModelPageInfoV productSearchKeywordQueryModelPageInfoV = alibabaProductService.searchKeyword(param);
         ReadableProductPageInfo productPageInfo = ObjectConvert.convert(productSearchKeywordQueryModelPageInfoV, ReadableProductPageInfo.class);
@@ -194,6 +241,10 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     public Long saveProduct(ProductSearchQueryProductDetailModelProductDetailModel productSearchQueryProductDetailModelProductDetailModelForEn,ProductSearchQueryProductDetailModelProductDetailModel productDetailModel,
                             String language, MerchantStore store, List<Long> categoryIds, PublishWayEnums importType) throws Exception {
+        if (productSearchQueryProductDetailModelProductDetailModelForEn.getProductSkuInfos() == null){
+            return null;
+        }
+
         PersistableProductDefinition productDefinition = new PersistableProductDefinition();
 
         PersistableProduct persistableProduct =  new PersistableProduct();
@@ -207,12 +258,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         if (!CollectionUtils.isEmpty(categoryIds)){
 
             Long leftCategoryId = categoryIds.get(0);
-            Category leftCategory = categoryService.getById(store, leftCategoryId);
+            Category leftCategory = categoryService.findOneById(leftCategoryId);
             if (leftCategory == null){
                 throw new ResourceNotFoundException("leftCategory is null [" + leftCategoryId + "]");
             }
-            com.salesmanager.shop.model.catalog.category.Category convertCategory = ObjectConvert.convert(leftCategory, com.salesmanager.shop.model.catalog.category.Category.class);
-            convertCategory.setDescription(ObjectConvert.convert(leftCategory.getDescription(), CategoryDescription.class));
+            com.salesmanager.shop.model.catalog.category.Category convertCategory = new  com.salesmanager.shop.model.catalog.category.Category();
+            convertCategory.setCode(leftCategory.getCode());
+            convertCategory.setId(leftCategory.getId());
             categoryList.add(convertCategory);
         }else{
             Long categoryId =   productDetailModel.getCategoryId();
@@ -258,7 +310,16 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     descriptions.add(manufacturersDescription);
                     manufacturers.setDescriptions(descriptions);
 
-                    manufacturerService.create(manufacturers);
+
+                    //todo
+                    try {
+                        manufacturerService.create(manufacturers);
+                    } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                        // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
+                        System.out.println("manufacturerService Unique constraint violation occurred, ignoring");
+                    }catch (Exception e){
+                        LOGGER.error("manufacturerService create error", e );
+                    }
                 }
                 break;  // 找到后立即退出循环，提高效率
             }
@@ -266,7 +327,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
 
         productDefinition.setIdentifier(productDetailModel.getSubjectTrans());
-        productDefinition.setOutProductId(productDetailModel.getOfferId());
         productDefinition.setOutProductId(productDetailModel.getOfferId());
         Product productByOutId = productService.findByOutId(productDetailModel.getOfferId());
 
@@ -360,237 +420,278 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
 
-    private void createAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttributeForEn,Language en ,Language language, MerchantStore store, ProductSearchQueryProductDetailModelProductAttribute[] productAttribute, PersistableProduct product) throws Exception {
+    private void createAttribute(ProductSearchQueryProductDetailModelProductAttribute[] productAttributeForEn, Language en, Language language, MerchantStore store, ProductSearchQueryProductDetailModelProductAttribute[] productAttribute, PersistableProduct product) throws Exception {
 
-        Map<String, ProductSearchQueryProductDetailModelProductAttribute> attributeEnMap = Arrays.stream(productAttributeForEn)
-                .collect(Collectors.toMap(
+        // 创建一个线程池
+
+        // 使用线程安全的Map来存储英文属性
+        ConcurrentHashMap<String, ProductSearchQueryProductDetailModelProductAttribute> attributeEnMap = (ConcurrentHashMap<String, ProductSearchQueryProductDetailModelProductAttribute>) Arrays.stream(productAttributeForEn)
+                .collect(Collectors.toConcurrentMap(
                         attribute -> attribute.getAttributeId() + attribute.getValue(),  // 使用 attributeId 和 value 组合成键
-                        attribute -> attribute,
-                        (existing, replacement) -> existing  // 在遇到重复键时选择保留现有值
+                        attribute -> attribute
                 ));
 
+        // 使用线程安全的集合来存储属性
+        CopyOnWriteArrayList<PersistableProductAttribute> attributes = new CopyOnWriteArrayList<>();
 
+        // 并行处理每个属性
+        List<CompletableFuture<Void>> futures = Arrays.stream(productAttribute)
+                .map(attr -> CompletableFuture.runAsync(() -> {
+                    try {
+                        if ("2176".equals(attr.getAttributeId())) {
+                            return; // 跳过ID为2176的属性
+                        }
 
-        List<PersistableProductAttribute> attributes = new ArrayList<PersistableProductAttribute>();
+                        PersistableProductAttribute persistableProductAttribute = new PersistableProductAttribute();
+                        String attributeName = attr.getAttributeName();
+                        String value = attr.getValue();
 
-        for(int i =0; i<productAttribute.length ;i++) {
-            ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute = productAttribute[i];
-            if ("2176".equals(productSearchQueryProductDetailModelProductAttribute.getAttributeId())) {
-                continue;
-            }
-            PersistableProductAttribute persistableProductAttribute = new PersistableProductAttribute();
+                        Long productOptionId  = productOptionService.getByCode(attributeName);
 
-            String attributeName = productSearchQueryProductDetailModelProductAttribute.getAttributeName();
-            String value = productSearchQueryProductDetailModelProductAttribute.getValue();
+                        if (productOptionId == null) {
+                            ProductOption option = new ProductOption();
+                            option.setMerchantStore(store);
+                            option.setCode(attributeName);
+                            option.setProductOptionType(ProductOptionType.Select.name());
 
-            ProductOption productOption =  productOptionService.getByCode(store, attributeName);
-            Long productOptionId = productOption == null ? null : productOption.getId();
-            if (productOption == null){
-                ProductOption option =  new ProductOption();
-                option.setMerchantStore(store);
-                option.setCode(attributeName);
-                option.setProductOptionType(ProductOptionType.Select.name());
+                            ProductOptionDescription sizeDescription = new ProductOptionDescription();
+                            sizeDescription.setLanguage(language);
+                            sizeDescription.setName(attr.getValueTrans());
+                            sizeDescription.setDescription(attr.getValueTrans());
+                            sizeDescription.setProductOption(option);
 
-                ProductOptionDescription sizeDescription = new ProductOptionDescription();
-                sizeDescription.setLanguage(language);
-                sizeDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-                sizeDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-                sizeDescription.setProductOption(option);
+                            ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
+                            if (attrEn != null) {
+                                ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
+                                sizeDescriptionForEn.setLanguage(en);
+                                sizeDescriptionForEn.setName(attrEn.getValueTrans());
+                                sizeDescriptionForEn.setDescription(attrEn.getValueTrans());
+                                sizeDescriptionForEn.setProductOption(option);
+                                option.getDescriptions().add(sizeDescriptionForEn);
+                            }
 
-                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
-                if (productSearchQueryProductDetailModelProductAttribute1!=null){
-                    ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
-                    sizeDescriptionForEn.setLanguage(en);
-                    sizeDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null :productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                    sizeDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1 == null ? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                    sizeDescriptionForEn.setProductOption(option);
-                    option.getDescriptions().add(sizeDescriptionForEn);
-                }
+                            option.getDescriptions().add(sizeDescription);
+                            try {
+                                productOptionService.saveOrUpdate(option);
+                            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                                // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
+                                System.out.println("Unique constraint violation occurred, ignoring");
+                            }
+                            productOptionId = productOptionService.getByCode(attributeName);
+                        }
 
+                        PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
+                        propertyOption.setCode(attributeName);
+                        propertyOption.setId(productOptionId);
+                        persistableProductAttribute.setOption(propertyOption);
 
-                option.getDescriptions().add(sizeDescription);
+                        Long optionValueId = productOptionValueService.getByCode(value);
 
-                //create option
-                productOptionService.saveOrUpdate(option);
-                ProductOption byCode = productOptionService.getByCode(store, attributeName);
-                productOptionId = byCode.getId();
+                        if (optionValueId == null) {
+                            ProductOptionValue productOptionValue = new ProductOptionValue();
+                            productOptionValue.setMerchantStore(store);
+                            productOptionValue.setCode(value);
 
-            }
-            PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
-            propertyOption.setCode(attributeName);
-            propertyOption.setId(productOptionId);
-            persistableProductAttribute.setOption(propertyOption);
+                            ProductOptionValueDescription valueDescription = new ProductOptionValueDescription();
+                            valueDescription.setLanguage(language);
+                            valueDescription.setName(attr.getValueTrans());
+                            valueDescription.setDescription(attr.getValueTrans());
+                            valueDescription.setProductOptionValue(productOptionValue);
 
-            ProductOptionValue optionValue =  productOptionValueService.getByCode(store, value);
-            Long optionValueId = optionValue == null ? null : optionValue.getId();
+                            ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
+                            if (attrEn != null) {
+                                ProductOptionValueDescription valueDescriptionForEn = new ProductOptionValueDescription();
+                                valueDescriptionForEn.setLanguage(en);
+                                valueDescriptionForEn.setName(attrEn.getValueTrans());
+                                valueDescriptionForEn.setDescription(attrEn.getValueTrans());
+                                valueDescriptionForEn.setProductOptionValue(productOptionValue);
+                                productOptionValue.getDescriptions().add(valueDescriptionForEn);
+                            }
 
-            if (optionValue == null){
-                ProductOptionValue productOptionValue = new ProductOptionValue();
-                productOptionValue.setMerchantStore(store);
-                productOptionValue.setCode(value);
+                            productOptionValue.getDescriptions().add(valueDescription);
+                            try {
+                                productOptionValueService.saveOrUpdate(productOptionValue);
+                            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                                // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
+                                System.out.println("Unique constraint violation occurred, ignoring");
+                            }
+                            optionValueId = productOptionValueService.getByCode(value);
+                        }
 
-                ProductOptionValueDescription nineDescription = new ProductOptionValueDescription();
-                nineDescription.setLanguage(language);
-                nineDescription.setName(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-                nineDescription.setDescription(productSearchQueryProductDetailModelProductAttribute.getValueTrans());
-                nineDescription.setProductOptionValue(productOptionValue);
+                        PersistableProductOptionValue persistentOptionValue = new PersistableProductOptionValue();
+                        persistentOptionValue.setCode(value);
+                        persistentOptionValue.setId(optionValueId);
+                        persistableProductAttribute.setOptionValue(persistentOptionValue);
+                        persistableProductAttribute.setSortOrder(Arrays.asList(productAttribute).indexOf(attr));
+                        persistableProductAttribute.setAttributeDisplayOnly(true);
+                        attributes.add(persistableProductAttribute);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }, executor)).collect(Collectors.toList());
 
-                ProductSearchQueryProductDetailModelProductAttribute productSearchQueryProductDetailModelProductAttribute1 = attributeEnMap.get(productSearchQueryProductDetailModelProductAttribute.getAttributeId() + productSearchQueryProductDetailModelProductAttribute.getValue());
-                if (productSearchQueryProductDetailModelProductAttribute1 !=null){
-                    ProductOptionValueDescription nineDescriptionForEn = new ProductOptionValueDescription();
-                    nineDescriptionForEn.setLanguage(en);
-                    nineDescriptionForEn.setName(productSearchQueryProductDetailModelProductAttribute1 == null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                    nineDescriptionForEn.setDescription(productSearchQueryProductDetailModelProductAttribute1== null? null : productSearchQueryProductDetailModelProductAttribute1.getValueTrans());
-                    nineDescriptionForEn.setProductOptionValue(productOptionValue);
-                    productOptionValue.getDescriptions().add(nineDescriptionForEn);
-                }
-                productOptionValue.getDescriptions().add(nineDescription);
+        // 等待所有任务完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-                //create an option value
-                productOptionValueService.saveOrUpdate(productOptionValue);
-
-                ProductOptionValue byCode = productOptionValueService.getByCode(store, value);
-                optionValueId = byCode.getId();
-            }
-            PersistableProductOptionValue persistentOptionValue = new PersistableProductOptionValue();
-            persistentOptionValue.setCode(value);
-            persistentOptionValue.setId(optionValueId);
-            persistableProductAttribute.setOptionValue(persistentOptionValue);
-            persistableProductAttribute.setSortOrder(i);
-            persistableProductAttribute.setAttributeDisplayOnly(true);
-            attributes.add(persistableProductAttribute);
-        }
+        // 设置产品属性
         product.setProperties(attributes);
 
     }
 
 
 
+
     private void createProductVariant(Language language, MerchantStore store,
                                       ProductSearchQueryProductDetailModelProductDetailModel productDetailModel, PersistableProduct product) throws Exception {
 
-        List<PersistableProductVariant> variants = new ArrayList<PersistableProductVariant>();
+        // 使用线程安全的 List 来存储产品变体
+        List<PersistableProductVariant> variants = Collections.synchronizedList(new ArrayList<>());
 
-        BigDecimal defaultPrice = new BigDecimal(Integer.MAX_VALUE); // 初始化为一个较大的值
+        // 使用 AtomicReference 来确保线程安全的默认价格计算
+        AtomicReference<BigDecimal> defaultPrice = new AtomicReference<>(new BigDecimal(Integer.MAX_VALUE));
 
         ProductSearchQueryProductDetailModelSkuInfo[] productSkuInfos = productDetailModel.getProductSkuInfos();
-        for (int i=0; i<productSkuInfos.length; i++){
-            ProductSearchQueryProductDetailModelSkuInfo productSkuInfo = productSkuInfos[i];
 
-            PersistableProductVariant persistableProductVariant = new PersistableProductVariant();
-            PersistableProductInventory productInventory = new PersistableProductInventory();
+        // 创建并行任务
+        List<Callable<Void>> tasks = new ArrayList<>();
 
-            PersistableProductPrice price = new PersistableProductPrice();
-            price.setCurrency("CNY");
-            if (productDetailModel.getProductSaleInfo().getQuoteType() != null && productDetailModel.getProductSaleInfo().getQuoteType() == 2){
-                ProductSearchQueryProductDetailModelPriceRangeV[] priceRangeList = productDetailModel.getProductSaleInfo().getPriceRangeList();
-                List<PriceRange> ranges = new ArrayList<>();
-                for(int p =0;p<priceRangeList.length;p++){
-                    ProductSearchQueryProductDetailModelPriceRangeV productSearchQueryProductDetailModelPriceRangeV = priceRangeList[p];
-                    PriceRange priceRange = new PriceRange();
-                    priceRange.setPrice(
-                            productSearchQueryProductDetailModelPriceRangeV.getPrice()
-                    );
-                    priceRange.setStartQuantity(productSearchQueryProductDetailModelPriceRangeV.getStartQuantity());
-                    ranges.add(priceRange);
+        for (ProductSearchQueryProductDetailModelSkuInfo productSkuInfo : productSkuInfos) {
+            tasks.add(() -> {
+                PersistableProductVariant persistableProductVariant = new PersistableProductVariant();
+                PersistableProductInventory productInventory = new PersistableProductInventory();
+
+                PersistableProductPrice price = new PersistableProductPrice();
+                price.setCurrency("CNY");
+
+                if (productDetailModel.getProductSaleInfo().getQuoteType() != null &&
+                        productDetailModel.getProductSaleInfo().getQuoteType() == 2) {
+
+                    ProductSearchQueryProductDetailModelPriceRangeV[] priceRangeList = productDetailModel.getProductSaleInfo().getPriceRangeList();
+                    List<PriceRange> ranges = new ArrayList<>();
+                    for (ProductSearchQueryProductDetailModelPriceRangeV priceRangeV : priceRangeList) {
+                        PriceRange priceRange = new PriceRange();
+                        priceRange.setPrice(priceRangeV.getPrice());
+                        priceRange.setStartQuantity(priceRangeV.getStartQuantity());
+                        ranges.add(priceRange);
+                    }
+                    price.setPriceRangeList(ranges);
+                    product.setPriceRangeList(ranges);
+                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
+                } else {
+                    BigDecimal skuPrice = new BigDecimal(StringUtils.isEmpty(productSkuInfo.getPromotionPrice()) ?
+                            productSkuInfo.getPrice() : productSkuInfo.getPromotionPrice());
+                    price.setPrice(skuPrice);
+
+                    // 更新默认价格
+                    defaultPrice.updateAndGet(currentPrice -> skuPrice.compareTo(currentPrice) < 0 ? skuPrice : currentPrice);
+
+                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
                 }
-                price.setPriceRangeList(ranges);
-                product.setPriceRangeList(ranges);
-                productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
-            } else {
-                BigDecimal skuPrice = new BigDecimal(StringUtils.isEmpty(productSkuInfo.getPromotionPrice())?
-                        productSkuInfo.getPrice() : productSkuInfo.getPromotionPrice());
-                price.setPrice(skuPrice);
-                if (skuPrice.compareTo(defaultPrice) < 0) {
-                    defaultPrice = skuPrice;
+                productInventory.setPrice(price);
+
+                product.setQuoteType(productDetailModel.getProductSaleInfo().getQuoteType());
+                ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes = productSkuInfo.getSkuAttributes();
+                List<PersistableVariation> persistableVariationList = new ArrayList<>();
+
+                for (ProductSearchQueryProductDetailModelSkuAttribute skuAttribute : skuAttributes) {
+                    PersistableProductVariation productVariant = new PersistableProductVariation();
+                    String attributeName = skuAttribute.getAttributeName();
+                    String value = skuAttribute.getValue();
+
+                    // 处理产品选项
+                    Long productOptionId = productOptionService.getByCode(attributeName);
+                    if (productOptionId == null) {
+                        ProductOption option = new ProductOption();
+                        option.setMerchantStore(store);
+                        option.setCode(attributeName);
+                        option.setProductOptionType(ProductOptionType.Select.name());
+
+                        ProductOptionDescription sizeDescription = new ProductOptionDescription();
+                        sizeDescription.setLanguage(language);
+                        sizeDescription.setName(skuAttribute.getAttributeNameTrans());
+                        sizeDescription.setDescription(skuAttribute.getAttributeNameTrans());
+                        sizeDescription.setProductOption(option);
+                        option.getDescriptions().add(sizeDescription);
+
+                        // 创建选项并捕获唯一性约束异常
+                        try {
+                            productOptionService.saveOrUpdate(option);
+                        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                            System.out.println("Unique constraint violation occurred, ignoring");
+                        }
+
+                        productOptionId = productOptionService.getByCode(attributeName);
+                    }
+                    productVariant.setOption(productOptionId);
+
+                    // 处理产品选项值
+                    Long optionValueId = productOptionValueService.getByCode(value);
+                    if (optionValueId == null) {
+                        ProductOptionValue productOptionValue = new ProductOptionValue();
+                        productOptionValue.setMerchantStore(store);
+                        productOptionValue.setCode(value);
+
+                        ProductOptionValueDescription nineDescription = new ProductOptionValueDescription();
+                        nineDescription.setLanguage(language);
+                        nineDescription.setName(skuAttribute.getValueTrans());
+                        nineDescription.setDescription(skuAttribute.getValueTrans());
+                        nineDescription.setProductOptionValue(productOptionValue);
+                        productOptionValue.getDescriptions().add(nineDescription);
+
+                        // 创建选项值并捕获唯一性约束异常
+                        try {
+                            productOptionValueService.saveOrUpdate(productOptionValue);
+                        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                            System.out.println("Unique constraint violation occurred, ignoring");
+                        }
+
+                        optionValueId = productOptionValueService.getByCode(value);
+                    }
+                    productVariant.setOptionValue(optionValueId);
+                    productVariant.setCode(attributeName + ":" + value);
+
+                    Optional<ProductVariation> byCode = productVariationService.getByCode(productVariant.getCode());
+                    Long productVariationId = null;
+                    if (byCode.isPresent()) {
+                        ProductVariation productVariation = byCode.get();
+                        productVariationId = productVariation.getId();
+                    } else {
+                        try {
+                            productVariationId = productVariationFacade.create(productVariant, store, language);
+                        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                            System.out.println("productVariationId Unique constraint violation occurred, ignoring");
+                        }
+                    }
+                    PersistableVariation persistableVariation = new PersistableVariation();
+                    persistableVariation.setVariationId(productVariationId);
+                    persistableVariation.setOptionId(productOptionId);
+                    persistableVariation.setOptionValueId(optionValueId);
+                    persistableVariationList.add(persistableVariation);
                 }
-                productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
-            }
-            productInventory.setPrice(price);
 
-            product.setQuoteType(productDetailModel.getProductSaleInfo().getQuoteType());
-            ProductSearchQueryProductDetailModelSkuAttribute[] skuAttributes = productSkuInfo.getSkuAttributes();
-            List<PersistableVariation> persistableVariationList = new ArrayList<>();
-            for (int s =0; s<skuAttributes.length; s++){
-                PersistableProductVariation productVariant = new PersistableProductVariation();
+                persistableProductVariant.setProductVariations(persistableVariationList);
+                persistableProductVariant.setSku(UUID.randomUUID().toString().replace("-", ""));
+                persistableProductVariant.setInventory(productInventory);
+                persistableProductVariant.setSpecId(productSkuInfo.getSpecId());
+                variants.add(persistableProductVariant);
 
-                ProductSearchQueryProductDetailModelSkuAttribute skuAttribute = skuAttributes[s];
-
-                String attributeName = skuAttribute.getAttributeName();
-                String value = skuAttribute.getValue();
-                ProductOption productOption =  productOptionService.getByCode(store, attributeName);
-                if (productOption == null){
-                    ProductOption option =  new ProductOption();
-                    option.setMerchantStore(store);
-                    option.setCode(attributeName);
-                    option.setProductOptionType(ProductOptionType.Select.name());
-
-                    ProductOptionDescription sizeDescription = new ProductOptionDescription();
-                    sizeDescription.setLanguage(language);
-                    sizeDescription.setName(skuAttribute.getAttributeNameTrans());
-                    sizeDescription.setDescription(skuAttribute.getAttributeNameTrans());
-                    sizeDescription.setProductOption(option);
-
-                    option.getDescriptions().add(sizeDescription);
-
-                    //create option
-                    productOptionService.saveOrUpdate(option);
-
-                    productOption = productOptionService.getByCode(store, attributeName);
-
-
-                }
-                productVariant.setOption(productOption.getId());
-
-                ProductOptionValue optionValue =  productOptionValueService.getByCode(store, value);
-                if (optionValue == null){
-                    ProductOptionValue productOptionValue = new ProductOptionValue();
-                    productOptionValue.setMerchantStore(store);
-                    productOptionValue.setCode(value);
-
-                    ProductOptionValueDescription nineDescription = new ProductOptionValueDescription();
-                    nineDescription.setLanguage(language);
-                    nineDescription.setName(skuAttribute.getValueTrans());
-                    nineDescription.setDescription(skuAttribute.getValueTrans());
-                    nineDescription.setProductOptionValue(productOptionValue);
-
-                    productOptionValue.getDescriptions().add(nineDescription);
-
-                    //create an option value
-                    productOptionValueService.saveOrUpdate(productOptionValue);
-
-                    optionValue = productOptionValueService.getByCode(store, value);
-                }
-                productVariant.setOptionValue(optionValue.getId());
-
-                productVariant.setCode(attributeName+":"+value);
-
-                Optional<ProductVariation> byCode = productVariationService.getByCode(store, productVariant.getCode());
-
-                Long productVariationId  = null;
-                if (byCode.isPresent()){
-                    ProductVariation productVariation = byCode.get();
-                    productVariationId  = productVariation.getId();
-                }else {
-                    productVariationId = productVariationFacade.create(productVariant, store, language);
-                }
-                PersistableVariation persistableVariation = new PersistableVariation();
-                persistableVariation.setVariationId(productVariationId);
-                persistableVariation.setOptionId(productOption.getId());
-                persistableVariation.setOptionValueId(optionValue.getId());
-                persistableVariationList.add(persistableVariation);
-            }
-            persistableProductVariant.setProductVariations(persistableVariationList);
-            persistableProductVariant.setSku(UUID.randomUUID().toString().replace("-", ""));
-            persistableProductVariant.setInventory(productInventory);
-            persistableProductVariant.setSpecId(productSkuInfo.getSpecId());
-            variants.add(persistableProductVariant);
+                return null;
+            });
         }
+
+        // 执行并等待所有任务完成
+        executor.invokeAll(tasks);
+
+        // 设置产品变体
         product.setVariants(variants);
-        if (CollectionUtils.isEmpty(product.getPriceRangeList())){
-            product.setPrice(defaultPrice);
+
+        // 设置默认价格
+        if (CollectionUtils.isEmpty(product.getPriceRangeList())) {
+            product.setPrice(defaultPrice.get());
         }
+
     }
+
 
     private Category createCategoryList(Category firstCategory, Category secondCategory, Category thirdCategory, MerchantStore merchantStore) throws ServiceException {
         try {

@@ -19,8 +19,10 @@ public interface ProductVariationService extends SalesManagerEntityService<Long,
 	Optional<ProductVariation> getById(MerchantStore store, Long id, Language lang);
 	
 	Optional<ProductVariation> getById(MerchantStore store, Long id);
+
+	Optional<ProductVariation> findOneById(Long id);
 	
-	Optional<ProductVariation> getByCode(MerchantStore store, String code);
+	Optional<ProductVariation> getByCode(String code);
 	
 	Page<ProductVariation> getByMerchant(MerchantStore store, Language language, String code, int page, int count);
 	

@@ -143,7 +143,7 @@ public class ProductVariationFacadeImpl implements ProductVariationFacade {
 	public boolean exists(String code, MerchantStore store) {
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(code, "code cannot be null");
-		Optional<ProductVariation> var =  productVariationService.getByCode(store, code);
+		Optional<ProductVariation> var =  productVariationService.getByCode(code);
 		if(var.isPresent()) {
 			return true;
 		}

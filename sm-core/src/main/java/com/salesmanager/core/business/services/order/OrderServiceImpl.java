@@ -399,18 +399,18 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             }
 
 
-            //erp
-            List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(item.getProductId());
-            if (CollectionUtils.isNotEmpty(productMaterials)){
-                for (ProductMaterial productMaterial : productMaterials ){
-                    Long materialId = productMaterial.getMaterialId();
-                    Material material  = erpService.getById(materialId);
-                    BigDecimal price = material.getPrice();
-                    Long weight = productMaterial.getWeight();
-                    BigDecimal productErpPrice = price.multiply(BigDecimal.valueOf(weight)).setScale(2, RoundingMode.HALF_UP);
-                    erpPrice = erpPrice.add(productErpPrice);
-                }
-            }
+//            //erp
+//            List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(item.getProductId());
+//            if (CollectionUtils.isNotEmpty(productMaterials)){
+//                for (ProductMaterial productMaterial : productMaterials ){
+//                    Long materialId = productMaterial.getMaterialId();
+//                    Material material  = erpService.getById(materialId);
+//                    BigDecimal price = material.getPrice();
+//                    Long weight = productMaterial.getWeight();
+//                    BigDecimal productErpPrice = price.multiply(BigDecimal.valueOf(weight)).setScale(2, RoundingMode.HALF_UP);
+//                    erpPrice = erpPrice.add(productErpPrice);
+//                }
+//            }
 
 
         }
@@ -499,16 +499,16 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
 
 
-        //增值服务费用
-        OrderTotal erpSubTotal = new OrderTotal();
-        erpSubTotal.setModule(Constants.OT_ERP_MODULE_CODE);
-        erpSubTotal.setOrderTotalType(OrderTotalType.ERP);
-        erpSubTotal.setOrderTotalCode("order.total.erp");
-        erpSubTotal.setSortOrder(102);
-        erpSubTotal.setText("order.total.erp");
-        erpSubTotal.setValue(erpPrice);
-        erpSubTotal.setTitle(Constants.OT_ERP_MODULE_CODE);
-        grandTotal=grandTotal.add(erpPrice);
+        //erp费用
+//        OrderTotal erpSubTotal = new OrderTotal();
+//        erpSubTotal.setModule(Constants.OT_ERP_MODULE_CODE);
+//        erpSubTotal.setOrderTotalType(OrderTotalType.ERP);
+//        erpSubTotal.setOrderTotalCode("order.total.erp");
+//        erpSubTotal.setSortOrder(102);
+//        erpSubTotal.setText("order.total.erp");
+//        erpSubTotal.setValue(erpPrice);
+//        erpSubTotal.setTitle(Constants.OT_ERP_MODULE_CODE);
+//        grandTotal=grandTotal.add(erpPrice);
 
         LOGGER.debug("[caculateOrder] calculate order shipping");
         //shipping

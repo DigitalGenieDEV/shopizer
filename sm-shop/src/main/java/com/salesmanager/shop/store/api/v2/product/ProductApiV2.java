@@ -453,7 +453,7 @@ public class ProductApiV2 {
 			response = ReadableProductPageInfo.class)
 	public ReadableProductPageInfo searchProductByKeywords(
 			@Valid @RequestBody
-			AlibabaProductSearchKeywordQueryParam queryParam) {
+			AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException {
 		return alibabaProductFacade.searchProductByKeywords(queryParam);
 	}
 

@@ -26,6 +26,10 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
 	
 	@Query("select distinct p from ProductOption p join fetch p.merchantStore pm left join fetch p.descriptions pd where pm.id = ?1 and p.code = ?2 and p.readOnly = ?3")
 	List<ProductOption> findByReadOnly(Integer storeId, Integer languageId, boolean readOnly);
-	
+
+
+	@Query("select p.id from ProductOption p where p.code = ?1")
+	Long findByCode(String optionCode);
+
 
 }

@@ -120,6 +120,14 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	List<Long> findListByOutId();
 
 	@Query(value="SELECT " +
+			"p.id " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.publishWay =?1 ")
+	List<Long> findListByPublishWay(String publishWay);
+
+
+	@Query(value="SELECT " +
 			"p " +
 			"FROM " +
 			"Product p " +

@@ -173,19 +173,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setProductLength(source.getProductSpecifications().getLength());
 				destination.setProductWeight(source.getProductSpecifications().getWeight());
 				destination.setProductWidth(source.getProductSpecifications().getWidth());
-
-				 /**
-				  * BRANDING
-				  */
-
-    	         if(source.getProductSpecifications().getManufacturer()!=null) {
-    	        	 
-    					Manufacturer manufacturer = manufacturerService.getByCode(store, source.getProductSpecifications().getManufacturer());
-    					if(manufacturer == null) {
-    						throw new ConversionException("Manufacturer [" + source.getProductSpecifications().getManufacturer() + "] does not exist");
-    					}
-    					destination.setManufacturer(manufacturer);
-               }
 			}
 			
 			
@@ -266,10 +253,10 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 					
 					Category c = null;
 					if(!StringUtils.isBlank(categ.getCode())) {
-						c = categoryService.getByCode(store, categ.getCode());
+						c = categoryService.getByCode(categ.getCode());
 					} else {
 						Validate.notNull(categ.getId(), "Category id nust not be null");
-						c = categoryService.getById(categ.getId(), store.getId());
+						c = categoryService.getById(categ.getId());
 					}
 					
 					if(c==null) {

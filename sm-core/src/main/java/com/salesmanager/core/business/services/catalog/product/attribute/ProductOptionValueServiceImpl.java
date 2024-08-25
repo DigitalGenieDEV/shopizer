@@ -104,6 +104,11 @@ public class ProductOptionValueServiceImpl extends
 		return productOptionValueRepository.findByCode(store.getId(), optionValueCode);
 	}
 
+	@Override
+	public Long getByCode(String optionValueCode) {
+		return productOptionValueRepository.findByCode(optionValueCode);
+	}
+
 
 	@Override
 	public ProductOptionValue getById(MerchantStore store, Long optionValueId) {

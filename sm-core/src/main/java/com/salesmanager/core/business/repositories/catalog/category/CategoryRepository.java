@@ -28,6 +28,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 	Category findByCode(Integer storeId, String code);
 
 
+	@Query("select c from Category c  where c.code=?1")
+	Category findByCode(String code);
+
 	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.code in (?2) and cdl.id=?3 and cm.id = ?1 order by c.sortOrder asc")
 	List<Category> findByCodes(Integer storeId, List<String> codes, Integer languageId);
 	
@@ -48,6 +51,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 	
 	@Query("select c from Category c left join fetch c.parent cp left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = ?1")
 	Optional<Category> findById(Long categoryId);
+
+
+	@Query("select c from Category c  where c.id = ?1")
+	Optional<Category> findOneById(Long categoryId);
 
 	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code=?1 and c.code=?2")
 	Category findByCode(String merchantStoreCode, String code);

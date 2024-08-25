@@ -157,6 +157,15 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 	}
 
 	@Override
+	public Category getByCode(String code) throws ServiceException {
+		try {
+			return categoryRepository.findByCode(code);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+  }
+
+	@Override
 	public Category getByCode(String storeCode, String code) throws ServiceException {
 
 		try {
@@ -397,6 +406,11 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 	@Override
 	public Category findById(Long category) {
 		Optional<Category> cat = categoryRepository.findById(category);
+		return cat.orElse(null);
+	}
+
+	public Category findOneById(Long category) {
+		Optional<Category> cat = categoryRepository.findOneById(category);
 		return cat.orElse(null);
 	}
 

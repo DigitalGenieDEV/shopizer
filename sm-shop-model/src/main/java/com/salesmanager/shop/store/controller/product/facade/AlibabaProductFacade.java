@@ -19,5 +19,5 @@ public interface AlibabaProductFacade {
                              List<Long> categoryIds, PublishWayEnums importType) throws Exception;
 
 
-    ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam);
+    ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException;
 }
