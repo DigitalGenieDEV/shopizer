@@ -2,6 +2,9 @@ package com.salesmanager.shop.store.controller.product.facade;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -9,10 +12,13 @@ import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.LightPersistableProduct;
+import com.salesmanager.shop.model.catalog.product.PersistableProductQna;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
+import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
 
@@ -154,7 +160,7 @@ public interface ProductCommonFacade {
 	   * @param language
 	   * @throws Exception
 	   */
-	  void saveOrUpdateReview(PersistableProductReview review, MerchantStore store, Language language)
+	  public void saveOrUpdateReview(PersistableProductReview review, MerchantStore store, Language language, List<MultipartFile> reviewImages)
 	      throws Exception;
 
 	  /**
@@ -176,8 +182,7 @@ public interface ProductCommonFacade {
 	   * @return
 	   * @throws Exception
 	   */
-	  List<ReadableProductReview> getProductReviews(Product product, MerchantStore store,
-	      Language language) throws Exception;
+	  public ReadableProductReviews getProductReviews(Product product, MerchantStore store, Language language, String keyword, Pageable pageRequest) throws Exception;
 
 	  /**
 	   * validates if product exists
@@ -187,6 +192,8 @@ public interface ProductCommonFacade {
 	   */
 	  public boolean exists(String sku, MerchantStore store);
 
-
+	  public void updateReviewRecommend(Long reviewId, PersistableProductReviewRecommend persistableRecommend) throws Exception;
+	  
+	  public void saveOrUpdateQna(PersistableProductQna persistableQna, MerchantStore store, Language language) throws Exception;
 
 }
