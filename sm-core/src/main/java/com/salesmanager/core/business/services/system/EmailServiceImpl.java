@@ -32,6 +32,29 @@ public class EmailServiceImpl implements EmailService {
 	private final EmailConfig config;
 	
 	@Override
+	public void sendEmail(
+			String to,
+			String subject,
+			String templateName,
+			Map<String, String> tokens
+	) {
+		Email email = new Email();
+		email.setFrom("Sourcingroot");
+		email.setFromEmail("info@sourcingroot.com");
+		email.setSubject(subject);
+		email.setTo(to);
+		email.setTemplateName(templateName);
+		email.setTemplateTokens(tokens);
+		
+		try {
+			sender.send(email);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
 	public void sendVerificationEmail(String to, String code) throws ServiceException {
 		
 		sender.setEmailConfig(config);

@@ -85,6 +85,7 @@ public class EmailConstants {
 	public static final String ORDER_STATUS_TMPL = "email_template_order_status.ftl";
 	public static final String EMAIL_CONTACT_TMPL = "email_template_contact.ftl";
 	public static final String EMAIL_NOTIFICATION_TMPL = "email_template_notification.ftl";
+	public static final String EMAIL_NEW_USER = "email_template_new_user.ftl";
 	
 	
 }

@@ -28,6 +28,9 @@ public interface ProductCommonFacade {
 	   */
 	  Long saveProduct(MerchantStore store, PersistableProduct product,
 	      Language language) throws ServiceException;
+	  
+	  Long saveAllProduct(MerchantStore store, List<Product> products,
+		      Language language) throws ServiceException;
 
 
 	Long simpleUpdateProduct(PersistableSimpleProductUpdateReq product) throws ServiceException;
