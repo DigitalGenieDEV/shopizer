@@ -402,7 +402,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         createProductVariant(ko, store, productDetailModel, persistableProduct);
 
         createAttribute(productSearchQueryProductDetailModelProductDetailModelForEn.getProductAttribute(), en, ko, store, productDetailModel.getProductAttribute(),  persistableProduct);
-        persistableProduct.setPublishWay(importType == null ? PublishWayEnums.IMPORT_BY_1688.name() : PublishWayEnums.BATCH_IMPORT_BY_1688.name());
+        persistableProduct.setPublishWay(importType == null ? PublishWayEnums.IMPORT_BY_1688.name() : PublishWayEnums.IMPORT_BY_1688.name());
         PersistableAnnouncement persistableAnnouncement = new PersistableAnnouncement();
         persistableAnnouncement.setProductId(productId);
 

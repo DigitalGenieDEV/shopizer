@@ -83,10 +83,10 @@ public class MyScheduledTask {
             for (int i = 0; i < result.length; i++) {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
-                offerId = 751910003116L;
+                offerId = 795861001688L;
                 try {
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore,
-                            Collections.singletonList(1L), PublishWayEnums.BATCH_IMPORT_BY_1688);
+                            Collections.singletonList(1L), PublishWayEnums.IMPORT_BY_1688);
                 } catch (Exception e) {
                     System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++："
                             +offerId);

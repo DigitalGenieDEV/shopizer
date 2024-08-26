@@ -162,7 +162,7 @@ public class Product1688Api {
 //											//处理商品导入
 											alibabaProductFacade.adminBatchImportProduct(
 													data.getOfferId(), language.getCode(), merchantStore,
-													keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()), PublishWayEnums.BATCH_IMPORT_BY_1688);
+													keyword.getCategoryId() == null ? null : Lists.newArrayList(keyword.getCategoryId()), PublishWayEnums.IMPORT_BY_1688);
 										}
 
 									} catch (Exception e) {
