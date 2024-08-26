@@ -17,7 +17,16 @@ public class SearchProductRequestV2 implements Serializable {
     private Integer size = 20;
     private Integer number = 0;
     private String sort;
+    private String sortOrder;
     private Map<String, List<Object>> filterOptions;
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
+    }
 
     public String getLang() {
         return lang;

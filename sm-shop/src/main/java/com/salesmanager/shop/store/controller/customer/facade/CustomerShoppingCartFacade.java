@@ -40,6 +40,8 @@ public interface CustomerShoppingCartFacade {
 
     ReadableCustomerShoppingCart addToCart(Customer customer, PersistableCustomerShoppingCartItem item, MerchantStore store, Language language) throws Exception;
 
+    ReadableCustomerShoppingCart selectAllCartItem(Customer customer, MerchantStore store, Language language) throws Exception;
+
 //    ReadableCustomerShoppingCart addToCart(PersistableCustomerShoppingCartItem item, Language language);
 
     ReadableCustomerShoppingCart removeCartItem(Customer customer, String sku, MerchantStore store, Language language, boolean returnCart) throws Exception;;
