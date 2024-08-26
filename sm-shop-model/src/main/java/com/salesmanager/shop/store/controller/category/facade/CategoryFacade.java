@@ -125,5 +125,4 @@ public interface CategoryFacade {
 	ReadableCategoryList listByProduct(MerchantStore store, Long product, Language language);
 
 
-
 }

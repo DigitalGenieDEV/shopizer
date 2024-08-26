@@ -5,9 +5,12 @@ import java.util.Optional;
 
 import com.salesmanager.core.model.reference.language.Language;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.category.Category;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public interface CategoryRepository extends JpaRepository<Category, Long>, CategoryRepositoryCustom {
@@ -85,6 +88,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 
 	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.parent cp where cp.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
 	List<Category> findByParent(Long parentId, Integer languageId);
+
+
+	@Query("select distinct c from Category c left join fetch c.parent cp where cp.id=?1 order by c.lineage, c.sortOrder asc")
+	List<Category> findByParent(Long parentId);
 	
 	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
 	List<Category> findByStore(Integer merchantId, Integer languageId);
@@ -96,5 +103,15 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 	int count(Integer storeId);
 
 
-	
+	@Modifying
+	@Transactional
+	@Query("UPDATE Category c SET c.handlingFee = :handlingFee WHERE c.id = :id")
+	void updateHandlingFeeById(@Param("handlingFee") String handlingFee, @Param("id") Long id);
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Category c SET c.handlingFeeFor1688 = :handlingFeeFor1688 WHERE c.id = :id")
+	void updateHandlingFeeFor1688ById(@Param("handlingFeeFor1688") String handlingFeeFor1688, @Param("id") Long id);
+
 }

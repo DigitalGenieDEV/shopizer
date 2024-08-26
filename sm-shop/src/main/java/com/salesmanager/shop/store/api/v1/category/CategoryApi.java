@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.api.v1.category;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,8 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.model.catalog.category.CategoryType;
+import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
+import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
+import com.salesmanager.shop.store.api.v2.product.ProductApiV2;
 import com.salesmanager.shop.store.controller.manager.facade.ManagerFacade;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +70,8 @@ import springfox.documentation.annotations.ApiIgnore;
 )
 public class CategoryApi {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryApi.class);
+
 	private static final int DEFAULT_CATEGORY_DEPTH = 0;
 
 	@Inject
@@ -70,6 +82,9 @@ public class CategoryApi {
 
 	@Inject
 	private ManagerFacade managerFacade;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@GetMapping(value = "/private/category/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(
@@ -372,5 +387,21 @@ public class CategoryApi {
 	) {
 		ReadableCategory category = categoryFacade.getById(merchantStore, categoryId, language);
 		return category;
+	}
+
+
+
+	@PutMapping(value = "/private/update/category/handlingFee/{id}", produces = { APPLICATION_JSON_VALUE })
+	public CommonResultDTO<Void> updateHandlingFeeById(
+			@PathVariable Long id,
+			@RequestParam(value = "handlingFee", required = false) String handlingFee,
+			@RequestParam(value = "handlingFeeFor1688", required = false) String handlingFeeFor1688) {
+		try {
+			categoryService.updateHandlingFeeById(handlingFee, handlingFeeFor1688, id);
+			return CommonResultDTO.ofSuccess();
+		}catch(Exception e){
+			LOGGER.error("updateHandlingFeeById error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
 	}
 }

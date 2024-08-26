@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.drools.core.util.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -441,6 +442,27 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 	@Override
 	public List<Category> getByProductId(Long productId, MerchantStore store) {
 		return categoryRepository.listByProduct(store, productId);
+	}
+
+	@Override
+	public void updateHandlingFeeById(String handlingFee, String handlingFeeFor1688, Long categoryId) {
+		updateHandlingFeeRecursively(handlingFee, handlingFeeFor1688, categoryId);
+	}
+
+	private void updateHandlingFeeRecursively(String handlingFee, String handlingFeeFor1688, Long categoryId) {
+		// 更新当前类目的手续费
+		if (!StringUtils.isEmpty(handlingFee)) {
+			categoryRepository.updateHandlingFeeById(handlingFee, categoryId);
+		}
+		if (!StringUtils.isEmpty(handlingFeeFor1688)) {
+			categoryRepository.updateHandlingFeeFor1688ById(handlingFeeFor1688, categoryId);
+		}
+
+		// 查找子类目
+		List<Category> subCategories = categoryRepository.findByParent(categoryId);
+		for (Category subCategory : subCategories) {
+			updateHandlingFeeRecursively(handlingFee, handlingFeeFor1688, subCategory.getId());
+		}
 	}
 
 }

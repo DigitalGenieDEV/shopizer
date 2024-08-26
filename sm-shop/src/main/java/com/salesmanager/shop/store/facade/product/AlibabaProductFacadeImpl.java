@@ -437,7 +437,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         // 并行处理每个属性
         List<CompletableFuture<Void>> futures = Arrays.stream(productAttribute)
                 .map(attr -> CompletableFuture.runAsync(() -> {
-                    try {
                         if ("2176".equals(attr.getAttributeId())) {
                             return; // 跳过ID为2176的属性
                         }
@@ -476,6 +475,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             } catch (org.springframework.dao.DataIntegrityViolationException e) {
                                 // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
                                 System.out.println("Unique constraint violation occurred, ignoring");
+                            } catch (ServiceException e) {
+                                throw new RuntimeException(e);
                             }
                             productOptionId = productOptionService.getByCode(attributeName);
                         }
@@ -514,6 +515,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             } catch (org.springframework.dao.DataIntegrityViolationException e) {
                                 // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
                                 System.out.println("Unique constraint violation occurred, ignoring");
+                            } catch (ServiceException e) {
+                                throw new RuntimeException(e);
                             }
                             optionValueId = productOptionValueService.getByCode(value);
                         }
@@ -525,9 +528,6 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                         persistableProductAttribute.setSortOrder(Arrays.asList(productAttribute).indexOf(attr));
                         persistableProductAttribute.setAttributeDisplayOnly(true);
                         attributes.add(persistableProductAttribute);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }, executor)).collect(Collectors.toList());
 
         // 等待所有任务完成
@@ -576,7 +576,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     }
                     price.setPriceRangeList(ranges);
                     product.setPriceRangeList(ranges);
-                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
+                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale() ==null ?
+                            0: productDetailModel.getProductSaleInfo().getAmountOnSale());
                 } else {
                     BigDecimal skuPrice = new BigDecimal(StringUtils.isEmpty(productSkuInfo.getPromotionPrice()) ?
                             productSkuInfo.getPrice() : productSkuInfo.getPromotionPrice());
@@ -585,7 +586,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     // 更新默认价格
                     defaultPrice.updateAndGet(currentPrice -> skuPrice.compareTo(currentPrice) < 0 ? skuPrice : currentPrice);
 
-                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale());
+                    productInventory.setQuantity(productDetailModel.getProductSaleInfo().getAmountOnSale() ==null ?
+                            0: productDetailModel.getProductSaleInfo().getAmountOnSale());
                 }
                 productInventory.setPrice(price);
 
