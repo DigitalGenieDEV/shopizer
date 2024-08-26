@@ -248,6 +248,7 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setUid(searchProductRequestV2.getUid());
 		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceId());
 		searchProductRequest.setSort(searchProductRequestV2.getSort());
+		searchProductRequest.setSortOrder(searchProductRequestV2.getSortOrder());
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
 

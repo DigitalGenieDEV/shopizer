@@ -28,6 +28,9 @@ public class SearchRequest {
     @JsonProperty("sort")
     private String sort;
 
+    @JsonProperty("sort_order")
+    private String sortOrder;
+
     @JsonProperty("filter_options")
     private Map<String, List<Object>> filterOptions;
 
@@ -69,6 +72,14 @@ public class SearchRequest {
 
     public void setFilterOptions(Map<String, List<Object>> filterOptions) {
         this.filterOptions = filterOptions;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     //    public List<NameValuePair> getParams() {

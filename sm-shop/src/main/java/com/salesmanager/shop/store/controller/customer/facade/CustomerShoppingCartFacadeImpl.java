@@ -748,6 +748,24 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         return readableCustomerShoppingCart;
     }
 
+    @Override
+    public ReadableCustomerShoppingCart selectAllCartItem(Customer customer, MerchantStore store, Language language) throws Exception {
+        try {
+            CustomerShoppingCart cartModel = getCustomerShoppingCartModel(customer);
+            Set<com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem> items = cartModel.getLineItems();
+
+            for (com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem anItem: items) {
+                anItem.setChecked(true);
+            }
+
+            customerShoppingCartService.saveOrUpdate(cartModel);
+
+            return this.getByCustomer(customer, store, language);
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
 //    @Override
 //    public ReadableCustomerShoppingCart addToCart(PersistableCustomerShoppingCartItem item, Language language) {
 //        Validate.notNull(item, "PersistableCustomerShoppingCartItem cannot be null");
