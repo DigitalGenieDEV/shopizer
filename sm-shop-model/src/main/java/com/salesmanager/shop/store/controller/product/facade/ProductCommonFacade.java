@@ -2,9 +2,12 @@ package com.salesmanager.shop.store.controller.product.facade;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -13,10 +16,13 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.LightPersistableProduct;
 import com.salesmanager.shop.model.catalog.product.PersistableProductQna;
+import com.salesmanager.shop.model.catalog.product.PersistableProductQnaReply;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.ReadableProductQna;
+import com.salesmanager.shop.model.catalog.product.ReadableProductQnaList;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
@@ -195,5 +201,11 @@ public interface ProductCommonFacade {
 	  public void updateReviewRecommend(Long reviewId, PersistableProductReviewRecommend persistableRecommend) throws Exception;
 	  
 	  public void saveOrUpdateQna(PersistableProductQna persistableQna, MerchantStore store, Language language) throws Exception;
+
+	void saveReply(Long qnaId, @Valid PersistableProductQnaReply reply, MerchantStore merchantStore, Language language) throws Exception;
+
+	public ReadableProductQna getProductQna(Long qnaId, MerchantStore store, Language lang) throws ConversionException;
+
+	ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId, String questingType, Pageable pageRequest, MerchantStore store, Language lang);
 
 }

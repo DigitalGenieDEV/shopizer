@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +25,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.constants.QuestionType;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
@@ -63,14 +66,18 @@ public class ProductQna extends SalesManagerEntity<Long, ProductQna> implements 
 	@JoinColumn(name="PRODUCT_ID")
 	private Product product;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productQna")
-	private Set<ProductQnaDescription> descriptions = new HashSet<ProductQnaDescription>();
+	@OneToOne(mappedBy = "productQna", cascade = CascadeType.ALL, orphanRemoval = true)
+	private ProductQnaDescription description = new ProductQnaDescription();
+	
+	@OneToOne(mappedBy = "productQna", cascade = CascadeType.ALL, orphanRemoval = true)
+	private ProductQnaReply reply;
 	
 	@Column(name = "SECRET")
 	private boolean secret;
 	
 	@Column(name = "QUESTION_TYPE")
-	private String questionType;
+	@Enumerated(value = EnumType.STRING)
+	private QuestionType questionType;
 	
 	@Override
 	public AuditSection getAuditSection() {

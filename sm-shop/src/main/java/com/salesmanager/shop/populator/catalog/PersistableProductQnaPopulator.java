@@ -11,6 +11,7 @@ import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
+import com.salesmanager.core.constants.QuestionType;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.qna.ProductQna;
 import com.salesmanager.core.model.catalog.product.qna.ProductQnaDescription;
@@ -73,18 +74,15 @@ public class PersistableProductQnaPopulator extends AbstractDataPopulator<Persis
 			}
 			
 			ProductQnaDescription description = new ProductQnaDescription();
+			description.setTitle(source.getTitle());
 			description.setDescription(source.getDescription());
 			description.setLanguage(lang);
 			description.setName("-");
 			description.setProductQna(target);
-			
-			Set<ProductQnaDescription> descriptions = new HashSet<ProductQnaDescription>();
-			descriptions.add(description);
-			
-			target.setDescriptions(descriptions);
+			target.setDescription(description);
 			
 			target.setSecret(source.isSecret());
-			target.setQuestionType(source.getQuestionType());
+			target.setQuestionType(QuestionType.valueOf(source.getQuestionType()));
 			
 			return target;
 			

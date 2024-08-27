@@ -51,12 +51,14 @@ import com.salesmanager.core.business.services.catalog.product.review.ProductRev
 import com.salesmanager.core.business.services.catalog.product.review.ProductReviewStatService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
+import com.salesmanager.core.constants.QuestionType;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.price.ProductPrice;
 import com.salesmanager.core.model.catalog.product.qna.ProductQna;
+import com.salesmanager.core.model.catalog.product.qna.ProductQnaReply;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.catalog.product.review.ProductReviewImage;
 import com.salesmanager.core.model.catalog.product.review.ProductReviewRecommend;
@@ -69,10 +71,13 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.catalog.product.PersistableProductMapper;
 import com.salesmanager.shop.model.catalog.product.LightPersistableProduct;
 import com.salesmanager.shop.model.catalog.product.PersistableProductQna;
+import com.salesmanager.shop.model.catalog.product.PersistableProductQnaReply;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.ReadableProductQna;
+import com.salesmanager.shop.model.catalog.product.ReadableProductQnaList;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReviewStat;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
@@ -80,8 +85,10 @@ import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
 import com.salesmanager.shop.model.content.ContentFile;
 import com.salesmanager.shop.populator.catalog.PersistableProductQnaPopulator;
+import com.salesmanager.shop.populator.catalog.PersistableProductQnaReplyPopulator;
 import com.salesmanager.shop.populator.catalog.PersistableProductReviewPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
+import com.salesmanager.shop.populator.catalog.ReadableProductQnaPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductReviewPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductReviewStatPopulator;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
@@ -479,7 +486,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		
 		review.setId(rev.getId());
 		
-		// Ã·ºÎ ÆÄÀÏÀÌ ÀÖÀ¸¸é Ã³¸®.
+		// Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½.
 		if(reviewImages != null) {
 			for(MultipartFile file : reviewImages) {
 				ProductReviewImage reviewImage = new ProductReviewImage();
@@ -511,7 +518,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		
 		ReadableProductReviews readableProductReviews = new ReadableProductReviews();
 		
-		// review ¸ñ·Ï
+		// review ï¿½ï¿½ï¿½
 		List<ProductReview> reviews = productReviewService.listByKeyword(product, keyword, pageRequest);
 		ReadableProductReviewPopulator populator = new ReadableProductReviewPopulator();
 
@@ -778,5 +785,75 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		} else {
 			productQnaService.update(qna);
 		}
+	}
+
+	@Override
+	public void saveReply(Long qnaId, @Valid PersistableProductQnaReply persistableReply, MerchantStore merchantStore, Language language) throws ConversionException {
+		// TODO Auto-generated method stub
+		ProductQna qna = productQnaService.getById(qnaId);
+		
+		ProductQnaReply reply = new ProductQnaReply();
+		PersistableProductQnaReplyPopulator populator = new PersistableProductQnaReplyPopulator();
+		populator.setProductQnaService(productQnaService);
+		persistableReply.setId(qnaId);
+		populator.populate(persistableReply, reply, merchantStore, language);
+		
+		qna.setReply(reply);
+		productQnaService.update(qna);
+	}
+
+	@Override
+	public ReadableProductQna getProductQna(Long qnaId, MerchantStore store, Language lang) throws ConversionException {
+		// TODO Auto-generated method stub
+		ProductQna qna = productQnaService.getById(qnaId);
+		ReadableProductQna readableQna = new ReadableProductQna();
+		if(qna != null) {
+			ReadableProductQnaPopulator populator = new ReadableProductQnaPopulator();
+			populator.setPricingService(pricingService);
+			populator.setImageUtils(imageUtils);
+			populator.populate(qna, readableQna, store, lang);
+		}
+		
+		return readableQna;
+	}
+
+	@Override
+	public ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId,
+			String questingType, Pageable pageRequest, MerchantStore store, Language lang) {
+		// TODO Auto-generated method stub
+		QuestionType qt = null;
+		try {
+			qt = QuestionType.valueOf(questingType);
+		} catch (Exception e) {
+			// TODO: handle exception
+			qt = null;
+		}
+		Page<ProductQna> productQnaList = productQnaService.getProductQnaList(productId, customerId, checkSelf, checkSecret, qt, pageRequest);
+		ReadableProductQnaList readableProductQnaList = new ReadableProductQnaList();
+		List<ReadableProductQna> readableQnaList = new ArrayList<ReadableProductQna>();
+		
+		if(!CollectionUtils.isEmpty(productQnaList.getContent())) {
+			for(ProductQna qna : productQnaList) {
+				ReadableProductQnaPopulator populator = new ReadableProductQnaPopulator();
+				populator.setPricingService(pricingService);
+				populator.setImageUtils(imageUtils);
+				ReadableProductQna readableQna = new ReadableProductQna();
+				try {
+					populator.populate(qna, readableQna, store, lang);
+				} catch (ConversionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				readableQnaList.add(readableQna);
+			}
+		}
+		
+		readableProductQnaList.setData(readableQnaList);
+		readableProductQnaList.setRecordsTotal(productQnaList.getTotalElements());
+		readableProductQnaList.setTotalPages(productQnaList.getTotalPages());
+		readableProductQnaList.setNumber(productQnaList.getSize());
+		readableProductQnaList.setRecordsFiltered(productQnaList.getSize());
+		
+		return readableProductQnaList;
 	}
 }
