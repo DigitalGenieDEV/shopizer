@@ -16,6 +16,8 @@ import lombok.Setter;
 public class ProductQnaEntity extends Entity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@NotEmpty
+	private String title;
+	@NotEmpty
 	private String description;
 	private Long productId;
 	private String date;
