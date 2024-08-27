@@ -61,6 +61,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	@Query(value ="UPDATE PRODUCT_CATEGORY pc SET pc.CATEGORY_ID = :categoryId WHERE pc.PRODUCT_ID = :productId", nativeQuery = true)
 	void updateProductCategory(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
 
+	@Modifying
+	@Transactional
+	@Query(value ="DELETE FROM PRODUCT_CATEGORY WHERE PRODUCT_ID = :productId", nativeQuery = true)
+	void deleteProductCategory(@Param("productId") Long productId);
+
 
 	@Modifying
 	@Transactional
