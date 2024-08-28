@@ -190,6 +190,9 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 					shoppingCartItem.setQuantity(item.getQuantity());
 					shoppingCartItem.setSku(item.getSku());
+					if (item.getProduct() != null && item.getProduct().getPublishWay() != null) {
+						shoppingCartItem.setPublishWay(item.getProduct().getPublishWay().name());
+					}
 //					shoppingCartItem.setDescription(this.description(item.getProduct().getProductDescription()));
 
 					cartQuantity = cartQuantity + item.getQuantity();
