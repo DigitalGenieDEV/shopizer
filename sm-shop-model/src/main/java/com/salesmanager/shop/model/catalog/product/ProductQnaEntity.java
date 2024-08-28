@@ -18,9 +18,9 @@ public class ProductQnaEntity extends Entity implements Serializable {
 	@NotEmpty
 	private String title;
 	@NotEmpty
-	private String description;
+	private String content;
 	private Long productId;
 	private String date;
-	private String questionType;
+	private String category;
 	private boolean secret;
 }

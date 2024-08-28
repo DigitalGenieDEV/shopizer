@@ -17,10 +17,10 @@ public class ReadableProductQna {
 	private Date qnaDate;
 	private AuditSection auditSection;
 	private ReadableCustomer customer;
-	private ReadableProduct product;
+//	private ReadableProduct product;
 	private ReadableProductQnaDescription question;
-	private ReadableProductQnaReply reply;
+	private ReadableProductQnaReply answer;
 	private boolean secret;
-	private String questionType;
+	private String category;
 	
 }

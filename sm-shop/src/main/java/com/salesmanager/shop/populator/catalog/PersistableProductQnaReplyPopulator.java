@@ -23,7 +23,7 @@ public class PersistableProductQnaReplyPopulator
 				target = new ProductQnaReply();
 			}
 			target.setTitle(source.getTitle());
-			target.setDescription(source.getDescription());
+			target.setDescription(source.getContent());
 			target.setLanguage(language);
 			target.setName("-");
 		

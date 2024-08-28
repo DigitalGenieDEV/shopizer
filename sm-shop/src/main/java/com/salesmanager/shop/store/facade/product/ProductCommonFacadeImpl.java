@@ -819,16 +819,18 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Override
 	public ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId,
-			String questingType, Pageable pageRequest, MerchantStore store, Language lang) {
+			String category, Pageable pageRequest, MerchantStore store, Language lang) {
 		// TODO Auto-generated method stub
 		QuestionType qt = null;
 		try {
-			qt = QuestionType.valueOf(questingType);
+			qt = QuestionType.valueOf(category);
+			category = qt.name();
 		} catch (Exception e) {
 			// TODO: handle exception
-			qt = null;
+			category = null;
 		}
-		Page<ProductQna> productQnaList = productQnaService.getProductQnaList(productId, customerId, checkSelf, checkSecret, qt, pageRequest);
+		
+		Page<ProductQna> productQnaList = productQnaService.getProductQnaList(productId, customerId, checkSelf, checkSecret, category, pageRequest);
 		ReadableProductQnaList readableProductQnaList = new ReadableProductQnaList();
 		List<ReadableProductQna> readableQnaList = new ArrayList<ReadableProductQna>();
 		
@@ -855,5 +857,12 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		readableProductQnaList.setRecordsFiltered(productQnaList.getSize());
 		
 		return readableProductQnaList;
+	}
+
+	@Override
+	public void deleteQna(Long qnaId) {
+		// TODO Auto-generated method stub
+		ProductQna qna = productQnaService.getById(qnaId);
+		this.productQnaService.deleteById(qna);
 	}
 }
