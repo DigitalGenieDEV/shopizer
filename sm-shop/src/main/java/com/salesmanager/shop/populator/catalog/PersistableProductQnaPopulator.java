@@ -75,14 +75,14 @@ public class PersistableProductQnaPopulator extends AbstractDataPopulator<Persis
 			
 			ProductQnaDescription description = new ProductQnaDescription();
 			description.setTitle(source.getTitle());
-			description.setDescription(source.getDescription());
+			description.setDescription(source.getContent());
 			description.setLanguage(lang);
 			description.setName("-");
 			description.setProductQna(target);
 			target.setDescription(description);
 			
 			target.setSecret(source.isSecret());
-			target.setQuestionType(QuestionType.valueOf(source.getQuestionType()));
+			target.setQuestionType(QuestionType.valueOf(source.getCategory()));
 			
 			return target;
 			

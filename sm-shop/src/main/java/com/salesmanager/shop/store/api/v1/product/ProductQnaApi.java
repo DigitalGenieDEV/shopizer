@@ -9,11 +9,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +55,7 @@ public class ProductQnaApi {
 		@ApiImplicitParam(name = "checkSecret", dataType = "boolean", defaultValue = "false"),
 		@ApiImplicitParam(name = "checkSelf", dataType = "boolean", defaultValue = "false"),
 		@ApiImplicitParam(name = "customerId", dataType = "Integer"),
+		@ApiImplicitParam(name = "category", dataType = "String"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
 	public ReadableProductQnaList getAll(
@@ -63,7 +66,7 @@ public class ProductQnaApi {
 			@RequestParam(value = "checkSecret", required = false) boolean checkSecret,
 			@RequestParam(value = "checkSelf", required = false) boolean checkSelf,
 			@RequestParam(value = "customerId", required = false) Integer customerId,
-			@RequestParam(value = "questingType", required = false) String questingType,
+			@RequestParam(value = "category", required = false) String category,
 			@ApiIgnore Language language,
 			HttpServletResponse response,
 			HttpServletRequest request
@@ -86,7 +89,7 @@ public class ProductQnaApi {
 			}
 			
 			Pageable pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("QNA_DATE")));
-			ReadableProductQnaList readableQnaList =  productCommonFacade.getProductQnaList(id, checkSecret, checkSelf, customerId, questingType, pageRequest, merchantStore, language);
+			ReadableProductQnaList readableQnaList =  productCommonFacade.getProductQnaList(id, checkSecret, checkSelf, customerId, category, pageRequest, merchantStore, language);
 			return readableQnaList;
 						
 		} catch (Exception e) {
@@ -111,7 +114,14 @@ public class ProductQnaApi {
 			HttpServletResponse response,
 			HttpServletRequest request
 			) throws ConversionException {
-		return productCommonFacade.getProductQna(qnaId, merchantStore, language);
+		try {
+			ReadableProductQna readableQna = productCommonFacade.getProductQna(qnaId, merchantStore, language); 
+			return readableQna;
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e; 
+		}
+		
 	}
 	
 	@PostMapping(value = {"/auth/products/{id}/qna", "/private/products/{id}/qna"})
@@ -121,7 +131,7 @@ public class ProductQnaApi {
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public PersistableProductQna create(
+	public ResponseEntity<?> create(
 			@PathVariable final Long id,
 			@Valid @RequestBody PersistableProductQna qna,
 			@ApiIgnore MerchantStore merchantStore,
@@ -129,9 +139,16 @@ public class ProductQnaApi {
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		productCommonFacade.saveOrUpdateQna(qna, merchantStore, language);
+		try {
+			qna.setProductId(id);
+			productCommonFacade.saveOrUpdateQna(qna, merchantStore, language);
+			
+			return ResponseEntity.ok(Void.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.badRequest().body("Exception when saving library files "+e.getMessage());
+		}
 		
-		return qna;
 	}
 	
 	@PostMapping(value = {"/auth/products/{id}/qna/{qnaId}/reply", "/private/products/{id}/qna/{qnaId}/reply"})
@@ -141,7 +158,7 @@ public class ProductQnaApi {
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public ReadableProductQna createReply(
+	public ResponseEntity<?> createReply(
 			@PathVariable final Long id,
 			@PathVariable final Long qnaId,
 			@Valid @RequestBody PersistableProductQnaReply reply,
@@ -150,9 +167,42 @@ public class ProductQnaApi {
 			HttpServletResponse response,
 			HttpServletRequest request) throws Exception {
 		
-		productCommonFacade.saveReply(qnaId, reply, merchantStore, language);
+		try {
+			productCommonFacade.saveReply(qnaId, reply, merchantStore, language);
+			return ResponseEntity.ok(Void.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.badRequest().body("Exception when saving library files "+e.getMessage());
+		}
+	}
+	
+	@PutMapping(value = {"/auth/products/{id}/qna/{qnaId}", "/private/products/{id}/qna/{qnaId}"})
+	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
+	})
+	public ResponseEntity<?> createReply(
+			@PathVariable final Long id,
+			@PathVariable final Long qnaId,
+			@Valid @RequestBody PersistableProductQna qna,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language,
+			HttpServletResponse response,
+			HttpServletRequest request) throws Exception {
 		
-		return null;
+		try {
+			qna.setProductId(id);
+			qna.setId(qnaId);
+			productCommonFacade.saveOrUpdateQna(qna, merchantStore, language);
+			return ResponseEntity.ok(Void.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.badRequest().body("Exception when saving library files "+e.getMessage());
+		}
+		
+		
 	}
 	
 	@DeleteMapping(value = {"/auth/products/{id}/qna/{qnaId}", "/private/products/{id}/qna/{qnaId}"})
@@ -162,7 +212,7 @@ public class ProductQnaApi {
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public void delete(
+	public ResponseEntity<?> delete(
 			@PathVariable final Long id,
 			@PathVariable final Long qnaId,
 			@ApiIgnore MerchantStore merchantStore,
@@ -170,6 +220,13 @@ public class ProductQnaApi {
 			HttpServletResponse response,
 			HttpServletRequest request
 			) {
+		try {
+			productCommonFacade.deleteQna(qnaId);
+			return ResponseEntity.ok(Void.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.badRequest().body("Exception when saving library files "+e.getMessage());
+		}
 		
 	}
 }

@@ -206,6 +206,8 @@ public interface ProductCommonFacade {
 
 	public ReadableProductQna getProductQna(Long qnaId, MerchantStore store, Language lang) throws ConversionException;
 
-	ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId, String questingType, Pageable pageRequest, MerchantStore store, Language lang);
+	ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId, String category, Pageable pageRequest, MerchantStore store, Language lang);
+
+	void deleteQna(Long qnaId);
 
 }

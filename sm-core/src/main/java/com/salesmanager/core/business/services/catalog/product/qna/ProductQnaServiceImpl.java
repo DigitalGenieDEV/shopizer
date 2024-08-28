@@ -40,8 +40,14 @@ public class ProductQnaServiceImpl extends SalesManagerEntityServiceImpl<Long, P
 
 	@Override
 	public Page<ProductQna> getProductQnaList(Long productId, Integer customerId, boolean checkSelf,
-			boolean checkSecret, QuestionType qt, Pageable pageRequest) {
+			boolean checkSecret, String category, Pageable pageRequest) {
 		// TODO Auto-generated method stub
-		return this.productQnaRepository.getByProductId(productId, customerId, checkSelf, checkSecret, qt, pageRequest);
+		return this.productQnaRepository.getByProductId(productId, customerId, checkSelf, checkSecret, category, pageRequest);
+	}
+
+	@Override
+	public void deleteById(ProductQna qna) {
+		// TODO Auto-generated method stub
+		this.productQnaRepository.delete(qna);
 	}
 }

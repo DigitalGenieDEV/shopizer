@@ -12,6 +12,6 @@ import lombok.Setter;
 public class ReadableProductQnaDescription {
 	private Long Id;
 	private String title;
-	private String description;
-	private Date created;
+	private String content;
+	private String date;
 }

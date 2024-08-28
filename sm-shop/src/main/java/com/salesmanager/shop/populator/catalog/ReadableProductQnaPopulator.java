@@ -1,5 +1,7 @@
 package com.salesmanager.shop.populator.catalog;
 
+import java.text.SimpleDateFormat;
+
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
@@ -44,23 +46,23 @@ public class ReadableProductQnaPopulator extends AbstractDataPopulator<ProductQn
 			customerPopulator.populate(customer, readableCustomer, store, language);
 			target.setCustomer(readableCustomer);
 			
-			Product product = source.getProduct();
-			ReadableProduct readableProduct = new ReadableProduct();
-			ReadableProductPopulator productPopulator = new ReadableProductPopulator();
-			productPopulator.setPricingService(pricingService);;
-			productPopulator.setimageUtils(imageUtils);
-			productPopulator.populate(product, readableProduct, store, language);
-			target.setProduct(readableProduct);
+//			Product product = source.getProduct();
+//			ReadableProduct readableProduct = new ReadableProduct();
+//			ReadableProductPopulator productPopulator = new ReadableProductPopulator();
+//			productPopulator.setPricingService(pricingService);;
+//			productPopulator.setimageUtils(imageUtils);
+//			productPopulator.populate(product, readableProduct, store, language);
+//			target.setProduct(readableProduct);
 			
 			ReadableProductQnaDescription readableDescription = populateDescription(source.getDescription());
 			target.setQuestion(readableDescription);
 			if(source.getReply() != null) {
 				ReadableProductQnaReply readableReply = populateReply(source.getReply());
-				target.setReply(readableReply);
+				target.setAnswer(readableReply);
 			}
 			
 			target.setSecret(source.isSecret());
-			target.setQuestionType(source.getQuestionType().name());
+			target.setCategory(source.getQuestionType().name());
 			
 			return target;
 			
@@ -75,8 +77,8 @@ public class ReadableProductQnaPopulator extends AbstractDataPopulator<ProductQn
 		ReadableProductQnaReply target = new ReadableProductQnaReply();
 		target.setId(source.getId());
 		target.setTitle(source.getTitle());
-		target.setDescription(source.getDescription());
-		target.setCreated(source.getAuditSection().getDateCreated());
+		target.setContent(source.getDescription());
+		target.setDate((new SimpleDateFormat("yyyy.MM.dd")).format(source.getAuditSection().getDateCreated()));
 		return target;
 	}
 
@@ -85,8 +87,8 @@ public class ReadableProductQnaPopulator extends AbstractDataPopulator<ProductQn
 		ReadableProductQnaDescription target = new ReadableProductQnaDescription();
 		target.setId(source.getId());
 		target.setTitle(source.getTitle());
-		target.setDescription(source.getDescription());
-		target.setCreated(source.getAuditSection().getDateCreated());
+		target.setContent(source.getDescription());
+		target.setDate((new SimpleDateFormat("yyyy.MM.dd")).format(source.getAuditSection().getDateCreated()));
 		return target;
 	}
 
