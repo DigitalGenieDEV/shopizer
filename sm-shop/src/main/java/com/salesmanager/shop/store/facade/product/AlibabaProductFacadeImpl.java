@@ -379,7 +379,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         }
 
         if (productDetailModel != null ) {
-            if (productDetailModel.getProductShippingInfo().getSkuShippingInfoList() != null&& productDetailModel.getProductShippingInfo().getSkuShippingInfoList().length >0 ){
+            if (productDetailModel.getProductShippingInfo() !=null && productDetailModel.getProductShippingInfo().getSkuShippingInfoList() != null&& productDetailModel.getProductShippingInfo().getSkuShippingInfoList().length >0 ){
                 ComAlibabaCbuOfferModelSkuShippingInfo[] skuShippingInfoList = productDetailModel.getProductShippingInfo().getSkuShippingInfoList();
                 ComAlibabaCbuOfferModelSkuShippingInfo comAlibabaCbuOfferModelSkuShippingInfo = skuShippingInfoList[0];
                 ProductSpecification productSpecification = new ProductSpecification();
