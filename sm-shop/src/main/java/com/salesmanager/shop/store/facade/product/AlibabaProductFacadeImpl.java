@@ -389,12 +389,14 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 productSpecification.setWidth(convertToBigDecimal(comAlibabaCbuOfferModelSkuShippingInfo.getWidth()));
                 persistableProduct.setProductSpecifications(productSpecification);
             }else{
-                ProductSpecification productSpecification = new ProductSpecification();
-                productSpecification.setHeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getHeight()));
-                productSpecification.setLength(convertToBigDecimal(productDetailModel.getProductShippingInfo().getLength()));
-                productSpecification.setWeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWeight()));
-                productSpecification.setWidth(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWidth()));
-                persistableProduct.setProductSpecifications(productSpecification);
+                if (productDetailModel.getProductShippingInfo() !=null){
+                    ProductSpecification productSpecification = new ProductSpecification();
+                    productSpecification.setHeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getHeight()));
+                    productSpecification.setLength(convertToBigDecimal(productDetailModel.getProductShippingInfo().getLength()));
+                    productSpecification.setWeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWeight()));
+                    productSpecification.setWidth(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWidth()));
+                    persistableProduct.setProductSpecifications(productSpecification);
+                }
             }
         }
 
