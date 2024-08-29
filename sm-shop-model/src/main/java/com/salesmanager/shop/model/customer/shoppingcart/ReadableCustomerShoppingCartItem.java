@@ -36,6 +36,7 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 
     private Long productId;
 
+    private String publishWay;
 
     private List<ReadableProductVariation> variants = null;
 

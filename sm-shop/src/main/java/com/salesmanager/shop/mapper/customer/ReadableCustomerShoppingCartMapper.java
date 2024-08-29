@@ -236,6 +236,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setMixAmount(readableShoppingCartItem.getMixAmount());
         readableCustomerShoppingCartItem.setMixNumber(readableShoppingCartItem.getMixNumber());
         readableCustomerShoppingCartItem.setProductShipeable(readableShoppingCartItem.isProductShipeable());
+        readableCustomerShoppingCartItem.setPublishWay(readableShoppingCartItem.getPublishWay());
 
         readableCustomerShoppingCartItem.setTruckType(readableShoppingCartItem.getTruckType());
         readableCustomerShoppingCartItem.setTruckModel(readableShoppingCartItem.getTruckModel());

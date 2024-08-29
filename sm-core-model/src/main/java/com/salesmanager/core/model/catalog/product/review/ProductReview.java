@@ -23,6 +23,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.constants.SchemaConstant;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -78,6 +80,12 @@ public class ProductReview extends SalesManagerEntity<Long, ProductReview> imple
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
 	private Set<ProductReviewDescription> descriptions = new HashSet<ProductReviewDescription>();
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
+	private Set<ProductReviewImage> images = new HashSet<ProductReviewImage>();
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
+	private Set<ProductReviewRecommend> recommends = new HashSet<ProductReviewRecommend>();
 	
 	public ProductReview() {
 	}
@@ -156,4 +164,20 @@ public class ProductReview extends SalesManagerEntity<Long, ProductReview> imple
 		this.reviewDate = reviewDate;
 	}
 
+	public Set<ProductReviewImage> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<ProductReviewImage> images) {
+		this.images = images;
+	}
+
+	public Set<ProductReviewRecommend> getRecommends() {
+		return recommends;
+	}
+
+	public void setRecommends(Set<ProductReviewRecommend> recommends) {
+		this.recommends = recommends;
+	}
+	
 }

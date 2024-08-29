@@ -6,9 +6,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.repositories.catalog.product.review.PageableProductReviewRepository;
 import com.salesmanager.core.business.repositories.catalog.product.review.ProductReviewRepository;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -18,12 +22,12 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.reference.language.Language;
 
 @Service("productReviewService")
-public class ProductReviewServiceImpl extends
-		SalesManagerEntityServiceImpl<Long, ProductReview> implements
-		ProductReviewService {
-
-
+public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long, ProductReview> implements ProductReviewService {
+	
 	private ProductReviewRepository productReviewRepository;
+	
+	@Autowired
+	private PageableProductReviewRepository pageableProductReviewRepository;
 	
 	@Inject
 	private ProductService productService;
@@ -114,5 +118,11 @@ public class ProductReviewServiceImpl extends
 		return productReviewRepository.findByProductNoCustomers(product.getId());
 	}
 
+	@Override
+	public List<ProductReview> listByKeyword(Product product, String keyword, Pageable pageRequest) {
+		// TODO Auto-generated method stub
+//		Page<Object> temp = pageableProductReviewRepository.getByProduct(product.getId(), keyword, pageRequest);
+		return productReviewRepository.findByProduct(product.getId());
+	}
 
 }

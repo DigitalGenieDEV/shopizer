@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.model.catalog.product.Material;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
@@ -83,6 +84,9 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	
 	@Autowired
 	private ProductTypeService productTypeService;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Override
 	public Product convert(PersistableProduct source, MerchantStore store, Language language) {
@@ -249,6 +253,9 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			 */
 
 			if(!CollectionUtils.isEmpty(source.getCategories())) {
+				if (destination.getId() !=null){
+					productRepository.deleteProductCategory(destination.getId());
+				}
 				for(com.salesmanager.shop.model.catalog.category.Category categ : source.getCategories()) {
 					
 					Category c = null;
