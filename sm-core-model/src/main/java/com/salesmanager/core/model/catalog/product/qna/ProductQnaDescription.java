@@ -3,6 +3,7 @@ package com.salesmanager.core.model.catalog.product.qna;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -22,7 +23,7 @@ public class ProductQnaDescription extends Description {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne(targetEntity = ProductQna.class)
+	@OneToOne
 	@JoinColumn(name="PRODUCT_QNA_ID")
 	private ProductQna productQna;
 	
