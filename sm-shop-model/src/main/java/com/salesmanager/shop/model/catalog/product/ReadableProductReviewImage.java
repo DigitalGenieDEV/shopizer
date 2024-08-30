@@ -10,5 +10,4 @@ import lombok.Setter;
 public class ReadableProductReviewImage {
 	private Long id;
 	private String reviewImageUrl;
-	private Long productReviewId;
 }

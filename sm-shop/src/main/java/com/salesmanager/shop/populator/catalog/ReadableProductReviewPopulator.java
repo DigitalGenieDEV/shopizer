@@ -1,17 +1,20 @@
 package com.salesmanager.shop.populator.catalog;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.catalog.product.review.ProductReviewDescription;
+import com.salesmanager.core.model.catalog.product.review.ProductReviewImage;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.populator.customer.ReadableCustomerPopulator;
 import com.salesmanager.shop.utils.DateUtil;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReviewImage;
 
 public class ReadableProductReviewPopulator extends
 		AbstractDataPopulator<ProductReview, ReadableProductReview> {
@@ -32,6 +35,7 @@ public class ReadableProductReviewPopulator extends
 			target.setCustomer(customer);
 			target.setRating(source.getReviewRating());
 			target.setProductId(source.getProduct().getId());
+			target.setRecommendCount(Long.valueOf(source.getRecommends().size()));
 			
 			Set<ProductReviewDescription> descriptions = source.getDescriptions();
 			if(descriptions!=null) {
@@ -41,14 +45,24 @@ public class ReadableProductReviewPopulator extends
 					break;
 				}
 			}
-
+			
+			Set<ReadableProductReviewImage> readableReviewImages = new HashSet<ReadableProductReviewImage>();
+			Set<ProductReviewImage> reviewImages = source.getImages();
+			if(reviewImages != null) {
+				for(ProductReviewImage sourceImage : reviewImages) {
+					ReadableProductReviewImage targetImage = new ReadableProductReviewImage();
+					targetImage.setId(sourceImage.getId());
+					targetImage.setReviewImageUrl(sourceImage.getImageUrl());
+					readableReviewImages.add(targetImage);
+				}
+			}
+			target.setReviewImages(readableReviewImages);
+			
 			return target;
 			
 		} catch (Exception e) {
 			throw new ConversionException("Cannot populate ProductReview", e);
 		}
-		
-		
 		
 	}
 

@@ -162,9 +162,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Inject
 	private ProductReviewRecommendService productReviewRecommendService;
 	
-	@Inject
-	private ProductQnaService productQnaService;
-	
 	@Autowired
 	private PersistableProductMapper persistableProductMapper;
 
@@ -478,7 +475,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		com.salesmanager.core.model.catalog.product.review.ProductReview rev = new com.salesmanager.core.model.catalog.product.review.ProductReview();
 		populator.populate(review, rev, store, language);
 
-		if (review.getId() == null) {
+		if (review.getId() == null || review.getId() == 0) {
 			productReviewService.create(rev);
 		} else {
 			productReviewService.update(rev);
@@ -486,7 +483,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		
 		review.setId(rev.getId());
 		
-		// ÷�� ������ ������ ó��.
 		if(reviewImages != null) {
 			for(MultipartFile file : reviewImages) {
 				ProductReviewImage reviewImage = new ProductReviewImage();
@@ -518,7 +514,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		
 		ReadableProductReviews readableProductReviews = new ReadableProductReviews();
 		
-		// review ���
 		List<ProductReview> reviews = productReviewService.listByKeyword(product, keyword, pageRequest);
 		ReadableProductReviewPopulator populator = new ReadableProductReviewPopulator();
 
@@ -765,104 +760,5 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		}
 		
 		
-	}
-
-
-
-	@Override
-	public void saveOrUpdateQna(@Valid PersistableProductQna persistableQna, MerchantStore store, Language language) throws Exception {
-		// TODO Auto-generated method stub
-		PersistableProductQnaPopulator populator = new PersistableProductQnaPopulator();
-		populator.setLanguageService(languageService);
-		populator.setCustomerService(customerService);
-		populator.setProductService(productService);
-		
-		ProductQna qna = new ProductQna();
-		populator.populate(persistableQna, qna, store, language);
-
-		if (persistableQna.getId() == null) {
-			productQnaService.create(qna);
-		} else {
-			productQnaService.update(qna);
-		}
-	}
-
-	@Override
-	public void saveReply(Long qnaId, @Valid PersistableProductQnaReply persistableReply, MerchantStore merchantStore, Language language) throws ConversionException {
-		// TODO Auto-generated method stub
-		ProductQna qna = productQnaService.getById(qnaId);
-		
-		ProductQnaReply reply = new ProductQnaReply();
-		PersistableProductQnaReplyPopulator populator = new PersistableProductQnaReplyPopulator();
-		populator.setProductQnaService(productQnaService);
-		persistableReply.setId(qnaId);
-		populator.populate(persistableReply, reply, merchantStore, language);
-		
-		qna.setReply(reply);
-		productQnaService.update(qna);
-	}
-
-	@Override
-	public ReadableProductQna getProductQna(Long qnaId, MerchantStore store, Language lang) throws ConversionException {
-		// TODO Auto-generated method stub
-		ProductQna qna = productQnaService.getById(qnaId);
-		ReadableProductQna readableQna = new ReadableProductQna();
-		if(qna != null) {
-			ReadableProductQnaPopulator populator = new ReadableProductQnaPopulator();
-			populator.setPricingService(pricingService);
-			populator.setImageUtils(imageUtils);
-			populator.populate(qna, readableQna, store, lang);
-		}
-		
-		return readableQna;
-	}
-
-	@Override
-	public ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId,
-			String category, Pageable pageRequest, MerchantStore store, Language lang) {
-		// TODO Auto-generated method stub
-		QuestionType qt = null;
-		try {
-			qt = QuestionType.valueOf(category);
-			category = qt.name();
-		} catch (Exception e) {
-			// TODO: handle exception
-			category = null;
-		}
-		
-		Page<ProductQna> productQnaList = productQnaService.getProductQnaList(productId, customerId, checkSelf, checkSecret, category, pageRequest);
-		ReadableProductQnaList readableProductQnaList = new ReadableProductQnaList();
-		List<ReadableProductQna> readableQnaList = new ArrayList<ReadableProductQna>();
-		
-		if(!CollectionUtils.isEmpty(productQnaList.getContent())) {
-			for(ProductQna qna : productQnaList) {
-				ReadableProductQnaPopulator populator = new ReadableProductQnaPopulator();
-				populator.setPricingService(pricingService);
-				populator.setImageUtils(imageUtils);
-				ReadableProductQna readableQna = new ReadableProductQna();
-				try {
-					populator.populate(qna, readableQna, store, lang);
-				} catch (ConversionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				readableQnaList.add(readableQna);
-			}
-		}
-		
-		readableProductQnaList.setData(readableQnaList);
-		readableProductQnaList.setRecordsTotal(productQnaList.getTotalElements());
-		readableProductQnaList.setTotalPages(productQnaList.getTotalPages());
-		readableProductQnaList.setNumber(productQnaList.getSize());
-		readableProductQnaList.setRecordsFiltered(productQnaList.getSize());
-		
-		return readableProductQnaList;
-	}
-
-	@Override
-	public void deleteQna(Long qnaId) {
-		// TODO Auto-generated method stub
-		ProductQna qna = productQnaService.getById(qnaId);
-		this.productQnaService.deleteById(qna);
 	}
 }

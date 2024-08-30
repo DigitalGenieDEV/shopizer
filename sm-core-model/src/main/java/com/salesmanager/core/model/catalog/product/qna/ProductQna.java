@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.constants.QuestionType;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.qna.ProductQnaImage;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
@@ -71,6 +72,9 @@ public class ProductQna extends SalesManagerEntity<Long, ProductQna> implements 
 	
 	@OneToOne(mappedBy = "productQna", cascade = CascadeType.ALL, orphanRemoval = true)
 	private ProductQnaReply reply;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productQna")
+	private Set<ProductQnaImage> images;
 	
 	@Column(name = "SECRET")
 	private boolean secret;

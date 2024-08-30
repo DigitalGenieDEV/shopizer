@@ -200,14 +200,6 @@ public interface ProductCommonFacade {
 
 	  public void updateReviewRecommend(Long reviewId, PersistableProductReviewRecommend persistableRecommend) throws Exception;
 	  
-	  public void saveOrUpdateQna(PersistableProductQna persistableQna, MerchantStore store, Language language) throws Exception;
 
-	void saveReply(Long qnaId, @Valid PersistableProductQnaReply reply, MerchantStore merchantStore, Language language) throws Exception;
-
-	public ReadableProductQna getProductQna(Long qnaId, MerchantStore store, Language lang) throws ConversionException;
-
-	ReadableProductQnaList getProductQnaList(Long productId, boolean checkSecret, boolean checkSelf, Integer customerId, String category, Pageable pageRequest, MerchantStore store, Language lang);
-
-	void deleteQna(Long qnaId);
 
 }
