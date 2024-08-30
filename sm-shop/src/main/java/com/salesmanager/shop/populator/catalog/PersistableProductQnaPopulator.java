@@ -45,6 +45,7 @@ public class PersistableProductQnaPopulator extends AbstractDataPopulator<Persis
 			if(target == null) {
 				target = new ProductQna();
 			}
+			target.setId(source.getId());
 			
 			Customer customer = customerService.getById(source.getCustomerId());
 			//check if customer belongs to store

@@ -81,7 +81,7 @@ public class PersistableProductReviewPopulator extends
 			Product product = productService.getById(source.getProductId());
 			
 			//check if product belongs to store
-			if(product ==null || product.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
+			if(product == null || product.getMerchantStore().getId().intValue() == store.getId().intValue()) {
 				throw new ConversionException("Invalid product id for the given store");
 			}
 			
@@ -102,11 +102,7 @@ public class PersistableProductReviewPopulator extends
 			descriptions.add(description);
 			
 			target.setDescriptions(descriptions);
-			
-			
-
-			
-			
+						
 			return target;
 			
 		} catch (Exception e) {

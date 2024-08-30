@@ -12,4 +12,5 @@ import lombok.Setter;
 public class PersistableProductQna extends ProductQnaEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long customerId;
+	private String fileContentType;
 }

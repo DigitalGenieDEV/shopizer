@@ -14,6 +14,7 @@ public class ProductReviewStatServiceImpl extends SalesManagerEntityServiceImpl<
 	
 	private ProductReviewStatRepository productReviewStatRepository;
 	
+	
 	public ProductReviewStatServiceImpl(ProductReviewStatRepository repository) {
 		super(repository);
 		// TODO Auto-generated constructor stub
