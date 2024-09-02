@@ -9,6 +9,7 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -33,8 +34,7 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	private ProductService productService;
 	
 	@Inject
-	public ProductReviewServiceImpl(
-			ProductReviewRepository productReviewRepository) {
+	public ProductReviewServiceImpl(ProductReviewRepository productReviewRepository) {
 			super(productReviewRepository);
 			this.productReviewRepository = productReviewRepository;
 	}
@@ -121,7 +121,7 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	@Override
 	public List<ProductReview> listByKeyword(Product product, String keyword, Pageable pageRequest) {
 		// TODO Auto-generated method stub
-//		Page<Object> temp = pageableProductReviewRepository.getByProduct(product.getId(), keyword, pageRequest);
+//		Page<ProductReview> temp = productReviewRepository.getByProductId(product.getId(), keyword, pageRequest);
 		return productReviewRepository.findByProduct(product.getId());
 	}
 

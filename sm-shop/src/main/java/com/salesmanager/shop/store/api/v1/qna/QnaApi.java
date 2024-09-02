@@ -231,7 +231,7 @@ public class QnaApi {
 		}
 	}
 	
-	@GetMapping(value = {"/auth/qna/store"})
+	@GetMapping(value = {"/auth/qna/store", "/private/qna/store"})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({
