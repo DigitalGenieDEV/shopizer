@@ -124,6 +124,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			}
 
 			destination.setHsCode(source.getHsCode());
+			destination.setCertificationDocument(source.getCertificationDocument());
+			destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
 			destination.setSellerOpenId(source.getSellerOpenId());
 			destination.setSellerTextInfoId(source.getSellerTextInfoId());
 			destination.setBatchNumber(source.getBatchNumber());

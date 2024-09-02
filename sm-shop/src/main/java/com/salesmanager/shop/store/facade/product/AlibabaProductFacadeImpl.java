@@ -217,6 +217,32 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
 
+    // 重试方法
+    private ProductSearchQueryProductDetailModelProductDetailModel retrySearch(ProductSearchQueryProductDetailParamOfferDetailParam param) throws ServiceException {
+        int retryCount = 0;
+        while (retryCount < 999999999) { // 最大重试次数
+            try {
+                return alibabaProductService.queryProductDetail(param);
+            } catch (Exception e) {
+//				if ("403".equals(e.getMessage())) {
+                //现在所有异常都重试
+                try {
+                    Thread.sleep(10000); // 等待10秒
+                    System.out.println("等待中。。。。。。。");
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                retryCount++;
+//				} else {
+//					throw e; // 其他异常不重试
+//				}
+            }
+        }
+        throw new RuntimeException("Failed to retrieve data after retries");
+    }
+
+
     @Override
     public ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam param = ObjectConvert.convert(queryParam, ProductSearchKeywordQueryParamOfferQueryParam.class);

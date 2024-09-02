@@ -43,7 +43,9 @@ public class SellerTextInfoFacadeImpl implements SellerTextInfoFacade {
 			return null;
 		}
 		List<SellerProductShippingTextInfo> result = sellerTextInfos.stream().map(sellerTextInfo -> {
-			return JSON.parseObject(sellerTextInfo.getText(), SellerProductShippingTextInfo.class);
+			SellerProductShippingTextInfo sellerProductShippingTextInfo = JSON.parseObject(sellerTextInfo.getText(), SellerProductShippingTextInfo.class);
+			sellerProductShippingTextInfo.setId(sellerTextInfo.getId());
+			return sellerProductShippingTextInfo;
 		}).collect(Collectors.toList());
 		return result;
 	}
