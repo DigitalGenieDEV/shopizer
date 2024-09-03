@@ -34,8 +34,6 @@ public class ProductEntity extends Product implements Serializable {
 
 	private String intellectualPropertyDocuments;
 
-	private String exportDeclarationDocuments;
-	
 	private BigDecimal price;
 	private int quantity = 0;
 	private String sku;
@@ -72,5 +70,6 @@ public class ProductEntity extends Product implements Serializable {
 	private Boolean generalMixedBatch;
 
 
+	private String orderQuantityType;
 
 }

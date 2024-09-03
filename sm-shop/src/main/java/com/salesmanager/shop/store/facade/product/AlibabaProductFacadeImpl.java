@@ -217,6 +217,32 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     }
 
 
+    // 重试方法
+    private ProductSearchQueryProductDetailModelProductDetailModel retrySearch(ProductSearchQueryProductDetailParamOfferDetailParam param) throws ServiceException {
+        int retryCount = 0;
+        while (retryCount < 999999999) { // 最大重试次数
+            try {
+                return alibabaProductService.queryProductDetail(param);
+            } catch (Exception e) {
+//				if ("403".equals(e.getMessage())) {
+                //现在所有异常都重试
+                try {
+                    Thread.sleep(10000); // 等待10秒
+                    System.out.println("等待中。。。。。。。");
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                retryCount++;
+//				} else {
+//					throw e; // 其他异常不重试
+//				}
+            }
+        }
+        throw new RuntimeException("Failed to retrieve data after retries");
+    }
+
+
     @Override
     public ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException {
         ProductSearchKeywordQueryParamOfferQueryParam param = ObjectConvert.convert(queryParam, ProductSearchKeywordQueryParamOfferQueryParam.class);
@@ -379,7 +405,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         }
 
         if (productDetailModel != null ) {
-            if (productDetailModel.getProductShippingInfo().getSkuShippingInfoList() != null&& productDetailModel.getProductShippingInfo().getSkuShippingInfoList().length >0 ){
+            if (productDetailModel.getProductShippingInfo() !=null && productDetailModel.getProductShippingInfo().getSkuShippingInfoList() != null&& productDetailModel.getProductShippingInfo().getSkuShippingInfoList().length >0 ){
                 ComAlibabaCbuOfferModelSkuShippingInfo[] skuShippingInfoList = productDetailModel.getProductShippingInfo().getSkuShippingInfoList();
                 ComAlibabaCbuOfferModelSkuShippingInfo comAlibabaCbuOfferModelSkuShippingInfo = skuShippingInfoList[0];
                 ProductSpecification productSpecification = new ProductSpecification();
@@ -389,12 +415,14 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                 productSpecification.setWidth(convertToBigDecimal(comAlibabaCbuOfferModelSkuShippingInfo.getWidth()));
                 persistableProduct.setProductSpecifications(productSpecification);
             }else{
-                ProductSpecification productSpecification = new ProductSpecification();
-                productSpecification.setHeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getHeight()));
-                productSpecification.setLength(convertToBigDecimal(productDetailModel.getProductShippingInfo().getLength()));
-                productSpecification.setWeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWeight()));
-                productSpecification.setWidth(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWidth()));
-                persistableProduct.setProductSpecifications(productSpecification);
+                if (productDetailModel.getProductShippingInfo() !=null){
+                    ProductSpecification productSpecification = new ProductSpecification();
+                    productSpecification.setHeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getHeight()));
+                    productSpecification.setLength(convertToBigDecimal(productDetailModel.getProductShippingInfo().getLength()));
+                    productSpecification.setWeight(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWeight()));
+                    productSpecification.setWidth(convertToBigDecimal(productDetailModel.getProductShippingInfo().getWidth()));
+                    persistableProduct.setProductSpecifications(productSpecification);
+                }
             }
         }
 

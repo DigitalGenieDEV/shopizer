@@ -78,6 +78,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "HS_CODE")
 	private String hsCode;
 
+	@Column(name = "CERTIFICATION_DOCUMENT", length = 1000)
+	private String certificationDocument;
+
+	@Column(name = "INTELLECTUAL_PROPERTY_DOCUMENTS", length = 1000)
+	private String intellectualPropertyDocuments;
 	@Column(name = "SELLER_OPENID")
 	private String sellerOpenId;
 
@@ -223,6 +228,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	 */
 	@Column(name = "QUOTE_TYPE", nullable = true)
 	private Integer quoteType;
+
+
+	/**
+	 * 件、套
+	 */
+	@Column(name = "ORDER_QUANTITY_TYPE", nullable = true)
+	private String orderQuantityType;
 
 	@Column(name = "BIZ_TYPE", nullable = true)
 	private String bizType;
@@ -723,5 +735,29 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setProductMaterialList(Set<ProductMaterial> productMaterialList) {
 		this.productMaterialList = productMaterialList;
+	}
+
+	public String getCertificationDocument() {
+		return certificationDocument;
+	}
+
+	public void setCertificationDocument(String certificationDocument) {
+		this.certificationDocument = certificationDocument;
+	}
+
+	public String getIntellectualPropertyDocuments() {
+		return intellectualPropertyDocuments;
+	}
+
+	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
+		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
+	}
+
+	public String getOrderQuantityType() {
+		return orderQuantityType;
+	}
+
+	public void setOrderQuantityType(String orderQuantityType) {
+		this.orderQuantityType = orderQuantityType;
 	}
 }
