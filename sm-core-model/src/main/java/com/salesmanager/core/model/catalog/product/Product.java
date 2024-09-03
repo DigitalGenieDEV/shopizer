@@ -229,6 +229,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "QUOTE_TYPE", nullable = true)
 	private Integer quoteType;
 
+
+	/**
+	 * 件、套
+	 */
+	@Column(name = "ORDER_QUANTITY_TYPE", nullable = true)
+	private String orderQuantityType;
+
 	@Column(name = "BIZ_TYPE", nullable = true)
 	private String bizType;
 
@@ -744,5 +751,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setIntellectualPropertyDocuments(String intellectualPropertyDocuments) {
 		this.intellectualPropertyDocuments = intellectualPropertyDocuments;
+	}
+
+	public String getOrderQuantityType() {
+		return orderQuantityType;
+	}
+
+	public void setOrderQuantityType(String orderQuantityType) {
+		this.orderQuantityType = orderQuantityType;
 	}
 }

@@ -70,5 +70,6 @@ public class ProductEntity extends Product implements Serializable {
 	private Boolean generalMixedBatch;
 
 
+	private String orderQuantityType;
 
 }

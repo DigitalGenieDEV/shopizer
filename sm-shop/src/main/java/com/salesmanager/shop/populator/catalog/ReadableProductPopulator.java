@@ -128,9 +128,11 @@ public class ReadableProductPopulator extends
 			target.setProductSpecifications(specifications);
 			target.setProductAuditStatus(source.getProductAuditStatus() == null? null : source.getProductAuditStatus().name());
 			target.setPreOrder(source.isPreOrder());
+			target.setQuoteType(source.getQuoteType());
 			target.setRefSku(source.getRefSku());
 			target.setSortOrder(source.getSortOrder());
 			target.setIdentifier(source.getSku());
+			target.setOrderQuantityType(source.getOrderQuantityType());
 			if(source.getType() != null) {
 				target.setType(this.type(source.getType(), language));
 			}
