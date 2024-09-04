@@ -111,6 +111,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
 		destination.setMinOrderQuantity(source.getMinOrderQuantity());
+		
 		ProductDescription description = null;
 		if (source.getDescriptions() != null && source.getDescriptions().size() > 0) {
 			for (ProductDescription desc : source.getDescriptions()) {

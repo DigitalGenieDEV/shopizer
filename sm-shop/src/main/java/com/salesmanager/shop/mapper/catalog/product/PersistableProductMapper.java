@@ -127,6 +127,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			destination.setOrderQuantityType(source.getOrderQuantityType());
 			destination.setCertificationDocument(source.getCertificationDocument());
 			destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
+			destination.setShippingTemplateId(source.getShippingTemplateId());
 			destination.setSellerOpenId(source.getSellerOpenId());
 			destination.setSellerTextInfoId(source.getSellerTextInfoId());
 			destination.setBatchNumber(source.getBatchNumber());
@@ -176,6 +177,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			 * SPEIFICATIONS
 			 */
 			if(source.getProductSpecifications()!=null) {
+				System.out.println("source.getProductSpecifications().getLength()"+source.getProductSpecifications().getLength());
 				destination.setProductHeight(source.getProductSpecifications().getHeight());
 				destination.setProductLength(source.getProductSpecifications().getLength());
 				destination.setProductWeight(source.getProductSpecifications().getWeight());
