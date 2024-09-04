@@ -22,4 +22,6 @@ public class ReadableProductAnnouncement {
     private List<AnnouncementField> announcementFields;
 
     private Long productId;
+    
+    private Long announcementId;
 }
