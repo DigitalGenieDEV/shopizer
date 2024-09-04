@@ -63,6 +63,8 @@ public class PersistableProductReviewPopulator extends
 				target = new ProductReview();
 			}
 			
+			target.setId(source.getId());
+			
 			Customer customer = customerService.getById(source.getCustomerId());
 			
 			//check if customer belongs to store
@@ -94,15 +96,23 @@ public class PersistableProductReviewPopulator extends
 				throw new ConversionException("Invalid language code, use iso codes (en, fr ...)");
 			}
 			
-			ProductReviewDescription description = new ProductReviewDescription();
-			description.setDescription(source.getDescription());
-			description.setLanguage(lang);
-			description.setName("-");
-			description.setProductReview(target);
-			
 			Set<ProductReviewDescription> descriptions = new HashSet<ProductReviewDescription>();
-			descriptions.add(description);
-			
+			if(!(target.getDescriptions() == null || target.getDescriptions().size() == 0)) {
+				for(ProductReviewDescription description : target.getDescriptions()) {
+					description.setDescription(source.getDescription());
+					description.setLanguage(lang);
+					description.setName("-");
+					description.setProductReview(target);
+					descriptions.add(description);
+				}
+			} else {
+				ProductReviewDescription description = new ProductReviewDescription();
+				description.setDescription(source.getDescription());
+				description.setLanguage(lang);
+				description.setName("-");
+				description.setProductReview(target);
+				descriptions.add(description);
+			}
 			target.setDescriptions(descriptions);
 						
 			return target;

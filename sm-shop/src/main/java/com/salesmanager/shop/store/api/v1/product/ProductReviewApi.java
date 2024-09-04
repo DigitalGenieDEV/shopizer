@@ -40,7 +40,7 @@ import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
-import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReviewList;
 import com.salesmanager.shop.store.api.exception.RestApiException;
 import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade;
 import com.salesmanager.shop.utils.ServiceRequestCriteriaBuilderUtils;
@@ -105,7 +105,7 @@ public class ProductReviewApi {
 		}
 		
 		review.setProductId(id);
-		productCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
+//		productCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
 
       return review;
 
@@ -130,7 +130,7 @@ public class ProductReviewApi {
 		@ApiImplicitParam(name = "checkMedia", dataType = "boolean", defaultValue = "false"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public ReadableProductReviews getAll(
+	public ReadableProductReviewList getAll(
 			@PathVariable final Long id,
 			@ApiIgnore MerchantStore merchantStore,
 			@RequestParam(value = "page", required = false) Integer page,
@@ -165,8 +165,9 @@ public class ProductReviewApi {
 				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
 			}
 			
-			ReadableProductReviews reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
-			return reviews;
+//			ReadableProductReviewList reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
+//			return reviews;
+			return null;
 		} catch (Exception e) {
 			LOGGER.error("Error while getting product reviews", e);
 			try {
@@ -187,7 +188,7 @@ public class ProductReviewApi {
 		@ApiImplicitParam(name = "sortType", dataType = "String"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public ReadableProductReviews recommend(
+	public ReadableProductReviewList recommend(
 			@PathVariable final Long id,
 			@PathVariable final Long reviewId,
 			@Valid @RequestBody PersistableProductReviewRecommend recommend,
@@ -202,17 +203,17 @@ public class ProductReviewApi {
 			HttpServletResponse response) {
 		
 		// recommend update
-		try {
-			productCommonFacade.updateReviewRecommend(reviewId, recommend);
-		} catch (Exception e) {
-			// TODO: handle exception
-			try {
-				response.sendError(503, e.getMessage());
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+//		try {
+//			productCommonFacade.updateReviewRecommend(reviewId, recommend);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			try {
+//				response.sendError(503, e.getMessage());
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//		}
 		
 		try {
 			// product exist
@@ -242,8 +243,9 @@ public class ProductReviewApi {
 				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
 			}
 			
-			ReadableProductReviews reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
-			return reviews;
+//			ReadableProductReviewList reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
+//			return reviews;
+			return null;
 		} catch (Exception e) {
 			LOGGER.error("Error while getting product reviews", e);
 			try {
@@ -296,7 +298,7 @@ public class ProductReviewApi {
       }
 
       review.setProductId(id);
-      productCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
+//      productCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
 
       return review;
 
@@ -342,7 +344,7 @@ public class ProductReviewApi {
         return;
       }
 
-      productCommonFacade.deleteReview(prodReview, merchantStore, language);
+//      productCommonFacade.deleteReview(prodReview, merchantStore, language);
 
     } catch (Exception e) {
       LOGGER.error("Error while deleting product review", e);

@@ -1,44 +1,32 @@
 package com.salesmanager.shop.model.catalog.product;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.salesmanager.core.model.catalog.product.review.ProductReviewImage;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class ReadableProductReview extends ProductReviewEntity implements Serializable {
-
-	/**
-	 * 
-	 */
+@Getter
+@Setter
+@NoArgsConstructor
+public class ReadableProductReview implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private ReadableCustomer customer;
-	private Long recommendCount;
-	private Set<ReadableProductReviewImage> reviewImages;
-	
-	public ReadableCustomer getCustomer() {
-		return customer;
-	}
-	
-	public void setCustomer(ReadableCustomer customer) {
-		this.customer = customer;
-	}
-
-	public Long getRecommendCount() {
-		return recommendCount;
-	}
-
-	public void setRecommendCount(Long recommendCount) {
-		this.recommendCount = recommendCount;
-	}
-
-	public Set<ReadableProductReviewImage> getReviewImages() {
-		return reviewImages;
-	}
-
-	public void setReviewImages(Set<ReadableProductReviewImage> reviewImages) {
-		this.reviewImages = reviewImages;
-	}
-
+	private Long productId;
+	private Long productReviewId;
+	private String reviewDate;
+	private int reviewsRating;
+	private String reviewDescription;
+	private Long customerId;
+	private String firstName;
+	private String lastName;
+	private String productTitle;
+	private int recommendCount;
+	private int imageCount;
+	private List<ProductReviewImage> images;
 }

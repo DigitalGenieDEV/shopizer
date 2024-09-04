@@ -82,7 +82,7 @@ public class ProductReview extends SalesManagerEntity<Long, ProductReview> imple
 	private Set<ProductReviewDescription> descriptions = new HashSet<ProductReviewDescription>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
-	private Set<ProductReviewImage> images = new HashSet<ProductReviewImage>();
+	private Set<ProductReviewImage> images;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
 	private Set<ProductReviewRecommend> recommends = new HashSet<ProductReviewRecommend>();

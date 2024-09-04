@@ -1,27 +1,21 @@
 package com.salesmanager.shop.store.facade.product;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
-
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAnnouncementAttributeRepository;
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAttributeRepository;
 import com.salesmanager.core.business.repositories.catalog.product.feature.ProductFeatureRepository;
-import com.salesmanager.core.business.services.alibaba.product.AlibabaProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAnnouncementAttributeService;
 import com.salesmanager.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.business.services.catalog.product.feature.ProductFeatureService;
 import com.salesmanager.core.business.services.catalog.product.image.ProductImageService;
-import com.salesmanager.core.business.services.catalog.product.qna.ProductQnaService;
 import com.salesmanager.core.business.services.catalog.product.type.ProductTypeService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
-import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
@@ -30,67 +24,33 @@ import com.salesmanager.core.model.feature.ProductFeature;
 import com.salesmanager.shop.mapper.catalog.PersistableProductAnnouncementAttributeMapper;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableAnnouncement;
 import com.salesmanager.shop.model.catalog.product.product.PersistableSimpleProductUpdateReq;
-import com.salesmanager.shop.store.controller.content.facade.ContentFacade;
-import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
-import com.salesmanager.core.business.services.catalog.product.review.ProductReviewImageService;
-import com.salesmanager.core.business.services.catalog.product.review.ProductReviewRecommendService;
-import com.salesmanager.core.business.services.catalog.product.review.ProductReviewService;
-import com.salesmanager.core.business.services.catalog.product.review.ProductReviewStatService;
 import com.salesmanager.core.business.services.customer.CustomerService;
-import com.salesmanager.core.business.services.reference.language.LanguageService;
-import com.salesmanager.core.constants.QuestionType;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
 import com.salesmanager.core.model.catalog.product.price.ProductPrice;
-import com.salesmanager.core.model.catalog.product.qna.ProductQna;
-import com.salesmanager.core.model.catalog.product.qna.ProductQnaReply;
-import com.salesmanager.core.model.catalog.product.review.ProductReview;
-import com.salesmanager.core.model.catalog.product.review.ProductReviewImage;
-import com.salesmanager.core.model.catalog.product.review.ProductReviewRecommend;
-import com.salesmanager.core.model.catalog.product.review.ProductReviewStat;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
-import com.salesmanager.core.model.content.FileContentType;
-import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.catalog.product.PersistableProductMapper;
 import com.salesmanager.shop.model.catalog.product.LightPersistableProduct;
-import com.salesmanager.shop.model.catalog.product.PersistableProductQna;
-import com.salesmanager.shop.model.catalog.product.PersistableProductQnaReply;
-import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
-import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
-import com.salesmanager.shop.model.catalog.product.ReadableProductQna;
-import com.salesmanager.shop.model.catalog.product.ReadableProductQnaList;
-import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
-import com.salesmanager.shop.model.catalog.product.ReadableProductReviewStat;
-import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
-import com.salesmanager.shop.model.content.ContentFile;
-import com.salesmanager.shop.populator.catalog.PersistableProductQnaPopulator;
-import com.salesmanager.shop.populator.catalog.PersistableProductQnaReplyPopulator;
-import com.salesmanager.shop.populator.catalog.PersistableProductReviewPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
-import com.salesmanager.shop.populator.catalog.ReadableProductQnaPopulator;
-import com.salesmanager.shop.populator.catalog.ReadableProductReviewPopulator;
-import com.salesmanager.shop.populator.catalog.ReadableProductReviewStatPopulator;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.store.api.exception.OperationNotAllowedException;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
@@ -100,7 +60,6 @@ import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -117,9 +76,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Autowired
 	private PersistableProductAnnouncementAttributeMapper persistableProductAnnouncementAttributeMapper;
-	@Inject
-	private LanguageService languageService;
-
+	
 	@Inject
 	private ProductService productService;
 
@@ -150,18 +107,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Inject
 	private CustomerService customerService;
 
-	@Inject
-	private ProductReviewService productReviewService;
-	
-	@Inject
-	private ProductReviewStatService productReviewStatService;
-	
-	@Inject
-	private ProductReviewImageService productReviewImageService;
-	
-	@Inject
-	private ProductReviewRecommendService productReviewRecommendService;
-	
 	@Autowired
 	private PersistableProductMapper persistableProductMapper;
 
@@ -180,9 +125,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
-	
-	@Inject
-	private ContentFacade contentFacade;
 	
 	@Override
 	@Transactional
@@ -465,84 +407,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	}
 
 	@Override
-	public void saveOrUpdateReview(PersistableProductReview review, MerchantStore store, Language language, List<MultipartFile> reviewImages)
-			throws Exception {
-		PersistableProductReviewPopulator populator = new PersistableProductReviewPopulator();
-		populator.setLanguageService(languageService);
-		populator.setCustomerService(customerService);
-		populator.setProductService(productService);
-
-		com.salesmanager.core.model.catalog.product.review.ProductReview rev = new com.salesmanager.core.model.catalog.product.review.ProductReview();
-		populator.populate(review, rev, store, language);
-
-		if (review.getId() == null || review.getId() == 0) {
-			productReviewService.create(rev);
-		} else {
-			productReviewService.update(rev);
-		}
-		
-		review.setId(rev.getId());
-		
-		if(reviewImages != null) {
-			for(MultipartFile file : reviewImages) {
-				ProductReviewImage reviewImage = new ProductReviewImage();
-				ContentFile f = new ContentFile();
-				f.setContentType(file.getContentType());
-				f.setName(file.getOriginalFilename());
-				try {
-					f.setFile(file.getBytes());
-				} catch (IOException e) {
-					throw new ServiceRuntimeException("Error while getting file bytes");
-				}
-				String fileName = contentFacade.addLibraryFile(f, store.getCode(), FileContentType.valueOf(review.getFileContentType()));
-				reviewImage.setImageUrl(imageUtils.buildLibraryFileUtils(store, fileName, review.getFileContentType()));
-				reviewImage.setProductReview(rev);
-				productReviewImageService.save(reviewImage);
-			}
-		}
-	}
-
-	@Override
-	public void deleteReview(ProductReview review, MerchantStore store, Language language) throws Exception {
-		productReviewService.delete(review);
-
-	}
-
-	@Override
-	public ReadableProductReviews getProductReviews(Product product, MerchantStore store, Language language, String keyword, Pageable pageRequest)
-			throws Exception {
-		
-		ReadableProductReviews readableProductReviews = new ReadableProductReviews();
-		
-		List<ProductReview> reviews = productReviewService.listByKeyword(product, keyword, pageRequest);
-		ReadableProductReviewPopulator populator = new ReadableProductReviewPopulator();
-
-		List<ReadableProductReview> productReviews = new ArrayList<ReadableProductReview>();
-
-		for (ProductReview review : reviews) {
-			ReadableProductReview readableReview = new ReadableProductReview();
-			populator.populate(review, readableReview, store, language);
-			productReviews.add(readableReview);
-		}
-		readableProductReviews.setReviews(productReviews);
-		
-		// review stat
-		ReadableProductReviewStat readableProductReviewStat = null;
-		if(reviews.size() > 0) {
-//		if(!CollectionUtils.isEmpty(reviews.getContent())) {
-			ProductReviewStat reviewStat = productReviewStatService.getByProduct(product);
-			ReadableProductReviewStatPopulator statPopulator = new ReadableProductReviewStatPopulator();
-			readableProductReviewStat = statPopulator.populate(reviewStat, null, store, language);
-		} else {
-			readableProductReviewStat = new ReadableProductReviewStat(product.getId());
-		}
-		readableProductReviews.setReviewStat(readableProductReviewStat);
-		
-		return readableProductReviews;
-	}
-
-
-	@Override
 	public void update(Long productId, LightPersistableProduct product, MerchantStore merchant, Language language) {
 		// Get product
 		Product modified = productService.findOne(productId, merchant);
@@ -730,35 +594,5 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 				productFeatureService.save(feature);
 			}
 		}
-	}
-
-
-
-	@Override
-	public void updateReviewRecommend(Long reviewId, PersistableProductReviewRecommend persistableRecommend) throws Exception {
-		// TODO Auto-generated method stub
-		ProductReviewRecommend recommend = productReviewRecommendService.getByCutomerReview(persistableRecommend.getCustomerId(), reviewId);
-		ProductReview review = productReviewService.getById(reviewId);
-		Customer customer = customerService.getById(persistableRecommend.getCustomerId());
-		if(review.getCustomer().getId().longValue() != persistableRecommend.getCustomerId().longValue()) {
-			try {
-				if(recommend == null) {
-					recommend = new ProductReviewRecommend();
-					recommend.setProductReview(review);
-					recommend.setCustomer(customer);
-					recommend.setActive(true);
-					productReviewRecommendService.save(recommend);
-				} else {
-					recommend.setActive(!recommend.isActive());
-					productReviewRecommendService.update(recommend);
-				}
-			} catch (Exception e) {
-				throw new Exception("Failed Review Recommend", e);
-			}
-		} else {
-			throw new Exception("Own review cannot recommend");
-		}
-		
-		
 	}
 }

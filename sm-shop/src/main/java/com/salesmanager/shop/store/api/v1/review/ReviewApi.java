@@ -38,7 +38,8 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.constants.Constants;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
-import com.salesmanager.shop.model.catalog.product.ReadableProductReviews;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReviewList;
 import com.salesmanager.shop.store.api.v1.product.ProductReviewApi;
 import com.salesmanager.shop.store.controller.review.facade.ReviewCommonFacade;
 
@@ -71,7 +72,7 @@ public class ReviewApi {
 		@ApiImplicitParam(name = "checkMedia", dataType = "boolean", defaultValue = "false"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public ReadableProductReviews getAll(
+	public ReadableProductReviewList getAll(
 			@PathVariable final Long id,
 			@ApiIgnore MerchantStore merchantStore,
 			@RequestParam(value = "page", required = false) Integer page,
@@ -101,13 +102,54 @@ public class ReviewApi {
 			
 			Pageable pageRequest = null;
 			if(checkMedia) {
-				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("MEDIA_FLAG"), Sort.Order.desc(sortType))); 
+				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("IMAGE_COUNT"), Sort.Order.desc(sortType))); 
 			} else {
 				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
 			}
 			
-			ReadableProductReviews reviews = reviewCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
+			ReadableProductReviewList reviews = reviewCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
 			return reviews;
+		} catch (Exception e) {
+			LOGGER.error("Error while getting product reviews", e);
+			try {
+				response.sendError(503, "Error while getting product reviews" + e.getMessage());
+			} catch (Exception ignore) {
+				
+			}
+			return null;
+		}
+	}
+	
+	@GetMapping(value = {"/auth/review/{reviewId}/product/{id}", "/private/review/{reviewId}/product/{id}"})
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+		@ApiImplicitParam(name = "keyword", dataType = "String"),
+		@ApiImplicitParam(name = "sortType", dataType = "String"),
+		@ApiImplicitParam(name = "checkMedia", dataType = "boolean", defaultValue = "false"),
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
+	})
+	public ReadableProductReview getReview(
+			@PathVariable final Long id,
+			@PathVariable final Long reviewId,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language,
+			HttpServletResponse response,
+			HttpServletRequest request) {
+		
+		try {
+			// product exist
+			Product product = productService.getById(id);
+			
+			if (product == null) {
+				response.sendError(404, "Product id " + id + " does not exists");
+				return null;
+			}
+			
+			ReadableProductReview review = reviewCommonFacade.getReviewById(reviewId, product, merchantStore, language);
+			return review;
+			
 		} catch (Exception e) {
 			LOGGER.error("Error while getting product reviews", e);
 			try {
@@ -174,7 +216,8 @@ public class ReviewApi {
 	public PersistableProductReview update(
 			@PathVariable final Long id,
 			@PathVariable final Long reviewId,
-			@Valid @RequestBody PersistableProductReview review,
+			@Valid @RequestPart(name = "param") PersistableProductReview review,
+			@RequestPart(name = "reviewImages", required = false) List<MultipartFile> reviewImages,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			HttpServletRequest request,
@@ -198,8 +241,9 @@ public class ReviewApi {
 				return null;
 			}
 			
+			review.setId(reviewId);
 			review.setProductId(id);
-			reviewCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
+			reviewCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
 			
 			return review;
 			
@@ -225,7 +269,7 @@ public class ReviewApi {
 		@ApiImplicitParam(name = "sortType", dataType = "String"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public ReadableProductReviews recommend(
+	public ReadableProductReviewList recommend(
 			@PathVariable final Long id,
 			@PathVariable final Long reviewId,
 			@Valid @RequestBody PersistableProductReviewRecommend recommend,
@@ -280,7 +324,7 @@ public class ReviewApi {
 				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
 			}
 			
-			ReadableProductReviews reviews = reviewCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
+			ReadableProductReviewList reviews = reviewCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
 			return reviews;
 		} catch (Exception e) {
 			LOGGER.error("Error while getting product reviews", e);
@@ -333,6 +377,54 @@ public class ReviewApi {
 			return;
 			
 		}
+	}
+	
+	@GetMapping(value = {"/auth/review/store", "/private/review/store"})
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+		@ApiImplicitParam(name = "keyword", dataType = "String"),
+		@ApiImplicitParam(name = "sortType", dataType = "String"),
+		@ApiImplicitParam(name = "checkMedia", dataType = "boolean", defaultValue = "false"),
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
+	})
+	public ReadableProductReviewList getAllByStore (
+			@ApiIgnore MerchantStore merchantStore,
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "count", required = false) Integer count,
+			@RequestParam(value = "checkMedia", required = false) boolean checkMedia,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@ApiIgnore Language language,
+			HttpServletResponse response,
+			HttpServletRequest request) {
 		
+		try {
+			if(page == null) {
+				page = 0;
+			}
+			if(count == null) {
+				count = Integer.MAX_VALUE;
+			}
+			
+			Pageable pageRequest = null;
+			if(checkMedia) {
+				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("IMAGE_COUNT"), Sort.Order.desc(sortType))); 
+			} else {
+				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
+			}
+			
+			ReadableProductReviewList reviews = reviewCommonFacade.getReviewsByStore(merchantStore, language, keyword, pageRequest);
+			return reviews;
+		} catch (Exception e) {
+			LOGGER.error("Error while getting product reviews", e);
+			try {
+				response.sendError(503, "Error while getting product reviews" + e.getMessage());
+			} catch (Exception ignore) {
+				
+			}
+			return null;
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.salesmanager.core.business.services.catalog.product.review;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -13,12 +14,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
-import com.salesmanager.core.business.repositories.catalog.product.review.PageableProductReviewRepository;
 import com.salesmanager.core.business.repositories.catalog.product.review.ProductReviewRepository;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
+import com.salesmanager.core.model.catalog.product.review.ProductReviewDTO;
+import com.salesmanager.core.model.catalog.product.review.ReadProductReview;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.reference.language.Language;
 
@@ -26,9 +28,6 @@ import com.salesmanager.core.model.reference.language.Language;
 public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long, ProductReview> implements ProductReviewService {
 	
 	private ProductReviewRepository productReviewRepository;
-	
-	@Autowired
-	private PageableProductReviewRepository pageableProductReviewRepository;
 	
 	@Inject
 	private ProductService productService;
@@ -75,16 +74,13 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 		if(product.getProductReviewCount()!=null) {
 			count = product.getProductReviewCount();
 		}
-				
-		
-		
 
 		BigDecimal averageRating = product.getProductReviewAvg();
 		if(averageRating==null) {
 			averageRating = new BigDecimal(0);
 		}
+		
 		//get reviews
-
 		
 		BigDecimal totalRating = averageRating.multiply(new BigDecimal(count));
 		totalRating = totalRating.add(new BigDecimal(review.getReviewRating()));
@@ -119,10 +115,21 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	}
 
 	@Override
-	public List<ProductReview> listByKeyword(Product product, String keyword, Pageable pageRequest) {
+	public Page<ReadProductReview> listByKeyword(Product product, String keyword, Language lang, Pageable pageRequest) {
 		// TODO Auto-generated method stub
-//		Page<ProductReview> temp = productReviewRepository.getByProductId(product.getId(), keyword, pageRequest);
-		return productReviewRepository.findByProduct(product.getId());
+		return productReviewRepository.listByProductId(product.getId(), lang.getId(), keyword, pageRequest);
+	}
+
+	@Override
+	public Page<ReadProductReview> listByStore(Integer storeId, String keyword, Language lang, Pageable pageRequest) {
+		// TODO Auto-generated method stub
+		return productReviewRepository.listByStore(storeId, lang.getId(), keyword, pageRequest);
+	}
+
+	@Override
+	public ProductReview findById(Long id) {
+		// TODO Auto-generated method stub
+		return productReviewRepository.findOne(id);
 	}
 
 }

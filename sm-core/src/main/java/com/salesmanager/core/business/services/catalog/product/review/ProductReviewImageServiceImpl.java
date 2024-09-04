@@ -1,5 +1,7 @@
 package com.salesmanager.core.business.services.catalog.product.review;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -19,8 +21,20 @@ public class ProductReviewImageServiceImpl extends SalesManagerEntityServiceImpl
 	}
 	
 	@Override
+	public List<ProductReviewImage> getByProductReviewId(Long productReviewId) {
+		// TODO Auto-generated method stub
+		return productReviewImageRepository.getByProductReviewId(productReviewId);
+	}
+	
+	@Override
 	public void save(ProductReviewImage productReviewImage) throws ServiceException {
 		// TODO Auto-generated method stub
 		productReviewImageRepository.save(productReviewImage);
+	}
+
+	@Override
+	public void deleteByProductReviewId(Long reviewId) {
+		// TODO Auto-generated method stub
+		productReviewImageRepository.deleteAllByProductReviewId(reviewId);
 	}
 }
