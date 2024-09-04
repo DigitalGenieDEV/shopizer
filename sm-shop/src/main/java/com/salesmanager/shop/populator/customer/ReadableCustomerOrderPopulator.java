@@ -38,6 +38,7 @@ public class ReadableCustomerOrderPopulator extends AbstractDataPopulator<Custom
         //target.setCurrencyModel(source.getCurrency());
 
         target.setPaymentType(source.getPaymentType());
+        target.setImportMain(source.getImportMain());
         target.setPaymentModule(source.getPaymentModuleCode());
 
         if(source.getCustomerAgreement()!=null) {

@@ -1,5 +1,6 @@
 package com.salesmanager.shop.model.customer.shoppingcart;
 
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
@@ -70,5 +71,11 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
      */
     private String truckType;
 
+
+    /**
+     * 通关选项
+     * @see PlayThroughOptionsEnums
+     */
+    private String playThroughOption;
 
 }

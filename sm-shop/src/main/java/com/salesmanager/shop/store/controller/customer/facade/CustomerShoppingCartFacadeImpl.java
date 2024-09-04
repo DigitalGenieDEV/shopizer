@@ -7,6 +7,7 @@ import com.salesmanager.core.business.services.catalog.product.attribute.Product
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartCalculationService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -338,6 +340,12 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setTruckModel(customerShoppingCartItem.getTruckModel());
         }
 
+
+        if (customerShoppingCartItem.getPlayThroughOption() != null) {
+            item.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
+        }
+
+
         if (customerShoppingCartItem.getTruckType() != null) {
             item.setTruckType(customerShoppingCartItem.getTruckType());
         }
@@ -490,6 +498,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         anItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());
                         anItem.setShippingTransportationType(itemModel.getShippingTransportationType());
                         anItem.setTruckModel(itemModel.getTruckModel());
+                        anItem.setPlayThroughOption(itemModel.getPlayThroughOption());
                         anItem.setTruckType(itemModel.getTruckType());
                         newItems.add(anItem);
                     }
@@ -606,6 +615,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                 oldCartItem.setNationalTransportationMethod(newItemValue.getNationalTransportationMethod());
                 oldCartItem.setShippingTransportationType(newItemValue.getShippingTransportationType());
                 oldCartItem.setTruckModel(newItemValue.getTruckModel());
+                oldCartItem.setPlayThroughOption(newItemValue.getPlayThroughOption());
                 oldCartItem.setTruckType(newItemValue.getTruckType());
                 ++itemUpdatedCnt;
             } else {
@@ -671,6 +681,10 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
             if (customerShoppingCartItem.getTruckModel() != null) {
                 item.setTruckModel(customerShoppingCartItem.getTruckModel());
+            }
+
+            if (customerShoppingCartItem.getPlayThroughOption() != null) {
+                item.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
             }
 
             if (customerShoppingCartItem.getTruckType() != null) {
@@ -852,7 +866,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         cartItem.setShippingTransportationType(itemModel.getShippingTransportationType());
                         cartItem.setTruckModel(itemModel.getTruckModel());
                         cartItem.setTruckType(itemModel.getTruckType());
-
+                        cartItem.setPlayThroughOption(itemModel.getPlayThroughOption());
                         duplicateFound = true;
                         break;
                     }

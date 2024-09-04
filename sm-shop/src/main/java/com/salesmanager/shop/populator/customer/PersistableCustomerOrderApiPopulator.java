@@ -131,7 +131,7 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setStatus(OrderStatus.ORDERED);
             target.setPaymentModuleCode(source.getPayment().getPaymentModule());
             target.setPaymentType(PaymentType.valueOf(source.getPayment().getPaymentType()));
-
+            target.setImportMain(source.getImportMain());
             target.setCustomerAgreement(source.isCustomerAgreement());
             target.setConfirmedAddress(true);
 

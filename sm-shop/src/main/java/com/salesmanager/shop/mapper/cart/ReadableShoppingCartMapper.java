@@ -177,6 +177,7 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 					shoppingCartItem.setTruckType(item.getTruckType());
 					shoppingCartItem.setTruckModel(item.getTruckModel());
+					shoppingCartItem.setPlayThroughOption(item.getPlayThroughOption());
 					shoppingCartItem.setShippingType(item.getShippingType() == null? null : item.getShippingType().name());
 					shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType()== null? null : item.getShippingTransportationType().name());
 					shoppingCartItem.setNationalTransportationMethod(item.getNationalTransportationMethod()== null? null : item.getNationalTransportationMethod().name());
