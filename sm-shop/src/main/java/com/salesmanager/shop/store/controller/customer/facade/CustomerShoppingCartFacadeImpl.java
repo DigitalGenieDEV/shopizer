@@ -489,6 +489,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         anItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         anItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());
                         anItem.setShippingTransportationType(itemModel.getShippingTransportationType());
+                        anItem.setTruckModel(itemModel.getTruckModel());
+                        anItem.setTruckType(itemModel.getTruckType());
                         newItems.add(anItem);
                     }
                     itemModified = true;
@@ -603,6 +605,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                 oldCartItem.setInternationalTransportationMethod(newItemValue.getInternationalTransportationMethod());
                 oldCartItem.setNationalTransportationMethod(newItemValue.getNationalTransportationMethod());
                 oldCartItem.setShippingTransportationType(newItemValue.getShippingTransportationType());
+                oldCartItem.setTruckModel(newItemValue.getTruckModel());
+                oldCartItem.setTruckType(newItemValue.getTruckType());
                 ++itemUpdatedCnt;
             } else {
                 cartModel.getLineItems().add(newItemValue);
@@ -846,6 +850,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         cartItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         cartItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());
                         cartItem.setShippingTransportationType(itemModel.getShippingTransportationType());
+                        cartItem.setTruckModel(itemModel.getTruckModel());
+                        cartItem.setTruckType(itemModel.getTruckType());
 
                         duplicateFound = true;
                         break;
