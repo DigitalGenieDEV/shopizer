@@ -6,6 +6,7 @@ import com.salesmanager.core.business.services.catalog.product.erp.ProductMateri
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
+import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
@@ -38,6 +39,7 @@ import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.references.DimensionUnitOfMeasure;
 import com.salesmanager.shop.model.references.WeightUnitOfMeasure;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
+import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
@@ -81,6 +83,9 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 
 	@Autowired
 	private PricingService pricingService;
+
+	@Autowired
+	private SellerTextInfoFacade sellerTextInfoFacade;
 
 	@Override
 	public ReadableProduct convert(Product source, MerchantStore store, Language language) {
@@ -140,7 +145,11 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setPreOrder(source.isPreOrder());
 		destination.setRefSku(source.getRefSku());
 		destination.setSortOrder(source.getSortOrder());
-
+		destination.setShippingTemplateId(source.getShippingTemplateId());
+		if (source.getSellerTextInfoId() != null){
+			SellerProductShippingTextInfo sellerProductShippingTextInfo = sellerTextInfoFacade.getSellerProductShippingTextById(source.getSellerTextInfoId());
+			destination.setSellerProductShippingTextInfo(sellerProductShippingTextInfo);
+		}
 		if (source.getType() != null) {
 			ReadableProductType readableType = readableProductTypeMapper.convert(source.getType(), store, language);
 			destination.setType(readableType);

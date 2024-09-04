@@ -89,7 +89,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 	private PricingService pricingService;
 
 	@Autowired
-	private SellerTextInfoFacade serviceFacade;
+	private SellerTextInfoFacade sellerTextInfoFacade;
 
 	@Override
 	public ReadableProduct convert(Product source, MerchantStore store, Language language) {
@@ -133,7 +133,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		}
 
 		Language finalLanguage = language;
-
+		destination.setOrderQuantityType(source.getOrderQuantityType());
+		destination.setCertificationDocument(source.getCertificationDocument());
+		destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
+		destination.setShippingTemplateId(source.getShippingTemplateId());
 		destination.setId(source.getId());
 		destination.setAvailable(source.isAvailable());
 		destination.setProductShipeable(source.isProductShipeable());
@@ -400,7 +403,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			}
 		}
 		if (source.getSellerTextInfoId() != null){
-			SellerProductShippingTextInfo sellerProductShippingTextInfo = serviceFacade.getSellerProductShippingTextById(source.getSellerTextInfoId());
+			SellerProductShippingTextInfo sellerProductShippingTextInfo = sellerTextInfoFacade.getSellerProductShippingTextById(source.getSellerTextInfoId());
 			destination.setSellerProductShippingTextInfo(sellerProductShippingTextInfo);
 		}
 
