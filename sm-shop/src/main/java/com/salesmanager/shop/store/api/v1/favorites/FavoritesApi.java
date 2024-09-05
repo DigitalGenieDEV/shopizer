@@ -70,7 +70,7 @@ public class FavoritesApi {
         return listFavoriteProducts;
     }
 
-    @GetMapping(value = "/auth/favorite/user/is_favorite/{productId}")
+    @GetMapping(value = "/auth/favorite/user/is_favorited/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(httpMethod = "count", value = "product favorites count by user and productId", notes = "")
     public CommonResultDTO<Boolean> isFavoriteByUserProduct(@PathVariable Long productId, HttpServletRequest request) {
