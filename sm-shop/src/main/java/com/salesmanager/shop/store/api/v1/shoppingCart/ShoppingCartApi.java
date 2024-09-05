@@ -227,16 +227,6 @@ public class ShoppingCartApi {
 			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		Principal principal = request.getUserPrincipal();
-
-		// lookup customer
-		Customer customer = customerService.getById(id);
-
-		if (customer == null) {
-			throw new ResourceNotFoundException("No Customer found for id [" + id + "]");
-		}
-
-		customerFacadev1.authorize(customer, principal);
 
 		ReadableShoppingCart readableCart = shoppingCartFacadev1.get(cart, id, merchantStore, language);
 
@@ -267,12 +257,11 @@ public class ShoppingCartApi {
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("Exception while getting customer [ " + principal.getName() + "]");
 		}
-		
+
 		if (customer == null) {
 			throw new ResourceNotFoundException("No Customer found for principal[" + principal.getName() + "]");
 		}
-		
-		customerFacadev1.authorize(customer, principal);
+
 		ReadableShoppingCart readableCart = shoppingCartFacadev1.get(cart, customer.getId(), merchantStore, language);
 
 		if (readableCart == null) {

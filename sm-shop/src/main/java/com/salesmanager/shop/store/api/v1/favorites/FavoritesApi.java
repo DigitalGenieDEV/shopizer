@@ -49,20 +49,7 @@ public class FavoritesApi {
             @RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
             @ApiIgnore Language language,
             HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
 
-        // Fetch customer
-        Customer customer = customerService.getById(userId);
-        if (customer == null) {
-            throw new ResourceNotFoundException("No Customer found for id [" + userId + "]");
-        }
-
-        // Authorize customer
-        try {
-            customerFacadev1.authorize(customer, principal);
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Unauthorized access for customer id [" + userId + "]");
-        }
 
         // Fetch favorite products
         ReadableEntityList<ReadableFavorites> listFavoriteProducts;
@@ -81,13 +68,7 @@ public class FavoritesApi {
     public void saveFavoriteProduct(
             @RequestBody PersistableFavorites persistableFavorites,
             HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
 
-        Customer customer = customerService.getById(persistableFavorites.getUserId());
-        if (customer == null) {
-            throw new ResourceNotFoundException("No Customer found for id [" + persistableFavorites.getUserId() + "]");
-        }
-        customerFacadev1.authorize(customer, principal);
         favoritesFacade.saveFavoriteProduct(persistableFavorites);
     }
 
@@ -98,13 +79,6 @@ public class FavoritesApi {
             @PathVariable Long productId,
             @RequestParam(value = "userId", required = true) Long userId,
             HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-
-        Customer customer = customerService.getById(userId);
-        if (customer == null) {
-            throw new ResourceNotFoundException("No Customer found for id [" + userId + "]");
-        }
-        customerFacadev1.authorize(customer, principal);
         favoritesFacade.deleteFavoriteProduct(productId, userId);
     }
 
