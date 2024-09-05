@@ -67,7 +67,7 @@ public class ReadableProductPricePopulator  {
 			}
 			if (source.getCurrency().equals("CNY") && source.getProductPriceAmount() != null
 					&& (isShowProductPriceCurrencyCode == null || !isShowProductPriceCurrencyCode)){
-				BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(source.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+				BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(source.getProductPriceAmount()).setScale(0, RoundingMode.HALF_UP);
 				target.setOriginalPrice(pricingService.getDisplayAmount(productPriceAmount, store));
 			}else {
 				target.setOriginalPrice(pricingService.getDisplayAmount(source.getProductPriceAmount(), store));

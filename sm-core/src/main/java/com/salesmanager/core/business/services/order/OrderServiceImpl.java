@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
@@ -246,7 +247,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         ShippingConfiguration shippingConfiguration = null;
 
         BigDecimal grandTotal = new BigDecimal(0);
-        grandTotal.setScale(2, RoundingMode.HALF_UP);
+        grandTotal.setScale(0, RoundingMode.HALF_UP);
 
         LOGGER.debug("[caculateOrder] calculate order qty price");
         //price by item
@@ -257,20 +258,20 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         BigDecimal subTotal = new BigDecimal(0);
 
         //手续费
-        BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
 
         //运费
-        BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
 
         //增值服务费
-        BigDecimal additionalServicesPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalAdditionalServicesPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
 
         //erp费用
-        BigDecimal erpPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal erpPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
 
 
 
-        subTotal.setScale(2, RoundingMode.HALF_UP);
+        subTotal.setScale(0, RoundingMode.UP);
         for(ShoppingCartItem item : summary.getProducts()) {
             if (item.getItemPrice() == null) {
                 throw new ServiceException("shopping cart item sku = [" +item.getSku()+"] price is null");
@@ -301,7 +302,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                             BigDecimal orderTotalValue = itemSubTotal.getValue();
                             if(orderTotalValue==null) {
                                 orderTotalValue = new BigDecimal(0);
-                                orderTotalValue.setScale(2, RoundingMode.HALF_UP);
+                                orderTotalValue.setScale(0, RoundingMode.UP);
                             }
 
                             orderTotalValue = orderTotalValue.add(price.getFinalPrice());
@@ -324,16 +325,22 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     if (StringUtils.isNotEmpty(category.getHandlingFeeFor1688())
                             && item.getProduct().getPublishWay() != null
                             && item.getProduct().getPublishWay() == PublishWayEnums.IMPORT_BY_1688 ){
-                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(2, RoundingMode.HALF_UP);
+                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(3, RoundingMode.UP);
+                        BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
                         BigDecimal itemPrice = item.getItemPrice();
-                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFee).setScale(2, RoundingMode.HALF_UP);
+                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+                        finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getQuantity()));
                         totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+                        break;
                     }
                     if (StringUtils.isNotEmpty(category.getHandlingFee())){
-                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(2, RoundingMode.HALF_UP);
+                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(3, RoundingMode.UP);
+                        BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
                         BigDecimal itemPrice = item.getItemPrice();
-                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFee).setScale(2, RoundingMode.HALF_UP);
+                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+                        finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getQuantity()));
                         totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+                        break;
                     }
                 }
             }
@@ -394,7 +401,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                     }else {
                         price = additionalServices.getPrice();
                     }
-                    additionalServicesPrice = additionalServicesPrice.add(new BigDecimal(price).setScale(2, RoundingMode.HALF_UP));
+                    totalAdditionalServicesPrice = totalAdditionalServicesPrice.add(new BigDecimal(price).setScale(0, RoundingMode.UP));
                 }
             }
 
@@ -452,9 +459,6 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         orderTotalSubTotal.setValue(subTotal);
         orderTotals.add(orderTotalSubTotal);
 
-        //这个是总价+商品费用
-        grandTotal=grandTotal.add(subTotal);
-
 
         //加价费用
         OrderTotal handlingubTotal = new OrderTotal();
@@ -467,8 +471,6 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         handlingubTotal.setValue(totalProductHandlingFeePrice);
         orderTotals.add(handlingubTotal);
 
-        //这个是总价+加价
-        grandTotal=grandTotal.add(totalProductHandlingFeePrice);
 
         //运费
         OrderTotal shippingSubTotal = new OrderTotal();
@@ -481,9 +483,6 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         shippingSubTotal.setValue(totalShippingPrice);
         orderTotals.add(shippingSubTotal);
 
-        //这个是总价+加运费
-        grandTotal=grandTotal.add(totalShippingPrice);
-
 
         //增值服务费用
         OrderTotal additionalServicesSubTotal = new OrderTotal();
@@ -492,10 +491,9 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         additionalServicesSubTotal.setOrderTotalCode("order.total.additionalServices");
         additionalServicesSubTotal.setSortOrder(102);
         additionalServicesSubTotal.setText("order.total.additionalServices");
-        additionalServicesSubTotal.setValue(additionalServicesPrice);
+        additionalServicesSubTotal.setValue(totalAdditionalServicesPrice);
         additionalServicesSubTotal.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
-        grandTotal=grandTotal.add(additionalServicesPrice);
-
+        orderTotals.add(additionalServicesSubTotal);
 
 
 
@@ -527,7 +525,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         List<TaxItem> taxes = taxService.calculateTax(summary, customer, store, language);
         if(taxes!=null && taxes.size()>0) {
             BigDecimal totalTaxes = new BigDecimal(0);
-            totalTaxes.setScale(2, RoundingMode.HALF_UP);
+            totalTaxes.setScale(0, RoundingMode.UP);
             int taxCount = 200;
             for(TaxItem tax : taxes) {
 
@@ -547,9 +545,13 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
                 taxCount ++;
 
             }
-            grandTotal = grandTotal.add(totalTaxes);
             totalSummary.setTaxTotal(totalTaxes);
         }
+
+        grandTotal = grandTotal.add(totalProductHandlingFeePrice)
+                .add(erpPrice).add(subTotal)
+                .add(totalShippingPrice)
+                .add(totalAdditionalServicesPrice);
 
         // grand total
         OrderTotal orderTotal = new OrderTotal();
@@ -560,8 +562,13 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         //orderTotal.setText("order.total.total");
         orderTotal.setSortOrder(500);
         orderTotal.setValue(grandTotal);
+
         orderTotals.add(orderTotal);
 
+        totalSummary.setProductHandlingFeePriceTotal(totalProductHandlingFeePrice);
+        totalSummary.setErpPriceTotal(erpPrice);
+        totalSummary.setShippingPriceTotal(totalShippingPrice);
+        totalSummary.setAdditionalServicesPriceTotal(totalAdditionalServicesPrice);
         totalSummary.setTotal(grandTotal);
         totalSummary.setTotals(orderTotals);
 

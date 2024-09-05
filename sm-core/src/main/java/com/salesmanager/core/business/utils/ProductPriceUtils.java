@@ -82,7 +82,7 @@ public class ProductPriceUtils {
 
 				if (price.isDefaultPrice()) {
 					if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-						defaultPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+						defaultPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(0, RoundingMode.UP);
 					}else {
 						defaultPrice = price.getProductPriceAmount();
 					}
@@ -638,11 +638,11 @@ public class ProductPriceUtils {
 					if (StringUtils.isNotEmpty(priceRange.getPromotionPrice())){
 						priceRange.setPromotionPrice(
 								rate.multiply(new BigDecimal(priceRange.getPromotionPrice()))
-										.setScale(2, RoundingMode.HALF_UP)
+										.setScale(0, RoundingMode.UP)
 										.toString());
 					}
 					priceRange.setPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
-							.setScale(2, RoundingMode.HALF_UP)
+							.setScale(0, RoundingMode.UP)
 							.toString());
 				});
 			}
@@ -698,8 +698,8 @@ public class ProductPriceUtils {
 		BigDecimal oPrice = price.getProductPriceAmount();
 
 		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-			fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
-			oPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+			fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(0, RoundingMode.UP);
+			oPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(0, RoundingMode.UP);
 		}
 
 
@@ -717,7 +717,7 @@ public class ProductPriceUtils {
 							finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 
 							if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-								fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+								fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(0, RoundingMode.UP);
 							}
 
 						}
@@ -732,7 +732,7 @@ public class ProductPriceUtils {
 					hasDiscount = true;
 					fPrice = price.getProductPriceSpecialAmount();
 					if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-						fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+						fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(0, RoundingMode.UP);
 					}
 					finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 				}
@@ -744,14 +744,14 @@ public class ProductPriceUtils {
 				fPrice = price.getProductPriceSpecialAmount();
 
 				if (price.getCurrency().equals("CNY") && price.getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-					fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+					fPrice = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceSpecialAmount()).setScale(0, RoundingMode.UP);
 				}
 				finalPrice.setDiscountEndDate(price.getProductPriceSpecialEndDate());
 			}
 		}
 
 		if (price.getCurrency().equals("CNY") && price.getProductPriceAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-			BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(2, RoundingMode.HALF_UP);
+			BigDecimal productPriceAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(price.getProductPriceAmount()).setScale(0, RoundingMode.UP);
 			price.setProductPriceAmount(productPriceAmount);
 		}
 
@@ -777,11 +777,11 @@ public class ProductPriceUtils {
 					BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
 
 					finalPrice.setStringPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
-							.setScale(2, RoundingMode.HALF_UP)
+							.setScale(0, RoundingMode.UP)
 							.toString());
 
 					finalPrice.setFinalPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
-							.setScale(2, RoundingMode.HALF_UP));
+							.setScale(0, RoundingMode.UP));
 				}else {
 					finalPrice.setStringPrice(priceRange.getPrice());
 					finalPrice.setFinalPrice(new BigDecimal(priceRange.getPrice()));
@@ -795,7 +795,7 @@ public class ProductPriceUtils {
 			finalPrice.setDiscountPercent(price.getDiscountPercent() == null? 0 : price.getDiscountPercent());
 
 			if (price.getCurrency().equals("CNY") && finalPrice.getProductPrice().getProductPriceSpecialAmount() != null && (isShowProductPriceCurrencyCode ==null || !isShowProductPriceCurrencyCode)){
-				BigDecimal specialAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(finalPrice.getProductPrice().getProductPriceSpecialAmount()).setScale(2, RoundingMode.HALF_UP);
+				BigDecimal specialAmount = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(finalPrice.getProductPrice().getProductPriceSpecialAmount()).setScale(0, RoundingMode.UP);
 				finalPrice.setDiscountedPrice(specialAmount);
 			}else {
 				finalPrice.setDiscountedPrice(finalPrice.getProductPrice().getProductPriceSpecialAmount());
@@ -823,7 +823,7 @@ public class ProductPriceUtils {
 	public static String formatToTwoDecimalPlaces(String s) {
 		try {
 			BigDecimal bd = new BigDecimal(s);
-			bd = bd.setScale(2, RoundingMode.HALF_UP);
+			bd = bd.setScale(0, RoundingMode.UP);
 			return bd.toPlainString();
 		} catch (NumberFormatException e) {
 			return "Invalid number format";

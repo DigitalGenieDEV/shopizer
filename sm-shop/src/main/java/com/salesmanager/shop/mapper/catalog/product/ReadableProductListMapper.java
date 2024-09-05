@@ -188,18 +188,18 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 				BigDecimal rate = examRateConfig.getRate(ExchangeRateEnums.CNY_KRW);
 
 				if (price != null){
-					price =  rate.multiply(price).setScale(2, RoundingMode.HALF_UP);
+					price =  rate.multiply(price).setScale(0, RoundingMode.UP);
 				}
 				if (CollectionUtils.isNotEmpty(priceRanges)){
 					priceRanges.forEach(priceRange -> {
 						if (StringUtils.isNotEmpty(priceRange.getPromotionPrice())){
 							priceRange.setPromotionPrice(
 									rate.multiply(new BigDecimal(priceRange.getPromotionPrice()))
-											.setScale(2, RoundingMode.HALF_UP)
+											.setScale(0, RoundingMode.UP)
 											.toString());
 						}
 						priceRange.setPrice(rate.multiply(new BigDecimal(priceRange.getPrice()))
-								.setScale(2, RoundingMode.HALF_UP)
+								.setScale(0, RoundingMode.UP)
 								.toString());
 					});
 				}
