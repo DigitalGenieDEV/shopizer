@@ -16,8 +16,8 @@ public interface FavoritesRepository extends JpaRepository<Favorites, Long> {
 	@Query("select count(f) from Favorites f where f.productId = ?1")
 	Integer countByProductId(Long productId);
 
-	@Query("select f from Favorites f where f.userId = ?1 and f.productId = ?2")
-	Favorites findByUserIdAndProductId(Long userId, Long productId);
+	@Query("select count(f) from Favorites f where f.userId = ?1 and f.productId = ?2")
+	Integer findCountByUserIdAndProductId(Long userId, Long productId);
 
 
 

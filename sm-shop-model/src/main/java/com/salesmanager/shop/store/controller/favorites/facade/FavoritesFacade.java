@@ -12,6 +12,8 @@ public interface FavoritesFacade {
     ReadableEntityList<ReadableFavorites> getListFavoriteProducts(Long userId, int page, int count, Language language);
 
 
+    Boolean isFavoriteByUserProduct(Long userId, Long productId);
+
     void saveFavoriteProduct(PersistableFavorites persistableFavorites);
 
 

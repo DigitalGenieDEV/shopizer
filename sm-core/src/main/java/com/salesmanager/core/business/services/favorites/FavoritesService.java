@@ -14,4 +14,7 @@ public interface FavoritesService {
 
 
     Integer queryFavoriteCountByProductId(Long productId);
+
+
+    Integer findCountByUserIdAndProductId(Long userId, Long productId);
 }

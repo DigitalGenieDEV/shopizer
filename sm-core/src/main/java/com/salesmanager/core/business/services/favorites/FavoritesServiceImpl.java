@@ -50,4 +50,9 @@ public class FavoritesServiceImpl  extends SalesManagerEntityServiceImpl<Long, F
     public Integer queryFavoriteCountByProductId(Long productId) {
         return favoritesRepository.countByProductId(productId);
     }
+
+    @Override
+    public Integer findCountByUserIdAndProductId(Long userId, Long productId) {
+        return favoritesRepository.findCountByUserIdAndProductId(userId, productId);
+    }
 }

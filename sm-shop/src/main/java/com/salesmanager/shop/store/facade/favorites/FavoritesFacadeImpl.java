@@ -58,6 +58,15 @@ public class FavoritesFacadeImpl implements FavoritesFacade {
     }
 
     @Override
+    public Boolean isFavoriteByUserProduct(Long userId, Long productId) {
+        Integer integer = favoritesService.findCountByUserIdAndProductId(userId, productId);
+        if (integer == null){
+            return false;
+        }
+        return integer>0;
+    }
+
+    @Override
     public void saveFavoriteProduct(PersistableFavorites persistableFavorites) {
         Favorites favorite = new Favorites();
         favorite.setUserId(persistableFavorites.getUserId());

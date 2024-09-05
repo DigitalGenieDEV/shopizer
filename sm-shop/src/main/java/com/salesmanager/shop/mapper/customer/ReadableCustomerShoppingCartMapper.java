@@ -243,7 +243,7 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setShippingType(readableShoppingCartItem.getShippingType());
         readableCustomerShoppingCartItem.setShippingTransportationType(readableShoppingCartItem.getShippingTransportationType());
         readableCustomerShoppingCartItem.setNationalTransportationMethod(readableShoppingCartItem.getNationalTransportationMethod());
-
+        readableCustomerShoppingCartItem.setPlayThroughOption(readableCustomerShoppingCartItem.getPlayThroughOption());
         readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getAdditionalServices());
         readableCustomerShoppingCartItem.setInternationalTransportationMethod(readableShoppingCartItem.getInternationalTransportationMethod());
 
