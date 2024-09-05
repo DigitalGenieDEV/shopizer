@@ -12,7 +12,13 @@ public class Order extends Entity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+
+	/**
+	 * 进口主体
+	 */
+	private String importMain;
+
 	private boolean customerAgreement;
 	private String comments;
 	private String currency;
@@ -52,5 +58,11 @@ public class Order extends Entity {
 	}
 
 
+	public String getImportMain() {
+		return importMain;
+	}
 
+	public void setImportMain(String importMain) {
+		this.importMain = importMain;
+	}
 }

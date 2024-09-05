@@ -20,6 +20,9 @@ public class ReadableCustomerOrder extends Entity implements Serializable {
     private static final long serialVersionUID = 1L;
     private ReadableTotal total;
     private PaymentType paymentType;
+
+    private String importMain;
+
     private String paymentModule;
     private String shippingModule;
     private Date datePurchased;
@@ -126,5 +129,14 @@ public class ReadableCustomerOrder extends Entity implements Serializable {
 
     public void setOrders(List<ReadableOrder> orders) {
         this.orders = orders;
+    }
+
+
+    public String getImportMain() {
+        return importMain;
+    }
+
+    public void setImportMain(String importMain) {
+        this.importMain = importMain;
     }
 }

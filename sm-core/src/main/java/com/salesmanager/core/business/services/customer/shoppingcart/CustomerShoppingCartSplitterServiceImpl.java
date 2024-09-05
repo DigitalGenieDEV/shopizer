@@ -127,6 +127,15 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setProduct(customerShoppingCartItem.getProduct());
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
         shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
+
+        shoppingCartItem.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+        shoppingCartItem.setInternationalTransportationMethod(customerShoppingCartItem.getInternationalTransportationMethod());
+        shoppingCartItem.setNationalTransportationMethod(customerShoppingCartItem.getNationalTransportationMethod());
+        shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());
+        shoppingCartItem.setShippingTransportationType(customerShoppingCartItem.getShippingTransportationType());
+        shoppingCartItem.setTruckModel(customerShoppingCartItem.getTruckModel());
+        shoppingCartItem.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
+        shoppingCartItem.setTruckType(customerShoppingCartItem.getTruckType());
         return shoppingCartItem;
     }
 

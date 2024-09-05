@@ -63,12 +63,6 @@ public class ProductPriceApi {
 			@Valid @RequestBody PersistableProductPriceDiscount discount,
 			HttpServletRequest request) {
 		try {
-			String authenticatedManager = managerFacade.authenticatedManager();
-			if (authenticatedManager == null) {
-				throw new UnauthorizedException();
-			}
-			managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
-
 			productPriceFacade.setProductDiscount(discount);
 			return CommonResultDTO.ofSuccess();
 		} catch (IllegalArgumentException e) {

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.shipping.ShippingType;
@@ -13,6 +14,8 @@ import com.salesmanager.shop.model.catalog.product.ReadableMinimalProduct;
 import com.salesmanager.shop.model.catalog.product.variation.ReadableProductVariation;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import lombok.Data;
+
+import javax.persistence.Column;
 
 /**
  * compatible with v1 version
@@ -81,4 +84,12 @@ public class ReadableShoppingCartItem extends ReadableMinimalProduct implements 
 	 * @see TruckTypeEnums
 	 */
 	private String truckType;
+
+
+	/**
+	 * 通关选项
+	 * @see PlayThroughOptionsEnums
+	 */
+	private String playThroughOption;
+
 }

@@ -112,6 +112,13 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Enumerated(value = EnumType.STRING)
     private PaymentType paymentType;
 
+
+    /**
+     * 进口主体
+     */
+    @Column (name ="IMPORT_MAIN", length = 50)
+    private String importMain;
+
     @Column (name ="PAYMENT_MODULE_CODE")
     private String paymentModuleCode;
 
@@ -309,5 +316,13 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     public void setMerchant(MerchantStore merchant) {
         this.merchant = merchant;
+    }
+
+    public String getImportMain() {
+        return importMain;
+    }
+
+    public void setImportMain(String importMain) {
+        this.importMain = importMain;
     }
 }

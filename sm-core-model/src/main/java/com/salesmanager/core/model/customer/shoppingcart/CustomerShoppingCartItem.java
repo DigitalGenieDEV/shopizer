@@ -1,6 +1,7 @@
 package com.salesmanager.core.model.customer.shoppingcart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -89,6 +90,15 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      */
     @Column(name = "TRUCK_MODEL")
     private String truckModel;
+
+
+    /**
+     * 通关选项
+     * @see PlayThroughOptionsEnums
+     */
+    @Column(name = "PLAY_THROUGH_OPTION")
+    private String playThroughOption;
+
 
 
     /**
@@ -301,6 +311,14 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
 
     public String getTruckType() {
         return truckType;
+    }
+
+    public String getPlayThroughOption() {
+        return playThroughOption;
+    }
+
+    public void setPlayThroughOption(String playThroughOption) {
+        this.playThroughOption = playThroughOption;
     }
 
     public void setTruckType(String truckType) {
