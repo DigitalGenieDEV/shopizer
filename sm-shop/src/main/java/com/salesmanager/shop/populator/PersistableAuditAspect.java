@@ -2,6 +2,8 @@ package com.salesmanager.shop.populator;
 
 import java.util.Date;
 
+import com.salesmanager.core.model.common.UserContext;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -47,6 +49,13 @@ public class PersistableAuditAspect {
 							audit.setModifiedBy(user.getUsername());
 						}
 					}
+					UserContext currentInstance = UserContext.getCurrentInstance();
+					if (currentInstance != null && StringUtils.isNotBlank(currentInstance.getIpAddress())) {
+						String ipAddress = currentInstance.getIpAddress();
+						audit.setOperatorIp(ipAddress);
+						LOGGER.info("get IP from UserContext" + ipAddress);
+					}
+
 					//TODO put in log audit log trail
 					entity.setAuditSection(audit);
 				}

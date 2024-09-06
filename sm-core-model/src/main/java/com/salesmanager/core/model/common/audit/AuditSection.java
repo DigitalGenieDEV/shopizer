@@ -29,6 +29,9 @@ public class AuditSection implements Serializable {
   @Column(name = "UPDT_ID", length = 60)
   private String modifiedBy;
 
+  @Column(name = "OPERATOR_IP", length = 64)
+  private String operatorIp;
+
   public AuditSection() {}
 
   public Date getDateCreated() {
@@ -58,5 +61,16 @@ public class AuditSection implements Serializable {
 		  }
 	  }
     this.modifiedBy = modifiedBy;
+  }
+
+  public String getOperatorIp() {
+    return operatorIp;
+  }
+
+  public void setOperatorIp(String operatorIp) {
+    if (!StringUtils.isBlank(operatorIp) && operatorIp.length() > 64) {
+      operatorIp = operatorIp.substring(0, 64);
+    }
+    this.operatorIp = operatorIp;
   }
 }

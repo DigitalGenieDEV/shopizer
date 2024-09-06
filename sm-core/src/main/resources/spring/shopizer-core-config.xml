@@ -173,7 +173,7 @@
 					<beans:value>classpath:profiles/local/sendy.properties</beans:value>
 					<beans:value>classpath:profiles/local/external.properties</beans:value>
 					<beans:value>classpath:profiles/local/payments.properties</beans:value>
-					<beans:value>classpath:s3.properties</beans:value>
+					<beans:value>classpath:profiles/local/s3.properties</beans:value>
 				</beans:list>
 			</beans:property>
 		</beans:bean>
