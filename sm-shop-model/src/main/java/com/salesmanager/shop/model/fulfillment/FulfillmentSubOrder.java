@@ -120,11 +120,6 @@ public class FulfillmentSubOrder {
      */
     private String fulfillmentSubTypeEnums;
 
-    /**
-     * 增值服务Id map 为增值服务的key ，key 为数量
-     * @see AdditionalServiceEnums
-     */
-    private Map<Long, Integer> additionalServicesMap;
 
 
     @Override
@@ -145,8 +140,7 @@ public class FulfillmentSubOrder {
                 Objects.equals(crossBorderTransportationLogisticsNumber, that.crossBorderTransportationLogisticsNumber) &&
                 Objects.equals(transportInformation, that.transportInformation) &&
                 Objects.equals(fulfillmentMainType, that.fulfillmentMainType) &&
-                Objects.equals(fulfillmentSubTypeEnums, that.fulfillmentSubTypeEnums) &&
-                Objects.equals(additionalServicesMap, that.additionalServicesMap);
+                Objects.equals(fulfillmentSubTypeEnums, that.fulfillmentSubTypeEnums);
     }
 
     @Override
@@ -154,8 +148,7 @@ public class FulfillmentSubOrder {
         return Objects.hash(id, orderId, orderProductId, shippingType, internationalTransportationMethod,
                 nationalTransportationMethod, shippingTransportationType, truckModel, truckType,
                  logisticsNumber, crossBorderTransportationLogisticsNumber,
-                transportInformation, fulfillmentMainType, fulfillmentSubTypeEnums,
-                additionalServicesMap);
+                transportInformation, fulfillmentMainType, fulfillmentSubTypeEnums);
     }
 
 }

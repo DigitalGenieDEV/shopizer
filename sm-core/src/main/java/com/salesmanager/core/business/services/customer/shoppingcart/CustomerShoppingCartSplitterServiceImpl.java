@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.services.customer.shoppingcart;
 
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.model.customer.Customer;
@@ -15,6 +16,7 @@ import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -35,6 +37,9 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
 
     @Inject
     private CustomerService customerService;
+
+    @Autowired
+    private AdditionalServicesService additionalServicesService;
 
     @Override
     public List<ShoppingCart> splitCheckedItemsToShoppingCart(CustomerShoppingCart customerShoppingCart) {
@@ -128,7 +133,6 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
         shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
 
-        shoppingCartItem.setAdditionalServicesMap(customerShoppingCartItem.getAdditionalServicesMap());
         shoppingCartItem.setInternationalTransportationMethod(customerShoppingCartItem.getInternationalTransportationMethod());
         shoppingCartItem.setNationalTransportationMethod(customerShoppingCartItem.getNationalTransportationMethod());
         shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());
@@ -136,6 +140,8 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setTruckModel(customerShoppingCartItem.getTruckModel());
         shoppingCartItem.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
         shoppingCartItem.setTruckType(customerShoppingCartItem.getTruckType());
+        shoppingCartItem.setAdditionalServicesIdMap(customerShoppingCartItem.getAdditionalServicesIdMap());
+
         return shoppingCartItem;
     }
 

@@ -14,6 +14,7 @@ import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.catalog.product.ReadableMinimalProduct;
 import com.salesmanager.shop.model.catalog.product.variation.ReadableProductVariation;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
+import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -37,11 +38,7 @@ public class ReadableShoppingCartItem extends ReadableMinimalProduct implements 
 	private List<ReadableProductVariation> variants = null;
 
 
-	/**
-	 * 增值服务Id value 为数量
-	 * The value-added service ID list is separated by commas.
-	 */
-	private List<ReadableAdditionalServices> additionalServicesList;
+	private List<ReadableProductAdditionalService> readableProductAdditionalServices;
 
 	/**
 	 * 国内运输还是国外运输

@@ -50,8 +50,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      * The value-added service ID list is separated by commas.
      */
     @Column(name = "ADDITIONAL_SERVICES_IDS")
-    private String additionalServicesMap;
-
+    private String additionalServicesIdMap;
 
 
     /**
@@ -262,12 +261,12 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     }
 
 
-    public String getAdditionalServicesMap() {
-        return additionalServicesMap;
+    public String getAdditionalServicesIdMap() {
+        return additionalServicesIdMap;
     }
 
-    public void setAdditionalServicesMap(String additionalServicesMap) {
-        this.additionalServicesMap = additionalServicesMap;
+    public void setAdditionalServicesIdMap(String additionalServicesIdMap) {
+        this.additionalServicesIdMap = additionalServicesIdMap;
     }
 
     public ShippingType getShippingType() {

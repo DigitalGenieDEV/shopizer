@@ -22,6 +22,7 @@ import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCartItem;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -244,7 +245,8 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setShippingTransportationType(readableShoppingCartItem.getShippingTransportationType());
         readableCustomerShoppingCartItem.setNationalTransportationMethod(readableShoppingCartItem.getNationalTransportationMethod());
         readableCustomerShoppingCartItem.setPlayThroughOption(readableCustomerShoppingCartItem.getPlayThroughOption());
-        readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getAdditionalServicesList());
+        readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getReadableProductAdditionalServices());
+
         readableCustomerShoppingCartItem.setInternationalTransportationMethod(readableShoppingCartItem.getInternationalTransportationMethod());
 
         return readableCustomerShoppingCartItem;

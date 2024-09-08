@@ -49,11 +49,11 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	private AuditSection auditSection = new AuditSection();
 
 	@Deprecated //Use sku
-	@Column(name="PRODUCT_ID", nullable=false) 
-    private Long productId;
-	
+	@Column(name="PRODUCT_ID", nullable=false)
+	private Long productId;
+
 	//SKU
-	@Column(name="SKU", nullable=true) 
+	@Column(name="SKU", nullable=true)
 	private String sku;
 
 	@JsonIgnore
@@ -62,7 +62,7 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "shoppingCartItem")
 	private Set<ShoppingCartAttributeItem> attributes = new HashSet<ShoppingCartAttributeItem>();
-	
+
 	@Column(name="PRODUCT_VARIANT", nullable=true)
 	private Long variant;
 
@@ -88,11 +88,11 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 
 	/**
-	 * 增值服务Id map 结构
+	 * 增值服务Id list列表用逗号分隔
 	 * The value-added service ID list is separated by commas.
 	 */
 	@Column(name = "ADDITIONAL_SERVICES_IDS")
-	private String additionalServicesMap;
+	private String additionalServicesIdMap;
 
 
 
@@ -191,12 +191,12 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 	}
 
-	public String getAdditionalServicesMap() {
-		return additionalServicesMap;
+	public String getAdditionalServicesIdMap() {
+		return additionalServicesIdMap;
 	}
 
-	public void setAdditionalServicesMap(String additionalServicesMap) {
-		this.additionalServicesMap = additionalServicesMap;
+	public void setAdditionalServicesIdMap(String additionalServicesIdMap) {
+		this.additionalServicesIdMap = additionalServicesIdMap;
 	}
 
 	public void setAttributes(Set<ShoppingCartAttributeItem> attributes) {
@@ -249,12 +249,12 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 	public void addAttributes(ShoppingCartAttributeItem shoppingCartAttributeItem)
 	{
-	    this.attributes.add(shoppingCartAttributeItem);
+		this.attributes.add(shoppingCartAttributeItem);
 	}
 
 	public void removeAttributes(ShoppingCartAttributeItem shoppingCartAttributeItem)
 	{
-	    this.attributes.remove(shoppingCartAttributeItem);
+		this.attributes.remove(shoppingCartAttributeItem);
 	}
 
 	public void removeAllAttributes(){

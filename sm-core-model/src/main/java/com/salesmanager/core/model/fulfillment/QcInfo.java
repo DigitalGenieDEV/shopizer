@@ -39,13 +39,6 @@ public class QcInfo extends SalesManagerEntity<Long, QcInfo> implements Auditabl
 
 
     /**
-     * 增值服务Id list列表用逗号分隔
-     * @see AdditionalServiceEnums
-     */
-    @Column(name = "ADDITIONAL_SERVICES_IDS")
-    private String additionalServicesMap;
-
-    /**
      * 商品id
      */
     @Column(name = "PRODUCT_ID")

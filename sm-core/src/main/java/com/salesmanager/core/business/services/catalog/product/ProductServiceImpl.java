@@ -58,6 +58,7 @@ import com.salesmanager.core.model.content.ImageContentFile;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.tax.taxclass.TaxClass;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("productService")
 public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Product> implements ProductService {
@@ -532,6 +533,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	@Transactional
 	public Product getBySku(String productCode) throws ServiceException {
 		try {
 			if (productCode == null){
@@ -546,6 +548,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 			BigInteger id = (BigInteger) products.get(0);
 			return this.getById(id.longValue());
 		} catch (Exception e) {
+			LOGGER.error(productCode+" getBySku error", e);
 			throw new ServiceException("Cannot get product with sku [" + productCode + "]", e);
 		}
 	}

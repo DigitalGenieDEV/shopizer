@@ -8,6 +8,7 @@ import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.catalog.product.ReadableMinimalProduct;
 import com.salesmanager.shop.model.catalog.product.variation.ReadableProductVariation;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
+import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCartAttribute;
 import lombok.Data;
 
@@ -46,10 +47,8 @@ public class ReadableCustomerShoppingCartItem extends ReadableMinimalProduct imp
 
 
     /**
-     * 增值服务Id list列表用逗号分隔
-     * The value-added service ID list is separated by commas.
      */
-    private List<ReadableAdditionalServices> additionalServices;
+    private List<ReadableProductAdditionalService> additionalServices;
 
     /**
      * 国内运输还是国外运输

@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.entity.ReadableDescription;
 import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -62,6 +62,9 @@ import com.salesmanager.shop.utils.ImageFilePath;
 public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, ReadableShoppingCart> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ReadableShoppingCartMapper.class);
+
+	@Autowired
+	private AdditionalServicesConvert additionalServicesConvert;
 
 	@Autowired
 	private ShoppingCartCalculationService shoppingCartCalculationService;
@@ -181,7 +184,9 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 					shoppingCartItem.setShippingType(item.getShippingType() == null? null : item.getShippingType().name());
 					shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType()== null? null : item.getShippingTransportationType().name());
 					shoppingCartItem.setNationalTransportationMethod(item.getNationalTransportationMethod()== null? null : item.getNationalTransportationMethod().name());
-					shoppingCartItem.setAdditionalServicesList(additionalServicesFacade.queryAdditionalServicesByIds(item.getAdditionalServicesMap(), language));
+
+					shoppingCartItem.setReadableProductAdditionalServices(
+							additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(item.getAdditionalServicesIdMap(), language));
 					shoppingCartItem.setInternationalTransportationMethod(item.getInternationalTransportationMethod()== null? null : item.getInternationalTransportationMethod().name());
 
 					LOG.debug("[ReadableShoppingCartMapper/merge] calculate price");

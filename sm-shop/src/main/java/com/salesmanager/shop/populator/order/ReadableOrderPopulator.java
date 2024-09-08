@@ -10,6 +10,7 @@ import com.salesmanager.core.business.fulfillment.service.FulfillmentSubOrderSer
 import com.salesmanager.core.business.fulfillment.service.GeneralDocumentService;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.fulfillment.*;
@@ -18,7 +19,7 @@ import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
-import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -77,6 +78,9 @@ public class ReadableOrderPopulator extends
 	private InvoicePackingFormService invoicePackingFormService;
 	@Autowired
 	private CustomerFacade customerFacade;
+
+	@Autowired
+	private OrderProductService orderProductService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderPopulator.class);
 
@@ -343,10 +347,6 @@ public class ReadableOrderPopulator extends
 			if (fulfillmentSubOrder.getFulfillmentSubTypeEnums() != null) {
 				readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
 			}
-
-//			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
-//				readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
-//			}
 
 			if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
 				readableFulfillmentSubOrder.setInternationalTransportationMethod(fulfillmentSubOrder.getInternationalTransportationMethod().name());

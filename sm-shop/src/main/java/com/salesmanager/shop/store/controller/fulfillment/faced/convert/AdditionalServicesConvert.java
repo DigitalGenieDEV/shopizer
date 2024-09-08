@@ -1,24 +1,31 @@
 package com.salesmanager.shop.store.controller.fulfillment.faced.convert;
 
+import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.utils.ObjectConvert;
-import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.fulfillment.AdditionalServicesDescription;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
+import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class AdditionalServicesConvert {
 
-    public static ReadableAdditionalServices convertToReadableAdditionalServices(
-            AdditionalServices additionalServices,
-            Language language,
-            Map<Long, Integer> additionalServicesMapFromJson) {
+    @Autowired
+    private AdditionalServicesService additionalServicesService;
 
-        // 转换基本的 AdditionalServices 到 ReadableAdditionalServices
+    public  ReadableAdditionalServices convertToReadableAdditionalServices(
+            AdditionalServices additionalServices,
+            Language language) {
         ReadableAdditionalServices readableAdditionalServices = ObjectConvert.convert(additionalServices, ReadableAdditionalServices.class);
 
         // 根据语言设置描述
@@ -29,22 +36,36 @@ public class AdditionalServicesConvert {
             }
         });
 
-        // 如果 additionalServicesMapFromJson 不为空，则设置数量
-        if (additionalServicesMapFromJson != null) {
-            readableAdditionalServices.setNum(additionalServicesMapFromJson.get(additionalServices.getId()));
-        }
-
         return readableAdditionalServices;
     }
 
-    // 重载方法，提供不需要 additionalServicesMapFromJson 的情况
-    public static ReadableAdditionalServices convertToReadableAdditionalServices(
-            AdditionalServices additionalServices,
+
+
+    public  List<ReadableProductAdditionalService> convertToReadableAdditionalServicesByShoppingItem(
+            String additionalServicesIdMap,
             Language language) {
 
-        // 调用更全面的方法
-        return convertToReadableAdditionalServices(additionalServices, language, null);
+        if (StringUtils.isEmpty(additionalServicesIdMap)){
+            return null;
+        }
+        Map<String,String> additionalServiceMap =  (Map<String,String>)JSON.parse(additionalServicesIdMap);
+
+        Set<String> additionalServiceSet = additionalServiceMap.keySet();
+
+        return additionalServiceSet.stream().map(additionalService ->{
+            ReadableProductAdditionalService readableProductAdditionalService = new ReadableProductAdditionalService();
+
+            AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(additionalService));
+
+            ReadableAdditionalServices readableAdditionalServices = convertToReadableAdditionalServices(additionalServices, language);
+
+            readableProductAdditionalService.setAdditionalServices(readableAdditionalServices);
+            readableProductAdditionalService.setQuantity(Integer.valueOf(additionalServiceMap.get(additionalService)));
+            return readableProductAdditionalService;
+        }).collect(Collectors.toList());
+
     }
+
 
 
 }

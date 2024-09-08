@@ -23,6 +23,7 @@ import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -185,6 +186,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private InvoicePackingFormService invoicePackingFormService;
 	@Autowired
 	private FulfillmentFacade fulfillmentFacade;
+	@Autowired
+	private AdditionalServicesConvert additionalServicesConvert;
 
 
 	@Override
@@ -429,7 +432,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				}
 
 				OrderProduct orderProduct = new OrderProduct();
-				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language);
+				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language, true);
 				orderProduct.setOrder(modelOrder);
 				orderProducts.add(orderProduct);
 			}
@@ -1073,6 +1076,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setProductService(productService);
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
+			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
@@ -1198,6 +1202,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setProductVariantService(productVariantService);
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, store, language);
 				orderProducts.add(orderProduct);
@@ -1235,6 +1240,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setProductVariantService(productVariantService);
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
 				orderProducts.add(orderProduct);
@@ -1329,7 +1335,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			for (ShoppingCartItem item : shoppingCartItems) {
 				OrderProduct orderProduct = new OrderProduct();
-				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language);
+				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language, true);
 				orderProduct.setOrder(modelOrder);
 				orderProducts.add(orderProduct);
 			}
@@ -1457,7 +1463,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			return modelOrder;
 
 		} catch (Exception e) {
-
+			LOGGER.error("processOrder error", e);
 			throw new ServiceException(e);
 
 		}
@@ -1774,6 +1780,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 			try {
 				orderProductPopulator.populate(orderProduct, readableOrderProduct, null, language);

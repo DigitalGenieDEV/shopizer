@@ -1,21 +1,20 @@
 package com.salesmanager.shop.store.controller.customer.facade;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartCalculationService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
-import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
-import com.salesmanager.core.model.customer.order.CustomerOrder;
-import com.salesmanager.core.model.customer.order.CustomerOrderTotalSummary;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
+import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
@@ -28,6 +27,7 @@ import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartDat
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
+import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
 import com.salesmanager.shop.populator.customer.CustomerShoppingCartDataPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
@@ -75,6 +75,9 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
     @Inject
     private ProductAttributeService productAttributeService;
+
+    @Autowired
+    private AdditionalServicesService additionalServicesService;
 
     @Inject
     @Qualifier("img")
@@ -336,8 +339,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
         }
 
-        item.setAdditionalServicesMap(MapUtils.isEmpty(customerShoppingCartItem.getAdditionalServicesMap())?
-                null : JSON.toJSONString(customerShoppingCartItem.getAdditionalServicesMap()));
+
 
         if (customerShoppingCartItem.getTruckModel() != null) {
             item.setTruckModel(customerShoppingCartItem.getTruckModel());
@@ -495,7 +497,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         // new quantity
                         anItem.setQuantity(item.getQuantity());
                         anItem.setChecked(item.isChecked());
-                        anItem.setAdditionalServicesMap(itemModel.getAdditionalServicesMap());
+                        anItem.setAdditionalServicesIdMap(itemModel.getAdditionalServicesIdMap());
                         anItem.setShippingType(itemModel.getShippingType());
                         anItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         anItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());
@@ -612,7 +614,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
                 oldCartItem.setQuantity(newItemValue.getQuantity());
                 oldCartItem.setChecked(newItemValue.isChecked());
-                oldCartItem.setAdditionalServicesMap(newItemValue.getAdditionalServicesMap());
+                oldCartItem.setAdditionalServicesIdMap(newItemValue.getAdditionalServicesIdMap());
                 oldCartItem.setShippingType(newItemValue.getShippingType());
                 oldCartItem.setInternationalTransportationMethod(newItemValue.getInternationalTransportationMethod());
                 oldCartItem.setNationalTransportationMethod(newItemValue.getNationalTransportationMethod());
@@ -671,8 +673,20 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setQuantity(customerShoppingCartItem.getQuantity());
             item.setCustomerShoppingCart(cartModel);
             item.setChecked(customerShoppingCartItem.isChecked());
-            item.setAdditionalServicesMap(MapUtils.isEmpty(customerShoppingCartItem.getAdditionalServicesMap())?
-                    null : JSON.toJSONString(customerShoppingCartItem.getAdditionalServicesMap()));
+
+            List<PersistableProductAdditionalService> perAdditionalServiceList = customerShoppingCartItem.getAdditionalServices();
+
+            if (CollectionUtils.isNotEmpty(perAdditionalServiceList)){
+                Map<String, String> additionalServiceMap = new HashMap<>();
+
+                perAdditionalServiceList.forEach(perAdditionalService -> {
+                    additionalServiceMap.put(String.valueOf(perAdditionalService.getAdditionalServiceId()),
+                            String.valueOf(perAdditionalService.getQuantity() == null? 1 :perAdditionalService.getQuantity()));
+
+                });
+                item.setAdditionalServicesIdMap(JSON.toJSONString(additionalServiceMap));
+            }
+
             if (customerShoppingCartItem.getShippingType() != null) {
                 item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
             }
@@ -714,11 +728,11 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                 throw new Exception("Item with id " + p.getId() + " is not properly configured");
             }
 
-            for (ProductAvailability availability : availabilities) {
-                if (customerShoppingCartItem.getQuantity() > 0 && availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
-                    throw new Exception("Item with id " + p.getId() + " is not available");
-                }
-            }
+//            for (ProductAvailability availability : availabilities) {
+//                if (customerShoppingCartItem.getQuantity() > 0 && availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
+//                    throw new Exception("Item with id " + p.getId() + " is not available");
+//                }
+//            }
 
             if (!DateUtil.dateBeforeEqualsDate(p.getDateAvailable(), new Date())) {
                 throw new Exception("Item with id " + p.getId() + " is not available");
@@ -861,7 +875,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                     if (!duplicateFound) {
                         cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
                         cartItem.setChecked(itemModel.isChecked());
-                        cartItem.setAdditionalServicesMap(itemModel.getAdditionalServicesMap());
+                        cartItem.setAdditionalServicesIdMap(itemModel.getAdditionalServicesIdMap());
                         cartItem.setShippingType(itemModel.getShippingType());
                         cartItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         cartItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());

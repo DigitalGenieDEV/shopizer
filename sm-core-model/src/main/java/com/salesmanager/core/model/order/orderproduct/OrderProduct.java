@@ -7,14 +7,16 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table (name="ORDER_PRODUCT" )
@@ -66,19 +68,29 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	private TransportationMethod nationalTransportationMethod;
 
 
+	/**
+	 * 通关选项
+	 * @see PlayThroughOptionsEnums
+	 */
+	@Column(name = "PLAY_THROUGH_OPTION")
+	@Enumerated(value = EnumType.STRING)
+	private PlayThroughOptionsEnums playThroughOption;
 
 	/**
 	 * 货车型号
 	 * @see TruckModelEnums
 	 */
-	private String truckModel;
-
+	@Column(name = "TRUCK_MODEL")
+	@Enumerated(value = EnumType.STRING)
+	private TruckModelEnums truckModel;
 
 	/**
 	 * 货车类型
 	 * @see TruckTypeEnums
 	 */
-	private String truckType;
+	@Column(name = "TRUCK_TYPE")
+	@Enumerated(value = EnumType.STRING)
+	private TruckTypeEnums truckType;
 
 
 	/**
@@ -86,6 +98,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	 */
 	@Column(name = "ADDITIONAL_SERVICES_IDS")
 	private String additionalServicesMap;
+
+
+	@JsonIgnore
+	@EqualsAndHashCode.Exclude
+	@ManyToOne(targetEntity = ShippingDocumentOrder.class)
+	@JoinColumn(name = "SHIPPING_DOCUMENT_ORDER_ID")
+	private ShippingDocumentOrder shippingDocumentOrder;
 
 
 	@Column (name="PRODUCT_NAME" , length=64 , nullable=false)
@@ -140,6 +159,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	}
 
 
+	public PlayThroughOptionsEnums getPlayThroughOption() {
+		return playThroughOption;
+	}
+
+	public void setPlayThroughOption(PlayThroughOptionsEnums playThroughOption) {
+		this.playThroughOption = playThroughOption;
+	}
 
 	public Order getOrder() {
 		return order;
@@ -223,19 +249,19 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 		this.nationalTransportationMethod = nationalTransportationMethod;
 	}
 
-	public String getTruckModel() {
+	public TruckModelEnums getTruckModel() {
 		return truckModel;
 	}
 
-	public void setTruckModel(String truckModel) {
+	public void setTruckModel(TruckModelEnums truckModel) {
 		this.truckModel = truckModel;
 	}
 
-	public String getTruckType() {
+	public TruckTypeEnums getTruckType() {
 		return truckType;
 	}
 
-	public void setTruckType(String truckType) {
+	public void setTruckType(TruckTypeEnums truckType) {
 		this.truckType = truckType;
 	}
 
@@ -254,5 +280,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	public void setAdditionalServicesMap(String additionalServicesMap) {
 		this.additionalServicesMap = additionalServicesMap;
+	}
+
+	public ShippingDocumentOrder getShippingDocumentOrder() {
+		return shippingDocumentOrder;
+	}
+
+	public void setShippingDocumentOrder(ShippingDocumentOrder shippingDocumentOrder) {
+		this.shippingDocumentOrder = shippingDocumentOrder;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.salesmanager.core.model.order.OrderType;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.shop.model.entity.Entity;
 import com.salesmanager.shop.model.order.OrderAttribute;
 
@@ -23,6 +24,7 @@ public class Order extends Entity {
 
 	/**
 	 * 进口主体
+	 * @see ImportMainEnums
 	 */
 	private String importMain;
 

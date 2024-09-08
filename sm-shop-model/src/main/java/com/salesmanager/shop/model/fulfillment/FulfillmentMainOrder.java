@@ -22,8 +22,6 @@ public class FulfillmentMainOrder  {
 
     private Long id;
 
-    private Long mainOrderId;
-
     /**
      * 部分发货
      */

@@ -480,7 +480,7 @@ public class CustomerShoppingCartApi {
             }
 
             persistableCustomerOrder.setCustomerId(customer.getId());
-            persistableCustomerOrder.setCurrency("CAD");
+            persistableCustomerOrder.setCurrency("KRW");
 
             CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
             Long customerOrderId = modelCustomerOrder.getId();

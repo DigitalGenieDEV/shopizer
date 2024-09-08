@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacadeImpl;
@@ -29,11 +32,13 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartAttributeItem;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.shop.constants.ApplicationConstants;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-public class OrderProductPopulator extends
-		AbstractDataPopulator<ShoppingCartItem, OrderProduct> {
+@Component
+public class OrderProductPopulator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderProductPopulator.class);
 	
@@ -63,9 +68,8 @@ public class OrderProductPopulator extends
 	 * Converts a ShoppingCartItem carried in the ShoppingCart to an OrderProduct
 	 * that will be saved in the system
 	 */
-	@Override
 	public OrderProduct populate(ShoppingCartItem source, OrderProduct target,
-			MerchantStore store, Language language) throws ConversionException {
+			MerchantStore store, Language language, Boolean isCreate) throws ConversionException {
 		
 		Validate.notNull(productService,"productService must be set");
 		Validate.notNull(digitalProductService,"digitalProductService must be set");
@@ -75,13 +79,26 @@ public class OrderProductPopulator extends
 		
 		try {
 
-			target.setId(source.getId());
-			target.setOneTimeCharge(source.getItemPrice());	
+			if (!isCreate){
+				target.setId(source.getId());
+			}
+			target.setOneTimeCharge(source.getItemPrice());
 			target.setProductName(source.getProduct().getDescriptions().iterator().next().getName());
 			target.setProductQuantity(source.getQuantity());
 			target.setSku(source.getSku());
 			target.setProductId(source.getProductId());
 
+			target.setTruckType(StringUtils.isNotEmpty(source.getTruckModel())?
+					TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+			target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
+					TruckModelEnums.valueOf(source.getTruckModel()) : null);
+			target.setShippingType(source.getShippingType());
+			target.setShippingTransportationType(source.getShippingTransportationType());
+			target.setNationalTransportationMethod(source.getNationalTransportationMethod());
+			target.setAdditionalServicesMap(source.getAdditionalServicesIdMap());
+			target.setInternationalTransportationMethod(source.getInternationalTransportationMethod());
+			target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
+					PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
 			FinalPrice finalPrice = source.getFinalPrice();
 			if(finalPrice==null) {
 				throw new ConversionException("Object final price not populated in shoppingCartItem (source)");
@@ -165,7 +182,6 @@ public class OrderProductPopulator extends
 		return target;
 	}
 
-	@Override
 	protected OrderProduct createTarget() {
 		return null;
 	}

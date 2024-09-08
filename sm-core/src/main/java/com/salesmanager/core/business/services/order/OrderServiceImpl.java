@@ -23,12 +23,8 @@ import com.salesmanager.core.business.fulfillment.service.AdditionalServicesServ
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.business.utils.AdditionalServicesUtils;
-import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.catalog.category.Category;
-import com.salesmanager.core.model.catalog.product.Material;
-import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
-import com.salesmanager.core.model.fulfillment.AddidtionalServicesDescription;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
@@ -72,6 +68,7 @@ import com.salesmanager.core.model.shipping.ShippingConfiguration;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.core.model.tax.TaxItem;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("orderService")
 public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order> implements OrderService {
@@ -138,6 +135,7 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
     @Override
+    @Transactional
     public Order processOrder(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, MerchantStore store) throws ServiceException {
 
         return process(order, customer, items, summary, payment, null, store);
@@ -390,16 +388,16 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             }
 
             //additionalServicePrice
-            String additionalServicesMap = item.getAdditionalServicesMap();
+            String additionalServicesMap = item.getAdditionalServicesIdMap();
             if (StringUtils.isNotEmpty(additionalServicesMap)){
-                Map<Long, Integer> additionalServiceMapFromJson = (Map<Long, Integer>) JSON.parse(additionalServicesMap);
+                Map<String, String> additionalServiceMapFromJson = (Map<String, String>) JSON.parse(additionalServicesMap);
 
-                Set<Long> keySet = additionalServiceMapFromJson.keySet();
+                Set<String> keySet = additionalServiceMapFromJson.keySet();
 
-                for(Long id : keySet){
-                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(id);
+                for(String id : keySet){
+                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
 
-                    String price = AdditionalServicesUtils.getPrice(additionalServices, additionalServiceMapFromJson.get(id), item.getQuantity());
+                    String price = AdditionalServicesUtils.getPrice(additionalServices, additionalServiceMapFromJson.get(id) == null ? 0 :Integer.valueOf(additionalServiceMapFromJson.get(id)), item.getQuantity());
 
                     totalAdditionalServicesPrice = totalAdditionalServicesPrice.add(new BigDecimal(price).setScale(0, RoundingMode.UP));
                 }

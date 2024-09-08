@@ -145,7 +145,6 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     private String crossBorderTransportationLogisticsNumber;
 
 
-
     /**
      * 送货单
      */
@@ -167,15 +166,6 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     @Column(name = "FULFILLMENT_SUB_TYPE")
     @Enumerated(EnumType.STRING)
     private FulfillmentSubTypeEnums fulfillmentSubTypeEnums;
-
-
-    /**
-     * 增值服务Id list列表用逗号分隔
-     * @see AdditionalServiceEnums
-     */
-    @Column(name = "ADDITIONAL_SERVICES_IDS")
-    private String additionalServicesMap;
-
 
 
     @JsonIgnore

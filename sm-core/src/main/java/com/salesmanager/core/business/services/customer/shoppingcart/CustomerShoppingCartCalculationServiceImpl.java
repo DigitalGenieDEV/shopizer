@@ -127,7 +127,7 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
         shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());
         shoppingCartItem.setShippingTransportationType(customerShoppingCartItem.getShippingTransportationType());
         shoppingCartItem.setNationalTransportationMethod(customerShoppingCartItem.getNationalTransportationMethod());
-        shoppingCartItem.setAdditionalServicesMap(customerShoppingCartItem.getAdditionalServicesMap());
+        shoppingCartItem.setAdditionalServicesIdMap(customerShoppingCartItem.getAdditionalServicesIdMap());
         shoppingCartItem.setInternationalTransportationMethod(customerShoppingCartItem.getInternationalTransportationMethod());
 
         return shoppingCartItem;

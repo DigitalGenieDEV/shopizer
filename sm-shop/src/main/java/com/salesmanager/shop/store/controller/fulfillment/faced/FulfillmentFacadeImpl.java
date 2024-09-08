@@ -2,17 +2,16 @@ package com.salesmanager.shop.store.controller.fulfillment.faced;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.*;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
-import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
-import com.salesmanager.shop.model.shop.CommonResultDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.drools.core.util.StringUtils;
 import org.slf4j.Logger;
@@ -42,6 +41,9 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Autowired
     private FulfillmentHistoryService fulfillmentHistoryService;
+
+    @Autowired
+    private OrderProductService orderProductService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FulfillmentFacadeImpl.class);
 
@@ -120,7 +122,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             }
             result.setBilling(address);
         }
-        
+
 
         if(delivery!=null) {
             ReadableDelivery address = new ReadableDelivery();
@@ -139,7 +141,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             }
             result.setDelivery(address);
         }
-        
+
         return result;
     }
 
@@ -293,9 +295,6 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
                 readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
             }
 
-            if (org.apache.commons.lang3.StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
-                readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
-            }
 
             if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
                 readableFulfillmentSubOrder.setInternationalTransportationMethod(fulfillmentSubOrder.getInternationalTransportationMethod().name());

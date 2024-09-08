@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.salesmanager.shop.model.catalog.product.attribute.ProductAttribute;
+import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
 
 /**
  * Compatible with v1
@@ -20,8 +21,10 @@ public class PersistableShoppingCartItem implements Serializable {
 	private int quantity;
 	private String promoCode;
 	private List<ProductAttribute> attributes;
-	
-	
+
+	private PersistableProductAdditionalService additionalServices;
+
+
 	public String getPromoCode() {
 		return promoCode;
 	}
@@ -49,4 +52,11 @@ public class PersistableShoppingCartItem implements Serializable {
 	}
 
 
+	public PersistableProductAdditionalService getAdditionalServices() {
+		return additionalServices;
+	}
+
+	public void setAdditionalServices(PersistableProductAdditionalService additionalServices) {
+		this.additionalServices = additionalServices;
+	}
 }

@@ -16,6 +16,7 @@ import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.utils.StringUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -56,7 +57,6 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
     @Transactional
     public void createFulfillmentOrderByOrder(Order order) {
         FulfillmentMainOrder fulfillmentMainOrder = new FulfillmentMainOrder();
-        fulfillmentMainOrder.setOrder(order);
         fulfillmentMainOrder.setPartialDelivery(false);
         fulfillmentMainOrder.setDelivery(order.getDelivery());
         fulfillmentMainOrder.setBilling(order.getBilling());
@@ -67,16 +67,14 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
             if (StringUtils.isNotEmpty(orderProduct.getAdditionalServicesMap())){
                 QcInfo qcInfo = new QcInfo();
                 qcInfo.setOrderId(order.getId());
-                qcInfo.setAdditionalServicesMap(orderProduct.getAdditionalServicesMap());
                 qcInfo.setProductId(orderProduct.getProductId());
                 qcInfoService.saveQcInfo(qcInfo);
             }
 
             FulfillmentSubOrder fulfillmentSubOrder = new FulfillmentSubOrder();
-            fulfillmentSubOrder.setAdditionalServicesMap(orderProduct.getAdditionalServicesMap());
             fulfillmentSubOrder.setFulfillmentMainType(FulfillmentTypeEnums.PAYMENT_COMPLETED);
-            fulfillmentSubOrder.setTruckModel(TruckModelEnums.valueOf(orderProduct.getTruckModel()));
-            fulfillmentSubOrder.setTruckType(TruckTypeEnums.valueOf(orderProduct.getTruckType()));
+            fulfillmentSubOrder.setTruckModel(orderProduct.getTruckModel());
+            fulfillmentSubOrder.setTruckType(orderProduct.getTruckType());
             fulfillmentSubOrder.setNationalTransportationMethod(orderProduct.getNationalTransportationMethod());
             fulfillmentSubOrder.setShippingType(orderProduct.getShippingType());
             fulfillmentSubOrder.setShippingTransportationType(orderProduct.getShippingTransportationType());

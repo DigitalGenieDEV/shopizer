@@ -7,6 +7,7 @@ import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -45,6 +46,13 @@ public class GeneralDocument extends SalesManagerEntity<Long, GeneralDocument> i
 
     @Column(name = "ORDER_ID")
     private Long orderId;
+
+
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(targetEntity = ShippingDocumentOrder.class)
+    @JoinColumn(name = "SHIPPING_DOCUMENT_ORDER_ID")
+    private ShippingDocumentOrder shippingDocumentOrder;
 
     @Embedded
     private AuditSection auditSection = new AuditSection();
