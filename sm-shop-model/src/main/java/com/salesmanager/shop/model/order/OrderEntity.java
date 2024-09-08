@@ -48,6 +48,9 @@ public class OrderEntity extends Order implements Serializable {
 	private String orderType;
 
 
+	private Date dateCreated;
+
+	private Date dateModified;
 
 	public void setTotals(List<OrderTotal> totals) {
 		this.totals = totals;
@@ -152,5 +155,21 @@ public class OrderEntity extends Order implements Serializable {
 
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(Date dateModified) {
+		this.dateModified = dateModified;
 	}
 }

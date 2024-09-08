@@ -37,6 +37,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	 * 国内运输还是国外运输
 	 */
 	@Column(name = "SHIPPING_TYPE")
+	@Enumerated(value = EnumType.STRING)
 	private ShippingType shippingType;
 
 
@@ -44,6 +45,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	 * 委托配送还是自提
 	 */
 	@Column(name = "SHIPPING_TRANSPORTATION_TYPE")
+	@Enumerated(value = EnumType.STRING)
 	private ShippingTransportationType shippingTransportationType;
 
 
@@ -52,6 +54,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	 * @see TransportationMethod
 	 */
 	@Column(name = "INTERNATIONAL_TRANSPORTATION_METHOD")
+	@Enumerated(value = EnumType.STRING)
 	private TransportationMethod internationalTransportationMethod;
 
 	/**
@@ -59,6 +62,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	 * @see TransportationMethod
 	 */
 	@Column(name = "NATIONAL_TRANSPORTATION_METHOD")
+	@Enumerated(value = EnumType.STRING)
 	private TransportationMethod nationalTransportationMethod;
 
 

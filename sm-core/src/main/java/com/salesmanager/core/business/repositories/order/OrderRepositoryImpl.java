@@ -4,23 +4,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.catalog.product.ProductCriteria;
-import com.salesmanager.core.model.catalog.product.ProductList;
-import com.salesmanager.core.model.catalog.product.PublishWayEnums;
+import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.customer.Customer;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.order.OrderCustomerCriteria;
-import com.salesmanager.core.model.reference.language.Language;
-import org.apache.commons.collections4.CollectionUtils;
+import com.salesmanager.core.model.order.*;
+import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.core.model.shipping.ShippingType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
 import com.salesmanager.core.model.common.CriteriaOrderBy;
 import com.salesmanager.core.model.common.GenericEntityList;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.OrderCriteria;
-import com.salesmanager.core.model.order.OrderList;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 
 import java.util.Date;
@@ -400,29 +394,69 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			queryBuilder.append(" and p.merchant.id=:mId");
 		}
 		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
-			String nameQuery =  " and o.billing.firstName like:name or o.billing.lastName like:name";
+			String nameQuery =  " and (p.billing.firstName like:name or p.billing.lastName like:name)";
 			queryBuilder.append(nameQuery);
 		}
 
 		if(!StringUtils.isEmpty(criteria.getEmail())) {
-			String nameQuery =  " and o.customerEmailAddress like:email";
+			String nameQuery =  " and p.customerEmailAddress like:email";
 			queryBuilder.append(nameQuery);
 		}
 		//id
 		if(criteria.getId() != null) {
-			String nameQuery =  " and str(o.id) like:id";
+			String nameQuery =  " and str(p.id) like:id";
 			queryBuilder.append(nameQuery);
 		}
 		//phone
 		if(!StringUtils.isEmpty(criteria.getCustomerPhone())) {
-			String nameQuery =  " and o.billing.telephone like:phone or o.delivery.telephone like:phone";
+			String nameQuery =  " and (p.billing.telephone like:phone or p.delivery.telephone like:phone)";
 			queryBuilder.append(nameQuery);
 		}
 
 		//status
 		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			String nameQuery =  " and o.status =:status";
+			String nameQuery =  " and p.status =:status";
 			queryBuilder.append(nameQuery);
+		}
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			String nameQuery = " and p.auditSection.dateCreated >= :startTime";
+			queryBuilder.append(nameQuery);
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			String nameQuery = " and p.auditSection.dateCreated <= :endTime";
+			queryBuilder.append(nameQuery);
+		}
+		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
+			String nameQuery =  " and exists(select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType = :shippingStatus)";
+			queryBuilder.append(nameQuery);
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			String queryFragment = "and p.orderType = :orderType";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getCustomerCountryName())) {
+			String queryFragment = "and p.delivery.country.id in (select cd.country.id from CountryDescription cd where cd.name = :customerCountryName and cd.language.code = :language  )";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getCustomsClearanceNumber())) {
+			String queryFragment = "and p.customsClearanceNumber = :customsClearanceNumber";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getPaymentMethod())) {
+			String queryFragment = "and p.paymentType = :paymentMethod";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getShippingType())) {
+			String queryFragment = "and exists (select pops.id from p.orderProducts pops where pops.shippingType = :shippingType)";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			String queryFragment = "and exists (select pops.id from p.orderProducts pops where pops.productName like :productName)";
+			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getHsCode())) {
+			String queryFragment = "and exists (select pops.id from p.orderProducts pops where pops.productId in (select product.id from Product product where product.hsCode = :hsCode))";
+			queryBuilder.append(queryFragment);
 		}
 	}
 
@@ -465,6 +499,38 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		//status
 		if(!StringUtils.isEmpty(criteria.getStatus())) {
 			query.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
+		}
+
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			query.setParameter("startTime", new Date(criteria.getStartTime()));
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			query.setParameter("endTime", new Date(criteria.getEndTime()));
+		}
+		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
+			query.setParameter("shippingStatus", FulfillmentTypeEnums.valueOf(criteria.getShippingStatus().toUpperCase()));
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			query.setParameter("orderType", OrderType.valueOf(criteria.getOrderType().toUpperCase()));
+		}
+		if (StringUtils.isNotBlank(criteria.getCustomerCountryName())) {
+			query.setParameter("customerCountryName", criteria.getCustomerCountryName());
+			query.setParameter("language", criteria.getLanguage());
+		}
+		if (StringUtils.isNotBlank(criteria.getCustomsClearanceNumber())) {
+			query.setParameter("customsClearanceNumber", criteria.getCustomsClearanceNumber());
+		}
+		if (StringUtils.isNotBlank(criteria.getPaymentMethod())) {
+			query.setParameter("paymentMethod", PaymentType.valueOf(criteria.getPaymentMethod().toUpperCase()));
+		}
+		if (StringUtils.isNotBlank(criteria.getShippingType())) {
+			query.setParameter("shippingType", ShippingType.valueOf(criteria.getShippingType().toUpperCase()));
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			query.setParameter("productName", like(criteria.getProductName()));
+		}
+		if (StringUtils.isNotBlank(criteria.getHsCode())) {
+			query.setParameter("hsCode", criteria.getHsCode());
 		}
 
 	}

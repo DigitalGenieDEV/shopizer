@@ -2,22 +2,18 @@ package com.salesmanager.core.model.fulfillment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.*;
-import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
-import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.reference.zone.Zone;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Entity
@@ -183,6 +179,7 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
 
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToOne(targetEntity = FulfillmentMainOrder.class)
     @JoinColumn(name = "FULFILLMENT_MAIN_ORDER_ID", nullable = false)
     private FulfillmentMainOrder fulfillmentMainOrder;

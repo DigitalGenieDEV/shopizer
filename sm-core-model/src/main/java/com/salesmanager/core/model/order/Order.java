@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.payments.ImportMainEnums;
@@ -32,9 +34,8 @@ import com.salesmanager.core.utils.CloneUtils;
 
 @Entity
 @Table (name="ORDERS")
-public class Order extends SalesManagerEntity<Long, Order> {
-	
-	
+public class Order extends SalesManagerEntity<Long, Order> implements Auditable {
+
 	/**
 	 * 
 	 */
@@ -46,7 +47,10 @@ public class Order extends SalesManagerEntity<Long, Order> {
 		pkColumnValue = "ORDER_ID_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
-	
+
+	@Embedded
+	private AuditSection auditSection = new AuditSection();
+
 	@Column (name ="ORDER_STATUS")
 	@Enumerated(value = EnumType.STRING)
 	private OrderStatus status;
@@ -444,5 +448,15 @@ public class Order extends SalesManagerEntity<Long, Order> {
 
 	public void setCustomsClearanceNumber(String customsClearanceNumber) {
 		this.customsClearanceNumber = customsClearanceNumber;
+	}
+
+	@Override
+	public AuditSection getAuditSection() {
+		return auditSection;
+	}
+
+	@Override
+	public void setAuditSection(AuditSection auditSection) {
+		this.auditSection = auditSection;
 	}
 }

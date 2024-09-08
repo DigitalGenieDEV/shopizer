@@ -1,6 +1,5 @@
 package com.salesmanager.shop.store.api.v1.order;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
@@ -13,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.salesmanager.core.business.services.order.OrderService;
+import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
@@ -239,39 +240,71 @@ public class OrderApi {
 		orderCriteria.setPageSize(count);
 		orderCriteria.setStartPage(page);
 
-		if (StringUtils.isNotEmpty(queryType) &&  queryType.equals("ID")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("ORDER_TYPE")) {
+			try {
+				OrderType.valueOf(queryValue.toUpperCase());
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), "Invalid order type: " + queryValue);
+			}
+			orderCriteria.setOrderType(queryValue);
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("ID")) {
 			orderCriteria.setId(Long.valueOf(queryValue));
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")) {
 			orderCriteria.setCustomerName(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PHONE")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PHONE")) {
 			orderCriteria.setCustomerPhone(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PAYMENT_METHOD")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("COUNTRY_NAME")) {
+			orderCriteria.setCustomerCountryName(queryValue);
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("CLEARANCE_NUMBER")) {
+			orderCriteria.setCustomsClearanceNumber(queryValue);
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PAYMENT_METHOD")) {
+			try {
+				PaymentType.valueOf(queryValue.toUpperCase());
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), "Invalid payment type: " + queryValue);
+			}
 			orderCriteria.setPaymentMethod(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("EMAIL")){
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("SHIPPING_TYPE")) {
+			orderCriteria.setShippingType(queryValue);
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PRODUCT_NAME")) {
+			orderCriteria.setProductName(queryValue);
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("EMAIL")) {
 			orderCriteria.setEmail(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("HS_CODE")){
-
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("HS_CODE")) {
+			orderCriteria.setHsCode(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("STORE_CODE")){
-
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("STORE_CODE")) {
+			orderCriteria.setStoreCode(queryValue);
 		}
-		orderCriteria.setStatus(orderStatus);
+		if (StringUtils.isNotBlank(orderStatus)) {
+			try {
+				OrderStatus.valueOf(orderStatus.toUpperCase());
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), "Invalid order status: " + orderStatus);
+			}
+			orderCriteria.setStatus(orderStatus);
+		}
 		orderCriteria.setStartTime(startTime);
 		orderCriteria.setEndTime(endTime);
 		orderCriteria.setShippingStatus(shippingStatus);
+		orderCriteria.setLanguage(language.getCode());
 
 		try {
 			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, null);
 			return CommonResultDTO.ofSuccess(orders);
-		}catch (Exception e){
+		} catch (Exception e) {
 			LOGGER.error("admin query order list error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
-
 		}
 	}
 

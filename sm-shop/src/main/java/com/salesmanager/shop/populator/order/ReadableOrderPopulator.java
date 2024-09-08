@@ -93,6 +93,8 @@ public class ReadableOrderPopulator extends
 		target.setOrderType(source.getOrderType() == null? null : source.getOrderType().name());
 		target.setImportMain(source.getImportMain() == null? null : source.getImportMain().name());
 		target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
+		target.setDateCreated(source.getAuditSection().getDateCreated());
+		target.setDateModified(source.getAuditSection().getDateModified());
 
 		Long customerId = source.getCustomerId();
 		if (source.getCustomerId() != null) {
@@ -109,10 +111,9 @@ public class ReadableOrderPopulator extends
 
 			ReadableFulfillmentMainOrder readableFulfillmentMainOrder = ObjectConvert.convert(fulfillmentMainOrder, ReadableFulfillmentMainOrder.class);
 
-			List<FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(source.getId());
-
+			Set<FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentMainOrder.getFulfillSubOrders();;
 			if (fulfillmentSubOrders != null) {
-				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.parallelStream()
+				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.stream()
 						.map(this::convertToReadableFulfillmentSubOrder)
 						.filter(Objects::nonNull)
 						.collect(Collectors.toSet());
@@ -123,7 +124,7 @@ public class ReadableOrderPopulator extends
 			List<GeneralDocument> generalDocuments = generalDocumentService.queryGeneralDocumentByOrderId(source.getId());
 
 			if (CollectionUtils.isNotEmpty(generalDocuments)) {
-				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.parallelStream()
+				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.stream()
 						.map(generalDocument -> {
 							ReadableGeneralDocument readableGeneralDocument = ObjectConvert.convert(generalDocument, ReadableGeneralDocument.class);
 							readableGeneralDocument.setDocumentType(generalDocument.getDocumentType()==null? null : generalDocument.getDocumentType().name());
@@ -343,9 +344,9 @@ public class ReadableOrderPopulator extends
 				readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
 			}
 
-			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
-				readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
-			}
+//			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
+//				readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
+//			}
 
 			if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
 				readableFulfillmentSubOrder.setInternationalTransportationMethod(fulfillmentSubOrder.getInternationalTransportationMethod().name());
