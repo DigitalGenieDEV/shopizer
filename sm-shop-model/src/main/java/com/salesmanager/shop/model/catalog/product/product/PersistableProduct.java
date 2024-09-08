@@ -33,6 +33,8 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private Long shippingTemplateId;
 
+	private Boolean certificateOfOrigin;
+
 	private List<PersistableProductAttribute> properties = new ArrayList<PersistableProductAttribute>();
 
 	private PersistableAnnouncement announcement = new PersistableAnnouncement();

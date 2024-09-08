@@ -83,6 +83,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	@Column(name = "INTELLECTUAL_PROPERTY_DOCUMENTS", length = 1000)
 	private String intellectualPropertyDocuments;
+
+
+	@Column(name = "CERTIFICATE_OF_ORIGIN")
+	private Boolean certificateOfOrigin;
+
 	@Column(name = "SELLER_OPENID")
 	private String sellerOpenId;
 
@@ -759,5 +764,13 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 
 	public void setOrderQuantityType(String orderQuantityType) {
 		this.orderQuantityType = orderQuantityType;
+	}
+
+	public Boolean getCertificateOfOrigin() {
+		return certificateOfOrigin;
+	}
+
+	public void setCertificateOfOrigin(Boolean certificateOfOrigin) {
+		this.certificateOfOrigin = certificateOfOrigin;
 	}
 }

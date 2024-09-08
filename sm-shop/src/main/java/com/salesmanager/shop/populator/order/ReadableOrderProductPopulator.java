@@ -33,6 +33,7 @@ import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductSimplePopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -52,6 +53,8 @@ import java.util.stream.Collectors;
  */
 public class ReadableOrderProductPopulator extends
 		AbstractDataPopulator<OrderProduct, ReadableOrderProduct> {
+
+	private AdditionalServicesConvert additionalServicesConvert;
 
 	private ProductVariantService productVariantService;
 	private ReadableProductVariantMapper readableProductVariantMapper;
@@ -174,9 +177,11 @@ public class ReadableOrderProductPopulator extends
 		target.setPaymentType(source.getOrder().getPaymentType());
 		target.setPaymentModule(source.getOrder().getPaymentModuleCode());
 
+		target.setReadableProductAdditionalServices(
+				additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(source.getAdditionalServicesMap(), language));
 
 
-			String productSku = source.getSku();
+		String productSku = source.getSku();
 			if(!StringUtils.isBlank(productSku)) {
 				Product product = null;
 				try {
@@ -269,5 +274,14 @@ public class ReadableOrderProductPopulator extends
 
 	public void setFulfillmentFacade(FulfillmentFacade fulfillmentFacade) {
 		this.fulfillmentFacade = fulfillmentFacade;
+	}
+
+
+	public AdditionalServicesConvert getAdditionalServicesConvert() {
+		return additionalServicesConvert;
+	}
+
+	public void setAdditionalServicesConvert(AdditionalServicesConvert additionalServicesConvert) {
+		this.additionalServicesConvert = additionalServicesConvert;
 	}
 }

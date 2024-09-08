@@ -26,6 +26,7 @@ import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
 import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -77,6 +78,8 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
 
     @Autowired
     private FulfillmentFacade fulfillmentFacade;
+    @Autowired
+    private AdditionalServicesConvert additionalServicesConvert;
 
 
     @Override
@@ -111,6 +114,7 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
             readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
             readableOrderProductPopulator.setProductVariantService(productVariantService);
             readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+            readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
             readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             List<ReadableOrderProduct> readableOrderProducts = new ArrayList<>();
             for (OrderProduct orderProduct : orderProducts) {
@@ -146,6 +150,7 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
         readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
         readableOrderProductPopulator.setProductVariantService(productVariantService);
         readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+        readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
         readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
         ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 

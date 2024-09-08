@@ -111,6 +111,8 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setHsCode(source.getHsCode());
 		destination.setQuoteType(source.getQuoteType());
 		destination.setOrderQuantityType(source.getOrderQuantityType());
+
+		destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
 		destination.setCertificationDocument(source.getCertificationDocument());
 		destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));

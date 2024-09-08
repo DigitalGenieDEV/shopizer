@@ -1,11 +1,13 @@
 package com.salesmanager.shop.model.order;
 
+import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.ShippingOption;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
 import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingForm;
+import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
 
 import java.io.Serializable;
@@ -31,8 +33,16 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 //	private ShippingOption shippingOption;
 	private ReadablePayment payment;
 
+
 	private ReadableFulfillmentSubOrder readableFulfillmentSubOrder;
-	
+
+	/**
+	 *
+	 * @see AdditionalServiceEnums
+	 */
+	private List<ReadableProductAdditionalService> readableProductAdditionalServices;
+
+
 	private String sku;
 	private String image;
 	public String getProductName() {
@@ -118,5 +128,13 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setReadableFulfillmentSubOrder(ReadableFulfillmentSubOrder readableFulfillmentSubOrder) {
 		this.readableFulfillmentSubOrder = readableFulfillmentSubOrder;
+	}
+
+	public List<ReadableProductAdditionalService> getReadableProductAdditionalServices() {
+		return readableProductAdditionalServices;
+	}
+
+	public void setReadableProductAdditionalServices(List<ReadableProductAdditionalService> readableProductAdditionalServices) {
+		this.readableProductAdditionalServices = readableProductAdditionalServices;
 	}
 }

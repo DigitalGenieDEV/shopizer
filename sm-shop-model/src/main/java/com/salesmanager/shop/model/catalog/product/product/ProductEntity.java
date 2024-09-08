@@ -72,6 +72,8 @@ public class ProductEntity extends Product implements Serializable {
 
 	private Boolean generalMixedBatch;
 
+	private Boolean certificateOfOrigin;
+
 
 	private String orderQuantityType;
 

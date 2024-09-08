@@ -121,6 +121,8 @@ public class ReadableProductSimplePopulator extends
 			target.setSortOrder(source.getSortOrder());
 			target.setIdentifier(source.getSku());
 			target.setOrderQuantityType(source.getOrderQuantityType());
+			target.setCertificateOfOrigin(source.getCertificateOfOrigin());
+
 			if(source.getType() != null) {
 				target.setType(this.type(source.getType(), language));
 			}

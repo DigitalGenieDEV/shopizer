@@ -128,6 +128,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			destination.setCertificationDocument(source.getCertificationDocument());
 			destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
 			destination.setShippingTemplateId(source.getShippingTemplateId());
+			destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
 			destination.setSellerOpenId(source.getSellerOpenId());
 			destination.setSellerTextInfoId(source.getSellerTextInfoId());
 			destination.setBatchNumber(source.getBatchNumber());

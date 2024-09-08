@@ -134,6 +134,8 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 		Language finalLanguage = language;
 		destination.setOrderQuantityType(source.getOrderQuantityType());
+		destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
+
 		destination.setCertificationDocument(source.getCertificationDocument());
 		destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
 		destination.setShippingTemplateId(source.getShippingTemplateId());
