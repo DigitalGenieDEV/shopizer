@@ -458,6 +458,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String queryFragment = "and exists (select pops.id from p.orderProducts pops where pops.productId in (select product.id from Product product where product.hsCode = :hsCode))";
 			queryBuilder.append(queryFragment);
 		}
+		if (StringUtils.isNotBlank(criteria.getStoreCode())) {
+			String queryFragment = "and p.merchant.code = :storeCode";
+			queryBuilder.append(queryFragment);
+		}
 	}
 
 	private void setComplexParameters(Query query, OrderCriteria criteria) {
@@ -531,6 +535,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		if (StringUtils.isNotBlank(criteria.getHsCode())) {
 			query.setParameter("hsCode", criteria.getHsCode());
+		}
+		if (StringUtils.isNotBlank(criteria.getStoreCode())) {
+			query.setParameter("storeCode", criteria.getStoreCode());
 		}
 
 	}
