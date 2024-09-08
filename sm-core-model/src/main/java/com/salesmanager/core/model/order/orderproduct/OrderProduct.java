@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
@@ -76,10 +78,10 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 
 	/**
-	 * 增值服务Id list列表用逗号分隔
+	 * 增值服务Id Map 结构，key 为id  value 为数量
 	 */
 	@Column(name = "ADDITIONAL_SERVICES_IDS")
-	private String additionalServicesIds;
+	private String additionalServicesMap;
 
 
 	@Column (name="PRODUCT_NAME" , length=64 , nullable=false)
@@ -242,11 +244,11 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	}
 
 
-	public String getAdditionalServicesIds() {
-		return additionalServicesIds;
+	public String getAdditionalServicesMap() {
+		return additionalServicesMap;
 	}
 
-	public void setAdditionalServicesIds(String additionalServicesIds) {
-		this.additionalServicesIds = additionalServicesIds;
+	public void setAdditionalServicesMap(String additionalServicesMap) {
+		this.additionalServicesMap = additionalServicesMap;
 	}
 }

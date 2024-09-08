@@ -178,7 +178,7 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
      * @see AdditionalServiceEnums
      */
     @Column(name = "ADDITIONAL_SERVICES_IDS")
-    private String additionalServicesIds;
+    private String additionalServicesMap;
 
 
 

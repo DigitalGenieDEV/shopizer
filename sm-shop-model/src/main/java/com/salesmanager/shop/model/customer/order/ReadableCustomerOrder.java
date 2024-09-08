@@ -21,9 +21,23 @@ public class ReadableCustomerOrder extends Entity implements Serializable {
     private ReadableTotal total;
     private PaymentType paymentType;
 
+    /**
+     * @see com.salesmanager.core.model.payments.ImportMainEnums
+     */
     private String importMain;
 
+
+    private String customsClearanceNumber;
+
+    /**
+     * @see orderType
+     */
+    private String orderType;
+
+
     private String paymentModule;
+
+
     private String shippingModule;
     private Date datePurchased;
     private String currency;
@@ -131,6 +145,21 @@ public class ReadableCustomerOrder extends Entity implements Serializable {
         this.orders = orders;
     }
 
+    public String getCustomsClearanceNumber() {
+        return customsClearanceNumber;
+    }
+
+    public void setCustomsClearanceNumber(String customsClearanceNumber) {
+        this.customsClearanceNumber = customsClearanceNumber;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
 
     public String getImportMain() {
         return importMain;

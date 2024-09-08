@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
+import com.salesmanager.core.business.utils.AdditionalServicesUtils;
 import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Material;
@@ -389,18 +390,17 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
             }
 
             //additionalServicePrice
-            String additionalServicesIds = item.getAdditionalServicesIds();
-            if (StringUtils.isNotEmpty(additionalServicesIds)){
-                String[] split = additionalServicesIds.split(",");
-                for(String id : split){
-                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
-                    String price = "0";
-                    if (AdditionalServiceEnums.QUANTITY_CONFIRMATION.name().equals(additionalServices.getCode()) ||
-                            AdditionalServiceEnums.DAMAGE_CONFIRMATION.name().equals(additionalServices.getCode())){
-                        price = buildAdditionalSpecialPrice(item.getQuantity(), additionalServices.getPrice());
-                    }else {
-                        price = additionalServices.getPrice();
-                    }
+            String additionalServicesMap = item.getAdditionalServicesMap();
+            if (StringUtils.isNotEmpty(additionalServicesMap)){
+                Map<Long, Integer> additionalServiceMapFromJson = (Map<Long, Integer>) JSON.parse(additionalServicesMap);
+
+                Set<Long> keySet = additionalServiceMapFromJson.keySet();
+
+                for(Long id : keySet){
+                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(id);
+
+                    String price = AdditionalServicesUtils.getPrice(additionalServices, additionalServiceMapFromJson.get(id), item.getQuantity());
+
                     totalAdditionalServicesPrice = totalAdditionalServicesPrice.add(new BigDecimal(price).setScale(0, RoundingMode.UP));
                 }
             }
@@ -578,15 +578,6 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
 
-
-    private static String buildAdditionalSpecialPrice(Integer quantity, String price) {
-        if (quantity <= 100){
-            return "0";
-        }
-        int basePriceInt = Integer.parseInt(price);
-        int priceIncrement = ((quantity - 100) / 100) * 100;
-        return String.valueOf(basePriceInt + priceIncrement);
-    }
 
 
     static void buildShippingSummary(List<OrderTotal> orderTotals, BigDecimal grandTotal,
@@ -900,8 +891,6 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
         System.out.println(grandTotal.toString());
 
 
-        String s = buildAdditionalSpecialPrice(102, "102");
-        System.out.println(s);
     }
 
 

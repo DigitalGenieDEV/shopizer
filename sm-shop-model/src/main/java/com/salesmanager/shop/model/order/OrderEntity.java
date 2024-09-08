@@ -34,6 +34,21 @@ public class OrderEntity extends Order implements Serializable {
 	private String comments;
 
 
+	/**
+	 * @see com.salesmanager.core.model.payments.ImportMainEnums
+	 */
+	private String importMain;
+
+
+	private String customsClearanceNumber;
+
+	/**
+	 * @see orderType
+	 */
+	private String orderType;
+
+
+
 	public void setTotals(List<OrderTotal> totals) {
 		this.totals = totals;
 	}
@@ -115,4 +130,27 @@ public class OrderEntity extends Order implements Serializable {
 	}
 
 
+	public String getImportMain() {
+		return importMain;
+	}
+
+	public void setImportMain(String importMain) {
+		this.importMain = importMain;
+	}
+
+	public String getCustomsClearanceNumber() {
+		return customsClearanceNumber;
+	}
+
+	public void setCustomsClearanceNumber(String customsClearanceNumber) {
+		this.customsClearanceNumber = customsClearanceNumber;
+	}
+
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
 }

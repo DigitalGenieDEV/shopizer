@@ -191,7 +191,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 PersistableOrder persistableOrder = new PersistableOrder();
                 persistableOrder.setCustomerId(customer.getId());
                 persistableOrder.setShoppingCartId(shoppingCart.getId());
-
+                persistableOrder.setImportMain(customerOrder.getImportMain());
+                persistableOrder.setCustomsClearanceNumber(customerOrder.getCustomsClearanceNumber());
+                persistableOrder.setOrderType(customerOrder.getOrderType());
                 persistableOrder.setCurrency(customerOrder.getCurrency());
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
                 persistableOrder.setAddress(customerOrder.getAddress());

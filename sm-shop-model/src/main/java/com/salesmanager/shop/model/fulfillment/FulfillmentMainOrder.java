@@ -40,5 +40,7 @@ public class FulfillmentMainOrder  {
     private List<ReadableGeneralDocument> generalDocuments;
 
 
+    private ReadableInvoicePackingForm invoicePackingForm;
+
 
 }

@@ -43,7 +43,7 @@ public class QcInfo extends SalesManagerEntity<Long, QcInfo> implements Auditabl
      * @see AdditionalServiceEnums
      */
     @Column(name = "ADDITIONAL_SERVICES_IDS")
-    private String additionalServicesIds;
+    private String additionalServicesMap;
 
     /**
      * 商品id

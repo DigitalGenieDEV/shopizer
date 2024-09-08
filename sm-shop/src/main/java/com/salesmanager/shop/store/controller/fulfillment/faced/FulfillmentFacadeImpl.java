@@ -7,6 +7,7 @@ import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -292,9 +293,8 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
                 readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
             }
 
-            if (org.apache.commons.lang3.StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesIds())){
-                String[] split = fulfillmentSubOrder.getAdditionalServicesIds().split(",");
-                readableFulfillmentSubOrder.setAdditionalServicesIds(List.of(split));
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
+                readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
             }
 
             if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {

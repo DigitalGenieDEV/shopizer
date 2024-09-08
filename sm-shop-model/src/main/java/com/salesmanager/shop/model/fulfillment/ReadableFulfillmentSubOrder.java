@@ -9,6 +9,4 @@ public class ReadableFulfillmentSubOrder extends FulfillmentSubOrder{
 
 
 
-
-
 }

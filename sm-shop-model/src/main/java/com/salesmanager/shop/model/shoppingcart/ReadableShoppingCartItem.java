@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
@@ -37,10 +38,10 @@ public class ReadableShoppingCartItem extends ReadableMinimalProduct implements 
 
 
 	/**
-	 * 增值服务Id list列表用逗号分隔
+	 * 增值服务Id value 为数量
 	 * The value-added service ID list is separated by commas.
 	 */
-	private List<ReadableAdditionalServices> additionalServices;
+	private List<ReadableAdditionalServices> additionalServicesList;
 
 	/**
 	 * 国内运输还是国外运输

@@ -561,22 +561,18 @@ public class OrderApi {
 
 
 
-	@RequestMapping(value = { "/auth/order/products/{id}" }, method = RequestMethod.PUT)
+	@RequestMapping(value = { "/private/order/products/{id}", "/auth/order/products/{id}" }, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public CommonResultDTO<Void> queryOrderProductsByOrderId(
+	public CommonResultDTO<List<ReadableOrderProduct>> queryOrderProductsByOrderId(
 			@PathVariable final Long id, HttpServletRequest request,
 			@ApiIgnore Language language) {
 		try {
-			Principal principal = request.getUserPrincipal();
-			String userName = principal.getName();
-			Customer customer = customerService.getByNick(userName);
-			Order order = orderService.getOrder(id, customer.getMerchantStore());
+			Order order = orderService.getOrder(id, new MerchantStore());
 			if (order == null) {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
-			orderFacade.queryOrderProductsByOrderId(id, language);
-			return CommonResultDTO.ofSuccess();
+			return CommonResultDTO.ofSuccess(orderFacade.queryOrderProductsByOrderId(id, language));
 		}catch (Exception e){
 			LOGGER.error("updateSellerOrderStatus error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());

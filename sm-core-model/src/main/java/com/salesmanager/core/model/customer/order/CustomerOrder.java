@@ -10,6 +10,7 @@ import com.salesmanager.core.model.order.OrderChannel;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.payment.CreditCard;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.reference.currency.Currency;
 import org.hibernate.annotations.Type;
@@ -75,6 +76,11 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Deprecated
     private CreditCard creditCard = null;
 
+    /**
+     * 清关号
+     */
+    @Column (name ="CUSTOMS_CLEARANCE_NUMBER", length=100)
+    private String customsClearanceNumber;
 
     @ManyToOne(targetEntity = Currency.class)
     @JoinColumn(name = "CURRENCY_ID")
@@ -106,7 +112,7 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     @Column (name ="ORDER_TYPE")
     @Enumerated(value = EnumType.STRING)
-    private OrderType orderType = OrderType.ORDER;
+    private OrderType orderType = OrderType.PRODUCT;
 
     @Column (name ="PAYMENT_TYPE")
     @Enumerated(value = EnumType.STRING)
@@ -115,9 +121,12 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     /**
      * 进口主体
+     * IMPORT_AGENT
+     * SELLER_RESPONSIBILITY
      */
-    @Column (name ="IMPORT_MAIN", length = 50)
-    private String importMain;
+    @Column (name ="IMPORT_MAIN")
+    @Enumerated(value = EnumType.STRING)
+    private ImportMainEnums importMain;
 
     @Column (name ="PAYMENT_MODULE_CODE")
     private String paymentModuleCode;
@@ -318,11 +327,20 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
         this.merchant = merchant;
     }
 
-    public String getImportMain() {
+
+    public ImportMainEnums getImportMain() {
         return importMain;
     }
 
-    public void setImportMain(String importMain) {
+    public void setImportMain(ImportMainEnums importMain) {
         this.importMain = importMain;
+    }
+
+    public String getCustomsClearanceNumber() {
+        return customsClearanceNumber;
+    }
+
+    public void setCustomsClearanceNumber(String customsClearanceNumber) {
+        this.customsClearanceNumber = customsClearanceNumber;
     }
 }

@@ -1,6 +1,8 @@
 package com.salesmanager.shop.model.customer.shoppingcart;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
@@ -12,6 +14,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class PersistableCustomerShoppingCartItem implements Serializable {
@@ -27,10 +30,10 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
     private boolean checked;
 
     /**
-     * 增值服务Id list列表用逗号分隔
+     * key 增值服务Id , value 是数量
      * The value-added service ID list is separated by commas.
      */
-    private String additionalServicesIds;
+    private Map<Long, Integer> additionalServicesMap;
 
     /**
      * 国内运输还是国外运输

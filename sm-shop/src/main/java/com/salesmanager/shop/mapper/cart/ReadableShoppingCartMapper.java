@@ -181,7 +181,7 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 					shoppingCartItem.setShippingType(item.getShippingType() == null? null : item.getShippingType().name());
 					shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType()== null? null : item.getShippingTransportationType().name());
 					shoppingCartItem.setNationalTransportationMethod(item.getNationalTransportationMethod()== null? null : item.getNationalTransportationMethod().name());
-					shoppingCartItem.setAdditionalServices(additionalServicesFacade.queryAdditionalServicesByIds(item.getAdditionalServicesIds(), language));
+					shoppingCartItem.setAdditionalServicesList(additionalServicesFacade.queryAdditionalServicesByIds(item.getAdditionalServicesMap(), language));
 					shoppingCartItem.setInternationalTransportationMethod(item.getInternationalTransportationMethod()== null? null : item.getInternationalTransportationMethod().name());
 
 					LOG.debug("[ReadableShoppingCartMapper/merge] calculate price");

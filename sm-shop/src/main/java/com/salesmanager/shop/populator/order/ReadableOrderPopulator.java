@@ -9,7 +9,9 @@ import com.salesmanager.core.business.fulfillment.service.FulfillmentMainOrderSe
 import com.salesmanager.core.business.fulfillment.service.FulfillmentSubOrderService;
 import com.salesmanager.core.business.fulfillment.service.GeneralDocumentService;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
@@ -17,7 +19,10 @@ import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
 import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
+import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.fulfillment.*;
+import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
@@ -70,6 +75,8 @@ public class ReadableOrderPopulator extends
 
 	@Autowired
 	private InvoicePackingFormService invoicePackingFormService;
+	@Autowired
+	private CustomerFacade customerFacade;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderPopulator.class);
 
@@ -83,6 +90,20 @@ public class ReadableOrderPopulator extends
 		target.setCurrency(source.getCurrency().getCode());
 		//target.setCurrencyModel(source.getCurrency());
 
+		target.setOrderType(source.getOrderType() == null? null : source.getOrderType().name());
+		target.setImportMain(source.getImportMain() == null? null : source.getImportMain().name());
+		target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
+
+		Long customerId = source.getCustomerId();
+		if (source.getCustomerId() != null) {
+			ReadableCustomer readableCustomer = customerFacade.getCustomerById(customerId,
+					null, language);
+			if (readableCustomer == null) {
+				LOGGER.warn("Customer id " + customerId + " not found in order " );
+			} else {
+				target.setCustomer(readableCustomer);
+			}
+		}
 		if (source.getFulfillmentMainOrder() != null) {
 			FulfillmentMainOrder fulfillmentMainOrder = source.getFulfillmentMainOrder();
 
@@ -110,9 +131,14 @@ public class ReadableOrderPopulator extends
 						})
 						.filter(Objects::nonNull)
 						.collect(Collectors.toList());
+
+				InvoicePackingForm invoicePackingForm = invoicePackingFormService.queryInvoicePackingFormByOrderId(source.getId());
+				if (invoicePackingForm != null) {
+					readableFulfillmentMainOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+				}
+
 				readableFulfillmentMainOrder.setGeneralDocuments(readableGeneralDocuments);
 			}
-
 			target.setFulfillmentMainOrder(readableFulfillmentMainOrder);
 		}
 
@@ -317,9 +343,8 @@ public class ReadableOrderPopulator extends
 				readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
 			}
 
-			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesIds())){
-				String[] split = fulfillmentSubOrder.getAdditionalServicesIds().split(",");
-				readableFulfillmentSubOrder.setAdditionalServicesIds(List.of(split));
+			if (StringUtils.isNotEmpty(fulfillmentSubOrder.getAdditionalServicesMap())){
+				readableFulfillmentSubOrder.setAdditionalServicesMap((Map<Long, Integer>) JSON.parse(fulfillmentSubOrder.getAdditionalServicesMap()));
 			}
 
 			if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
@@ -342,5 +367,28 @@ public class ReadableOrderPopulator extends
 		return readableFulfillmentSubOrder;
 	}
 
+
+	private ReadableInvoicePackingForm convertToReadableInvoicePackingForm(InvoicePackingForm invoicePackingForm) {
+		if (invoicePackingForm == null) {
+			return null;
+		}
+		try {
+			ReadableInvoicePackingForm readableInvoicePackingForm = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
+
+			Set<InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
+			if (invoicePackingFormDetails != null) {
+				List<ReadableInvoicePackingFormDetail> invoicePackingFormDetailList = invoicePackingFormDetails.stream()
+						.map(invoicePackingFormDetail -> ObjectConvert.convert(invoicePackingFormDetail, ReadableInvoicePackingFormDetail.class))
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+				readableInvoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
+			}
+
+			return readableInvoicePackingForm;
+		} catch (Exception e) {
+			LOGGER.error("convertToReadableInvoicePackingForm error", e);
+			return null;
+		}
+	}
 
 }

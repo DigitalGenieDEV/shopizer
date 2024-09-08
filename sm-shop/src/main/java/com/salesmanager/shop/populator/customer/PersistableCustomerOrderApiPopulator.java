@@ -11,11 +11,14 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderChannel;
+import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -127,11 +130,13 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setCurrencyValue(new BigDecimal(0));
             target.setMerchant(store);
             target.setChannel(OrderChannel.API);
+            target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
             //need this
             target.setStatus(OrderStatus.ORDERED);
             target.setPaymentModuleCode(source.getPayment().getPaymentModule());
             target.setPaymentType(PaymentType.valueOf(source.getPayment().getPaymentType()));
-            target.setImportMain(source.getImportMain());
+            target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
+            target.setImportMain(source.getImportMain() == null? null : ImportMainEnums.valueOf(source.getImportMain()));
             target.setCustomerAgreement(source.isCustomerAgreement());
             target.setConfirmedAddress(true);
 

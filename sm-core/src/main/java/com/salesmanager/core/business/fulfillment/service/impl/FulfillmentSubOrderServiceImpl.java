@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.List;
 
-@Service("fulfillmentSubOrderService")
+@Service
 public class FulfillmentSubOrderServiceImpl extends SalesManagerEntityServiceImpl<Long, FulfillmentSubOrder> implements FulfillmentSubOrderService {
 
     private FulfillmentSubOrderRepository fulfillmentSubOrderRepository;

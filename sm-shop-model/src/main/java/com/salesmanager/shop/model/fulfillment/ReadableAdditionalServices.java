@@ -21,5 +21,8 @@ public class ReadableAdditionalServices {
 
     private AdditionalServicesDescription description;
 
-    private List<ReadableAdditionalServices> SubReadableAdditionalServices;
+    /**
+     * 数量
+     */
+    private Integer num;
 }

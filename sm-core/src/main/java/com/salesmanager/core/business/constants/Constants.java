@@ -51,8 +51,8 @@ public class Constants {
 
   public final static String DEFAULT_STORE = "DEFAULT";
 
-  public final static Locale DEFAULT_LOCALE = Locale.US;
-  public final static Currency DEFAULT_CURRENCY = Currency.getInstance(Locale.US);
+  public final static Locale DEFAULT_LOCALE = Locale.KOREA;
+  public final static Currency DEFAULT_CURRENCY = Currency.getInstance(Locale.KOREA);
   
   public final static String PAYMENT_MODULES = "PAYMENT";
   public final static String COMBINE_PAYMENT_MODULES = "COMBINE_PAYMENT";

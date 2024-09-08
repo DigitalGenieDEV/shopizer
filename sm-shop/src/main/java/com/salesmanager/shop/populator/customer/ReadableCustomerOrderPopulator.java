@@ -5,6 +5,7 @@ import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
@@ -38,9 +39,11 @@ public class ReadableCustomerOrderPopulator extends AbstractDataPopulator<Custom
         //target.setCurrencyModel(source.getCurrency());
 
         target.setPaymentType(source.getPaymentType());
-        target.setImportMain(source.getImportMain());
-        target.setPaymentModule(source.getPaymentModuleCode());
+        target.setOrderType(source.getOrderType() == null? null : source.getOrderType().name());
+        target.setImportMain(source.getImportMain() == null? null : source.getImportMain().name());
+        target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
 
+        target.setPaymentModule(source.getPaymentModuleCode());
         if(source.getCustomerAgreement()!=null) {
             target.setCustomerAgreed(source.getCustomerAgreement());
         }

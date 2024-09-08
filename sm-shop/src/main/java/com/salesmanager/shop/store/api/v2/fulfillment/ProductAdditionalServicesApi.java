@@ -2,8 +2,6 @@ package com.salesmanager.shop.store.api.v2.fulfillment;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.model.catalog.product.ReadableProduct;
-import com.salesmanager.shop.model.content.ContentFolder;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
@@ -12,12 +10,10 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -66,6 +62,24 @@ public class ProductAdditionalServicesApi {
             return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
         }
     }
+
+
+
+    @RequestMapping(value = {"/auth/additional/services/price", "/private/additional/services/price"}, method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET", value = "Get additionalServices by merchant code", notes = "Get additionalServices by merchant code")
+    @ResponseBody
+    public CommonResultDTO<String> getAdditionalServicesPrice(@RequestParam(value = "additionalServicesId", required = false) Long additionalServicesId,
+                                                                                        @RequestParam(value = "additionalServicesQuantity", required = false) Integer additionalServicesQuantity,
+                                                                                        @RequestParam(value = "itemQuantity", required = false) Integer itemQuantity) {
+        try {
+            return CommonResultDTO.ofSuccess( additionalServicesFacade.queryAdditionalServicesPrice(additionalServicesId, additionalServicesQuantity, itemQuantity));
+        }catch (Exception e){
+            LOGGER.error("Error  to get additionalServices price ", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
+        }
+    }
+
+
 
 
 

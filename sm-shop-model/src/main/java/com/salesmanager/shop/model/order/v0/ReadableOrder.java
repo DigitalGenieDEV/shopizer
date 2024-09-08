@@ -20,6 +20,9 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private Long customerOrderId;
+
 	private ReadableCustomer customer;
 	private List<ReadableOrderProduct> products;
 	private ReadableBilling billing;
@@ -123,5 +126,11 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 
 	private OrderTotal erp;
 
+	public Long getCustomerOrderId() {
+		return customerOrderId;
+	}
 
+	public void setCustomerOrderId(Long customerOrderId) {
+		this.customerOrderId = customerOrderId;
+	}
 }

@@ -88,11 +88,11 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 
 	/**
-	 * 增值服务Id list列表用逗号分隔
+	 * 增值服务Id map 结构
 	 * The value-added service ID list is separated by commas.
 	 */
 	@Column(name = "ADDITIONAL_SERVICES_IDS")
-	private String additionalServicesIds;
+	private String additionalServicesMap;
 
 
 
@@ -191,12 +191,12 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 	}
 
-	public String getAdditionalServicesIds() {
-		return additionalServicesIds;
+	public String getAdditionalServicesMap() {
+		return additionalServicesMap;
 	}
 
-	public void setAdditionalServicesIds(String additionalServicesIds) {
-		this.additionalServicesIds = additionalServicesIds;
+	public void setAdditionalServicesMap(String additionalServicesMap) {
+		this.additionalServicesMap = additionalServicesMap;
 	}
 
 	public void setAttributes(Set<ShoppingCartAttributeItem> attributes) {

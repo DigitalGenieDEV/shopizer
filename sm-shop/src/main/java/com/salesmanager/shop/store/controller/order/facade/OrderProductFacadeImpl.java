@@ -1,7 +1,9 @@
 package com.salesmanager.shop.store.controller.order.facade;
 
+import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsService;
 import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsTraceService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
@@ -13,10 +15,12 @@ import com.salesmanager.core.model.order.OrderProductCriteria;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsMapper;
 import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsTraceMapper;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogisticsTrace;
+import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
 import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
@@ -25,6 +29,7 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +66,18 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
     @Qualifier("img")
     private ImageFilePath imageUtils;
 
+    @Autowired
+    private ProductVariantService productVariantService;
+
+    @Autowired
+    private ReadableProductVariantMapper readableProductVariantMapper;
+
+    @Inject
+    private InvoicePackingFormService invoicePackingFormService;
+
+    @Autowired
+    private FulfillmentFacade fulfillmentFacade;
+
 
     @Override
     public ReadableOrderProductList getReadableOrderProductList(MerchantStore store, Customer customer, Integer page, Integer count, Language language) {
@@ -91,7 +108,10 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
             readableOrderProductPopulator.setProductService(productService);
             readableOrderProductPopulator.setimageUtils(imageUtils);
             readableOrderProductPopulator.setPricingService(pricingService);
-
+            readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
+            readableOrderProductPopulator.setProductVariantService(productVariantService);
+            readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+            readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             List<ReadableOrderProduct> readableOrderProducts = new ArrayList<>();
             for (OrderProduct orderProduct : orderProducts) {
                 ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
@@ -123,7 +143,10 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
         readableOrderProductPopulator.setProductService(productService);
         readableOrderProductPopulator.setimageUtils(imageUtils);
         readableOrderProductPopulator.setPricingService(pricingService);
-
+        readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
+        readableOrderProductPopulator.setProductVariantService(productVariantService);
+        readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+        readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
         ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 
         try {

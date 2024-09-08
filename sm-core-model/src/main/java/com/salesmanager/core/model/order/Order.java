@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.reference.zone.Zone;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
@@ -86,7 +87,25 @@ public class Order extends SalesManagerEntity<Long, Order> {
 
 	@Column (name ="ORDER_TYPE")
 	@Enumerated(value = EnumType.STRING)
-	private OrderType orderType = OrderType.ORDER;
+	private OrderType orderType = OrderType.PRODUCT;
+
+	/**
+	 * 进口主体
+	 * IMPORT_AGENT
+	 * SELLER_RESPONSIBILITY
+	 */
+	@Column (name ="IMPORT_MAIN")
+	@Enumerated(value = EnumType.STRING)
+	private ImportMainEnums importMain;
+
+
+	/**
+	 * 清关号
+	 */
+	@Column (name ="CUSTOMS_CLEARANCE_NUMBER", length=100)
+	private String customsClearanceNumber;
+
+
 
 	@Column (name ="PAYMENT_TYPE")
 	@Enumerated(value = EnumType.STRING)
@@ -103,6 +122,9 @@ public class Order extends SalesManagerEntity<Long, Order> {
 	
 	@Column(name = "CONFIRMED_ADDRESS")
 	private Boolean confirmedAddress = false;
+
+
+
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="FULFILLMENT_MAIN_ORDER_ID", nullable=true)
@@ -406,5 +428,21 @@ public class Order extends SalesManagerEntity<Long, Order> {
 
 	public void setFulfillmentMainOrder(FulfillmentMainOrder fulfillmentMainOrder) {
 		this.fulfillmentMainOrder = fulfillmentMainOrder;
+	}
+
+	public ImportMainEnums getImportMain() {
+		return importMain;
+	}
+
+	public void setImportMain(ImportMainEnums importMain) {
+		this.importMain = importMain;
+	}
+
+	public String getCustomsClearanceNumber() {
+		return customsClearanceNumber;
+	}
+
+	public void setCustomsClearanceNumber(String customsClearanceNumber) {
+		this.customsClearanceNumber = customsClearanceNumber;
 	}
 }

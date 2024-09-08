@@ -534,11 +534,14 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	@Override
 	public Product getBySku(String productCode) throws ServiceException {
 		try {
+			if (productCode == null){
+				return null;
+			}
 			long start = LogPermUtil.start("getBySku, sku:" + productCode);
 			List<Object> products = productRepository.findBySku(productCode);
 			LogPermUtil.end("getBySku, sku:" + productCode, start);
 			if(products.isEmpty()) {
-				throw new ServiceException("Cannot get product with sku [" + productCode + "]");
+				return null;
 			}
 			BigInteger id = (BigInteger) products.get(0);
 			return this.getById(id.longValue());

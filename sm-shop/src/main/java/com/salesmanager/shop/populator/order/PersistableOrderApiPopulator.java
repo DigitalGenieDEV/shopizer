@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.salesmanager.core.business.services.reference.country.CountryService;
+import com.salesmanager.core.model.order.OrderType;
+import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacadeImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -172,6 +174,10 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setCustomerAgreement(source.isCustomerAgreement());
 			target.setConfirmedAddress(true);//force this to true, cannot perform this activity from the API
 
+
+			target.setImportMain(source.getImportMain() == null? null : ImportMainEnums.valueOf(source.getImportMain()));
+			target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
+			target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
 			
 			if(!StringUtils.isBlank(source.getComments())) {
 				OrderStatusHistory statusHistory = new OrderStatusHistory();

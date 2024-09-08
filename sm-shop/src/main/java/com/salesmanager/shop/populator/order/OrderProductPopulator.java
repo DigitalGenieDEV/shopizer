@@ -74,26 +74,8 @@ public class OrderProductPopulator extends
 		long start = LogPermUtil.start("OrderProductPopulator/populate, sku:" + source.getSku());
 		
 		try {
-			Product modelProduct = productService.getBySku(source.getSku());
-			if(modelProduct==null) {
-				throw new ConversionException("Cannot get product with sku " + source.getSku());
-			}
-			
-			if(modelProduct.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-				throw new ConversionException("Invalid product with sku " + source.getSku());
-			}
 
-			DigitalProduct digitalProduct = digitalProductService.getByProduct(store, modelProduct);
-			
-			if(digitalProduct!=null) {
-				OrderProductDownload orderProductDownload = new OrderProductDownload();	
-				orderProductDownload.setOrderProductFilename(digitalProduct.getProductFileName());
-				orderProductDownload.setOrderProduct(target);
-				orderProductDownload.setDownloadCount(0);
-				orderProductDownload.setMaxdays(ApplicationConstants.MAX_DOWNLOAD_DAYS);
-				target.getDownloads().add(orderProductDownload);
-			}
-
+			target.setId(source.getId());
 			target.setOneTimeCharge(source.getItemPrice());	
 			target.setProductName(source.getProduct().getDescriptions().iterator().next().getName());
 			target.setProductQuantity(source.getQuantity());
@@ -150,6 +132,28 @@ public class OrderProductPopulator extends
 					attributes.add(orderProductAttribute);
 				}
 				target.setOrderAttributes(attributes);
+			}
+
+			Product modelProduct = productService.getBySku(source.getSku());
+			if(modelProduct==null) {
+				//todo 查询订单快照
+				return target;
+//				throw new ConversionException("Cannot get product with sku " + source.getSku());
+			}
+
+			if(modelProduct.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
+				throw new ConversionException("Invalid product with sku " + source.getSku());
+			}
+
+			DigitalProduct digitalProduct = digitalProductService.getByProduct(store, modelProduct);
+
+			if(digitalProduct!=null) {
+				OrderProductDownload orderProductDownload = new OrderProductDownload();
+				orderProductDownload.setOrderProductFilename(digitalProduct.getProductFileName());
+				orderProductDownload.setOrderProduct(target);
+				orderProductDownload.setDownloadCount(0);
+				orderProductDownload.setMaxdays(ApplicationConstants.MAX_DOWNLOAD_DAYS);
+				target.getDownloads().add(orderProductDownload);
 			}
 
 			

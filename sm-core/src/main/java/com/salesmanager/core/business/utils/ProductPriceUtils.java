@@ -287,15 +287,15 @@ public class ProductPriceUtils {
 		Locale locale = Constants.DEFAULT_LOCALE;
 
 		try {
-			currency = store.getCurrency().getCurrency();
-			locale = new Locale(store.getDefaultLanguage().getCode(), store.getCountry().getIsoCode());
+			currency = store ==null ? currency : store.getCurrency().getCurrency();
+			locale = store == null ? locale : new Locale(store.getDefaultLanguage().getCode(), store.getCountry().getIsoCode());
 		} catch (Exception e) {
-			LOGGER.error("Cannot create currency or locale instance for store " + store.getCode());
+			LOGGER.error("Cannot create currency or locale instance for store " + store.getCode(), e);
 		}
 
 		NumberFormat currencyInstance = null;
 
-		if (store.isCurrencyFormatNational()) {
+		if (store !=null && store.isCurrencyFormatNational()) {
 			currencyInstance = NumberFormat.getCurrencyInstance(locale);// national
 		} else {
 			currencyInstance = NumberFormat.getCurrencyInstance();// international

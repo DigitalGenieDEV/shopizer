@@ -12,5 +12,9 @@ public interface InvoicePackingFormService extends SalesManagerEntityService<Lon
     InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
 
 
+
+    InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId);
+
+
 }
 

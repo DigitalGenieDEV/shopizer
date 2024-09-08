@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Data
@@ -120,10 +121,10 @@ public class FulfillmentSubOrder {
     private String fulfillmentSubTypeEnums;
 
     /**
-     * 增值服务Id list列表用逗号分隔
+     * 增值服务Id map 为增值服务的key ，key 为数量
      * @see AdditionalServiceEnums
      */
-    private List<String> additionalServicesIds;
+    private Map<Long, Integer> additionalServicesMap;
 
 
     @Override
@@ -145,7 +146,7 @@ public class FulfillmentSubOrder {
                 Objects.equals(transportInformation, that.transportInformation) &&
                 Objects.equals(fulfillmentMainType, that.fulfillmentMainType) &&
                 Objects.equals(fulfillmentSubTypeEnums, that.fulfillmentSubTypeEnums) &&
-                Objects.equals(additionalServicesIds, that.additionalServicesIds);
+                Objects.equals(additionalServicesMap, that.additionalServicesMap);
     }
 
     @Override
@@ -154,7 +155,7 @@ public class FulfillmentSubOrder {
                 nationalTransportationMethod, shippingTransportationType, truckModel, truckType,
                  logisticsNumber, crossBorderTransportationLogisticsNumber,
                 transportInformation, fulfillmentMainType, fulfillmentSubTypeEnums,
-                additionalServicesIds);
+                additionalServicesMap);
     }
 
 }

@@ -128,7 +128,7 @@ public class CustomerShoppingCartSplitterServiceImpl implements CustomerShopping
         shoppingCartItem.setSku(customerShoppingCartItem.getSku());
         shoppingCartItem.setVariant(customerShoppingCartItem.getVariant());
 
-        shoppingCartItem.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+        shoppingCartItem.setAdditionalServicesMap(customerShoppingCartItem.getAdditionalServicesMap());
         shoppingCartItem.setInternationalTransportationMethod(customerShoppingCartItem.getInternationalTransportationMethod());
         shoppingCartItem.setNationalTransportationMethod(customerShoppingCartItem.getNationalTransportationMethod());
         shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());

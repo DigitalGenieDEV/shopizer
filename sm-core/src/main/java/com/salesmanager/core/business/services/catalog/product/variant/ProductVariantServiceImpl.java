@@ -41,6 +41,10 @@ public class ProductVariantServiceImpl extends SalesManagerEntityServiceImpl<Lon
 		return productVariantRepository.queryBySkuAndProduct(sku, productId);
 	}
 
+	@Override
+	public ProductVariant queryBySku(String sku){
+		return productVariantRepository.queryBySku(sku);
+	}
 
 	@Override
 	public Optional<ProductVariant> getById(Long id, Long productId, MerchantStore store) {

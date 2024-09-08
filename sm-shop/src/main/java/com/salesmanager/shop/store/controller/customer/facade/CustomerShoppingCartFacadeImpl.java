@@ -22,6 +22,7 @@ import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
 import com.salesmanager.shop.mapper.customer.ReadableCustomerShoppingCartMapper;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartData;
 import com.salesmanager.shop.model.customer.shoppingcart.CustomerShoppingCartItem;
@@ -33,6 +34,7 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -334,7 +336,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
         }
 
-        item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+        item.setAdditionalServicesMap(MapUtils.isEmpty(customerShoppingCartItem.getAdditionalServicesMap())?
+                null : JSON.toJSONString(customerShoppingCartItem.getAdditionalServicesMap()));
 
         if (customerShoppingCartItem.getTruckModel() != null) {
             item.setTruckModel(customerShoppingCartItem.getTruckModel());
@@ -492,7 +495,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         // new quantity
                         anItem.setQuantity(item.getQuantity());
                         anItem.setChecked(item.isChecked());
-                        anItem.setAdditionalServicesIds(itemModel.getAdditionalServicesIds());
+                        anItem.setAdditionalServicesMap(itemModel.getAdditionalServicesMap());
                         anItem.setShippingType(itemModel.getShippingType());
                         anItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         anItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());
@@ -609,7 +612,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
                 oldCartItem.setQuantity(newItemValue.getQuantity());
                 oldCartItem.setChecked(newItemValue.isChecked());
-                oldCartItem.setAdditionalServicesIds(newItemValue.getAdditionalServicesIds());
+                oldCartItem.setAdditionalServicesMap(newItemValue.getAdditionalServicesMap());
                 oldCartItem.setShippingType(newItemValue.getShippingType());
                 oldCartItem.setInternationalTransportationMethod(newItemValue.getInternationalTransportationMethod());
                 oldCartItem.setNationalTransportationMethod(newItemValue.getNationalTransportationMethod());
@@ -668,7 +671,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setQuantity(customerShoppingCartItem.getQuantity());
             item.setCustomerShoppingCart(cartModel);
             item.setChecked(customerShoppingCartItem.isChecked());
-            item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
+            item.setAdditionalServicesMap(MapUtils.isEmpty(customerShoppingCartItem.getAdditionalServicesMap())?
+                    null : JSON.toJSONString(customerShoppingCartItem.getAdditionalServicesMap()));
             if (customerShoppingCartItem.getShippingType() != null) {
                 item.setShippingType(ShippingType.valueOf(customerShoppingCartItem.getShippingType()));
             }
@@ -676,8 +680,6 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             if (customerShoppingCartItem.getShippingTransportationType() != null) {
                 item.setShippingTransportationType(ShippingTransportationType.valueOf(customerShoppingCartItem.getShippingTransportationType()));
             }
-
-            item.setAdditionalServicesIds(customerShoppingCartItem.getAdditionalServicesIds());
 
             if (customerShoppingCartItem.getTruckModel() != null) {
                 item.setTruckModel(customerShoppingCartItem.getTruckModel());
@@ -859,7 +861,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                     if (!duplicateFound) {
                         cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
                         cartItem.setChecked(itemModel.isChecked());
-                        cartItem.setAdditionalServicesIds(itemModel.getAdditionalServicesIds());
+                        cartItem.setAdditionalServicesMap(itemModel.getAdditionalServicesMap());
                         cartItem.setShippingType(itemModel.getShippingType());
                         cartItem.setInternationalTransportationMethod(itemModel.getInternationalTransportationMethod());
                         cartItem.setNationalTransportationMethod(itemModel.getNationalTransportationMethod());

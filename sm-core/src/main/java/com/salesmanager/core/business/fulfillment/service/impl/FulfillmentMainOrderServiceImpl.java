@@ -64,16 +64,16 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
 
         order.getOrderProducts().forEach(orderProduct -> {
 
-            if (StringUtils.isNotEmpty(orderProduct.getAdditionalServicesIds())){
+            if (StringUtils.isNotEmpty(orderProduct.getAdditionalServicesMap())){
                 QcInfo qcInfo = new QcInfo();
                 qcInfo.setOrderId(order.getId());
-                qcInfo.setAdditionalServicesIds(orderProduct.getAdditionalServicesIds());
+                qcInfo.setAdditionalServicesMap(orderProduct.getAdditionalServicesMap());
                 qcInfo.setProductId(orderProduct.getProductId());
                 qcInfoService.saveQcInfo(qcInfo);
             }
 
             FulfillmentSubOrder fulfillmentSubOrder = new FulfillmentSubOrder();
-            fulfillmentSubOrder.setAdditionalServicesIds(orderProduct.getAdditionalServicesIds());
+            fulfillmentSubOrder.setAdditionalServicesMap(orderProduct.getAdditionalServicesMap());
             fulfillmentSubOrder.setFulfillmentMainType(FulfillmentTypeEnums.PAYMENT_COMPLETED);
             fulfillmentSubOrder.setTruckModel(TruckModelEnums.valueOf(orderProduct.getTruckModel()));
             fulfillmentSubOrder.setTruckType(TruckTypeEnums.valueOf(orderProduct.getTruckType()));

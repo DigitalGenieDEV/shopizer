@@ -1,8 +1,12 @@
 package com.salesmanager.shop.store.controller.fulfillment.faced;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
+import com.salesmanager.core.business.utils.AdditionalServicesUtils;
+import com.salesmanager.core.enmus.AdditionalServiceEnums;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
@@ -11,7 +15,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,16 +36,27 @@ public class AdditionalServicesFacadeImpl implements AdditionalServicesFacade {
     }
 
     @Override
-    public List<ReadableAdditionalServices> queryAdditionalServicesByIds(String ids, Language language) {
-        if (StringUtils.isEmpty(ids)){
+    public String queryAdditionalServicesPrice(Long id, Integer additionalServicesQuantity, Integer itemQuantity) {
+        AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(id);
+        return AdditionalServicesUtils.getPrice(additionalServices, additionalServicesQuantity, itemQuantity);
+    }
+
+    @Override
+    public List<ReadableAdditionalServices> queryAdditionalServicesByIds(String additionalServicesMap, Language language) {
+        if (StringUtils.isEmpty(additionalServicesMap)){
             return null;
         }
-        List<AdditionalServices> additionalServices = additionalServicesService.queryAdditionalServicesByIds(ids);
+        Map<Long, Integer> additionalServicesMapFromJson =  (Map<Long, Integer>) JSON.parse(additionalServicesMap);
+
+        Set<Long> keySet = additionalServicesMapFromJson.keySet();
+
+        List<AdditionalServices> additionalServices = additionalServicesService.queryAdditionalServicesByIds(new ArrayList<>(keySet));
         if (CollectionUtils.isEmpty(additionalServices)){
             return null;
         }
+
         return additionalServices.stream().map(additionalService->{
-            return AdditionalServicesConvert.convertToReadableAdditionalServices(additionalService, language);
+            return AdditionalServicesConvert.convertToReadableAdditionalServices(additionalService, language, additionalServicesMapFromJson);
         }).collect(Collectors.toList());
     }
 
@@ -50,4 +70,6 @@ public class AdditionalServicesFacadeImpl implements AdditionalServicesFacade {
             return AdditionalServicesConvert.convertToReadableAdditionalServices(additionalService, language);
         }).collect(Collectors.toList());
     }
+
+
 }

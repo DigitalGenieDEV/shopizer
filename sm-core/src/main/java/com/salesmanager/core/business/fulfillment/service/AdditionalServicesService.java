@@ -14,7 +14,7 @@ public interface AdditionalServicesService extends SalesManagerEntityService<Lon
 
     AdditionalServices queryAdditionalServicesById(Long id);
 
-    List<AdditionalServices> queryAdditionalServicesByIds(String ids);
+    List<AdditionalServices> queryAdditionalServicesByIds(List<Long> ids);
 
     List<AdditionalServices> queryAdditionalServicesByMerchantId(Long merchantId, Language language);
 

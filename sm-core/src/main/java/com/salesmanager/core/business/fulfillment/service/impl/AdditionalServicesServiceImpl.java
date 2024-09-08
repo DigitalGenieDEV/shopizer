@@ -5,6 +5,7 @@ import com.salesmanager.core.business.repositories.fulfillment.AdditionalService
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +37,13 @@ public class AdditionalServicesServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public List<AdditionalServices> queryAdditionalServicesByIds(String ids) {
-        if (StringUtils.isBlank(ids)){
+    public List<AdditionalServices> queryAdditionalServicesByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)){
             return null;
         }
         List<AdditionalServices> additionalServices = new ArrayList<>();
-        for (String id : ids.split(",")){
-            additionalServices.add(queryAdditionalServicesById(Long.valueOf(id)));
+        for (Long id : ids){
+            additionalServices.add(queryAdditionalServicesById(id));
         }
         return additionalServices;
     }
