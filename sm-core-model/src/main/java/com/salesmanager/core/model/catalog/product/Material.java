@@ -41,7 +41,7 @@ public class Material extends SalesManagerEntity<Long, Material> implements Audi
     private String subCode;
 
 
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", precision = 15, scale = 6)
     private BigDecimal  price;
 
 

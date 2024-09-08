@@ -53,7 +53,7 @@ public class PersistableAuditAspect {
 					if (currentInstance != null && StringUtils.isNotBlank(currentInstance.getIpAddress())) {
 						String ipAddress = currentInstance.getIpAddress();
 						audit.setOperatorIp(ipAddress);
-						LOGGER.info("get IP from UserContext" + ipAddress);
+						LOGGER.info("get IP from UserContext:" + ipAddress);
 					}
 
 					//TODO put in log audit log trail

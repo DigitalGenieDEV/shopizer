@@ -424,4 +424,11 @@ public class ManagerFacadeImpl implements ManagerFacade {
 		}
 	}
 
+	@Override
+	public boolean isSuperAdmin(String userName) throws ServiceException {
+		com.salesmanager.core.model.manager.ReadableManager manager = managerService.getByUserName(userName);
+
+		// is superadmin
+		return manager.getGrpId() == 1;
+	}
 }

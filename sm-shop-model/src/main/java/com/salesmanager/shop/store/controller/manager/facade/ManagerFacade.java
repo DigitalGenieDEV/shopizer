@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.manager.facade;
 
 import java.util.List;
 
+import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.manager.PersistableManager;
 import com.salesmanager.shop.model.manager.ReadableManager;
@@ -127,4 +128,6 @@ public interface ManagerFacade {
    * @throws Exception
    */
   boolean authorizedStore(String userName, String merchantStoreCode);
+
+  boolean isSuperAdmin(String userName) throws ServiceException;
 }

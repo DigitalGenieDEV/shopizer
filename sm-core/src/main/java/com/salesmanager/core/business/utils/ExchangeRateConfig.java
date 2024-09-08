@@ -23,6 +23,7 @@ public class ExchangeRateConfig {
 
     @PostConstruct
     public void init() {
+        // currently only support CNY2KRW, if more exchangeRate config in the future, should be dynamic loading
         ExchangeRatePOJO exchangeRate = exchangeRateRepository.findExchangeRate("CNY", "KRW");
         exchangeRates.put(ExchangeRateEnums.CNY_KRW.name(), exchangeRate);
     }

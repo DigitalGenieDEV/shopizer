@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 
-public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Integer> {
+public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long> {
 
 
 	@Query("SELECT er.baseCurrency AS baseCurrency, er.targetCurrency AS targetCurrency, er.id AS id, er.auditSection AS auditSection, er.rate AS rate " +
