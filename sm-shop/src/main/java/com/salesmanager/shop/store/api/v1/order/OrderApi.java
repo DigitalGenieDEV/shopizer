@@ -213,6 +213,66 @@ public class OrderApi {
 	}
 
 	/**
+	 * List orders for authenticated customers
+	 *
+	 * @param start
+	 * @param count
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = {"/auth/store/orders"}, method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")})
+	public CommonResultDTO<ReadableOrderList> list(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+								  @RequestParam(value = "count", required = false, defaultValue = DEFAULT_ORDER_LIST_COUNT) Integer count,
+								  @RequestParam(value = "orderId", required = false) Long orderId,
+								  @RequestParam(value = "deliveryName", required = false) String deliveryName,
+								  @RequestParam(value = "buyerName", required = false) String buyerName,
+								  @RequestParam(value = "startTime", required = false) Long startTime,
+								  @RequestParam(value = "endTime", required = false) Long endTime,
+								  @RequestParam(value = "orderStatus", required = false) String orderStatus,
+								  @RequestParam(value = "shippingStatus", required = false) String shippingStatus,
+								  @RequestParam(value = "orderType", required = false) String orderType,
+								  @RequestParam(value = "shippingType", required = false) String shippingType,
+								  @RequestParam(value = "transportationMethod", required = false) String transportationMethod,
+								  // TODO(yuxunhui):결제사 不知道是什么意思 结算公司，没找到对应的概念
+								  @RequestParam(value = "paymentType", required = false) String paymentType,
+								  // TODO(yuxunhui):주문플랫폼 不知道是什么意思 订购平台，没找到对应的概念
+								  @ApiIgnore MerchantStore merchantStore,
+								  @ApiIgnore Language language,
+								  HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		OrderCriteria orderCriteria = new OrderCriteria();
+		orderCriteria.setPageSize(count);
+		orderCriteria.setStartPage(page);
+		orderCriteria.setOrderType(orderType);
+		orderCriteria.setId(orderId);
+		orderCriteria.setCustomerName(buyerName);
+		orderCriteria.setDeliveryName(deliveryName);
+		orderCriteria.setPaymentMethod(paymentType);
+		orderCriteria.setShippingType(shippingType);
+		orderCriteria.setTransportationMethod(transportationMethod);
+		orderCriteria.setStartTime(startTime);
+		orderCriteria.setEndTime(endTime);
+		orderCriteria.setStatus(orderStatus);
+		orderCriteria.setShippingStatus(shippingStatus);
+		orderCriteria.setLanguage(language.getCode());
+
+		try {
+			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, merchantStore);
+			return CommonResultDTO.ofSuccess(orders);
+		} catch (Exception e) {
+			LOGGER.error("admin query order list error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+	/**
 	 * This method returns list of all the orders for a store.This is not
 	 * bound to any specific stores and will get list of all the orders
 	 * available for this instance
@@ -271,8 +331,8 @@ public class OrderApi {
 			}
 			orderCriteria.setPaymentMethod(queryValue);
 		}
-		if (StringUtils.isNotEmpty(queryType) && queryType.equals("SHIPPING_TYPE")) {
-			orderCriteria.setShippingType(queryValue);
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("transportationMethod")) {
+			orderCriteria.setTransportationMethod(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PRODUCT_NAME")) {
 			orderCriteria.setProductName(queryValue);
