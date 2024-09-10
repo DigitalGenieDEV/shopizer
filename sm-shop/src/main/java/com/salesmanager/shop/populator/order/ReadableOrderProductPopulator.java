@@ -99,9 +99,17 @@ public class ReadableOrderProductPopulator extends
 		target.setId(source.getId());
 		target.setOrderedQuantity(source.getProductQuantity());
 
-		ReadableFulfillmentSubOrder readableFulfillmentSubOrder = fulfillmentFacade.queryFulfillmentSubOrderListByProductOrderId(source.getId());
+		target.setShippingType(source.getShippingType() == null? null : source.getShippingType().name());
+		target.setShippingTransportationType(source.getShippingTransportationType() == null? null : source.getShippingTransportationType().name());
+		target.setInternationalTransportationMethod(source.getInternationalTransportationMethod() == null? null : source.getInternationalTransportationMethod().name());
+		target.setNationalTransportationMethod(source.getNationalTransportationMethod() == null? null : source.getNationalTransportationMethod().name());
+		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
+		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
+		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
 
-		target.setReadableFulfillmentSubOrder(readableFulfillmentSubOrder);
+		if (source.getOrder()!=null && source.getOrder().getOrderType()!=null){
+			target.setOrderType(source.getOrder().getOrderType().name());
+		}
 
 		try {
 			target.setPrice(pricingService.getDisplayAmount(source.getOneTimeCharge(), store));

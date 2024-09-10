@@ -5,8 +5,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.model.fulfillment.ShippingOrderProductQuery;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.shop.model.fulfillment.ReadableOrderProductShippingList;
+import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrderList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -27,6 +32,9 @@ import com.salesmanager.shop.model.order.ShopOrder;
 import com.salesmanager.shop.model.order.history.PersistableOrderStatusHistory;
 import com.salesmanager.shop.model.order.history.ReadableOrderStatusHistory;
 import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 public interface OrderFacade {
@@ -231,4 +239,23 @@ public interface OrderFacade {
 
 	List<ReadableOrderProduct> queryOrderProductsByOrderId (Long orderId, Language language);
 
+
+
+	List<ReadableOrderProduct> queryShippingOrderListProducts(Locale locale, Language language, Long shippingOrderId) throws ConversionException;
+
+
+	ReadableOrderProductShippingList queryShippingOrderProductsList(Locale locale, Language language, ShippingOrderProductQuery query);
+
+
+	ReadableShippingDocumentOrderList queryShippingDocumentOrderList(Locale locale, Language language, ShippingOrderProductQuery query);
+
+	String createShippingDocumentOrder(Long createDate);
+
+
+
+	void deleteShippingDocumentOrder(Long id);
+
+	void addShippingProductByOrderProductId(Long id,Long orderProductId);
+
+	void removeShippingProductByOrderProductId(Long id,Long orderProductId);
 }

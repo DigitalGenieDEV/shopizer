@@ -15,11 +15,11 @@ public interface FulfillmentFacade {
 
     ReadableGeneralDocument queryGeneralDocumentByOrderIdAndType(Long orderId, String documentType);
 
-    void saveGeneralDocumentByOrderId(PersistableGeneralDocument persistableGeneralDocument);
+    void saveGeneralDocument(PersistableGeneralDocument persistableGeneralDocument);
 
     ReadableInvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId, Long productId);
 
-    void saveInvoicePackingFormByOrderId(PersistableInvoicePackingForm persistableInvoicePackingForm);
+    void saveInvoicePackingForm(PersistableInvoicePackingForm persistableInvoicePackingForm);
 
 
     ReadableFulfillmentMainOrder queryFulfillmentMainOrderByOrderId(Long orderId);

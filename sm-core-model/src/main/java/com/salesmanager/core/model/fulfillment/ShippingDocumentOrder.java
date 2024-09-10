@@ -21,9 +21,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
-@EntityListeners(value = AuditListener.class)
 @Table(name = "SHIPPING_DOCUMENT_ORDER")
 public class ShippingDocumentOrder extends SalesManagerEntity<Long, ShippingDocumentOrder> implements Auditable {
 
@@ -40,9 +38,8 @@ public class ShippingDocumentOrder extends SalesManagerEntity<Long, ShippingDocu
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
     private Long id;
 
-    @Column(name = "SHIPPING_NO")
-    private Long shippingNo;
-
+    @Column(name = "SHIPPING_NO", length = 300)
+    private String shippingNo;
 
     /**
      * 交易单商品
@@ -57,7 +54,7 @@ public class ShippingDocumentOrder extends SalesManagerEntity<Long, ShippingDocu
     /**
      * 交易单商品
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "shippingDocumentOrder")
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "shippingDocumentOrder")
     private Set<OrderProduct> orderProducts =  new HashSet<>();
 
 
@@ -84,4 +81,35 @@ public class ShippingDocumentOrder extends SalesManagerEntity<Long, ShippingDocu
         this.auditSection = auditSection;
     }
 
+    public String getShippingNo() {
+        return shippingNo;
+    }
+
+    public void setShippingNo(String shippingNo) {
+        this.shippingNo = shippingNo;
+    }
+
+    public Set<GeneralDocument> getGeneralDocuments() {
+        return generalDocuments;
+    }
+
+    public void setGeneralDocuments(Set<GeneralDocument> generalDocuments) {
+        this.generalDocuments = generalDocuments;
+    }
+
+    public Long getInvoicePackingFormId() {
+        return invoicePackingFormId;
+    }
+
+    public void setInvoicePackingFormId(Long invoicePackingFormId) {
+        this.invoicePackingFormId = invoicePackingFormId;
+    }
+
+    public Set<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(Set<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
+    }
 }

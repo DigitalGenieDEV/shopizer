@@ -26,6 +26,19 @@ public class UniqueIdGenerator {
         return PREFIX + timestamp + randomNumbers.toString();
     }
 
+
+    public static String generateShippingOrderId(long timestamp, int sequenceNumber) {
+        // 1. 格式化日期为 yyyyMMdd 格式
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String dateStr = dateFormat.format(new Date(timestamp));
+
+        // 2. 格式化序列号为两位数（如：03）
+        String formattedSequenceNumber = String.format("%02d", sequenceNumber);
+
+        // 3. 拼接生成的 ID
+        return "CK" + dateStr + "-" + formattedSequenceNumber;
+    }
+
     public static void main(String[] args) {
         // 测试生成多个唯一ID
         for (int i = 0; i < 10; i++) {

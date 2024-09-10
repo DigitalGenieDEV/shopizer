@@ -28,6 +28,7 @@ public class OrderEntity extends Order implements Serializable {
 	private OrderStatus orderStatus;
 	private CreditCard creditCard;
 	private Date datePurchased;
+
 	private String currency;
 	private boolean customerAgreed;
 	private boolean confirmedAddress;

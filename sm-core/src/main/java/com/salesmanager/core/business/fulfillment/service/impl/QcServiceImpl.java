@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class QcServiceImpl extends SalesManagerEntityServiceImpl<Long, QcInfo>  implements QcInfoService {
@@ -37,6 +38,10 @@ public class QcServiceImpl extends SalesManagerEntityServiceImpl<Long, QcInfo>  
         qcInfoRepository.updateQcStatusById(QcStatusEnums.valueOf(qcStatus), id);
     }
 
+    public List<QcInfo> queryQcInfoByStatus(QcStatusEnums qcStatus) {
+        Validate.notNull(qcStatus, "qcStatus must be no null");
+        return qcInfoRepository.queryQcInfoByStatus(qcStatus);
+    }
 
 }
 

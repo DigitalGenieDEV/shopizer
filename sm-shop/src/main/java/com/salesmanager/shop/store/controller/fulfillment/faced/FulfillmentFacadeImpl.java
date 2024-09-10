@@ -2,6 +2,7 @@ package com.salesmanager.shop.store.controller.fulfillment.faced;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.*;
+import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentOrderRepository;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.enmus.DocumentTypeEnums;
@@ -43,6 +44,9 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
     private FulfillmentHistoryService fulfillmentHistoryService;
 
     @Autowired
+    private ShippingDocumentOrderRepository shippingDocumentOrderRepository;
+
+    @Autowired
     private OrderProductService orderProductService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FulfillmentFacadeImpl.class);
@@ -59,11 +63,19 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
     }
 
     @Override
-    public void saveGeneralDocumentByOrderId(PersistableGeneralDocument persistableGeneralDocument) {
+    public void saveGeneralDocument(PersistableGeneralDocument persistableGeneralDocument) {
         com.salesmanager.core.model.fulfillment.GeneralDocument generalDocument = ObjectConvert.convert(persistableGeneralDocument, com.salesmanager.core.model.fulfillment.GeneralDocument.class);
         generalDocument.setDocumentType(DocumentTypeEnums.valueOf(persistableGeneralDocument.getDocumentType()));
+        if (persistableGeneralDocument.getShippingOrderId() !=null){
+            com.salesmanager.core.model.fulfillment.ShippingDocumentOrder shippingDocumentOrder = shippingDocumentOrderRepository.getById(persistableGeneralDocument.getShippingOrderId());
+            if (shippingDocumentOrder == null){
+                return;
+            }
+            generalDocument.setShippingDocumentOrder(shippingDocumentOrder);
+        }
         generalDocumentService.saveGeneralDocument(generalDocument);
     }
+
 
     @Override
     public ReadableInvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId, Long productId) {
@@ -81,7 +93,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
     }
 
     @Override
-    public void saveInvoicePackingFormByOrderId(PersistableInvoicePackingForm persistableInvoicePackingForm) {
+    public void saveInvoicePackingForm(PersistableInvoicePackingForm persistableInvoicePackingForm) {
         com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = ObjectConvert.convert(persistableInvoicePackingForm, com.salesmanager.core.model.fulfillment.InvoicePackingForm.class);
         Set<PersistableInvoicePackingFormDetail> invoicePackingFormDetails = persistableInvoicePackingForm.getInvoicePackingFormDetails();
 
@@ -93,6 +105,14 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         }
         invoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
         invoicePackingFormService.saveInvoicePackingForm(invoicePackingForm);
+        if (persistableInvoicePackingForm.getShippingOrderId() !=null){
+            com.salesmanager.core.model.fulfillment.ShippingDocumentOrder shippingDocumentOrder = shippingDocumentOrderRepository.getById(persistableInvoicePackingForm.getShippingOrderId());
+            if (shippingDocumentOrder == null){
+                return;
+            }
+            shippingDocumentOrder.setInvoicePackingFormId(invoicePackingForm.getId());
+            shippingDocumentOrderRepository.save(shippingDocumentOrder);
+        }
     }
 
 

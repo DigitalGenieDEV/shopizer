@@ -168,6 +168,19 @@ public class DateUtil {
 		}
 	}
 
+
+	public static boolean isTimestampGreaterThanOrEqualToday(long timestampInSeconds) {
+		// 获取当前日期的开始时间（秒级）
+		Calendar todayStart = Calendar.getInstance();
+		todayStart.set(Calendar.HOUR_OF_DAY, 0);
+		todayStart.set(Calendar.MINUTE, 0);
+		todayStart.set(Calendar.SECOND, 0);
+		todayStart.set(Calendar.MILLISECOND, 0);
+
+		// 判断时间戳是否大于或等于今天的开始时间
+		return timestampInSeconds >= todayStart.getTimeInMillis();
+	}
+
 	public Date getEndDate() {
 		return endDate;
 	}

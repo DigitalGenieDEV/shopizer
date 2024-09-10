@@ -8,6 +8,8 @@ import java.util.Set;
 @Data
 public class PersistableInvoicePackingForm extends InvoicePackingForm{
 
+    private Long shippingOrderId;
+
 
     private Set<PersistableInvoicePackingFormDetail> invoicePackingFormDetails = new HashSet<>();
 
