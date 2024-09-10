@@ -9,6 +9,7 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
@@ -397,6 +398,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String nameQuery =  " and (p.billing.firstName like:name or p.billing.lastName like:name)";
 			queryBuilder.append(nameQuery);
 		}
+		if(!StringUtils.isEmpty(criteria.getDeliveryName())) {
+			String nameQuery =  " and (p.delivery.firstName like:deliveryName or p.delivery.lastName like:deliveryName)";
+			queryBuilder.append(nameQuery);
+		}
 
 		if(!StringUtils.isEmpty(criteria.getEmail())) {
 			String nameQuery =  " and p.customerEmailAddress like:email";
@@ -427,7 +432,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			queryBuilder.append(nameQuery);
 		}
 		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
-			String nameQuery =  " and exists(select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType = :shippingStatus)";
+			String nameQuery =  " and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType = :shippingStatus)";
 			queryBuilder.append(nameQuery);
 		}
 		if (StringUtils.isNotBlank(criteria.getOrderType())) {
@@ -445,6 +450,22 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		if (StringUtils.isNotBlank(criteria.getPaymentMethod())) {
 			String queryFragment = "and p.paymentType = :paymentMethod";
 			queryBuilder.append(queryFragment);
+		}
+		if (StringUtils.isNotBlank(criteria.getTransportationMethod())) {
+			if (criteria.getShippingType() == null) {
+				String queryFragment = "and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.nationalTransportationMethod = :transportationMethod or pff.internationalTransportationMethod = :transportationMethod)";
+				queryBuilder.append(queryFragment);
+			} else {
+				ShippingType shippingType = ShippingType.valueOf(criteria.getShippingType().toUpperCase());
+				if (ShippingType.NATIONAL.equals(shippingType)) {
+					String queryFragment = "and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.shippingType = :shippingType and pff.nationalTransportationMethod = :transportationMethod)";
+					queryBuilder.append(queryFragment);
+				}
+				if (ShippingType.INTERNATIONAL.equals(shippingType)) {
+					String queryFragment = "and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.shippingType = :shippingType and pff.internationalTransportationMethod = :transportationMethod)";
+					queryBuilder.append(queryFragment);
+				}
+			}
 		}
 		if (StringUtils.isNotBlank(criteria.getShippingType())) {
 			String queryFragment = "and exists (select pops.id from p.orderProducts pops where pops.shippingType = :shippingType)";
@@ -483,6 +504,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		//customer name
 		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
 			query.setParameter("name", like(criteria.getCustomerName()));
+		}
+		//delivery name
+		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
+			query.setParameter("deliveryName", like(criteria.getDeliveryName()));
 		}
 
 		//email
@@ -526,6 +551,14 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		if (StringUtils.isNotBlank(criteria.getPaymentMethod())) {
 			query.setParameter("paymentMethod", PaymentType.valueOf(criteria.getPaymentMethod().toUpperCase()));
+		}
+		if (StringUtils.isNotBlank(criteria.getTransportationMethod())) {
+			if (criteria.getShippingType() == null) {
+				query.setParameter("transportationMethod", TransportationMethod.valueOf(criteria.getTransportationMethod().toUpperCase()));
+			} else {
+				query.setParameter("shippingType", ShippingType.valueOf(criteria.getShippingType().toUpperCase()));
+				query.setParameter("transportationMethod", TransportationMethod.valueOf(criteria.getTransportationMethod().toUpperCase()));
+			}
 		}
 		if (StringUtils.isNotBlank(criteria.getShippingType())) {
 			query.setParameter("shippingType", ShippingType.valueOf(criteria.getShippingType().toUpperCase()));

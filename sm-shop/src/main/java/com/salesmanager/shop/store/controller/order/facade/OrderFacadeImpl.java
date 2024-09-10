@@ -1104,6 +1104,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		// ReadableOrderPopulator orderPopulator = new ReadableOrderPopulator();
 		Locale locale = LocaleUtils.getLocale(language);
+		// FIXME: not thread safe
 		readableOrderPopulator.setLocale(locale);
 
 		List<Order> orders = orderList.getOrders();

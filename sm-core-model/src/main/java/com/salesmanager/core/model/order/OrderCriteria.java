@@ -16,10 +16,12 @@ public class OrderCriteria extends Criteria {
 	private Long endTime;
 
 	private String customerName = null;
+	private String deliveryName = null;
 	private String customerPhone = null;
 	private String status = null;
 	private Long id = null;
 	private String paymentMethod;
+	private String transportationMethod;
 	private Long customerId;
 	private String email;
 	private String orderType = null;
