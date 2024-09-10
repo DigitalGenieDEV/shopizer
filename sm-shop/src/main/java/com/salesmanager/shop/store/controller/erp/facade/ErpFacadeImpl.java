@@ -6,6 +6,7 @@ import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.product.Material;
 import com.salesmanager.core.model.catalog.product.MaterialDescription;
+import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.PersistableMaterial;
 import com.salesmanager.shop.model.catalog.ReadableMaterial;
 import com.salesmanager.shop.populator.erp.PersistableMaterialPopulator;
@@ -30,7 +31,7 @@ public class ErpFacadeImpl implements ErpFacade {
 
 
     @Override
-    public List<ReadableMaterial> getMaterials() {
+    public List<ReadableMaterial> getMaterials(Language language) {
         List<Material> materials = erpService.queryList();
         if (CollectionUtils.isEmpty(materials)){
             return null;
@@ -39,8 +40,12 @@ public class ErpFacadeImpl implements ErpFacade {
             ReadableMaterial readableMaterial = ObjectConvert.convert(material, ReadableMaterial.class);
             List<com.salesmanager.shop.model.catalog.MaterialDescription> readableDescriptions = new ArrayList<>();
             for(MaterialDescription desc : material.getDescriptions()) {
+                if (desc.getLanguage().getCode().equals(language.getCode())) {
+                    readableMaterial.setDescription(description(desc));
+                }
                 readableDescriptions.add(description(desc));
             }
+            readableMaterial.setType(material.getType().name());
             readableMaterial.setDescriptions(readableDescriptions);
             return readableMaterial;
         }).collect(toList());

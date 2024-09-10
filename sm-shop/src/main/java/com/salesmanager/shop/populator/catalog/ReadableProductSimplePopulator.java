@@ -30,6 +30,8 @@ import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProduct
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
 import com.salesmanager.shop.model.catalog.product.type.ProductTypeDescription;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
+import com.salesmanager.shop.model.store.ReadableMerchantStore;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
@@ -47,12 +49,22 @@ public class ReadableProductSimplePopulator extends
 
 	private ImageFilePath imageUtils;
 
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
 	public ImageFilePath getimageUtils() {
 		return imageUtils;
 	}
 
 	public void setimageUtils(ImageFilePath imageUtils) {
 		this.imageUtils = imageUtils;
+	}
+
+	public ReadableMerchantStorePopulator getReadableMerchantStorePopulator() {
+		return readableMerchantStorePopulator;
+	}
+
+	public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
+		this.readableMerchantStorePopulator = readableMerchantStorePopulator;
 	}
 
 	public PricingService getPricingService() {
@@ -122,7 +134,7 @@ public class ReadableProductSimplePopulator extends
 			target.setIdentifier(source.getSku());
 			target.setOrderQuantityType(source.getOrderQuantityType());
 			target.setCertificateOfOrigin(source.getCertificateOfOrigin());
-
+			target.setMerchantStore(store(source.getMerchantStore(), language));
 			if(source.getType() != null) {
 				target.setType(this.type(source.getType(), language));
 			}
@@ -368,5 +380,18 @@ public class ReadableProductSimplePopulator extends
       }
       return tragetDescription;
     }
+
+	private ReadableMerchantStore store(MerchantStore store, Language language) throws ConversionException {
+		if (language == null) {
+			language = store.getDefaultLanguage();
+		}
+		/*
+		 * ReadableMerchantStorePopulator populator = new
+		 * ReadableMerchantStorePopulator();
+		 * populator.setCountryService(countryService);
+		 * populator.setZoneService(zoneService);
+		 */
+		return readableMerchantStorePopulator.populate(store, new ReadableMerchantStore(), store, language);
+	}
 
 }

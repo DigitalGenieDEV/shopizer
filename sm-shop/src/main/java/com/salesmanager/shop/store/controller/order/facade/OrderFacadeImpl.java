@@ -23,6 +23,7 @@ import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -188,7 +189,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private FulfillmentFacade fulfillmentFacade;
 	@Autowired
 	private AdditionalServicesConvert additionalServicesConvert;
-
+	@Autowired
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStore store, Customer customer, ShoppingCart shoppingCart,
@@ -1077,6 +1079,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
@@ -1203,6 +1206,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, store, language);
 				orderProducts.add(orderProduct);
@@ -1241,6 +1246,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
 				orderProducts.add(orderProduct);
@@ -1781,6 +1788,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 			try {
 				orderProductPopulator.populate(orderProduct, readableOrderProduct, null, language);

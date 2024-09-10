@@ -32,6 +32,7 @@ import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductSimplePopulator;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
@@ -64,6 +65,9 @@ public class ReadableOrderProductPopulator extends
 	private ProductService productService;
 	private PricingService pricingService;
 	private ImageFilePath imageUtils;
+
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
 
 
 	private InvoicePackingFormService invoicePackingFormService;
@@ -154,6 +158,7 @@ public class ReadableOrderProductPopulator extends
 			target.setDelivery(address);
 		}
 
+
 		if(source.getOrder().getBilling()!=null) {
 			ReadableBilling address = new ReadableBilling();
 			address.setEmail(source.getOrder().getCustomerEmailAddress());
@@ -195,7 +200,7 @@ public class ReadableOrderProductPopulator extends
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);
-					
+					populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
 					ProductVariant productVariant = productVariantService.queryBySku(productSku);
@@ -283,5 +288,13 @@ public class ReadableOrderProductPopulator extends
 
 	public void setAdditionalServicesConvert(AdditionalServicesConvert additionalServicesConvert) {
 		this.additionalServicesConvert = additionalServicesConvert;
+	}
+
+	public ReadableMerchantStorePopulator getReadableMerchantStorePopulator() {
+		return readableMerchantStorePopulator;
+	}
+
+	public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
+		this.readableMerchantStorePopulator = readableMerchantStorePopulator;
 	}
 }
