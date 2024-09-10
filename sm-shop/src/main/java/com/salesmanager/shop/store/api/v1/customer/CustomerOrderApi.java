@@ -36,7 +36,7 @@ import java.security.Principal;
 @SwaggerDefinition(tags = { @Tag(name = "Order flow resource", description = "Manage orders (list, get)") })
 public class CustomerOrderApi {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerOrderApi.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Customer.class);
 
     @Inject
     private CustomerService customerService;

@@ -254,8 +254,8 @@
 		<dependency>
 		      <groupId>com.querydsl</groupId>
 		      <artifactId>querydsl-jpa</artifactId>
-	    </dependency>	
-	</dependencies>
+	    </dependency>
+    </dependencies>
 	
 
 </project>
