@@ -45,6 +45,13 @@ public class QcInfo extends SalesManagerEntity<Long, QcInfo> implements Auditabl
     private Long productId;
 
 
+    /**
+     * 订单商品id
+     */
+    @Column(name = "ORDER_PRODUCT_ID")
+    private Long orderProductId;
+
+
 
     @Column(name = "VIDEO_URL")
     private String videoUrl;

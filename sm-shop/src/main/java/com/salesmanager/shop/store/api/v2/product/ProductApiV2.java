@@ -1119,10 +1119,12 @@ public class ProductApiV2 {
 
 
 	@RequestMapping(value = {"/private/materials/list","/auth/materials/list"}, method = RequestMethod.GET)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	@ResponseBody
-	public CommonResultDTO<List<ReadableMaterial>> getMaterials()  {
+	public CommonResultDTO<List<ReadableMaterial>> getMaterials(@ApiIgnore Language language)  {
 		try {
-			List<ReadableMaterial> materials = erpFacade.getMaterials();
+			List<ReadableMaterial> materials = erpFacade.getMaterials(language);
 			return CommonResultDTO.ofSuccess(materials);
 		}catch(Exception e){
 			LOGGER.error("getMaterials error", e);

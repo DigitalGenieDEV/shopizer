@@ -93,12 +93,11 @@ public class ReadableOrderPopulator extends
 		target.setOrderStatus(source.getStatus());
 		target.setCurrency(source.getCurrency().getCode());
 		//target.setCurrencyModel(source.getCurrency());
-
 		target.setOrderType(source.getOrderType() == null? null : source.getOrderType().name());
 		target.setImportMain(source.getImportMain() == null? null : source.getImportMain().name());
 		target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
-		target.setDateCreated(source.getAuditSection().getDateCreated());
-		target.setDateModified(source.getAuditSection().getDateModified());
+		target.setDateCreated(source.getAuditSection() == null ? null : source.getAuditSection().getDateCreated());
+		target.setDateModified(source.getAuditSection() == null ? null :source.getAuditSection().getDateModified());
 
 		Long customerId = source.getCustomerId();
 		if (source.getCustomerId() != null) {

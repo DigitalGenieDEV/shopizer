@@ -116,7 +116,7 @@ public class StoreCertificationFileApi {
 	}
 	
 	@PostMapping(value = {"/auth/store/certification/templete", "/private/store/certification/templete"}, produces ={ "application/json" })
-	@ApiOperation(httpMethod = "Post", value = "Sends request to create Certification Document's Templete", notes = "")
+	@ApiOperation(httpMethod = "POST", value = "Sends request to create Certification Document's Templete", notes = "")
 	public ResponseEntity<?> registerTemplete(HttpServletRequest request, 
 			@Valid @RequestBody PersistableCertificationConfig persistableCertificationConfig, 
 			@ApiIgnore MerchantStore merchantStore) throws Exception {

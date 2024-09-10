@@ -7,5 +7,6 @@ import lombok.Data;
 public class PersistableGeneralDocument extends GeneralDocument{
 
 
+    private Long shippingOrderId;
 
 }

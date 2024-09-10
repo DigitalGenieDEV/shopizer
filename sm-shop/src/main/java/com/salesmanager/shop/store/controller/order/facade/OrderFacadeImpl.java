@@ -12,18 +12,29 @@ import javax.inject.Inject;
 
 import com.salesmanager.core.business.fulfillment.service.FulfillmentHistoryService;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.fulfillment.service.ShippingOrderService;
+import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentOrderRepository;
+import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
-import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
-import com.salesmanager.core.model.fulfillment.FulfillmentHistory;
+import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.fulfillment.*;
+import com.salesmanager.core.model.fulfillment.GeneralDocument;
+import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
+import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
+import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.order.*;
+import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
-import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
+import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
+import com.salesmanager.shop.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -31,8 +42,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -103,11 +116,6 @@ import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
-import com.salesmanager.shop.utils.DateUtil;
-import com.salesmanager.shop.utils.EmailTemplatesUtils;
-import com.salesmanager.shop.utils.ImageFilePath;
-import com.salesmanager.shop.utils.LabelUtils;
-import com.salesmanager.shop.utils.LocaleUtils;
 
 @Service("orderFacade")
 public class OrderFacadeImpl implements OrderFacade {
@@ -122,6 +130,12 @@ public class OrderFacadeImpl implements OrderFacade {
 	private OrderService orderService;
 	@Inject
 	private ProductService productService;
+
+	@Autowired
+	private OrderProductRepository orderProductRepository;
+
+	@Autowired
+	private ShippingDocumentOrderRepository shippingDocumentOrderRepository;
 
 	@Inject
 	private ProductAttributeService productAttributeService;
@@ -177,6 +191,9 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
 
+	@Autowired
+	private ShippingOrderService shippingOrderService;
+
 
 	@Autowired
 	private ProductVariantService productVariantService;
@@ -188,7 +205,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private FulfillmentFacade fulfillmentFacade;
 	@Autowired
 	private AdditionalServicesConvert additionalServicesConvert;
-
+	@Autowired
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStore store, Customer customer, ShoppingCart shoppingCart,
@@ -1077,6 +1095,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
@@ -1101,6 +1120,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		// ReadableOrderPopulator orderPopulator = new ReadableOrderPopulator();
 		Locale locale = LocaleUtils.getLocale(language);
+		// FIXME: not thread safe
 		readableOrderPopulator.setLocale(locale);
 
 		List<Order> orders = orderList.getOrders();
@@ -1203,6 +1223,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, store, language);
 				orderProducts.add(orderProduct);
@@ -1241,6 +1263,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
 				orderProducts.add(orderProduct);
@@ -1781,6 +1805,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
 			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
 			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 			try {
 				orderProductPopulator.populate(orderProduct, readableOrderProduct, null, language);
@@ -1790,5 +1816,221 @@ public class OrderFacadeImpl implements OrderFacade {
 			return readableOrderProduct;
 		}).filter(Objects::nonNull).collect(Collectors.toList());
 
+	}
+
+
+
+	@Override
+	public List<ReadableOrderProduct> queryShippingOrderListProducts(Locale locale, Language language, Long shippingOrderId) throws ConversionException {
+		ShippingDocumentOrder shippingDocumentOrder = shippingDocumentOrderRepository.getById(shippingOrderId);
+		if (shippingDocumentOrder == null){
+			return null;
+		}
+		Set<OrderProduct> orderProducts = shippingDocumentOrder.getOrderProducts();
+		if (CollectionUtils.isEmpty(orderProducts)){
+			return null;
+		}
+		List<ReadableOrderProduct> returnList = new ArrayList<>();
+
+		for (OrderProduct product : orderProducts) {
+			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
+			orderProductPopulator.setLocale(locale);
+			orderProductPopulator.setProductService(productService);
+			orderProductPopulator.setPricingService(pricingService);
+			orderProductPopulator.setimageUtils(imageUtils);
+			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
+			orderProductPopulator.setProductVariantService(productVariantService);
+			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+			ReadableOrderProduct orderProduct = new ReadableOrderProduct();
+			orderProductPopulator.populate(product, orderProduct, null, language);
+			returnList.add(orderProduct);
+		}
+		return returnList;
+	}
+
+	@Override
+	public ReadableOrderProductShippingList queryShippingOrderProductsList(Locale locale, Language language, ShippingOrderProductQuery query) {
+
+		ReadableOrderProductShippingList readableList = new ReadableOrderProductShippingList();
+		try {
+			/**
+			 * Is this a pageable request
+			 */
+			OrderProductList orderProductList = orderProductRepository.findByProductNameOrOrderId(query);
+
+
+			readableList.setRecordsTotal(orderProductList.getTotalCount());
+
+			List<OrderProduct> content = orderProductList.getOrderProducts();
+
+			List<ReadableOrderProduct> returnList = new ArrayList<>();
+
+			if (CollectionUtils.isEmpty(content)){
+				return readableList;
+			}
+
+			for (OrderProduct product : content) {
+				ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
+				orderProductPopulator.setLocale(locale);
+				orderProductPopulator.setProductService(productService);
+				orderProductPopulator.setPricingService(pricingService);
+				orderProductPopulator.setimageUtils(imageUtils);
+				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+				orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
+				orderProductPopulator.setProductVariantService(productVariantService);
+				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
+				orderProductPopulator.populate(product, orderProduct, null, language);
+				returnList.add(orderProduct);
+			}
+
+			readableList.setProducts(returnList);
+			return readableList;
+
+		} catch (Exception e) {
+			throw new ServiceRuntimeException("Error while get manufacturers",e);
+		}
+	}
+
+	@Override
+	public ReadableShippingDocumentOrderList queryShippingDocumentOrderList(Locale locale, Language language, ShippingOrderProductQuery query){
+		ReadableShippingDocumentOrderList readableList = new ReadableShippingDocumentOrderList();
+		try {
+			/**
+			 * Is this a pageable request
+			 */
+			ShippingDocumentOrderList orderProductList = shippingDocumentOrderRepository.queryShippingDocumentOrderList(query);
+
+
+			readableList.setRecordsTotal(orderProductList.getTotalCount());
+
+			List<ShippingDocumentOrder> content = orderProductList.getShippingDocumentOrders();
+
+			List<ReadableShippingDocumentOrder> readableShippingDocumentOrders = new ArrayList<>();
+
+
+			for (ShippingDocumentOrder shippingDocumentOrder : content) {
+
+				ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
+				readableShippingDocumentOrder.setShippingNo(shippingDocumentOrder.getShippingNo());
+
+				Set<GeneralDocument> generalDocuments = shippingDocumentOrder.getGeneralDocuments();
+
+				if (CollectionUtils.isNotEmpty(generalDocuments)) {
+					List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.stream()
+							.map(generalDocument -> {
+								ReadableGeneralDocument readableGeneralDocument = ObjectConvert.convert(generalDocument, ReadableGeneralDocument.class);
+								readableGeneralDocument.setDocumentType(generalDocument.getDocumentType()==null? null : generalDocument.getDocumentType().name());
+								return readableGeneralDocument;
+							})
+							.filter(Objects::nonNull)
+							.collect(Collectors.toList());
+
+					InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(shippingDocumentOrder.getInvoicePackingFormId());
+					if (invoicePackingForm != null) {
+						readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+					}
+
+					readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+				}
+				readableShippingDocumentOrders.add(readableShippingDocumentOrder);
+			}
+
+			readableList.setReadableShippingDocumentOrders(readableShippingDocumentOrders);
+			return readableList;
+
+		} catch (Exception e) {
+			throw new ServiceRuntimeException("Error while get manufacturers",e);
+		}
+
+	}
+
+
+	private ReadableInvoicePackingForm convertToReadableInvoicePackingForm(InvoicePackingForm invoicePackingForm) {
+		if (invoicePackingForm == null) {
+			return null;
+		}
+		try {
+			ReadableInvoicePackingForm readableInvoicePackingForm = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
+
+			Set<InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
+			if (invoicePackingFormDetails != null) {
+				List<ReadableInvoicePackingFormDetail> invoicePackingFormDetailList = invoicePackingFormDetails.stream()
+						.map(invoicePackingFormDetail -> ObjectConvert.convert(invoicePackingFormDetail, ReadableInvoicePackingFormDetail.class))
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+				readableInvoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
+			}
+
+			return readableInvoicePackingForm;
+		} catch (Exception e) {
+			LOGGER.error("convertToReadableInvoicePackingForm error", e);
+			return null;
+		}
+	}
+
+
+	@Override
+	@Transactional
+	public String createShippingDocumentOrder(Long createDate){
+		Integer count = shippingDocumentOrderRepository.queryCountByCreateDate(new Date(createDate));
+		ShippingDocumentOrder shippingDocumentOrder = new ShippingDocumentOrder();
+		AuditSection auditSection = new AuditSection();
+		auditSection.setDateCreated(new Date(createDate));
+		shippingDocumentOrder.setAuditSection(auditSection);
+		shippingDocumentOrder.setShippingNo(UniqueIdGenerator.generateShippingOrderId(createDate, count+1));
+		shippingDocumentOrderRepository.save(shippingDocumentOrder);
+		return shippingDocumentOrder.getShippingNo();
+	}
+
+	@Override
+	public void deleteShippingDocumentOrder(Long id) {
+		ShippingDocumentOrder byId = shippingDocumentOrderRepository.getById(id);
+		List<Long> orderProducts = orderProductRepository.findIdListByShippingDocumentOrderId(id);
+
+		orderProducts.forEach(orderProductId->{
+			orderProductRepository.updateShippingDocumentOrderIdById(null, orderProductId);
+		});
+
+		shippingDocumentOrderRepository.delete(byId);
+	}
+
+	@Override
+	@Transactional
+	public void addShippingProductByOrderProductId(Long id, Long orderProductId) {
+		ShippingDocumentOrder shippingDocumentOrder = shippingDocumentOrderRepository.getById(id);
+		if (shippingDocumentOrder == null){
+			return;
+		}
+		OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
+		if (orderProduct == null){
+			return;
+		}
+
+		orderProductRepository.updateShippingDocumentOrderIdById(id, orderProductId);
+
+		orderProductRepository.updateIsInShippingOrderById(true, orderProductId);
+	}
+
+	@Override
+	@Transactional
+	public void removeShippingProductByOrderProductId(Long id, Long orderProductId) {
+		ShippingDocumentOrder shippingDocumentOrder = shippingDocumentOrderRepository.getById(id);
+		if (shippingDocumentOrder == null){
+			return;
+		}
+		OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
+		if (orderProduct == null){
+			return;
+		}
+
+		orderProductRepository.updateShippingDocumentOrderIdById(null, orderProductId);
+
+		orderProductRepository.updateIsInShippingOrderById(null, orderProductId);
 	}
 }

@@ -45,7 +45,7 @@ public class ProductFulfillmentApi {
     public @ResponseBody CommonResultDTO<Void> saveGeneralDocumentByOrderId(
             @Valid @RequestBody PersistableGeneralDocument persistableGeneralDocument) {
         try {
-            fulfillmentFacade.saveGeneralDocumentByOrderId(persistableGeneralDocument);
+            fulfillmentFacade.saveGeneralDocument(persistableGeneralDocument);
             return CommonResultDTO.ofSuccess();
         }catch (Exception e){
             LOGGER.error("save general document by order id error", e);
@@ -77,7 +77,7 @@ public class ProductFulfillmentApi {
     public @ResponseBody CommonResultDTO<Void> saveInvoicePackingFormByOrderId(
             @Valid @RequestBody PersistableInvoicePackingForm persistableInvoicePackingForm) {
         try {
-            fulfillmentFacade.saveInvoicePackingFormByOrderId(persistableInvoicePackingForm);
+            fulfillmentFacade.saveInvoicePackingForm(persistableInvoicePackingForm);
             return CommonResultDTO.ofSuccess();
         }catch (Exception e){
             LOGGER.error("save invoice packing form by order id error", e);

@@ -68,6 +68,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
                 QcInfo qcInfo = new QcInfo();
                 qcInfo.setOrderId(order.getId());
                 qcInfo.setProductId(orderProduct.getProductId());
+                qcInfo.setOrderId(orderProduct.getId());
                 qcInfoService.saveQcInfo(qcInfo);
             }
 

@@ -72,7 +72,7 @@ public class FavoritesApi {
 
     @GetMapping(value = "/auth/favorite/user/is_favorited/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(httpMethod = "count", value = "product favorites count by user and productId", notes = "")
+    @ApiOperation(httpMethod = "GET", value = "product favorites count by user and productId", notes = "")
     public CommonResultDTO<Boolean> isFavoriteByUserProduct(@PathVariable Long productId, HttpServletRequest request) {
         try {
             Principal principal = request.getUserPrincipal();
@@ -108,7 +108,7 @@ public class FavoritesApi {
 
     @GetMapping(value = "/favorite/count/product/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(httpMethod = "count", value = "product favorites count", notes = "")
+    @ApiOperation(httpMethod = "GET", value = "product favorites count", notes = "")
     public Integer favoriteProductCount(
             @PathVariable Long productId,
             HttpServletRequest request) {

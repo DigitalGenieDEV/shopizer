@@ -10,9 +10,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.reference.zone.Zone;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
@@ -102,13 +104,21 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	@JsonIgnore
 	@EqualsAndHashCode.Exclude
-	@ManyToOne(targetEntity = ShippingDocumentOrder.class)
+	@ManyToOne(targetEntity = ShippingDocumentOrder.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "SHIPPING_DOCUMENT_ORDER_ID")
 	private ShippingDocumentOrder shippingDocumentOrder;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="QC_INFO_ID")
+	private QcInfo qcInfo;
 
 
 	@Column (name="PRODUCT_NAME" , length=64 , nullable=false)
 	private String productName;
+
+
+	@Column (name="IS_IN_SHIPPING_ORDER")
+	private Boolean isInShippingOrder;
 
 	@Column (name="PRODUCT_QUANTITY")
 	private int productQuantity;
@@ -288,5 +298,21 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	public void setShippingDocumentOrder(ShippingDocumentOrder shippingDocumentOrder) {
 		this.shippingDocumentOrder = shippingDocumentOrder;
+	}
+
+	public Boolean getInShippingOrder() {
+		return isInShippingOrder;
+	}
+
+	public void setInShippingOrder(Boolean inShippingOrder) {
+		isInShippingOrder = inShippingOrder;
+	}
+
+	public QcInfo getQcInfo() {
+		return qcInfo;
+	}
+
+	public void setQcInfo(QcInfo qcInfo) {
+		this.qcInfo = qcInfo;
 	}
 }

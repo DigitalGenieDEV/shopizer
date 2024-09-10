@@ -24,6 +24,7 @@ import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
 import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
@@ -80,6 +81,8 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
     private FulfillmentFacade fulfillmentFacade;
     @Autowired
     private AdditionalServicesConvert additionalServicesConvert;
+    @Autowired
+    private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
 
     @Override
@@ -115,6 +118,8 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
             readableOrderProductPopulator.setProductVariantService(productVariantService);
             readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
             readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+            readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
             readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             List<ReadableOrderProduct> readableOrderProducts = new ArrayList<>();
             for (OrderProduct orderProduct : orderProducts) {
@@ -152,6 +157,8 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
         readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
         readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
         readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
+        readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+
         ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 
         try {

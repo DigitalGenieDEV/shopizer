@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
@@ -33,6 +34,7 @@ import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.core.utils.CloneUtils;
 
 @Entity
+@EntityListeners(value = AuditListener.class)
 @Table (name="ORDERS")
 public class Order extends SalesManagerEntity<Long, Order> implements Auditable {
 
