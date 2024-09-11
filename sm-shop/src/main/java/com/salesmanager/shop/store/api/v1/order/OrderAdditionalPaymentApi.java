@@ -50,7 +50,7 @@ public class OrderAdditionalPaymentApi {
     public ReadableOrderAdditionalPayment getAdditionalPayment(
             @PathVariable final String id
     ) throws Exception {
-        OrderAdditionalPayment payment = service.findById(id).get();
+        OrderAdditionalPayment payment = service.findById(id).orElse(new OrderAdditionalPayment());
         LOGGER.info("OrderAdditionalPaymentApi :: getAdditionalPayment id: {}", id);
         return readableOrderAdditionalPaymentPopulator.populate(payment, new ReadableOrderAdditionalPayment() ,null ,null);
     }
