@@ -5,6 +5,7 @@ import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface AdditionalServicesService extends SalesManagerEntityService<Long, AdditionalServices> {
@@ -15,6 +16,10 @@ public interface AdditionalServicesService extends SalesManagerEntityService<Lon
     AdditionalServices queryAdditionalServicesById(Long id);
 
     List<AdditionalServices> queryAdditionalServicesByIds(List<Long> ids);
+
+
+    Map<Long, AdditionalServices> queryAdditionalServicesByMerchantIds(Long merchantId);
+
 
     List<AdditionalServices> queryAdditionalServicesByMerchantId(Long merchantId, Language language);
 

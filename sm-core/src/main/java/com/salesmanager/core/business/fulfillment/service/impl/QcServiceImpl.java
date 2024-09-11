@@ -10,6 +10,8 @@ import com.salesmanager.core.model.fulfillment.QcInfoHistory;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -26,6 +28,7 @@ public class QcServiceImpl extends SalesManagerEntityServiceImpl<Long, QcInfo>  
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long saveQcInfo(QcInfo qcInfo) {
         qcInfoRepository.save(qcInfo);
         return qcInfo.getId();

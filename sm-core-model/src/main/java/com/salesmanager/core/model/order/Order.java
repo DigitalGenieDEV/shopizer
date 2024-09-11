@@ -81,6 +81,10 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Column (name ="ORDER_TOTAL")
 	private BigDecimal total;
 
+
+	@Column (name ="ORDER_NO")
+	private String orderNo;
+
 	@Column (name ="IP_ADDRESS")
 	private String ipAddress;
 	
@@ -450,6 +454,14 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 
 	public void setCustomsClearanceNumber(String customsClearanceNumber) {
 		this.customsClearanceNumber = customsClearanceNumber;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	@Override

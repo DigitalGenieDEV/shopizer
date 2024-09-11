@@ -779,8 +779,8 @@ public class ProductApiV2 {
 		}
 		criteria.setAuditStatus(auditStatus);
 		criteria.setShippingType(shippingType);
-		criteria.setStartTime(startTime);
-		criteria.setEndTime(endTime);
+		criteria.setCreateStartTime(startTime);
+		criteria.setCreateEndTime(endTime);
 		criteria.setStatus(status);
 		// End Category handling
 

@@ -57,6 +57,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      * 国内运输还是国外运输
      */
     @Column(name = "SHIPPING_TYPE")
+    @Enumerated(EnumType.STRING)
     private ShippingType shippingType;
 
     /**
@@ -64,6 +65,7 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      * @see TransportationMethod
      */
     @Column(name = "INTERNATIONAL_TRANSPORTATION_METHOD")
+    @Enumerated(EnumType.STRING)
     private TransportationMethod internationalTransportationMethod;
 
     /**

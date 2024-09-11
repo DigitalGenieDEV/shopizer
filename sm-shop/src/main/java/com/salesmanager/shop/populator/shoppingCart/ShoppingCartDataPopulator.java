@@ -121,8 +121,16 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 
                     shoppingCartItem.setPrice(pricingService.getDisplayAmount(item.getItemPrice(),store));
                     shoppingCartItem.setQuantity(item.getQuantity());
-                    
-                    
+
+                    shoppingCartItem.setInternationalTransportationMethod(item.getInternationalTransportationMethod());
+                    shoppingCartItem.setNationalTransportationMethod(item.getNationalTransportationMethod());
+                    shoppingCartItem.setShippingType(item.getShippingType());
+                    shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType());
+                    shoppingCartItem.setTruckModel(item.getTruckModel());
+                    shoppingCartItem.setPlayThroughOption(item.getPlayThroughOption());
+                    shoppingCartItem.setTruckType(item.getTruckType());
+                    shoppingCartItem.setAdditionalServicesIdMap(item.getAdditionalServicesIdMap());
+
                     cartQuantity = cartQuantity + item.getQuantity();
                     
                     shoppingCartItem.setProductPrice(item.getItemPrice());
