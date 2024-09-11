@@ -41,7 +41,7 @@ public class LambdaInvokeServiceImpl implements LambdaInvokeService {
 
     private String getResponse(String responseString) throws Exception {
         JSONObject responseJson = new JSONObject(responseString);
-        LOGGER.info("lambda response: " + responseString);
+        //LOGGER.info("lambda response: " + responseString);
         // 检查 statusCode
         int statusCode = responseJson.getInt("statusCode");
         if (statusCode != 200) {

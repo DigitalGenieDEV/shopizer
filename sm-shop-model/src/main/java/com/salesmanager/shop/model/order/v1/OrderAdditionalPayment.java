@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderAdditionalPayment extends Entity {
     private static final long serialVersionUID = 1L;
-    private Long orderId;
+    private String orderId;
     private AdditionalPayment additionalPayment;
     private ConfirmedAdditionalPayment confirmedAdditionalPayment;
 }

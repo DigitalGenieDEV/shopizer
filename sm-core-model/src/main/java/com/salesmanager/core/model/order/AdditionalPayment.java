@@ -86,7 +86,7 @@ public class AdditionalPayment {
 	@Column (name ="ADDITIONAL_FREIGHT_SURCHAGE")
 	private BigDecimal freightSurcharge = BigDecimal.ZERO;
 
-	@ApiParam(value = "내륙운송비")
+	@ApiParam(value = "도착항비용")
 	@Column (name ="ADDITIONAL_PORT_ARRIVAL_CHARGE")
 	private BigDecimal portArrivalCharge = BigDecimal.ZERO;
 }

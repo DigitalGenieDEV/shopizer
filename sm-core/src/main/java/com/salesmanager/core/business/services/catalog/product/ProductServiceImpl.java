@@ -539,9 +539,9 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 			if (productCode == null){
 				return null;
 			}
-			long start = LogPermUtil.start("getBySku, sku:" + productCode);
+			//long start = LogPermUtil.start("getBySku, sku:" + productCode);
 			List<Object> products = productRepository.findBySku(productCode);
-			LogPermUtil.end("getBySku, sku:" + productCode, start);
+			//LogPermUtil.end("getBySku, sku:" + productCode, start);
 			if(products.isEmpty()) {
 				return null;
 			}

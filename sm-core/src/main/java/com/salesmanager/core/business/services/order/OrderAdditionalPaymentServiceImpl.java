@@ -24,7 +24,7 @@ public class OrderAdditionalPaymentServiceImpl implements OrderAdditionalPayment
     }
 
     @Override
-    public Optional<OrderAdditionalPayment> findById(Long id) {
+    public Optional<OrderAdditionalPayment> findById(String id) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: findById");
         return repository.findById(id);
     }

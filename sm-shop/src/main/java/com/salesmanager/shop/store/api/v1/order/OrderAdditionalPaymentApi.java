@@ -34,7 +34,7 @@ public class OrderAdditionalPaymentApi {
             method = RequestMethod.POST)
     @ResponseBody
     public void saveAdditionalPayment(
-            @PathVariable final Long id,
+            @PathVariable final String id,
             @RequestBody PersistableOrderAdditionalPayment payment
     ) throws Exception {
         LOGGER.info("OrderAdditionalPaymentApi :: saveAdditionalPayment id: {}", id);
@@ -48,7 +48,7 @@ public class OrderAdditionalPaymentApi {
             method = RequestMethod.GET)
     @ResponseBody
     public ReadableOrderAdditionalPayment getAdditionalPayment(
-            @PathVariable final Long id
+            @PathVariable final String id
     ) throws Exception {
         OrderAdditionalPayment payment = service.findById(id).get();
         LOGGER.info("OrderAdditionalPaymentApi :: getAdditionalPayment id: {}", id);

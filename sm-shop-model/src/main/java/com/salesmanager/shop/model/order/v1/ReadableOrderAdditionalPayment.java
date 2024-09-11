@@ -18,5 +18,6 @@ public class ReadableOrderAdditionalPayment extends OrderAdditionalPayment {
     private AdditionalPayment additionalPayment;
     @ApiParam(value = "추가 결제 확정 정보")
     private ConfirmedAdditionalPayment confirmedAdditionalPayment;
-
+    @ApiParam(value = "정산 필요 금액")
+    private AdditionalPayment settlementRequiredPayment;
 }

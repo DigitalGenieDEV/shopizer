@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface OrderAdditionalPaymentService {
 	void saveOrderAdditionalPaymentService(OrderAdditionalPayment orderAdditionalPayment);
-	Optional<OrderAdditionalPayment> findById(Long id);
+	Optional<OrderAdditionalPayment> findById(String id);
 }
