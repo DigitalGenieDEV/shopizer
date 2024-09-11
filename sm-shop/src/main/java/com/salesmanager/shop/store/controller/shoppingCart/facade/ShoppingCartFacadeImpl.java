@@ -316,6 +316,14 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 		item.setQuantity(shoppingCartItem.getQuantity());
 		item.setShoppingCart(cartModel);
 		item.setSku(product.getSku());
+		item.setInternationalTransportationMethod(shoppingCartItem.getInternationalTransportationMethod());
+		item.setNationalTransportationMethod(shoppingCartItem.getNationalTransportationMethod());
+		item.setShippingType(shoppingCartItem.getShippingType());
+		item.setShippingTransportationType(shoppingCartItem.getShippingTransportationType());
+		item.setTruckModel(shoppingCartItem.getTruckModel());
+		item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
+		item.setTruckType(shoppingCartItem.getTruckType());
+		item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
 
 		if (instance != null) {
 			item.setVariant(instance.getId());
@@ -384,6 +392,15 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 			item.setQuantity(shoppingCartItem.getQuantity());
 			item.setSku(shoppingCartItem.getProduct());
 			item.setShoppingCart(cartModel);
+			item.setInternationalTransportationMethod(shoppingCartItem.getInternationalTransportationMethod());
+			item.setNationalTransportationMethod(shoppingCartItem.getNationalTransportationMethod());
+			item.setShippingType(shoppingCartItem.getShippingType());
+			item.setShippingTransportationType(shoppingCartItem.getShippingTransportationType());
+			item.setTruckModel(shoppingCartItem.getTruckModel());
+			item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
+			item.setTruckType(shoppingCartItem.getTruckType());
+			item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
+
 			LOG.info("createCartItems item sku:" + item.getSku() + ", quantity:" + item.getQuantity());
 
 			/**

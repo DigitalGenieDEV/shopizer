@@ -250,7 +250,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	@Override
 	public void updateProductHsCode(Long productId, String hsCode, MerchantStore merchantStore) throws ServiceException {
-		Product product = productRepository.getByProductId(productId);
+		Product product = productRepository.getById(productId);
 		if (merchantStore!= null && product.getMerchantStore().getCode().equals(merchantStore.getCode())){
 			productRepository.updateProductHsCode(productId, hsCode);
 		}else {

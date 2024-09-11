@@ -152,6 +152,7 @@ public class ReadableOrderProductPopulator extends
 			address.setCity(source.getOrder().getDelivery().getCity());
 			address.setAddress(source.getOrder().getDelivery().getAddress());
 			address.setCompany(source.getOrder().getDelivery().getCompany());
+			address.setMessage(source.getOrder().getDelivery().getMessage());
 			address.setFirstName(source.getOrder().getDelivery().getFirstName());
 			address.setLastName(source.getOrder().getDelivery().getLastName());
 			address.setPostalCode(source.getOrder().getDelivery().getPostalCode());

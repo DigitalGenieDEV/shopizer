@@ -363,6 +363,21 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setNationalTransportationMethod(TransportationMethod.valueOf(customerShoppingCartItem.getNationalTransportationMethod()));
         }
 
+        List<PersistableProductAdditionalService> perAdditionalServiceList = customerShoppingCartItem.getAdditionalServices();
+
+        if (CollectionUtils.isNotEmpty(perAdditionalServiceList)){
+            Map<String, String> additionalServiceMap = new HashMap<>();
+
+            perAdditionalServiceList.forEach(perAdditionalService -> {
+                additionalServiceMap.put(String.valueOf(perAdditionalService.getAdditionalServiceId()),
+                        String.valueOf(perAdditionalService.getQuantity() == null? 1 :perAdditionalService.getQuantity()));
+
+            });
+            item.setAdditionalServicesIdMap(JSON.toJSONString(additionalServiceMap));
+        }else {
+            item.setAdditionalServicesIdMap(null);
+        }
+
 
 
         if (instance != null) {
@@ -685,6 +700,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
                 });
                 item.setAdditionalServicesIdMap(JSON.toJSONString(additionalServiceMap));
+            }else {
+                item.setAdditionalServicesIdMap(null);
             }
 
             if (customerShoppingCartItem.getShippingType() != null) {

@@ -3,6 +3,8 @@ package com.salesmanager.core.enmus;
 import com.salesmanager.core.model.catalog.product.Product;
 
 public enum AdditionalServiceEnums {
+
+
     /**
      *
      */

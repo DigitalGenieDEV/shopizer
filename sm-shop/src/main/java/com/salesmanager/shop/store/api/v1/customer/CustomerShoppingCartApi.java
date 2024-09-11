@@ -1,12 +1,14 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.fulfillment.service.FulfillmentMainOrderService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
@@ -39,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -53,6 +56,9 @@ public class CustomerShoppingCartApi {
 
     @Inject
     private CustomerShoppingCartFacade customerShoppingCartFacade;
+
+    @Autowired
+    private FulfillmentMainOrderService fulfillmentMainOrderService;
 
     @Inject
     private CustomerShoppingCartService customerShoppingCartService;
@@ -459,11 +465,11 @@ public class CustomerShoppingCartApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableCustomerOrderConfirmation checkout(
-            @Valid @RequestBody PersistableCustomerOrder persistableCustomerOrder, // order
-            @ApiIgnore Language language,
-            HttpServletRequest request,
-            HttpServletResponse response, Locale locale) throws Exception {
-        long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
+                @Valid @RequestBody PersistableCustomerOrder persistableCustomerOrder, // order
+                @ApiIgnore Language language,
+                HttpServletRequest request,
+                HttpServletResponse response, Locale locale) throws Exception {
+            long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
             Principal principal = request.getUserPrincipal();
             String userName = principal.getName();
 
@@ -485,6 +491,14 @@ public class CustomerShoppingCartApi {
             CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
             Long customerOrderId = modelCustomerOrder.getId();
             modelCustomerOrder.setId(customerOrderId);
+
+            //查询该笔订单下所有商家订单
+            List<Order> orders = modelCustomerOrder.getOrders();
+
+            orders.forEach(order -> {
+                //创建履约单
+                fulfillmentMainOrderService.createFulfillmentOrderByOrder(order);
+            });
 
             ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
 

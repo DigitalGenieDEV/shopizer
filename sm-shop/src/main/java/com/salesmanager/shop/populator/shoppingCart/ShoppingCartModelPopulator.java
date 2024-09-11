@@ -219,6 +219,16 @@ public class ShoppingCartModelPopulator
         item.setShoppingCart( cart );
         item.setSku(shoppingCartItem.getSku());
 
+        item.setInternationalTransportationMethod(shoppingCartItem.getInternationalTransportationMethod());
+        item.setNationalTransportationMethod(shoppingCartItem.getNationalTransportationMethod());
+        item.setShippingType(shoppingCartItem.getShippingType());
+        item.setShippingTransportationType(shoppingCartItem.getShippingTransportationType());
+        item.setTruckModel(shoppingCartItem.getTruckModel());
+        item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
+        item.setTruckType(shoppingCartItem.getTruckType());
+        item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
+
+
         // attributes
         List<ShoppingCartAttribute> cartAttributes = shoppingCartItem.getShoppingCartAttributes();
         if ( !CollectionUtils.isEmpty( cartAttributes ) )

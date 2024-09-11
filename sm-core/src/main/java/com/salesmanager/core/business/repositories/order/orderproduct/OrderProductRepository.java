@@ -35,6 +35,11 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Long
     @Query("UPDATE OrderProduct p SET p.shippingDocumentOrder.id = :shippingDocumentOrderId WHERE p.id = :id")
     void updateShippingDocumentOrderIdById(@Param("shippingDocumentOrderId") Long shippingDocumentOrderId, @Param("id") Long id);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE OrderProduct p SET p.qcInfo.id = :qcInfoId WHERE p.id = :id")
+    void updateQcInfoIdByOrderProductId(@Param("qcInfoId") Long qcInfoId, @Param("id") Long id);
+
 
 
     @Query("select op.id from OrderProduct op  where op.shippingDocumentOrder.id = ?1 ")

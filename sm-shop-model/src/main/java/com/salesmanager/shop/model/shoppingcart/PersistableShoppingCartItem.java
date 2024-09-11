@@ -3,6 +3,12 @@ package com.salesmanager.shop.model.shoppingcart;
 import java.io.Serializable;
 import java.util.List;
 
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
 
@@ -22,7 +28,52 @@ public class PersistableShoppingCartItem implements Serializable {
 	private String promoCode;
 	private List<ProductAttribute> attributes;
 
-	private PersistableProductAdditionalService additionalServices;
+	private String additionalServicesIdMap;
+
+	/**
+	 * 国内运输还是国外运输
+	 */
+	private ShippingType shippingType;
+
+	/**
+	 * 国际运输方式
+	 * @see TransportationMethod
+	 */
+	private TransportationMethod internationalTransportationMethod;
+
+	/**
+	 * 国内运输方式
+	 * @see TransportationMethod
+	 */
+	private TransportationMethod nationalTransportationMethod;
+
+
+	/**
+	 * 委托配送还是自提
+	 */
+	private ShippingTransportationType shippingTransportationType;
+
+
+	/**
+	 * 货车型号
+	 * @see TruckModelEnums
+	 */
+	private String truckModel;
+
+
+	/**
+	 * 通关选项
+	 * @see PlayThroughOptionsEnums
+	 */
+	private String playThroughOption;
+
+
+
+	/**
+	 * 货车类型
+	 * @see TruckTypeEnums
+	 */
+	private String truckType;
 
 
 	public String getPromoCode() {
@@ -52,11 +103,67 @@ public class PersistableShoppingCartItem implements Serializable {
 	}
 
 
-	public PersistableProductAdditionalService getAdditionalServices() {
-		return additionalServices;
+	public String getAdditionalServicesIdMap() {
+		return additionalServicesIdMap;
 	}
 
-	public void setAdditionalServices(PersistableProductAdditionalService additionalServices) {
-		this.additionalServices = additionalServices;
+	public void setAdditionalServicesIdMap(String additionalServicesIdMap) {
+		this.additionalServicesIdMap = additionalServicesIdMap;
+	}
+
+	public ShippingType getShippingType() {
+		return shippingType;
+	}
+
+	public void setShippingType(ShippingType shippingType) {
+		this.shippingType = shippingType;
+	}
+
+	public TransportationMethod getInternationalTransportationMethod() {
+		return internationalTransportationMethod;
+	}
+
+	public void setInternationalTransportationMethod(TransportationMethod internationalTransportationMethod) {
+		this.internationalTransportationMethod = internationalTransportationMethod;
+	}
+
+	public TransportationMethod getNationalTransportationMethod() {
+		return nationalTransportationMethod;
+	}
+
+	public void setNationalTransportationMethod(TransportationMethod nationalTransportationMethod) {
+		this.nationalTransportationMethod = nationalTransportationMethod;
+	}
+
+	public ShippingTransportationType getShippingTransportationType() {
+		return shippingTransportationType;
+	}
+
+	public void setShippingTransportationType(ShippingTransportationType shippingTransportationType) {
+		this.shippingTransportationType = shippingTransportationType;
+	}
+
+	public String getTruckModel() {
+		return truckModel;
+	}
+
+	public void setTruckModel(String truckModel) {
+		this.truckModel = truckModel;
+	}
+
+	public String getPlayThroughOption() {
+		return playThroughOption;
+	}
+
+	public void setPlayThroughOption(String playThroughOption) {
+		this.playThroughOption = playThroughOption;
+	}
+
+	public String getTruckType() {
+		return truckType;
+	}
+
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
 	}
 }

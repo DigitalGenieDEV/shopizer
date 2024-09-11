@@ -87,13 +87,7 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
         customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
-        //查询该笔订单下所有商家订单
-        List<Order> orders = customerOrder.getOrders();
 
-        orders.forEach(order -> {
-            //创建履约单
-            fulfillmentMainOrderService.createFulfillmentOrderByOrder(order);
-        });
         return transaction;
     }
 

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service("additionalServicesService")
 public class AdditionalServicesServiceImpl extends SalesManagerEntityServiceImpl<Long, AdditionalServices> implements AdditionalServicesService {
@@ -46,6 +48,17 @@ public class AdditionalServicesServiceImpl extends SalesManagerEntityServiceImpl
             additionalServices.add(queryAdditionalServicesById(id));
         }
         return additionalServices;
+    }
+
+    @Override
+    public Map<Long, AdditionalServices> queryAdditionalServicesByMerchantIds(Long merchantId) {
+        List<AdditionalServices> additionalServices = additionalServicesRepository.queryAdditionalServicesByMerchantId(merchantId);
+        if (CollectionUtils.isEmpty(additionalServices)){
+            return null;
+        }
+        // 将 List 转换为 Map<Long, AdditionalServices> 结构，id 为 key
+        return additionalServices.stream()
+                .collect(Collectors.toMap(AdditionalServices::getId, service -> service));
     }
 
     @Override

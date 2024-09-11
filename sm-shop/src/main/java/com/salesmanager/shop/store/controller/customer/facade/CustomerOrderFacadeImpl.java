@@ -468,6 +468,16 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         PersistableShoppingCartItem item = new PersistableShoppingCartItem();
         item.setProduct(lineItem.getSku());
         item.setQuantity(lineItem.getQuantity());
+        item.setInternationalTransportationMethod(lineItem.getInternationalTransportationMethod());
+        item.setNationalTransportationMethod(lineItem.getNationalTransportationMethod());
+        item.setShippingType(lineItem.getShippingType());
+        item.setShippingTransportationType(lineItem.getShippingTransportationType());
+        item.setTruckModel(lineItem.getTruckModel());
+        item.setPlayThroughOption(lineItem.getPlayThroughOption());
+        item.setTruckType(lineItem.getTruckType());
+        item.setAdditionalServicesIdMap(lineItem.getAdditionalServicesIdMap());
+
+
 //                item.setAttributes(lineItem.getProduct().getAttributes());
 //                item.setPromoCode(lineItem.);
 

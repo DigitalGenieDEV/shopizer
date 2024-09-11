@@ -149,6 +149,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             address.setCity(delivery.getCity());
             address.setAddress(delivery.getAddress());
             address.setCompany(delivery.getCompany());
+            address.setMessage(delivery.getMessage());
             address.setFirstName(delivery.getFirstName());
             address.setLastName(delivery.getLastName());
             address.setPostalCode(delivery.getPostalCode());
