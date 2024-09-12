@@ -150,10 +150,10 @@ public class SearchAttrFiltUtils {
             try {
                 ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
 
-                List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId()).stream()
+                List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + productAttribute.getId()).stream()
                         .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
                         .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList());//tmpzk
                 ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
 
                 attrKv.setAttrName(attrName);
@@ -225,7 +225,7 @@ public class SearchAttrFiltUtils {
             Set<ProductOptionDescription> productOptionDescriptions = productOption.getDescriptions();
 
             ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
-            kv.setValue(FILT_KEY_ATTR_PREFIX + "_" + productAttribute.getId());
+            kv.setValue(FILT_KEY_ATTR_PREFIX + productAttribute.getId());//tmpzk
 
             for (ProductOptionDescription productOptionDescription : productOptionDescriptions) {
                 if (productOptionDescription.getLanguage().getId() == language.getId()) {
