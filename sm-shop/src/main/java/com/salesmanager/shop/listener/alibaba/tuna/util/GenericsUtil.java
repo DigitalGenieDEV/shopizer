@@ -15,6 +15,8 @@
  */
 package com.salesmanager.shop.listener.alibaba.tuna.util;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -281,5 +283,6 @@ public final class GenericsUtil {
         }
         return true;
     }
+
 
 }

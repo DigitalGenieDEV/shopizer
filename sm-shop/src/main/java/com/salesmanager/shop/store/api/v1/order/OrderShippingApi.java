@@ -381,6 +381,8 @@ public class OrderShippingApi {
         if (count != null) {
             query.setMaxCount(count);
         }
+        query.setCreateStartTime(createStartTime);
+        query.setCreateEndTime(createEndTime);
 
         try {
             ReadableShippingDocumentOrderList result  = orderFacade.queryShippingDocumentOrderList(LocaleUtils.getLocale(language), language, query);
@@ -479,7 +481,5 @@ public class OrderShippingApi {
             return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
         }
     }
-
-
 
 }
