@@ -2,6 +2,7 @@ package com.salesmanager.shop.model.order.v1;
 
 import com.salesmanager.core.model.order.AdditionalPayment;
 import com.salesmanager.core.model.order.ConfirmedAdditionalPayment;
+import com.salesmanager.core.model.order.OrderAdditionalPaymentStatus;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,4 +29,6 @@ public class ReadableOrderAdditionalPayment extends OrderAdditionalPayment {
     private BigDecimal confirmedPaymentTotal = BigDecimal.ZERO;
     @ApiParam(value = "정산 필요 금액 합계")
     private BigDecimal settlementPaymentTotal = BigDecimal.ZERO;
+    @ApiParam(value = "2차 결제 상태")
+    private OrderAdditionalPaymentStatus status = OrderAdditionalPaymentStatus.WAITING;
 }

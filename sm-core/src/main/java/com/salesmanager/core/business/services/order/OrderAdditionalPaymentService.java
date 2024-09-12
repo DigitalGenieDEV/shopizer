@@ -6,6 +6,7 @@ import java.util.Optional;
 
 
 public interface OrderAdditionalPaymentService {
-	void saveOrderAdditionalPaymentService(OrderAdditionalPayment orderAdditionalPayment);
+	void saveOrderAdditionalPayment(OrderAdditionalPayment orderAdditionalPayment);
+	void requestOrderAdditionalPayment(String id);
 	Optional<OrderAdditionalPayment> findById(String id);
 }

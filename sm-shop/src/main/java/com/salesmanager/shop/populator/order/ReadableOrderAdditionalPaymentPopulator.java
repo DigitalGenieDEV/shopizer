@@ -27,6 +27,8 @@ public class ReadableOrderAdditionalPaymentPopulator extends AbstractDataPopulat
             AdditionalPayment additional = source.getAdditionalPayment();
             ConfirmedAdditionalPayment confirmed = source.getConfirmedAdditionalPayment();
 
+            target.setStatus(source.getStatus());
+
             if (additional != null) {
                 target.setAdditionalPayment(additional);
                 BigDecimal total = getAdditionalTotal(additional);

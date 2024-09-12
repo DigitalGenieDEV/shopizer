@@ -64,12 +64,12 @@ public class RecProductServiceImpl implements RecProductService {
         for (ProductResult p : productResults) {
             try {
                 long start = System.currentTimeMillis();
-                LOGGER.info("get product id [" + p.getProductId() + "]");
+                //LOGGER.info("get product id [" + p.getProductId() + "]");
                 Product product = productService.getById(Long.valueOf(p.getProductId()));
                 if(product != null && product.getId() != null && product.getId() > 0) {
                     products.add(product);
                 }
-                LOGGER.info("get product id [" + p.getProductId() + "] cost " + (System.currentTimeMillis() - start)+"ms");
+                //LOGGER.info("get product id [" + p.getProductId() + "] cost " + (System.currentTimeMillis() - start)+"ms");
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error("get product id [" + p.getProductId() + "] exception", e);
