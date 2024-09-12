@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,4 +22,10 @@ public class ReadableOrderAdditionalPayment extends OrderAdditionalPayment {
     private ConfirmedAdditionalPayment confirmedAdditionalPayment;
     @ApiParam(value = "정산 필요 금액")
     private AdditionalPayment settlementRequiredPayment;
+    @ApiParam(value = "추가 결제 청구 합계")
+    private BigDecimal additionalPaymentTotal = BigDecimal.ZERO;
+    @ApiParam(value = "추가 결제 청구 합계")
+    private BigDecimal confirmedPaymentTotal = BigDecimal.ZERO;
+    @ApiParam(value = "정산 필요 금액 합계")
+    private BigDecimal settlementPaymentTotal = BigDecimal.ZERO;
 }
