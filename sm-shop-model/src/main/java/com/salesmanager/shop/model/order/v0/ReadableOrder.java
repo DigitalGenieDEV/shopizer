@@ -9,6 +9,7 @@ import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentMainOrder;
 import com.salesmanager.shop.model.order.OrderEntity;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.total.OrderTotal;
+import com.salesmanager.shop.model.order.v1.ReadableOrderInvoice;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
 
 import java.io.Serializable;
@@ -29,6 +30,15 @@ public class ReadableOrder extends OrderEntity implements Serializable {
 	private ReadableDelivery delivery;
 	private ReadableMerchantStore store;
 	private ReadableFulfillmentMainOrder fulfillmentMainOrder;
+	private ReadableOrderInvoice invoice;
+
+	public ReadableOrderInvoice getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(ReadableOrderInvoice invoice) {
+		this.invoice = invoice;
+	}
 
 	public ReadableFulfillmentMainOrder getFulfillmentMainOrder() {
 		return fulfillmentMainOrder;

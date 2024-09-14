@@ -39,6 +39,7 @@ public class Order extends Entity {
 	private String currency;
 	private List<OrderAttribute> attributes = new ArrayList<OrderAttribute>();
 
+	private OrderInvoice orderInvoice;
 
 	public boolean isCustomerAgreement() {
 		return customerAgreement;
@@ -95,5 +96,13 @@ public class Order extends Entity {
 
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+
+	public OrderInvoice getInvoice() {
+		return orderInvoice;
+	}
+
+	public void setInvoice(OrderInvoice orderInvoice) {
+		this.orderInvoice = orderInvoice;
 	}
 }

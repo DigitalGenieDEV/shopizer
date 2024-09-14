@@ -12,10 +12,8 @@ import javax.validation.Valid;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.payments.ImportMainEnums;
-import com.salesmanager.core.model.reference.zone.Zone;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
@@ -191,6 +189,9 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Column (name ="CUSTOMER_EMAIL_ADDRESS", length=50, nullable=false)
 	private String customerEmailAddress;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "INVOICE_ID")
+	private OrderInvoice orderInvoice;
 
 	@Override
 	public Long getId() {
@@ -472,5 +473,13 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Override
 	public void setAuditSection(AuditSection auditSection) {
 		this.auditSection = auditSection;
+	}
+
+	public OrderInvoice getInvoice() {
+		return orderInvoice;
+	}
+
+	public void setInvoice(OrderInvoice orderInvoice) {
+		this.orderInvoice = orderInvoice;
 	}
 }

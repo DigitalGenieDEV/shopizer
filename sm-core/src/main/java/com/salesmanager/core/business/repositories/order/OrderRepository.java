@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.repositories.order;
 
+import com.salesmanager.core.model.order.OrderInvoice;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -55,4 +56,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 	@Query("UPDATE Order o SET o.status = :status WHERE o.id = :orderId")
 	void updateOrderStatus(@Param("orderId") Long orderId, @Param("status") OrderStatus status);
 
+	@Modifying
+	@Transactional
+	@Query("UPDATE Order o set o.orderInvoice.id = :invoiceId WHERE o.id = :orderId")
+	void updateOrderInvoice(@Param("orderId") Long orderId, @Param("invoiceId") Long invoiceId);
 }

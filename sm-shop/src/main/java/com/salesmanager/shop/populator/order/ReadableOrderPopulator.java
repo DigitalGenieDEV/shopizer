@@ -55,6 +55,8 @@ import com.salesmanager.shop.utils.ImageFilePath;
 @Component
 public class ReadableOrderPopulator extends
 		AbstractDataPopulator<Order, ReadableOrder> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderPopulator.class);
 	
 	@Autowired
 	private CountryService countryService;
@@ -82,7 +84,8 @@ public class ReadableOrderPopulator extends
 	@Autowired
 	private OrderProductService orderProductService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderPopulator.class);
+    @Autowired
+    private ReadableOrderInvoicePopulator readableOrderInvoicePopulator;
 
 	@Override
 	public ReadableOrder populate(Order source, ReadableOrder target,
@@ -221,6 +224,10 @@ public class ReadableOrderPopulator extends
 			}
 			
 			target.setDelivery(address);
+		}
+
+		if (source.getInvoice() != null) {
+			target.setInvoice(readableOrderInvoicePopulator.populate(source.getInvoice(), source.getMerchant(), language));
 		}
 		
 		List<com.salesmanager.shop.model.order.total.OrderTotal> totals = new ArrayList<com.salesmanager.shop.model.order.total.OrderTotal>();
