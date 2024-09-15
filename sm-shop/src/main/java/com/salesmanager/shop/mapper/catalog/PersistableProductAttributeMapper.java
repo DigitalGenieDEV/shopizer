@@ -66,7 +66,7 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 		if(!CollectionUtils.isEmpty((source.getOption().getDescriptions()))) {
 			productOption =  persistableProductOptionMapper.merge(source.getOption(),productOption, store, language);
 			try {
-				productOption.setCode(UUID.randomUUID().toString());
+				productOption.setCode(!StringUtils.isBlank(source.getOption().getCode()) ? source.getOption().getCode() : UUID.randomUUID().toString());
 				productOption.setMerchantStore(store);
 				productOptionService.saveOrUpdate(productOption);
 			} catch (ServiceException e) {
@@ -86,6 +86,7 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 			//ProductOption value is text
 			productOptionValue = new ProductOptionValue();
 			productOptionValue.setProductOptionDisplayOnly(true);
+			productOptionValue.setCode(!StringUtils.isBlank(source.getOptionValue().getCode()) ? source.getOptionValue().getCode() : UUID.randomUUID().toString());
 			productOptionValue.setCode(UUID.randomUUID().toString());
 			productOptionValue.setMerchantStore(store);
 		}
