@@ -14,16 +14,20 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table (name="ORDER_ADDITIONAL_PAYMENT")
-public class OrderAdditionalPayment extends SalesManagerEntity<Long, OrderAdditionalPayment> {
+public class OrderAdditionalPayment extends SalesManagerEntity<String, OrderAdditionalPayment> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column (name ="ORDER_ID" , unique=true , nullable=false )
-	private Long id;
+	private String id;
 
 	@Embedded
 	private AdditionalPayment additionalPayment;
 
 	@Embedded
 	private ConfirmedAdditionalPayment confirmedAdditionalPayment;
+
+	@Enumerated(EnumType.STRING)
+	@Column (name = "STATUS")
+	private OrderAdditionalPaymentStatus status = OrderAdditionalPaymentStatus.WAITING;
 }

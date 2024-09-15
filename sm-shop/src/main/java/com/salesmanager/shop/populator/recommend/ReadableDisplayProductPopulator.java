@@ -112,7 +112,7 @@ public class ReadableDisplayProductPopulator extends
         Validate.notNull(pricingService, "Requires to set PricingService");
         Validate.notNull(imageUtils, "Requires to set imageUtils");
 
-        LOGGER.info("populate display product [" + source.getId() + "]");
+        //LOGGER.info("populate display product [" + source.getId() + "]");
 
         long start = System.currentTimeMillis();
         try {
@@ -193,7 +193,7 @@ public class ReadableDisplayProductPopulator extends
                 target.setManufacturer(readableManufacturerPopulator.populate(source.getManufacturer(), new ReadableManufacturer(), store, language));
             }
 
-            LOGGER.info("populate display product [" + source.getId() + "] description");
+            //LOGGER.info("populate display product [" + source.getId() + "] description");
 
             if(description!=null) {
                 com.salesmanager.shop.model.catalog.product.ProductDescription tragetDescription = populateDescription(description);
@@ -420,7 +420,7 @@ public class ReadableDisplayProductPopulator extends
 
             }
 
-            LOGGER.info("populate display product [" + source.getId() + "] variant sku");
+            //LOGGER.info("populate display product [" + source.getId() + "] variant sku");
             // variants
             if (!CollectionUtils.isEmpty(source.getVariants()))
 
@@ -436,7 +436,7 @@ public class ReadableDisplayProductPopulator extends
             }
 
 
-            LOGGER.info("populate display product [" + source.getId() + "] feature");
+            //LOGGER.info("populate display product [" + source.getId() + "] feature");
             List<ProductFeature> listByProductId = productFeatureService.findListByProductId(source.getId());
             if (!CollectionUtils.isEmpty(listByProductId)){
                 List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
@@ -445,7 +445,7 @@ public class ReadableDisplayProductPopulator extends
 
 //            target.setSku(source.getSku());
 
-            LOGGER.info("populate display product [" + source.getId() + "] price");
+            //LOGGER.info("populate display product [" + source.getId() + "] price");
 
             //availability
 //            ProductAvailability availability = null;
@@ -502,7 +502,7 @@ public class ReadableDisplayProductPopulator extends
             }
 
 
-            LOGGER.info("populate display product [" + source.getId() + "] done");
+            //LOGGER.info("populate display product [" + source.getId() + "] done");
 
             return target;
 

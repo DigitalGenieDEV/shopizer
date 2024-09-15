@@ -17,7 +17,7 @@ import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentO
 import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
-import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.business.utils.*;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
@@ -27,6 +27,7 @@ import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.listener.alibaba.tuna.util.GenericsUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
@@ -65,9 +66,6 @@ import com.salesmanager.core.business.services.reference.zone.ZoneService;
 import com.salesmanager.core.business.services.shipping.ShippingQuoteService;
 import com.salesmanager.core.business.services.shipping.ShippingService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
-import com.salesmanager.core.business.utils.CoreConfiguration;
-import com.salesmanager.core.business.utils.CreditCardUtils;
-import com.salesmanager.core.business.utils.ProductPriceUtils;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.common.Billing;
@@ -1890,6 +1888,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 			readableList.setProducts(returnList);
+			readableList.setTotalPages(ListUtils.calculateTotalPages(readableList.getRecordsTotal(), query.getMaxCount()));
 			return readableList;
 
 		} catch (Exception e) {
@@ -1913,12 +1912,15 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			List<ReadableShippingDocumentOrder> readableShippingDocumentOrders = new ArrayList<>();
 
+			if (CollectionUtils.isEmpty(readableShippingDocumentOrders)){
+				return readableList;
+			}
 
 			for (ShippingDocumentOrder shippingDocumentOrder : content) {
 
 				ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
 				readableShippingDocumentOrder.setShippingNo(shippingDocumentOrder.getShippingNo());
-
+				readableShippingDocumentOrder.setId(shippingDocumentOrder.getId());
 				Set<GeneralDocument> generalDocuments = shippingDocumentOrder.getGeneralDocuments();
 
 				if (CollectionUtils.isNotEmpty(generalDocuments)) {
@@ -1942,6 +1944,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 			readableList.setReadableShippingDocumentOrders(readableShippingDocumentOrders);
+			readableList.setTotalPages(ListUtils.calculateTotalPages(readableList.getRecordsTotal(), query.getMaxCount()));
 			return readableList;
 
 		} catch (Exception e) {

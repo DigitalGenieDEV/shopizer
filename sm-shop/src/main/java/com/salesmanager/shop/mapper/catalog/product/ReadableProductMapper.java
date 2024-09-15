@@ -1,12 +1,10 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
+import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
@@ -91,6 +89,9 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 	@Autowired
 	private SellerTextInfoFacade sellerTextInfoFacade;
 
+	@Autowired
+	private ProductMaterialService productMaterialService;
+
 	@Override
 	public ReadableProduct convert(Product source, MerchantStore store, Language language) {
 		ReadableProduct product = new ReadableProduct();
@@ -171,6 +172,20 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 					language);
 			destination.setManufacturer(manufacturer);
 		}
+
+		List<ProductMaterial> productMaterialList = productMaterialService.queryByProductId(source.getId());
+		if (CollectionUtils.isNotEmpty(productMaterialList)){
+			List<com.salesmanager.shop.model.catalog.ProductMaterial> collect = productMaterialList.stream().map(productMaterial -> {
+				com.salesmanager.shop.model.catalog.ProductMaterial pm = new com.salesmanager.shop.model.catalog.ProductMaterial();
+				pm.setProductId(source.getId());
+				pm.setMaterialId(productMaterial.getMaterialId());
+				pm.setWeight(productMaterial.getWeight());
+				pm.setId(productMaterial.getId());
+				return pm;
+			}).filter(Objects::nonNull).collect(Collectors.toList());
+			destination.setProductMaterials(collect);
+		}
+
 
 		// images
 		Set<ProductImage> images = source.getImages();

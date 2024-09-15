@@ -381,6 +381,8 @@ public class OrderShippingApi {
         if (count != null) {
             query.setMaxCount(count);
         }
+        query.setCreateStartTime(createStartTime);
+        query.setCreateEndTime(createEndTime);
 
         try {
             ReadableShippingDocumentOrderList result  = orderFacade.queryShippingDocumentOrderList(LocaleUtils.getLocale(language), language, query);
@@ -395,6 +397,7 @@ public class OrderShippingApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = { "/private/shipping/create"})
+    @ResponseBody
     public CommonResultDTO<Void> createShipping(
             @Valid @RequestParam(name = "createTime") Long createTime) {
         try {
@@ -411,23 +414,43 @@ public class OrderShippingApi {
 
 
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     @PostMapping(value = { "/private/shipping/delete/{id}" })
-    public void delete(@PathVariable Long id) {
-        orderFacade.deleteShippingDocumentOrder(id);
+    public CommonResultDTO<Void> delete(@PathVariable Long id) {
+        try {
+            orderFacade.deleteShippingDocumentOrder(id);
+            return CommonResultDTO.ofSuccess();
+        }catch (Exception e){
+            LOGGER.error("delete error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
     }
 
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = { "/private/shipping/{id}/add/order_product/{orderProductId}" })
-    public void addShippingProductByOrderProductId(@PathVariable Long orderProductId, @PathVariable Long id) {
-        orderFacade.addShippingProductByOrderProductId(id, orderProductId);
+    public CommonResultDTO<Void> addShippingProductByOrderProductId(@PathVariable Long orderProductId, @PathVariable Long id) {
+        try {
+            orderFacade.addShippingProductByOrderProductId(id, orderProductId);
+            return CommonResultDTO.ofSuccess();
+        }catch (Exception e){
+            LOGGER.error("addShippingProductByOrderProductId error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
     }
 
 
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     @PostMapping(value = { "/private/shipping/{id}/remove/order_product/{orderProductId}" })
-    public void removeShippingProductByOrderProductId(@PathVariable Long orderProductId, @PathVariable Long id) {
-        orderFacade.removeShippingProductByOrderProductId(id, orderProductId);
+    public CommonResultDTO<Void> removeShippingProductByOrderProductId(@PathVariable Long orderProductId, @PathVariable Long id) {
+        try {
+            orderFacade.removeShippingProductByOrderProductId(id, orderProductId);
+            return CommonResultDTO.ofSuccess();
+        }catch (Exception e){
+            LOGGER.error("removeShippingProductByOrderProductId error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
     }
 
 
@@ -458,7 +481,5 @@ public class OrderShippingApi {
             return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
         }
     }
-
-
 
 }

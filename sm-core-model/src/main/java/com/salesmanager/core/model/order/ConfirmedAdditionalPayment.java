@@ -87,7 +87,7 @@ public class ConfirmedAdditionalPayment {
 	@Column (name ="CONFIRMED_ADDITIONAL_FREIGHT_SURCHAGE")
 	private BigDecimal freightSurcharge = BigDecimal.ZERO;
 
-	@ApiParam(value = "내륙운송비")
+	@ApiParam(value = "도착항비용")
 	@Column (name ="CONFIRMED_ADDITIONAL_PORT_ARRIVAL_CHARGE")
 	private BigDecimal portArrivalCharge = BigDecimal.ZERO;
 }

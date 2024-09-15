@@ -150,8 +150,8 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
-	public Product getProductById(Long productId, Language language) throws ServiceException {
-		return productRepository.getProductById(productId, language);
+	public Product getProductById(Long productId) throws ServiceException {
+		return productRepository.getProductWithOnlyMerchantStoreById(productId);
 	}
 
 	@Override
@@ -516,7 +516,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 	
 	public Product getBySku(String productCode, MerchantStore merchant) throws ServiceException {
-
 		try {
 			List<Object> products = productRepository.findBySku(productCode, merchant.getId());
 			if(products.isEmpty()) {
@@ -527,9 +526,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		} catch (Exception e) {
 			throw new ServiceException("Cannot get product with sku [" + productCode + "]", e);
 		}
-		
-
-
 	}
 
 	@Override
@@ -539,9 +535,9 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 			if (productCode == null){
 				return null;
 			}
-			long start = LogPermUtil.start("getBySku, sku:" + productCode);
+			//long start = LogPermUtil.start("getBySku, sku:" + productCode);
 			List<Object> products = productRepository.findBySku(productCode);
-			LogPermUtil.end("getBySku, sku:" + productCode, start);
+			//LogPermUtil.end("getBySku, sku:" + productCode, start);
 			if(products.isEmpty()) {
 				return null;
 			}
@@ -598,7 +594,4 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 		return resourceLoader.getResource(
 				"classpath:" + file);
 	}
-
-
-
 }

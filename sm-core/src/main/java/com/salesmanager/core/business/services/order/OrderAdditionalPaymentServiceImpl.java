@@ -1,8 +1,11 @@
 package com.salesmanager.core.business.services.order;
 
+import com.google.api.gax.rpc.NotFoundException;
 import com.salesmanager.core.business.repositories.order.OrderAdditionalPaymentRepository;
 import com.salesmanager.core.model.order.OrderAdditionalPayment;
+import com.salesmanager.core.model.order.OrderAdditionalPaymentStatus;
 import lombok.RequiredArgsConstructor;
+import org.opensearch.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,27 @@ public class OrderAdditionalPaymentServiceImpl implements OrderAdditionalPayment
     private final OrderAdditionalPaymentRepository repository;
 
     @Override
-    public void saveOrderAdditionalPaymentService(OrderAdditionalPayment orderAdditionalPayment) {
-        LOGGER.info("OrderAdditionalPaymentServiceImpl :: saveOrderAdditionalPaymentService");
-        repository.save(orderAdditionalPayment);
+    public void saveOrderAdditionalPayment(OrderAdditionalPayment orderAdditionalPayment) {
+        LOGGER.info("OrderAdditionalPaymentServiceImpl :: saveOrderAdditionalPayment");
+        OrderAdditionalPayment payment = findById(orderAdditionalPayment.getId()).orElse(null);
+        if(payment == null)
+            repository.save(orderAdditionalPayment);
+        else if(payment.getStatus().equals(OrderAdditionalPaymentStatus.WAITING)) {
+            repository.save(orderAdditionalPayment);
+        }
     }
 
     @Override
-    public Optional<OrderAdditionalPayment> findById(Long id) {
+    public void requestOrderAdditionalPayment(String id) {
+        LOGGER.info("OrderAdditionalPaymentServiceImpl :: requestOrderAdditionalPayment");
+        OrderAdditionalPayment payment = findById(id).orElseThrow(() -> new ResourceNotFoundException("Order Additional Payment with id " + id + " does not exist"));
+        payment.setStatus(OrderAdditionalPaymentStatus.REQUEST);
+        // 요청 보내는 로직 추가 해야됨
+        repository.save(payment);
+    }
+
+    @Override
+    public Optional<OrderAdditionalPayment> findById(String id) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: findById");
         return repository.findById(id);
     }

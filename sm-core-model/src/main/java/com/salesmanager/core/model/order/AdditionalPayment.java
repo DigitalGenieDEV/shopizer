@@ -1,10 +1,7 @@
 package com.salesmanager.core.model.order;
 
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AdditionalPayment {
 	@ApiParam(value = "원산지 표시")
 	@Column (name ="ADDITIONAL_ORIGIN_CHARGE")
@@ -86,7 +84,7 @@ public class AdditionalPayment {
 	@Column (name ="ADDITIONAL_FREIGHT_SURCHAGE")
 	private BigDecimal freightSurcharge = BigDecimal.ZERO;
 
-	@ApiParam(value = "내륙운송비")
+	@ApiParam(value = "도착항비용")
 	@Column (name ="ADDITIONAL_PORT_ARRIVAL_CHARGE")
 	private BigDecimal portArrivalCharge = BigDecimal.ZERO;
 }

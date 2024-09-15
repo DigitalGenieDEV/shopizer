@@ -43,7 +43,7 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 
 
-	Product getProductById(Long productId, Language language) throws ServiceException;
+	Product getProductById(Long productId) throws ServiceException;
 	/**
 	 * The method to be used
 	 * @param product

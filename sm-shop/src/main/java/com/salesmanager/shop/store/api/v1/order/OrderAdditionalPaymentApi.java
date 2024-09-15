@@ -34,13 +34,13 @@ public class OrderAdditionalPaymentApi {
             method = RequestMethod.POST)
     @ResponseBody
     public void saveAdditionalPayment(
-            @PathVariable final Long id,
+            @PathVariable final String id,
             @RequestBody PersistableOrderAdditionalPayment payment
     ) throws Exception {
         LOGGER.info("OrderAdditionalPaymentApi :: saveAdditionalPayment id: {}", id);
         OrderAdditionalPayment target = new OrderAdditionalPayment();
         target.setId(id);
-        service.saveOrderAdditionalPaymentService(persistableOrderAdditionalPaymentPopulator.populate(payment, target, null, null));
+        service.saveOrderAdditionalPayment(persistableOrderAdditionalPaymentPopulator.populate(payment, target, null, null));
     }
 
     @RequestMapping(
@@ -48,10 +48,21 @@ public class OrderAdditionalPaymentApi {
             method = RequestMethod.GET)
     @ResponseBody
     public ReadableOrderAdditionalPayment getAdditionalPayment(
-            @PathVariable final Long id
+            @PathVariable final String id
     ) throws Exception {
-        OrderAdditionalPayment payment = service.findById(id).get();
+        OrderAdditionalPayment payment = service.findById(id).orElse(new OrderAdditionalPayment());
         LOGGER.info("OrderAdditionalPaymentApi :: getAdditionalPayment id: {}", id);
         return readableOrderAdditionalPaymentPopulator.populate(payment, new ReadableOrderAdditionalPayment() ,null ,null);
+    }
+
+    @RequestMapping(
+            value = {"/private/order/{id}/additional/payment/request"},
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void requestAdditionalPayment(
+            @PathVariable final String id
+    ) {
+        LOGGER.info("OrderAdditionalPaymentApi :: requestAdditionalPayment id: {}", id);
+        service.requestOrderAdditionalPayment(id);
     }
 }
