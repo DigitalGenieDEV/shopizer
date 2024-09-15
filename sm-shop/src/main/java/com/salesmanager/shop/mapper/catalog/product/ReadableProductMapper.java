@@ -125,9 +125,14 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 						&& desc.getLanguage().getId().intValue() == language.getId().intValue()) {
 					description = desc;
 					break;
+				}else {
+					com.salesmanager.shop.model.catalog.product.ProductDescription tragetDescription = populateDescription(
+							desc);
+					destination.getDescriptions().add(tragetDescription);
 				}
 			}
 		}
+
 
 		if (language == null){
 			language = store.getDefaultLanguage();
