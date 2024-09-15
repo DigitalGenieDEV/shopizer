@@ -26,4 +26,8 @@ public class OrderAdditionalPayment extends SalesManagerEntity<String, OrderAddi
 
 	@Embedded
 	private ConfirmedAdditionalPayment confirmedAdditionalPayment;
+
+	@Enumerated(EnumType.STRING)
+	@Column (name = "STATUS")
+	private OrderAdditionalPaymentStatus status = OrderAdditionalPaymentStatus.WAITING;
 }
