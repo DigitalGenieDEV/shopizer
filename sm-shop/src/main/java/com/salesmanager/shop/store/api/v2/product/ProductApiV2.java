@@ -312,7 +312,7 @@ public class ProductApiV2 {
 	 * @param language
 	 * @return
 	 */
-	@RequestMapping(value = "/private/product/id/{productId}", method = RequestMethod.GET)
+	@RequestMapping(value = {"/private/product/id/{productId}","/auth/product/id/{productId}"}, method = RequestMethod.GET)
 	@ApiOperation(httpMethod = "GET", value = "Get a product by productId", notes = "For Shop purpose. Specifying ?merchant is required otherwise it falls back to DEFAULT")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProduct.class) })
