@@ -15,6 +15,7 @@ import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "CUSTOMER_SHOPPING_CART_ITEM")
