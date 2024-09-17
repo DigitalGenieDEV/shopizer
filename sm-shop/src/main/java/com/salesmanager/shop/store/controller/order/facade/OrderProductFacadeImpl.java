@@ -1,11 +1,13 @@
 package com.salesmanager.shop.store.controller.order.facade;
 
+import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsService;
 import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderLogisticsTraceService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductDesignService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogistics;
 import com.salesmanager.core.model.crossorder.logistics.SupplierCrossOrderLogisticsTrace;
@@ -13,6 +15,7 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderProductCriteria;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.order.orderproduct.OrderProductDesign;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
@@ -21,8 +24,13 @@ import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisti
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogisticsTrace;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
+import com.salesmanager.shop.model.order.PersistableOrderProductDesign;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import com.salesmanager.shop.model.order.ReadableOrderProductDesign;
+import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
+import com.salesmanager.shop.populator.order.PersistableOrderProductDesignPopulator;
+import com.salesmanager.shop.populator.order.ReadableOrderProductDesignPopulator;
 import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
@@ -41,10 +49,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("orderProductFacade")
-public class OrderProductFacadeImpl implements OrderProductFacade{
+public class OrderProductFacadeImpl implements OrderProductFacade {
 
     @Inject
     private OrderProductService orderProductService;
+
+    @Inject
+    private OrderProductDesignService orderProductDesignService;
 
     @Inject
     private ProductService productService;
@@ -84,6 +95,11 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
     @Autowired
     private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 
+    @Inject
+    private PersistableOrderProductDesignPopulator persistableOrderProductDesignPopulator;
+
+    @Inject
+    private ReadableOrderProductDesignPopulator readableOrderProductDesignPopulator;
 
     @Override
     public ReadableOrderProductList getReadableOrderProductList(MerchantStore store, Customer customer, Integer page, Integer count, Language language) {
@@ -168,6 +184,32 @@ public class OrderProductFacadeImpl implements OrderProductFacade{
         }
 
         return readableOrderProduct;
+    }
+
+    @Override
+    public Boolean patchDesign(ReadableOrderProduct readableOrderProduct, PersistableOrderProductDesign persistableOrderProductDesign) {
+        OrderProductDesign orderProductDesign;
+        try {
+            OrderProductDesign existedOrderProductDesign = orderProductDesignService.getByOrderProductId(readableOrderProduct.getId());
+            orderProductDesign = persistableOrderProductDesignPopulator.populate(persistableOrderProductDesign, existedOrderProductDesign, null, null);
+        } catch (ConversionException e) {
+            throw new ServiceRuntimeException("Error while saveing order product design, order product id:" + readableOrderProduct.getId(), e);
+        }
+        return orderProductDesignService.save(orderProductDesign);
+    }
+
+    @Override
+    public ReadableOrderProductDesign getReadableOrderProductDesignById(Long id, MerchantStore merchantStore, Language language) {
+        OrderProductDesign orderProductDesign = orderProductDesignService.getByOrderProductId(id);
+
+        ReadableOrderProductDesign readableOrderProductDesign;
+        try {
+            readableOrderProductDesign = readableOrderProductDesignPopulator.populate(orderProductDesign, null, null);
+        } catch (ConversionException e) {
+            throw new ServiceRuntimeException("Error while getting order product design ", e);
+        }
+
+        return readableOrderProductDesign;
     }
 
     @Override

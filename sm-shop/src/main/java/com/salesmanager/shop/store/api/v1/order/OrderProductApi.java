@@ -4,12 +4,19 @@ import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderProductCriteria;
+import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogisticsTrace;
+import com.salesmanager.shop.model.order.PersistableOrderProductDesign;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import com.salesmanager.shop.model.order.ReadableOrderProductDesign;
+import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v1.ReadableOrderProductList;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
+import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.order.facade.OrderProductFacade;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -34,6 +42,9 @@ public class OrderProductApi {
 
     @Inject
     private OrderProductFacade orderProductFacade;
+
+    @Inject
+    private OrderFacade orderFacade;
 
     @Inject
     private CustomerService customerService;
@@ -111,6 +122,74 @@ public class OrderProductApi {
             return null;
         }
         return readableOrderProduct;
+    }
+
+
+    @RequestMapping(value = { "/auth/order_products/{id}/design" }, method = RequestMethod.PATCH)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+    public CommonResultDTO<Boolean> patchDesign(
+            @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+            @Valid @RequestBody PersistableOrderProductDesign persistableOrderProductDesign,
+            @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), "Error while patch design, customer not authorized");
+        }
+
+        ReadableOrderProduct readableOrderProduct = orderProductFacade.getReadableOrderProduct(id, merchantStore, language);
+        if (readableOrderProduct == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), "OrderProduct is null for id " + id);
+        }
+        persistableOrderProductDesign.setOrderProductId(readableOrderProduct.getId());
+
+        ReadableOrder readableOrder = orderFacade.getCustomerReadableOrder(readableOrderProduct.getOrderId(), customer, language);
+        if (readableOrder == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Error while patch design, order is not found");
+        }
+
+
+        OrderType orderType = OrderType.valueOf(readableOrderProduct.getOrderType());
+        if (!OrderType.OEM.equals(orderType)) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Error while patch degign, only OEM order support patch design");
+        }
+
+        return CommonResultDTO.ofSuccess(orderProductFacade.patchDesign(readableOrderProduct, persistableOrderProductDesign));
+    }
+
+    @RequestMapping(value = { "/auth/order_products/{id}/design" }, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+    public CommonResultDTO<ReadableOrderProductDesign> getDesign(
+            @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+            @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+        if (customer == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), "Error while patch design, customer not authorized");
+        }
+
+        ReadableOrderProduct readableOrderProduct = orderProductFacade.getReadableOrderProduct(id, merchantStore, language);
+        if (readableOrderProduct == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), "OrderProduct is null for id " + id);
+        }
+
+        ReadableOrder readableOrder = orderFacade.getCustomerReadableOrder(readableOrderProduct.getOrderId(), customer, language);
+        if (readableOrder == null) {
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Error while patch design, order is not found");
+        }
+
+        return CommonResultDTO.ofSuccess(orderProductFacade.getReadableOrderProductDesignById(readableOrderProduct.getId(), merchantStore, language));
     }
 
     @RequestMapping(value = { "/private/order_products/{id}/logistics" }, method = RequestMethod.GET)

@@ -31,6 +31,7 @@ import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
+import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.populator.catalog.ReadableProductPopulator;
 import com.salesmanager.shop.populator.catalog.ReadableProductSimplePopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
@@ -69,7 +70,6 @@ public class ReadableOrderProductPopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
-
 
 	private InvoicePackingFormService invoicePackingFormService;
 
@@ -176,6 +176,10 @@ public class ReadableOrderProductPopulator extends
 				attributes.add(readableAttribute);
 			}
 			target.setAttributes(attributes);
+		}
+
+		if (source.getOrder() != null) {
+			target.setOrderId(source.getOrder().getId());
 		}
 
 		if(source.getOrder().getDelivery()!=null) {

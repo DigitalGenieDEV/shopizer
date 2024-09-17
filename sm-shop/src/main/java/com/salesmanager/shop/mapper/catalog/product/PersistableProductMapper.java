@@ -151,6 +151,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			}
 
 			//PRODUCT TYPE
+			// FIXME: two fragment duplicate code
 			if(!StringUtils.isBlank(source.getType())) {
 				ProductType type = productTypeService.getByCode(source.getType(), store, language);
 				if(type == null) {

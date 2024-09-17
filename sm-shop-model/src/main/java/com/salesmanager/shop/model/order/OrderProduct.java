@@ -12,6 +12,7 @@ public class OrderProduct extends Entity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String sku;
+	private Long orderId;
 	public String getSku() {
 		return sku;
 	}
@@ -19,4 +20,11 @@ public class OrderProduct extends Entity implements Serializable {
 		this.sku = sku;
 	}
 
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
 }
