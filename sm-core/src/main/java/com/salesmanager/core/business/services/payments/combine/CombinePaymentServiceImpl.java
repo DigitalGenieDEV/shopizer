@@ -379,7 +379,7 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
 
         IntegrationModule integrationModule = getPaymentMethodByCode(store,customerOrder.getPaymentModuleCode());
 
-        CombineTransaction trx = combineTransactionService.getCapturableCombineTransaction(customerOrder);
+        CombineTransaction trx = combineTransactionService.getCapturableCombineTransaction(customerOrder, TransactionType.AUTHORIZE);
         if(trx==null) {
             throw new ServiceException("No capturable transaction for order id " + customerOrder.getId());
         }

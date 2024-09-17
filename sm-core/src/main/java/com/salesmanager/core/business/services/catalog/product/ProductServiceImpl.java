@@ -431,6 +431,11 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public Product findByProductId(Long id) {
+		return productRepository.findByProductId(id);
+	}
+
+	@Override
 	public Page<Product> listByStore(MerchantStore store, Language language, ProductCriteria criteria, int page,
 			int count) {
 
@@ -542,7 +547,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 				return null;
 			}
 			BigInteger id = (BigInteger) products.get(0);
-			return this.getById(id.longValue());
+			return findByProductId(id.longValue());
 		} catch (Exception e) {
 			LOGGER.error(productCode+" getBySku error", e);
 			throw new ServiceException("Cannot get product with sku [" + productCode + "]", e);

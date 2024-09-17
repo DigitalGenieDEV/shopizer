@@ -14,8 +14,14 @@ public interface FulfillmentHistoryService extends SalesManagerEntityService<Lon
     Long saveFulfillmentHistory(FulfillmentHistory fulfillmentHistory);
 
 
-    Long saveFulfillmentHistory(Long orderId, Long productId, String status, String previousStatus);
+    Long saveFulfillmentHistory(Long orderId, Long orderProductId, String status, String previousStatus);
 
     List<FulfillmentHistory> queryFulfillmentHistoryByOrderId(Long orderId);
+
+
+    List<FulfillmentHistory> queryFulfillmentHistoryByOrderIdAndProductId(Long orderId, Long orderProductId);
+
+
+    List< FulfillmentHistory> queryFulfillmentHistoryByOrderProductId(Long orderProductId);
 }
 

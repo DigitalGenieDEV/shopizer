@@ -17,7 +17,7 @@ public interface FulfillmentFacade {
 
     void saveGeneralDocument(PersistableGeneralDocument persistableGeneralDocument);
 
-    ReadableInvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId, Long productId);
+    ReadableInvoicePackingForm queryInvoicePackingFormByOrderProductId(Long orderId, Long orderProductId);
 
     void saveInvoicePackingForm(PersistableInvoicePackingForm persistableInvoicePackingForm);
 
@@ -38,9 +38,10 @@ public interface FulfillmentFacade {
 
     List<ReadableFulfillmentShippingInfo> queryShippingInformationByOrderId(Long orderId);
 
+    ReadableFulfillmentShippingInfo queryShippingInformationByOrderProductId(Long orderProductId);
 
-    void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO
-            , String type, Long id) throws ServiceException;
+
+    void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) throws ServiceException;
 
 
 }

@@ -158,4 +158,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"Product p " +
 			"WHERE  p.outProductId = ?1")
 	Product findByOutId(Long outId);
+
+
+	@Query(value="SELECT " +
+			"p " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.id = ?1")
+	Product findByProductId(Long id);
 }

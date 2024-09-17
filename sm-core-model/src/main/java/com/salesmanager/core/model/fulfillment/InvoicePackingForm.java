@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class InvoicePackingForm extends SalesManagerEntity<Long, InvoicePackingF
 
 
     @Column(name = "INVOICE_DATE")
-    private Long invoiceDate;
+    private String invoiceDate;
 
     @Column(name = "SHIPPER_COMPANY")
     private String shipperCompany;
@@ -76,6 +77,15 @@ public class InvoicePackingForm extends SalesManagerEntity<Long, InvoicePackingF
 
     @Column(name = "ORDER_ID")
     private Long orderId;
+
+    @Column(name = "LOCAL_TRANSPORTATION_CHARGE")
+    private String localTransportationCharge;
+
+    @Column(name = "OCEAN_FREIGHT_CHARGES")
+    private String oceanFreightCharges;
+
+    @Column(name = "INSURANCE_CHARGES")
+    private String insuranceCharges;
 
 
     @Column(name = "PRODUCT_ID")

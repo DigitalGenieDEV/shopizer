@@ -23,6 +23,10 @@ public class Order extends Entity {
 
 
 	/**
+	 */
+	private String orderNo;
+
+	/**
 	 * 进口主体
 	 * @see ImportMainEnums
 	 */
@@ -104,5 +108,13 @@ public class Order extends Entity {
 
 	public void setInvoice(OrderInvoice orderInvoice) {
 		this.orderInvoice = orderInvoice;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

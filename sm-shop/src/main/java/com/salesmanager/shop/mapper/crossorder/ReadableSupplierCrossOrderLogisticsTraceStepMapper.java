@@ -20,7 +20,7 @@ public class ReadableSupplierCrossOrderLogisticsTraceStepMapper implements Mappe
         ReadableSupplierCrossOrderLogisticsTraceStep destination = new ReadableSupplierCrossOrderLogisticsTraceStep();
         destination.setAcceptTime(source.getAcceptTime());
         destination.setRemark(source.getRemark());
-
+        destination.setId(source.getId());
         return destination;
     }
 
@@ -32,7 +32,7 @@ public class ReadableSupplierCrossOrderLogisticsTraceStepMapper implements Mappe
 
         destination.setAcceptTime(source.getAcceptTime());
         destination.setRemark(source.getRemark());
-
+        destination.setId(source.getId());
         return destination;
     }
 }

@@ -31,13 +31,13 @@ public class FulfillmentHistoryServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public Long saveFulfillmentHistory(Long orderId, Long productId, String status, String previousStatus) {
+    public Long saveFulfillmentHistory(Long orderId, Long orderProductId, String status, String previousStatus) {
         if (FulfillmentTypeEnums.fromString(status) == null){
             return null;
         }
         FulfillmentHistory fulfillmentHistory = new FulfillmentHistory();
         fulfillmentHistory.setOrderId(orderId);
-        fulfillmentHistory.setProductId(productId);
+        fulfillmentHistory.setOrderProductId(orderProductId);
         fulfillmentHistory.setPreviousStatus(FulfillmentHistoryTypeEnums.fromString(previousStatus));
         fulfillmentHistory.setStatus(FulfillmentHistoryTypeEnums.fromString(status));
         fulfillmentHistoryRepository.save(fulfillmentHistory);
@@ -47,6 +47,17 @@ public class FulfillmentHistoryServiceImpl extends SalesManagerEntityServiceImpl
     @Override
     public List<FulfillmentHistory> queryFulfillmentHistoryByOrderId(Long orderId){
        return fulfillmentHistoryRepository.queryFulfillmentHistoryByOrderId(orderId);
+    }
+
+    @Override
+    public List<FulfillmentHistory> queryFulfillmentHistoryByOrderIdAndProductId(Long orderId, Long productId) {
+        return fulfillmentHistoryRepository.queryFulfillmentHistoryByOrderIdAndProductId(orderId, productId);
+    }
+
+
+    @Override
+    public List<FulfillmentHistory> queryFulfillmentHistoryByOrderProductId(Long orderProductId) {
+        return fulfillmentHistoryRepository.queryFulfillmentHistoryByOrderProductId(orderProductId);
     }
 
 }

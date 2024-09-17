@@ -20,7 +20,7 @@ public class InvoicePackingForm {
     private String invoiceNo;
 
 
-    private Long invoiceDate;
+    private String invoiceDate;
 
     private String shipperCompany;
 
@@ -47,6 +47,12 @@ public class InvoicePackingForm {
      * 交易单id
      */
     private Long orderId;
+
+    private String localTransportationCharge;
+
+    private String oceanFreightCharges;
+
+    private String insuranceCharges;
 
 
 }

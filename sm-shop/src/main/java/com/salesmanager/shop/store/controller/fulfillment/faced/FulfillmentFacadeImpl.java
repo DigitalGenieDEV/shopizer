@@ -9,6 +9,7 @@ import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -78,8 +79,24 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
 
     @Override
-    public ReadableInvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId, Long productId) {
-        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = invoicePackingFormService.queryInvoicePackingFormByOrderIdAndProductId(orderId, productId);
+    public ReadableInvoicePackingForm queryInvoicePackingFormByOrderProductId(Long orderId, Long orderProductId) {
+
+        OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
+        if (orderProduct == null){
+            return null;
+        }
+
+        com.salesmanager.core.model.fulfillment.ShippingDocumentOrder shippingDocumentOrder = orderProduct.getShippingDocumentOrder();
+        if (shippingDocumentOrder == null || shippingDocumentOrder.getInvoicePackingFormId() == null){
+            return null;
+        }
+
+        Long invoicePackingFormId = shippingDocumentOrder.getInvoicePackingFormId();
+
+        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(invoicePackingFormId);
+        if (invoicePackingForm == null){
+            return null;
+        }
         ReadableInvoicePackingForm convert = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
 
         Set<com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
@@ -183,7 +200,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
     @Override
     public ReadableFulfillmentSubOrder queryFulfillmentSubOrderListByProductOrderId(Long productOrderId) {
         com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(productOrderId);
-        return  ObjectConvert.convert(fulfillmentSubOrder, ReadableFulfillmentSubOrder.class);
+        return   convertToReadableFulfillmentSubOrder(fulfillmentSubOrder);
     }
 
     @Override
@@ -232,41 +249,53 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         });
         Long mainId =  fulfillmentMainId.get();
         fulfillmentMainOrderService.updatePartialDelivery(mainId, true);
-
-
     }
 
     @Override
     public List<ReadableFulfillmentShippingInfo> queryShippingInformationByOrderId(Long orderId) {
-        List<com.salesmanager.core.model.fulfillment.FulfillmentHistory> fulfillmentHistories = fulfillmentHistoryService.queryFulfillmentHistoryByOrderId(orderId);
-        if (fulfillmentHistories == null){
-            return null;
-        }
 
-        List<ReadableFulfillmentShippingInfo> distinctFulfillmentHistories = fulfillmentHistories.stream()
-                .collect(Collectors.toMap(
-                        fh -> Arrays.asList(fh.getOrderId(), fh.getProductId(), fh.getStatus(), fh.getPreviousStatus()),
-                        fh -> ObjectConvert.convert(fh, ReadableFulfillmentShippingInfo.class),
-                        (fh1, fh2) -> fh1)) // 如果有重复的键，保留第一个
-                .values()
-                .stream()
-                .collect(Collectors.toList());
-        return distinctFulfillmentHistories;
+        List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(orderId);
+        if (CollectionUtils.isEmpty(fulfillmentSubOrders)){
+            return new ArrayList<>();
+        }
+        return fulfillmentSubOrders.stream().map(fulfillmentSubOrder -> {
+
+            return queryShippingInformationByOrderProductId(fulfillmentSubOrder.getOrderProductId());
+
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ReadableFulfillmentShippingInfo queryShippingInformationByOrderProductId(Long orderProductId) {
+        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(orderProductId);
+        ReadableFulfillmentShippingInfo result = new ReadableFulfillmentShippingInfo();
+
+        List<com.salesmanager.core.model.fulfillment.FulfillmentHistory> fulfillmentHistoryList = fulfillmentHistoryService.queryFulfillmentHistoryByOrderProductId(orderProductId);
+        if (CollectionUtils.isNotEmpty(fulfillmentHistoryList)){
+            List<FulfillmentHistory> fulfillmentHistories =  fulfillmentHistoryList.stream().map(fulfillmentHistory -> {
+                FulfillmentHistory convert = ObjectConvert.convert(fulfillmentHistory, FulfillmentHistory.class);
+                convert.setStatus(fulfillmentHistory.getStatus() == null? null : fulfillmentHistory.getStatus().name());
+                convert.setDateCreated(fulfillmentHistory.getAuditSection().getDateCreated());
+                return convert;
+            }).collect(Collectors.toList());
+            result.setFulfillmentHistoryList(fulfillmentHistories);
+        }
+        result.setFulfillmentSubOrder(convertToReadableFulfillmentSubOrder(fulfillmentSubOrder));
+        return result;
     }
 
     @Override
     @Transactional
-    public void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO, String type, Long id) throws ServiceException {
-        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(type)){
+    public void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException {
+        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(persistableFulfillmentSubOrderReqDTO.getType())){
             return;
         }
-        if (type.equals("ORDER")){
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("ORDER")){
             //更新所有履约单状态
-            com.salesmanager.core.model.fulfillment.FulfillmentMainOrder fulfillmentMainOrder = fulfillmentMainOrderService.queryFulfillmentMainOrderByOrderId(id);
-            if (fulfillmentMainOrder == null){
+            List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            if (CollectionUtils.isEmpty(fulfillSubOrders)){
                 return;
             }
-            Set<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentMainOrder.getFulfillSubOrders();
             for (com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder : fulfillSubOrders){
                 fulfillmentSubOrder.setLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getLogisticsNumber());
                 fulfillmentSubOrder.setNationalLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getNationalLogisticsCompany());
@@ -278,8 +307,8 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             }
             return ;
         }
-        if (type.equals("PRODUCT")){
-            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(id);
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(persistableFulfillmentSubOrderReqDTO.getId());
             fulfillmentSubOrder.setLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getLogisticsNumber());
             fulfillmentSubOrder.setNationalLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getNationalLogisticsCompany());
             fulfillmentSubOrder.setNationalDriverName(persistableFulfillmentSubOrderReqDTO.getNationalDriverName());
@@ -300,6 +329,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
         ReadableFulfillmentSubOrder readableFulfillmentSubOrder = new ReadableFulfillmentSubOrder();
         try {
+            // 基本字段
             readableFulfillmentSubOrder.setId(fulfillmentSubOrder.getId());
             readableFulfillmentSubOrder.setLogisticsNumberBy1688(fulfillmentSubOrder.getLogisticsNumberBy1688());
             readableFulfillmentSubOrder.setLogisticsNumber(fulfillmentSubOrder.getLogisticsNumber());
@@ -308,26 +338,32 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             readableFulfillmentSubOrder.setNationalDriverName(fulfillmentSubOrder.getNationalDriverName());
             readableFulfillmentSubOrder.setNationalDriverPhone(fulfillmentSubOrder.getNationalDriverPhone());
 
+            // 枚举字段处理（需要考虑枚举的转换）
             if (fulfillmentSubOrder.getFulfillmentMainType() != null) {
                 readableFulfillmentSubOrder.setFulfillmentMainType(fulfillmentSubOrder.getFulfillmentMainType().name());
             }
-
             if (fulfillmentSubOrder.getFulfillmentSubTypeEnums() != null) {
                 readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());
             }
-
-
             if (fulfillmentSubOrder.getInternationalTransportationMethod() != null) {
                 readableFulfillmentSubOrder.setInternationalTransportationMethod(fulfillmentSubOrder.getInternationalTransportationMethod().name());
             }
-
             if (fulfillmentSubOrder.getNationalTransportationMethod() != null) {
                 readableFulfillmentSubOrder.setNationalTransportationMethod(fulfillmentSubOrder.getNationalTransportationMethod().name());
             }
-
             if (fulfillmentSubOrder.getShippingType() != null) {
                 readableFulfillmentSubOrder.setShippingType(fulfillmentSubOrder.getShippingType().name());
             }
+            if (fulfillmentSubOrder.getTruckType() != null) {
+                readableFulfillmentSubOrder.setTruckType(fulfillmentSubOrder.getTruckType().name());
+            }
+            if (fulfillmentSubOrder.getTruckModel() != null) {
+                readableFulfillmentSubOrder.setTruckModel(fulfillmentSubOrder.getTruckModel().name());
+            }
+
+            readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(fulfillmentSubOrder.getCrossBorderTransportationLogisticsNumber());
+            readableFulfillmentSubOrder.setTransportInformation(fulfillmentSubOrder.getTransportInformation());
+
         } catch (Exception e) {
             LOGGER.error("convertToReadableFulfillmentSubOrder error", e);
             return null;

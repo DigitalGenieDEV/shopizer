@@ -37,12 +37,12 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public CombineTransaction  getCapturableCombineTransaction(CustomerOrder customerOrder) throws ServiceException {
+    public CombineTransaction  getCapturableCombineTransaction(CustomerOrder customerOrder, TransactionType queryTransactionType) throws ServiceException {
         List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrder.getId());
         ObjectMapper mapper = new ObjectMapper();
         CombineTransaction combineTransaction = null;
         for(CombineTransaction transaction : combineTransactions) {
-            if(transaction.getTransactionType().name().equals(TransactionType.AUTHORIZE.name())) {
+            if(transaction.getTransactionType().name().equals(queryTransactionType.name())) {
                 if(!StringUtils.isBlank(transaction.getDetails())) {
                     try {
                         @SuppressWarnings("unchecked")

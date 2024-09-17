@@ -64,7 +64,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		ReadableCustomer readableCustomer = readableCustomerMapper.convert(customer, store, language);
 		orderConfirmation.setBilling(readableCustomer.getBilling());
 		orderConfirmation.setDelivery(readableCustomer.getDelivery());
-		
+		orderConfirmation.setOrderNo(order.getOrderNo());
 		ReadableTotal readableTotal = new ReadableTotal();
 		
 		Set<OrderTotal> totals = order.getOrderTotal();

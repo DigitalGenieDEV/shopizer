@@ -394,6 +394,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		if (store !=null){
 			queryBuilder.append(" and p.merchant.id=:mId");
 		}
+		if (StringUtils.isNotEmpty(criteria.getOrderNo())){
+			String nameQuery =  " and p.orderNo =:orderNo";
+			queryBuilder.append(nameQuery);
+		}
 		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
 			String nameQuery =  " and (p.billing.firstName like:name or p.billing.lastName like:name)";
 			queryBuilder.append(nameQuery);
@@ -439,6 +443,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String queryFragment = "and p.orderType = :orderType";
 			queryBuilder.append(queryFragment);
 		}
+
 		if (StringUtils.isNotBlank(criteria.getCustomerCountryName())) {
 			String queryFragment = "and p.delivery.country.id in (select cd.country.id from CountryDescription cd where cd.name = :customerCountryName and cd.language.code = :language  )";
 			queryBuilder.append(queryFragment);
@@ -508,6 +513,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		//delivery name
 		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
 			query.setParameter("deliveryName", like(criteria.getDeliveryName()));
+		}
+
+		if (StringUtils.isNotEmpty(criteria.getOrderNo())){
+			query.setParameter("orderNo", criteria.getOrderNo());
 		}
 
 		//email

@@ -20,6 +20,7 @@ public class OrderCriteria extends Criteria {
 	private String customerPhone = null;
 	private String status = null;
 	private Long id = null;
+	private String orderNo = null;
 	private String paymentMethod;
 	private String transportationMethod;
 	private Long customerId;

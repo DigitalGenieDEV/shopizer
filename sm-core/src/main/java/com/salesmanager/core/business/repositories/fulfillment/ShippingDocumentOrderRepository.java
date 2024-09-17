@@ -20,4 +20,6 @@ public interface ShippingDocumentOrderRepository extends JpaRepository<ShippingD
             + " where c.auditSection.dateCreated=?1 ")
     Integer queryCountByCreateDate(Date createTime);
 
+
+
 }

@@ -2,6 +2,8 @@ package com.salesmanager.core.enmus;
 
 public enum FulfillmentHistoryTypeEnums {
 
+    PENDING_REVIEW,
+
     //付款完成
     PAYMENT_COMPLETED,
 

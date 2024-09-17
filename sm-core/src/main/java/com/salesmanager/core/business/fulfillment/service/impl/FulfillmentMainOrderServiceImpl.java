@@ -8,6 +8,7 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.enmus.*;
 import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.utils.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("fulfillmentMainOrderService")
@@ -72,9 +74,6 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
             // 创建履约子订单
             createFulfillmentSubOrder(order, orderProduct, fulfillmentMainOrder);
         });
-
-        // 创建履约历史
-        createFulfillmentHistory(order);
     }
 
     // 创建履约主订单的方法
@@ -83,6 +82,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         fulfillmentMainOrder.setPartialDelivery(false);
         fulfillmentMainOrder.setDelivery(order.getDelivery());
         fulfillmentMainOrder.setBilling(order.getBilling());
+        fulfillmentMainOrder.setOrder(order);
         fulfillmentMainOrderRepository.save(fulfillmentMainOrder);
         return fulfillmentMainOrder;
     }
@@ -139,13 +139,21 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         fulfillmentSubOrder.setOrderId(order.getId());
         fulfillmentSubOrder.setOrderProductId(orderProduct.getId());
         fulfillmentSubOrderService.saveFulfillmentMainOrder(fulfillmentSubOrder);
+
+        // 创建履约历史
+        createFulfillmentHistory(order, orderProduct);
     }
 
     // 创建履约历史的方法
-    private void createFulfillmentHistory(Order order) {
+    private void createFulfillmentHistory(Order order, OrderProduct orderProduct) {
         FulfillmentHistory fulfillmentHistory = new FulfillmentHistory();
         fulfillmentHistory.setOrderId(order.getId());
-        fulfillmentHistory.setStatus(FulfillmentHistoryTypeEnums.PAYMENT_COMPLETED);
+        fulfillmentHistory.setOrderProductId(orderProduct.getId());
+        if (order.getOrderType()!=null && OrderType.PRODUCT_1688 == order.getOrderType()){
+            fulfillmentHistory.setStatus(FulfillmentHistoryTypeEnums.PENDING_REVIEW);
+        }else {
+            fulfillmentHistory.setStatus(FulfillmentHistoryTypeEnums.PAYMENT_COMPLETED);
+        }
         fulfillmentHistoryService.saveFulfillmentHistory(fulfillmentHistory);
     }
 

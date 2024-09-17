@@ -124,7 +124,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			
 			
 			target.setCustomerEmailAddress(customer.getEmailAddress());
-			
 //			Delivery delivery = customer.getDelivery();
 //			target.setDelivery(delivery);
 //			Delivery delivery = customer.getDelivery();
@@ -178,7 +177,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setImportMain(source.getImportMain() == null? null : ImportMainEnums.valueOf(source.getImportMain()));
 			target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());
 			target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
-			
+			target.setOrderNo(source.getOrderNo());
 			if(!StringUtils.isBlank(source.getComments())) {
 				OrderStatusHistory statusHistory = new OrderStatusHistory();
 				statusHistory.setStatus(null);

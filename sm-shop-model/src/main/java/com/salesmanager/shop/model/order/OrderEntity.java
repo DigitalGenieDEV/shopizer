@@ -35,6 +35,8 @@ public class OrderEntity extends Order implements Serializable {
 	private String comments;
 
 
+	private String orderNo;
+
 	/**
 	 * @see com.salesmanager.core.model.payments.ImportMainEnums
 	 */
@@ -172,5 +174,13 @@ public class OrderEntity extends Order implements Serializable {
 
 	public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

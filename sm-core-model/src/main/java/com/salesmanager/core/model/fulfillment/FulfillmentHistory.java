@@ -40,8 +40,8 @@ public class FulfillmentHistory extends SalesManagerEntity<Long, FulfillmentHist
     private Long orderId;
 
 
-    @Column(name = "PRODUCT_ID")
-    private Long productId;
+    @Column(name = "ORDER_PRODUCT_ID")
+    private Long orderProductId;
 
 
     @Enumerated(EnumType.STRING)
