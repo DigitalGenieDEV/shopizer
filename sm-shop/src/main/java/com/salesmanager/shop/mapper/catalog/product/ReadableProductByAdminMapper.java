@@ -112,6 +112,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setQuoteType(source.getQuoteType());
 		destination.setOrderQuantityType(source.getOrderQuantityType());
 
+		destination.setProductStatus(source.getProductStatus() == null? null : source.getProductStatus().name());
 		destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
 		destination.setCertificationDocument(source.getCertificationDocument());
 		destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());

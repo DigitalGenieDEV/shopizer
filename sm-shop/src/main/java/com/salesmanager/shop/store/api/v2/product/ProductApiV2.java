@@ -213,6 +213,19 @@ public class ProductApiV2 {
 	}
 
 
+	@PutMapping(value = { "/private/product/documents/update"})
+	public @ResponseBody CommonResultDTO<Long> productDocumentsUpdate(
+			@Valid @RequestBody PersistableSimpleProductUpdateReq product) throws ServiceException {
+		try {
+			productService.updateProductDocuments(product.getProductId(), product.getCertificationDocument(), product.getIntellectualPropertyDocuments());
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("productSimpleUpdate error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/auth/product"})
@@ -1132,5 +1145,9 @@ public class ProductApiV2 {
 					ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}
+
+
+
+
 
 }

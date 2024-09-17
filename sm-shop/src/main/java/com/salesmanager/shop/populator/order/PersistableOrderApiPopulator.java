@@ -167,7 +167,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setMerchant(store);
 			target.setChannel(OrderChannel.API);
 			//need this
-			target.setStatus(OrderStatus.ORDERED);
+			target.setStatus(StringUtils.isEmpty(source.getStatus())?  OrderStatus.ORDERED : OrderStatus.fromValue(source.getStatus()));
 			target.setPaymentModuleCode(source.getPayment().getPaymentModule());
 			target.setPaymentType(PaymentType.valueOf(source.getPayment().getPaymentType()));
 			

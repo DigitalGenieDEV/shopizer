@@ -571,6 +571,12 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 	}
 
 	@Override
+	public void updateProductDocuments(Long productId,String certificationDocuments, String intellectualPropertyDocuments){
+		productRepository.updateProductDocuments(productId, certificationDocuments, intellectualPropertyDocuments);
+	}
+
+
+	@Override
 	public void updateProductCategory(Long productId, Long categoryId){
 		productRepository.updateProductCategory(productId, categoryId);
 	}

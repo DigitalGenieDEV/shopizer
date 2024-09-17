@@ -132,7 +132,7 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setChannel(OrderChannel.API);
             target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
             //need this
-            target.setStatus(OrderStatus.ORDERED);
+            target.setStatus(StringUtils.isEmpty(source.getStatus())? OrderStatus.ORDERED : OrderStatus.fromValue(source.getStatus()));
             target.setPaymentModuleCode(source.getPayment().getPaymentModule());
             target.setPaymentType(PaymentType.valueOf(source.getPayment().getPaymentType()));
             target.setCustomsClearanceNumber(source.getCustomsClearanceNumber());

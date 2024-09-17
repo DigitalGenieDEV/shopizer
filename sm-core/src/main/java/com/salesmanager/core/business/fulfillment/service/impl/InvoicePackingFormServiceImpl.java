@@ -6,6 +6,8 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,7 @@ public class InvoicePackingFormServiceImpl extends SalesManagerEntityServiceImpl
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long saveInvoicePackingForm(InvoicePackingForm invoicePackingForm) {
         invoicePackingFormRepository.save(invoicePackingForm);
         return invoicePackingForm.getId();

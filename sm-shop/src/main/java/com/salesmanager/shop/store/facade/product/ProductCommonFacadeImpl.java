@@ -220,6 +220,9 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		return product.getProductId();
 	}
 
+
+
+
 	public void updateProduct(MerchantStore store, PersistableProduct product, Language language) {
 
 		Validate.notNull(product, "Product must not be null");
@@ -472,6 +475,8 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	@Transactional
 	public void deleteProductsInParallel(Product product) throws ServiceException {
+		productMaterialService.deleteProductMaterialByProductId(product.getId());
+
 		productAnnouncementAttributeRepository.deleteByProductId(product.getId());
 
 		List<ProductAttribute> attributes = productAttributeRepository.findByProductId(product.getId());

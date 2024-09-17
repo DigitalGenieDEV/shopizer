@@ -27,6 +27,13 @@ public class PersistableSimpleProductUpdateReq  implements Serializable {
 
 	private String type;
 
+	/**
+	 * 认证文件
+	 */
+	private String certificationDocument;
 
-
+	/**
+	 * 知识产权文件
+	 */
+	private String intellectualPropertyDocuments;
 }

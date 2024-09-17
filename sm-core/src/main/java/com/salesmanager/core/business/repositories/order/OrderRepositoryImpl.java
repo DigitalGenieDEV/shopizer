@@ -245,8 +245,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		
 		//status
 		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			countQ.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
-			objectQ.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
+			countQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+			objectQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
 		}
 		
 
@@ -527,7 +527,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		//status
 		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			query.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
+			query.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
 		}
 
 		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {

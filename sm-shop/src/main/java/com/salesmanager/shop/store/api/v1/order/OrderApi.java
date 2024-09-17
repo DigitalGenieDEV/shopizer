@@ -348,7 +348,7 @@ public class OrderApi {
 		}
 		if (StringUtils.isNotBlank(orderStatus)) {
 			try {
-				OrderStatus.valueOf(orderStatus.toUpperCase());
+				OrderStatus.fromValue(orderStatus.toUpperCase());
 			} catch (Exception e) {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), "Invalid order status: " + orderStatus);
 			}
@@ -612,14 +612,14 @@ public class OrderApi {
 			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
 	public CommonResultDTO<Void> updateOrderStatus(
 			@PathVariable final Long id,
-			@Valid @RequestBody String status,
+			@Valid @RequestParam String status,
 			@ApiIgnore MerchantStore merchantStore) {
 		try {
 			Order order = orderService.getOrder(id, merchantStore);
 			if (order == null) {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
-			OrderStatus statusEnum = OrderStatus.valueOf(status);
+			OrderStatus statusEnum = OrderStatus.fromValue(status);
 			orderFacade.updateOrderStatus(order, statusEnum, merchantStore);
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
@@ -643,7 +643,7 @@ public class OrderApi {
 			if (order == null) {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
-			OrderStatus statusEnum = OrderStatus.valueOf(status);
+			OrderStatus statusEnum = OrderStatus.fromValue(status);
 			orderFacade.updateOrderStatus(order, statusEnum, customer.getMerchantStore());
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){

@@ -110,6 +110,7 @@ public class ReadableProductListMapper implements Mapper<Product, ReadableProduc
 		destination.setId(source.getId());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
+		destination.setShippingTemplateId(source.getShippingTemplateId());
 		ProductDescription description = null;
 		if (source.getDescriptions() != null && source.getDescriptions().size() > 0) {
 			for (ProductDescription desc : source.getDescriptions()) {

@@ -73,6 +73,9 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	void updateProductType(Long productId,Long productTypeId);
 
+
+	void updateProductDocuments(Long productId,String certificationDocuments, String intellectualPropertyDocuments);
+
 	void updateProductCategory(Long productId, Long categoryId);
 	/**
 	 * countProductsByCategoryIds

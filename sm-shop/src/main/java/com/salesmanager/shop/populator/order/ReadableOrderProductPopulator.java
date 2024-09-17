@@ -4,6 +4,8 @@ import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.fulfillment.service.ShippingOrderService;
+import com.salesmanager.core.business.fulfillment.service.impl.ShippingOrderServiceImpl;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
@@ -12,6 +14,7 @@ import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -24,9 +27,7 @@ import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
-import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
-import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingForm;
-import com.salesmanager.shop.model.fulfillment.ReadableInvoicePackingFormDetail;
+import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.order.ReadableOrderProductAttribute;
@@ -36,6 +37,7 @@ import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -67,7 +69,6 @@ public class ReadableOrderProductPopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
-
 
 
 	private InvoicePackingFormService invoicePackingFormService;
@@ -106,6 +107,36 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
+
+
+		if (source.getShippingDocumentOrder() !=null){
+			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
+			readableShippingDocumentOrder.setShippingNo(source.getShippingDocumentOrder().getShippingNo());
+			readableShippingDocumentOrder.setId(source.getShippingDocumentOrder().getId());
+			Set<GeneralDocument> generalDocuments = source.getShippingDocumentOrder().getGeneralDocuments();
+
+			if (CollectionUtils.isNotEmpty(generalDocuments)) {
+				List<ReadableGeneralDocument> readableGeneralDocuments = generalDocuments.stream()
+						.map(generalDocument -> {
+							ReadableGeneralDocument readableGeneralDocument = ObjectConvert.convert(generalDocument, ReadableGeneralDocument.class);
+							readableGeneralDocument.setDocumentType(generalDocument.getDocumentType()==null? null : generalDocument.getDocumentType().name());
+							return readableGeneralDocument;
+						})
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+
+				InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(source.getShippingDocumentOrder().getInvoicePackingFormId());
+				if (invoicePackingForm != null) {
+					readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+				}
+
+				readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+			}
+
+			target.setReadableShippingDocumentOrder(readableShippingDocumentOrder);
+		}
+
+
 
 		if (source.getOrder()!=null && source.getOrder().getOrderType()!=null){
 			target.setOrderType(source.getOrder().getOrderType().name());
@@ -263,7 +294,28 @@ public class ReadableOrderProductPopulator extends
 	}
 
 
+	private ReadableInvoicePackingForm convertToReadableInvoicePackingForm(InvoicePackingForm invoicePackingForm) {
+		if (invoicePackingForm == null) {
+			return null;
+		}
+		try {
+			ReadableInvoicePackingForm readableInvoicePackingForm = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
 
+			Set<InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
+			if (invoicePackingFormDetails != null) {
+				List<ReadableInvoicePackingFormDetail> invoicePackingFormDetailList = invoicePackingFormDetails.stream()
+						.map(invoicePackingFormDetail -> ObjectConvert.convert(invoicePackingFormDetail, ReadableInvoicePackingFormDetail.class))
+						.filter(Objects::nonNull)
+						.collect(Collectors.toList());
+				readableInvoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
+			}
+
+			return readableInvoicePackingForm;
+		} catch (Exception e) {
+			LOGGER.error("convertToReadableInvoicePackingForm error", e);
+			return null;
+		}
+	}
 
 
 	public ProductVariantService getProductVariantService() {

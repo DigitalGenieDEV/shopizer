@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.product.ProductStatus;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.shop.model.catalog.product.Product;
 import lombok.Data;
@@ -73,6 +74,8 @@ public class ProductEntity extends Product implements Serializable {
 	private Boolean generalMixedBatch;
 
 	private Boolean certificateOfOrigin;
+
+	private String productStatus;
 
 
 	private String orderQuantityType;

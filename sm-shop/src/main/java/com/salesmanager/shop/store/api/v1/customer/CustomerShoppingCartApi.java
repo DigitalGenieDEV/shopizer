@@ -7,6 +7,7 @@ import com.salesmanager.core.business.services.customer.shoppingcart.CustomerSho
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
+import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.payments.PaymentType;
@@ -40,10 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -484,10 +482,8 @@ public class CustomerShoppingCartApi {
             if (cart == null) {
                 throw new ResourceNotFoundException("Cusotmer Cart [" + customer.getId() + "] does not exist");
             }
-
             persistableCustomerOrder.setCustomerId(customer.getId());
             persistableCustomerOrder.setCurrency("KRW");
-
             CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
             Long customerOrderId = modelCustomerOrder.getId();
             modelCustomerOrder.setId(customerOrderId);

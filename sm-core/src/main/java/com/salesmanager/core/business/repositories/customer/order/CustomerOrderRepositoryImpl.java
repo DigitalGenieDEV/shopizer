@@ -112,8 +112,8 @@ public class CustomerOrderRepositoryImpl implements CustomerOrderRepositoryCusto
 
         //status
         if(!StringUtils.isEmpty(criteria.getStatus())) {
-            countQ.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
-            objectQ.setParameter("status", OrderStatus.valueOf(criteria.getStatus().toUpperCase()));
+            countQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+            objectQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
         }
 
         Number count = (Number) countQ.getSingleResult();

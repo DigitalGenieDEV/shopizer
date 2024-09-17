@@ -51,6 +51,20 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	@Query("UPDATE Product p SET p.type.id = :productTypeId WHERE p.id = :productId")
 	void updateProductType(@Param("productId") Long productId, @Param("productTypeId") Long productTypeId);
 
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Product p " +
+			"SET p.certificationDocument = COALESCE(:certificationDocument, p.certificationDocument), " +
+			"    p.intellectualPropertyDocuments = COALESCE(:intellectualPropertyDocuments, p.intellectualPropertyDocuments) " +
+			"WHERE p.id = :productId")
+	void updateProductDocuments(
+			@Param("productId") Long productId,
+			@Param("certificationDocument") String certificationDocuments,
+			@Param("intellectualPropertyDocuments") String intellectualPropertyDocuments
+	);
+
+
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO PRODUCT_CATEGORY (PRODUCT_ID, CATEGORY_ID) VALUES (:productId, :categoryId) ON DUPLICATE KEY UPDATE CATEGORY_ID = :categoryId", nativeQuery = true)

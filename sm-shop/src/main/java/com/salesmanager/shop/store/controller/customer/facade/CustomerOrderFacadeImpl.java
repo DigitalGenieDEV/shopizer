@@ -11,6 +11,8 @@ import com.salesmanager.core.business.services.payments.combine.CombineTransacti
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
+import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
@@ -21,6 +23,7 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderTotal;
 import com.salesmanager.core.model.order.OrderTotalSummary;
+import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.CombineTransaction;
@@ -143,8 +146,6 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         try {
             CustomerOrder modelCustomerOrder = new CustomerOrder();
 
-            LOGGER.info("[processCustomerOrder] populate customer order model");
-            persistableCustomerOrderApiPopulator.populate(customerOrder, modelCustomerOrder, null, language);
 
             CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
 
@@ -157,6 +158,18 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             if (checkedCartItems.size() <= 0) {
                 throw new ServiceException("Customer Shopping cart with Customer id " + customer.getId() + " does not have checked cart items");
             }
+
+            boolean allAre1688Products = checkedCartItems.stream()
+                    .map(CustomerShoppingCartItem::getProduct)
+                    .allMatch(product -> product.getPublishWay() != null && product.getPublishWay().equals(PublishWayEnums.IMPORT_BY_1688));
+
+            if (allAre1688Products){
+                customerOrder.setStatus(OrderStatus.PENDING_REVIEW.getValue());
+                customerOrder.setOrderType(OrderType.PRODUCT_1688.name());
+            }
+
+            LOGGER.info("[processCustomerOrder] populate customer order model");
+            persistableCustomerOrderApiPopulator.populate(customerOrder, modelCustomerOrder, null, language);
 
             // 将选中商品 按商户拆分
             LOGGER.info("[processCustomerOrder] split checked items to uniq stores");
@@ -197,6 +210,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setCurrency(customerOrder.getCurrency());
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
                 persistableOrder.setAddress(customerOrder.getAddress());
+                persistableOrder.setStatus(customerOrder.getStatus());
+
 
                 LOGGER.debug("[processCustomerOrder] calculate order total summary, [store id: " + store.getId() + "]");
                 OrderTotalSummary orderTotalSummary = shoppingCartCalculationService.calculate(shoppingCart, customer, store, language);

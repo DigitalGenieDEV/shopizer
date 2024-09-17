@@ -11,6 +11,7 @@ import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
 import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
+import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrder;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
 
 import java.io.Serializable;
@@ -92,6 +93,7 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	private List<ReadableProductAdditionalService> readableProductAdditionalServices;
 
 
+	private ReadableShippingDocumentOrder readableShippingDocumentOrder;
 	private String sku;
 	private String image;
 	public String getProductName() {
@@ -250,5 +252,13 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+
+	public ReadableShippingDocumentOrder getReadableShippingDocumentOrder() {
+		return readableShippingDocumentOrder;
+	}
+
+	public void setReadableShippingDocumentOrder(ReadableShippingDocumentOrder readableShippingDocumentOrder) {
+		this.readableShippingDocumentOrder = readableShippingDocumentOrder;
 	}
 }

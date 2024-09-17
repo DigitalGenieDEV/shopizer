@@ -23,6 +23,8 @@ public class PersistableCustomerOrder extends Order {
     @JsonIgnore
     private Long customerId;
 
+    private String status;
+
 
     public PersistablePayment getPayment() {
         return payment;
@@ -62,5 +64,13 @@ public class PersistableCustomerOrder extends Order {
 
     public void setAddress(PersistableDeliveryAddress address) {
         this.address = address;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
