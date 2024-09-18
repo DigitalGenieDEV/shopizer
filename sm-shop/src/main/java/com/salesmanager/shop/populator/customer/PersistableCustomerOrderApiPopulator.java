@@ -5,6 +5,9 @@ import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.business.services.reference.currency.CurrencyService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.customer.Customer;
@@ -17,6 +20,9 @@ import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -141,6 +147,18 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setImportMain(source.getImportMain() == null? null : ImportMainEnums.valueOf(source.getImportMain()));
             target.setCustomerAgreement(source.isCustomerAgreement());
             target.setConfirmedAddress(true);
+
+            target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
+                    TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+            target.setTruckModel(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
+                    TruckModelEnums.valueOf(source.getTruckModel()) : null);
+            target.setShippingType(source.getShippingType() == null ? null : ShippingType.valueOf(source.getShippingType()));
+            target.setShippingTransportationType(source.getShippingTransportationType() ==null ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
+            target.setNationalTransportationMethod(source.getNationalTransportationMethod() == null? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
+            target.setInternationalTransportationMethod(source.getInternationalTransportationMethod() ==null? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
+            target.setPlayThroughOption(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getPlayThroughOption())?
+                    PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
+
 
             return target;
         } catch (Exception e) {

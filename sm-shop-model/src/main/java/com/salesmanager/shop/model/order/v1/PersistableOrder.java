@@ -1,6 +1,10 @@
 package com.salesmanager.shop.model.order.v1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.order.shipping.PersistableDeliveryAddress;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 
@@ -27,6 +31,7 @@ public class PersistableOrder extends Order {
 	private Long customerId;
 	
 	private String status;
+
 	
 	public Long getShoppingCartId() {
 		return shoppingCartId;
@@ -75,4 +80,5 @@ public class PersistableOrder extends Order {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
 }

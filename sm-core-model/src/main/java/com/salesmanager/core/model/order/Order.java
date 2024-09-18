@@ -9,11 +9,17 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.Valid;
 
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.payments.ImportMainEnums;
+import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.ShippingType;
+import com.salesmanager.core.model.shipping.TransportationMethod;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.Type;
 
@@ -192,6 +198,66 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "INVOICE_ID")
 	private OrderInvoice orderInvoice;
+
+
+	/**
+	 * 国内运输还是国外运输
+	 */
+	@Column(name = "SHIPPING_TYPE")
+	@Enumerated(EnumType.STRING)
+	private ShippingType shippingType;
+
+	/**
+	 * 国际运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "INTERNATIONAL_TRANSPORTATION_METHOD")
+	@Enumerated(EnumType.STRING)
+	private TransportationMethod internationalTransportationMethod;
+
+	/**
+	 * 国内运输方式
+	 * @see TransportationMethod
+	 */
+	@Column(name = "NATIONAL_TRANSPORTATION_METHOD")
+	@Enumerated(EnumType.STRING)
+	private TransportationMethod nationalTransportationMethod;
+
+
+	/**
+	 * 委托配送还是自提
+	 */
+	@Column(name = "SHIPPING_TRANSPORTATION_TYPE")
+	@Enumerated(EnumType.STRING)
+	private ShippingTransportationType shippingTransportationType;
+
+
+	/**
+	 * 货车型号
+	 * @see TruckModelEnums
+	 */
+	@Column(name = "TRUCK_MODEL")
+	@Enumerated(EnumType.STRING)
+	private TruckModelEnums truckModel;
+
+
+	/**
+	 * 通关选项
+	 * @see PlayThroughOptionsEnums
+	 */
+	@Column(name = "PLAY_THROUGH_OPTION")
+	@Enumerated(EnumType.STRING)
+	private PlayThroughOptionsEnums playThroughOption;
+
+
+
+	/**
+	 * 货车类型
+	 * @see TruckTypeEnums
+	 */
+	@Column(name = "TRUCK_TYPE")
+	@Enumerated(EnumType.STRING)
+	private TruckTypeEnums truckType;
 
 	@Override
 	public Long getId() {
@@ -481,5 +547,71 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 
 	public void setInvoice(OrderInvoice orderInvoice) {
 		this.orderInvoice = orderInvoice;
+	}
+
+
+	public OrderInvoice getOrderInvoice() {
+		return orderInvoice;
+	}
+
+	public void setOrderInvoice(OrderInvoice orderInvoice) {
+		this.orderInvoice = orderInvoice;
+	}
+
+	public ShippingType getShippingType() {
+		return shippingType;
+	}
+
+	public void setShippingType(ShippingType shippingType) {
+		this.shippingType = shippingType;
+	}
+
+	public TransportationMethod getInternationalTransportationMethod() {
+		return internationalTransportationMethod;
+	}
+
+	public void setInternationalTransportationMethod(TransportationMethod internationalTransportationMethod) {
+		this.internationalTransportationMethod = internationalTransportationMethod;
+	}
+
+	public TransportationMethod getNationalTransportationMethod() {
+		return nationalTransportationMethod;
+	}
+
+	public void setNationalTransportationMethod(TransportationMethod nationalTransportationMethod) {
+		this.nationalTransportationMethod = nationalTransportationMethod;
+	}
+
+	public ShippingTransportationType getShippingTransportationType() {
+		return shippingTransportationType;
+	}
+
+	public void setShippingTransportationType(ShippingTransportationType shippingTransportationType) {
+		this.shippingTransportationType = shippingTransportationType;
+	}
+
+
+	public TruckModelEnums getTruckModel() {
+		return truckModel;
+	}
+
+	public void setTruckModel(TruckModelEnums truckModel) {
+		this.truckModel = truckModel;
+	}
+
+	public PlayThroughOptionsEnums getPlayThroughOption() {
+		return playThroughOption;
+	}
+
+	public void setPlayThroughOption(PlayThroughOptionsEnums playThroughOption) {
+		this.playThroughOption = playThroughOption;
+	}
+
+	public TruckTypeEnums getTruckType() {
+		return truckType;
+	}
+
+	public void setTruckType(TruckTypeEnums truckType) {
+		this.truckType = truckType;
 	}
 }
