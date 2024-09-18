@@ -94,6 +94,9 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 
 	private ReadableShippingDocumentOrder readableShippingDocumentOrder;
+
+	private ReadableOrderProductDesign readableOrderProductDesign;
+
 	private String sku;
 	private String image;
 	public String getProductName() {
@@ -260,5 +263,13 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setReadableShippingDocumentOrder(ReadableShippingDocumentOrder readableShippingDocumentOrder) {
 		this.readableShippingDocumentOrder = readableShippingDocumentOrder;
+	}
+
+	public ReadableOrderProductDesign getReadableOrderProductDesign() {
+		return readableOrderProductDesign;
+	}
+
+	public void setReadableOrderProductDesign(ReadableOrderProductDesign readableOrderProductDesign) {
+		this.readableOrderProductDesign = readableOrderProductDesign;
 	}
 }

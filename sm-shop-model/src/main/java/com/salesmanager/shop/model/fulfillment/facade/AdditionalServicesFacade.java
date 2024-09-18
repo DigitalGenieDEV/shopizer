@@ -2,10 +2,8 @@ package com.salesmanager.shop.model.fulfillment.facade;
 
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
-import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface AdditionalServicesFacade {
@@ -16,7 +14,7 @@ public interface AdditionalServicesFacade {
 
     List<ReadableAdditionalServices> queryAdditionalServicesByIds(List<Long> additionalServiceIds, Language language);
 
-    List<ReadableAdditionalServices> queryAdditionalServicesByMerchantId(Long merchantId, Language language);
+    List<ReadableAdditionalServices> queryAdditionalServicesByMerchantIdAndProductType(Long merchantId, String productType, Language language);
 
 
 }

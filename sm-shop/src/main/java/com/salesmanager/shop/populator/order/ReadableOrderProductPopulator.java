@@ -136,6 +136,11 @@ public class ReadableOrderProductPopulator extends
 			target.setReadableShippingDocumentOrder(readableShippingDocumentOrder);
 		}
 
+		if (source.getDesign() != null) {
+			ReadableOrderProductDesignPopulator readableOrderProductDesignPopulator = new ReadableOrderProductDesignPopulator();
+			target.setReadableOrderProductDesign(readableOrderProductDesignPopulator.populate(source.getDesign(), store, language));
+		}
+
 
 
 		if (source.getOrder()!=null && source.getOrder().getOrderType()!=null){

@@ -14,4 +14,8 @@ public interface AdditionalServicesRepository extends JpaRepository<AdditionalSe
     @Query("select distinct p from AdditionalServices p " +
             "left join fetch p.descriptions pd where p.merchantId = ?1 order by p.sort")
     List<AdditionalServices> queryAdditionalServicesByMerchantId(Long merchantId);
+
+    @Query("select distinct p from AdditionalServices p " +
+            "left join fetch p.descriptions pd where p.merchantId = ?1 and p.code = ?2 order by p.sort")
+    List<AdditionalServices> queryAdditionalServicesByMerchantIdAndCode(Long merchantId, String code);
 }
