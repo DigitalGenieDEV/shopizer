@@ -30,7 +30,7 @@ public class ProductAdditionalServicesApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductAdditionalServicesApi.class);
 
-    @RequestMapping(value = {"/auth/additional/services", "/private/additional/services"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/additional/services", "/auth/additional/services", "/private/additional/services"}, method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET", value = "Get additionalServices by merchant code", notes = "Get additionalServices by merchant code")
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
