@@ -318,4 +318,12 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	public void setQcInfo(QcInfo qcInfo) {
 		this.qcInfo = qcInfo;
 	}
+
+	public OrderProductDesign getDesign() {
+		return design;
+	}
+
+	public void setDesign(OrderProductDesign design) {
+		this.design = design;
+	}
 }
