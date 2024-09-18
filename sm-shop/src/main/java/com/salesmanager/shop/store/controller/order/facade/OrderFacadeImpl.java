@@ -17,8 +17,10 @@ import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentO
 import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
+import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
 import com.salesmanager.core.business.utils.*;
 import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
@@ -26,13 +28,16 @@ import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
 import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
+import com.salesmanager.core.model.payments.*;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.listener.alibaba.tuna.util.GenericsUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.populator.customer.ReadableCombineTransactionPopulator;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.*;
@@ -77,12 +82,6 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.order.payment.CreditCard;
-import com.salesmanager.core.model.payments.CreditCardPayment;
-import com.salesmanager.core.model.payments.CreditCardType;
-import com.salesmanager.core.model.payments.Payment;
-import com.salesmanager.core.model.payments.PaymentType;
-import com.salesmanager.core.model.payments.Transaction;
-import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.ShippingProduct;
@@ -135,6 +134,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Autowired
 	private ShippingDocumentOrderRepository shippingDocumentOrderRepository;
 
+	@Autowired
+	private CombineTransactionService combineTransactionService;
 	@Inject
 	private ProductAttributeService productAttributeService;
 	@Inject
@@ -1363,7 +1364,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 			modelOrder.setOrderProducts(orderProducts);
-
 			if (order.getAttributes() != null && order.getAttributes().size() > 0) {
 				Set<OrderAttribute> attrs = new HashSet<OrderAttribute>();
 				for (com.salesmanager.shop.model.order.OrderAttribute attribute : order.getAttributes()) {
@@ -1779,7 +1779,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			Set<OrderProduct> orderProducts = order.getOrderProducts();
 			orderProducts.forEach(orderProduct -> {
 				fulfillmentHistoryService.saveFulfillmentHistory(order.getId(),
-						orderProduct.getProductId(), newStatus.name(), oldStatus.name() );
+						orderProduct.getId(), newStatus.name(), oldStatus.name() );
 			});
 
 		} catch (ServiceException e) {
@@ -2035,5 +2035,21 @@ public class OrderFacadeImpl implements OrderFacade {
 		orderProductRepository.updateShippingDocumentOrderIdById(null, orderProductId);
 
 		orderProductRepository.updateIsInShippingOrderById(null, orderProductId);
+	}
+
+	@Override
+	public ReadableCombineTransaction getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
+																						   MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
+		CustomerOrder customerOrder = new CustomerOrder();
+		customerOrder.setId(customerOrderId);
+		ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
+		CombineTransaction capturableCombineTransaction = combineTransactionService.getCapturableCombineTransaction(customerOrder, TransactionType.INIT);
+		if (capturableCombineTransaction == null){
+			return readableCombineTransaction;
+		}
+		ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
+		populator.setPricingService(pricingService);
+		populator.populate(capturableCombineTransaction, readableCombineTransaction, merchantStore, language);
+		return readableCombineTransaction;
 	}
 }

@@ -157,5 +157,9 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 
 	Integer countProduct();
+
+	Product findByProductId(Long id);
+
+
 }
 

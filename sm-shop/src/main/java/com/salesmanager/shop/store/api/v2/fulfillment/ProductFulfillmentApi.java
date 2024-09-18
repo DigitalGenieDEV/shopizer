@@ -1,6 +1,7 @@
 package com.salesmanager.shop.store.api.v2.fulfillment;
 
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
@@ -86,14 +87,15 @@ public class ProductFulfillmentApi {
     }
 
 
-    @RequestMapping(value = {"/auth/product/fulfillment/{orderId}/invoice_packing/{productId}" ,"/private/product/fulfillment/{orderId}/invoice_packing/{productId}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/auth/product/fulfillment/{orderId}/invoice_packing/{orderProductId}" ,"/private/product/fulfillment/{orderId}/invoice_packing/{orderProductId}"}, method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET", value = "query invoice packing by order id ", notes = "query invoice packing by order id ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "query invoice packing by order id ", response = ReadableProduct.class) })
     @ResponseBody
-    public CommonResultDTO<ReadableInvoicePackingForm> queryInvoicePackingFormByOrderIdAndProductId(@PathVariable Long orderId,@PathVariable Long productId) {
+    public CommonResultDTO<ReadableInvoicePackingForm> queryInvoicePackingFormByOrderIdAndProductId(@PathVariable Long orderId,@PathVariable Long orderProductId) {
         try {
-            ReadableInvoicePackingForm readableInvoicePackingForm = fulfillmentFacade.queryInvoicePackingFormByOrderId(orderId, productId);
+
+            ReadableInvoicePackingForm readableInvoicePackingForm = fulfillmentFacade.queryInvoicePackingFormByOrderProductId(orderId, orderProductId);
             return CommonResultDTO.ofSuccess(readableInvoicePackingForm);
         }catch (Exception e){
             LOGGER.error("save invoice packing by order id error", e);
@@ -128,7 +130,7 @@ public class ProductFulfillmentApi {
     }
 
 
-    @RequestMapping(value = {"/auth/product/fulfillment/shipping/information/{orderId}" ,"/private/product/fulfillment/shipping/information/{orderId}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/auth/product/fulfillment/shipping/information/order/{orderId}" ,"/private/product/fulfillment/shipping/information/order/{orderId}"}, method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET", value = "query shipping information by order id ", notes = "query shipping information by order id ")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "query shipping information by order id ", response = ReadableProduct.class) })
@@ -144,16 +146,30 @@ public class ProductFulfillmentApi {
     }
 
 
+    @RequestMapping(value = {"/auth/product/fulfillment/shipping/information/order_product/{orderProductId}" ,"/private/product/fulfillment/shipping/information/order_product/{orderProductId}"}, method = RequestMethod.GET)
+    @ApiOperation(httpMethod = "GET", value = "query shipping information by order id ", notes = "query shipping information by order id ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "query shipping information by order id ", response = ReadableProduct.class) })
+    @ResponseBody
+    public CommonResultDTO<ReadableFulfillmentShippingInfo> queryShippingInformationByOrderProductId(@PathVariable Long orderProductId) {
+        try {
+            ReadableFulfillmentShippingInfo readableFulfillmentShippingInfos = fulfillmentFacade.queryShippingInformationByOrderProductId(orderProductId);
+            return CommonResultDTO.ofSuccess(readableFulfillmentShippingInfos);
+        }catch (Exception e){
+            LOGGER.error("save invoice packing by order id error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
+
+
 
     @RequestMapping(value = { "/auth/update/national/logistics", "/private/update/national/logistics" }, method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Void> updateNationalLogistics(
-            @Valid @RequestBody PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO,
-            @Valid @RequestBody Long id,
-            @Valid @RequestBody String type) {
+            @Valid @RequestBody PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) {
         try {
-            fulfillmentFacade.updateNationalLogistics(persistableFulfillmentLogisticsUpdateReqDTO, type, id);
+            fulfillmentFacade.updateNationalLogistics(persistableFulfillmentLogisticsUpdateReqDTO);
             return CommonResultDTO.ofSuccess();
         }catch (Exception e){
             LOGGER.error("updateNationalLogistics error", e);

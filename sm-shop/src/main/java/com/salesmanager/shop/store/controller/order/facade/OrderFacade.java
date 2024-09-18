@@ -6,8 +6,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.salesmanager.core.business.exception.ConversionException;
+import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
 import com.salesmanager.core.model.fulfillment.ShippingOrderProductQuery;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.ReadableOrderProductShippingList;
 import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrderList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
@@ -258,4 +260,9 @@ public interface OrderFacade {
 	void addShippingProductByOrderProductId(Long id,Long orderProductId);
 
 	void removeShippingProductByOrderProductId(Long id,Long orderProductId);
+
+	ReadableCombineTransaction getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
+																					MerchantStore merchantStore, Language language) throws ServiceException, ConversionException;
+
+
 }

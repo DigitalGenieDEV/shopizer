@@ -18,6 +18,7 @@ import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,7 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
 //                target.setOrderAttributes(attrs);
 //            }
 
+            target.setOrderNo(UniqueIdGenerator.generateOrderNumber());
             target.setDatePurchased(new Date());
             target.setCurrency(currency);
             target.setCurrencyValue(new BigDecimal(0));

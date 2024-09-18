@@ -94,6 +94,9 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
+    @Column (name ="ORDER_NO")
+    private String orderNo;
+
     @JsonIgnore
     @ManyToOne(targetEntity = MerchantStore.class)
     @JoinColumn(name="MERCHANTID")
@@ -342,5 +345,13 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     public void setCustomsClearanceNumber(String customsClearanceNumber) {
         this.customsClearanceNumber = customsClearanceNumber;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 }

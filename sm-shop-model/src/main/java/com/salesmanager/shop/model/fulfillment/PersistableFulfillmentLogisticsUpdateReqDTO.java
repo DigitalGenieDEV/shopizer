@@ -13,6 +13,7 @@ public class PersistableFulfillmentLogisticsUpdateReqDTO {
 
     private Long id;
 
+    private String type;
 
     /**
      * 物流单号

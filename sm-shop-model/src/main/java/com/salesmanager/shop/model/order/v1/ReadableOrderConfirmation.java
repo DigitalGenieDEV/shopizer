@@ -18,6 +18,9 @@ public class ReadableOrderConfirmation extends Entity {
 	private Address billing;
 	private Address delivery;
 	private String shipping;
+
+	private String orderNo;
+
 	private String payment;
 	private ReadableTotal total;
 	private List<ReadableOrderProduct> products;
@@ -59,4 +62,11 @@ public class ReadableOrderConfirmation extends Entity {
 		this.delivery = delivery;
 	}
 
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
 }

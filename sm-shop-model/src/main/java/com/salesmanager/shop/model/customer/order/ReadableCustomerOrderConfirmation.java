@@ -19,6 +19,8 @@ public class ReadableCustomerOrderConfirmation extends Entity {
     private String shipping;
     private String payment;
     private ReadableTotal total;
+
+    private String orderNo;
     private List<ReadableOrderProduct> products;
     private ReadableCombineTransaction transaction;
 
@@ -76,5 +78,13 @@ public class ReadableCustomerOrderConfirmation extends Entity {
 
     public void setProducts(List<ReadableOrderProduct> products) {
         this.products = products;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 }

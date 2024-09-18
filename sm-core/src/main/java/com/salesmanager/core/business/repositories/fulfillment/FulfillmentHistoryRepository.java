@@ -14,5 +14,11 @@ public interface FulfillmentHistoryRepository extends JpaRepository<FulfillmentH
             " where f.orderId = ?1 order by f.auditSection.dateCreated")
     List<FulfillmentHistory> queryFulfillmentHistoryByOrderId(Long orderId);
 
+    @Query("select distinct f from FulfillmentHistory f " +
+            " where f.orderProductId = ?1 order by f.auditSection.dateCreated")
+    List<FulfillmentHistory> queryFulfillmentHistoryByOrderProductId(Long orderProductId);
 
+    @Query("select distinct f from FulfillmentHistory f " +
+            " where f.orderId = ?1 and f.orderProductId = ?2 order by f.auditSection.dateCreated")
+    List<FulfillmentHistory> queryFulfillmentHistoryByOrderIdAndProductId(Long orderId, Long orderProductId);
 }

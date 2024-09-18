@@ -15,6 +15,7 @@ import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
@@ -238,6 +239,7 @@ public class OrderApi {
 								  @RequestParam(value = "shippingStatus", required = false) String shippingStatus,
 								  @RequestParam(value = "orderType", required = false) String orderType,
 								  @RequestParam(value = "shippingType", required = false) String shippingType,
+								  @RequestParam(value = "orderNo", required = false) String orderNo,
 								  @RequestParam(value = "transportationMethod", required = false) String transportationMethod,
 								  // TODO(yuxunhui):결제사 不知道是什么意思 结算公司，没找到对应的概念
 								  @RequestParam(value = "paymentType", required = false) String paymentType,
@@ -261,7 +263,7 @@ public class OrderApi {
 		orderCriteria.setStatus(orderStatus);
 		orderCriteria.setShippingStatus(shippingStatus);
 		orderCriteria.setLanguage(language.getCode());
-
+		orderCriteria.setOrderNo(orderNo);
 		try {
 			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, merchantStore);
 			return CommonResultDTO.ofSuccess(orders);
@@ -310,6 +312,9 @@ public class OrderApi {
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("ID")) {
 			orderCriteria.setId(Long.valueOf(queryValue));
+		}
+		if (StringUtils.isNotEmpty(queryType) && queryType.equals("ORDER_NO")) {
+			orderCriteria.setOrderNo(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")) {
 			orderCriteria.setCustomerName(queryValue);
@@ -615,7 +620,7 @@ public class OrderApi {
 			@Valid @RequestParam String status,
 			@ApiIgnore MerchantStore merchantStore) {
 		try {
-			Order order = orderService.getOrder(id, merchantStore);
+			Order order = orderService.getById(id);
 			if (order == null) {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
@@ -717,6 +722,27 @@ public class OrderApi {
 		try {
 			ReadableOrder readableOrder = orderFacade.getReadableOrder(id, null, language);
 			return CommonResultDTO.ofSuccess(readableOrder);
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
+	@RequestMapping(value = { "/private/order/capturable_combine_transaction_info/{customerOrderId}",
+			"/auth/order/capturable_combine_transaction_info/{customerOrderId}" }, method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") ,
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")})
+	public CommonResultDTO<ReadableCombineTransaction> getCapturableCombineTransactionInfo(
+			@PathVariable final Long customerOrderId,
+			@ApiIgnore Language language,
+			@ApiIgnore MerchantStore store,
+			HttpServletResponse response) {
+		try {
+			ReadableCombineTransaction readableCombineTransaction = orderFacade.getCapturableCombineTransactionInfoByCustomerOrderId(customerOrderId, store, language);
+			return CommonResultDTO.ofSuccess(readableCombineTransaction);
 		}catch (Exception e){
 			LOGGER.error("updateSellerOrderStatus error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());

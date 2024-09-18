@@ -205,6 +205,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setCustomerId(customer.getId());
                 persistableOrder.setShoppingCartId(shoppingCart.getId());
                 persistableOrder.setImportMain(customerOrder.getImportMain());
+                persistableOrder.setOrderNo(modelCustomerOrder.getOrderNo());
                 persistableOrder.setCustomsClearanceNumber(customerOrder.getCustomsClearanceNumber());
                 persistableOrder.setOrderType(customerOrder.getOrderType());
                 persistableOrder.setCurrency(customerOrder.getCurrency());
@@ -313,7 +314,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         ReadableCustomer readableCustomer = readableCustomerMapper.convert(customer, null, language);
         orderConfirmation.setBilling(readableCustomer.getBilling());
         orderConfirmation.setDelivery(readableCustomer.getDelivery());
-
+        orderConfirmation.setOrderNo(customerOrder.getOrderNo());
         LOGGER.debug("[CustomerOrderFacade/orderConfirmation] set order total");
         ReadableTotal readableTotal = new ReadableTotal();
 

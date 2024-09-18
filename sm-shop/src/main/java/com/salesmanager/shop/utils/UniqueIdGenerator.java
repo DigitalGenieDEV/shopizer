@@ -1,5 +1,7 @@
 package com.salesmanager.shop.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +40,45 @@ public class UniqueIdGenerator {
         // 3. 拼接生成的 ID
         return "CK" + dateStr + "-" + formattedSequenceNumber;
     }
+
+
+    // 获取机器唯一ID，可以使用IP地址作为机器ID的来源
+    private static String getMachineId() {
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            // 将IP地址的每个字节拼接起来作为机器ID
+            byte[] ipBytes = ip.getAddress();
+            StringBuilder machineId = new StringBuilder();
+            for (byte b : ipBytes) {
+                machineId.append(String.format("%02X", b));
+            }
+            return machineId.toString();
+        } catch (UnknownHostException e) {
+            // 如果获取失败，可以使用默认的机器ID
+            return "DEFAULT";
+        }
+    }
+
+    // 生成订单号码方法
+    public static String generateOrderNumber() {
+        // 前缀
+        String prefix = "P";
+
+        // 获取当前日期
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String dateStr = dateFormat.format(new Date());
+
+        // 获取机器ID
+        String machineId = getMachineId();
+
+        // 随机数生成器
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000; // 生成四位随机数
+
+        // 组合订单号 (前缀 + 日期 + 机器ID + 随机数)
+        return prefix + dateStr + machineId + randomNumber;
+    }
+
 
     public static void main(String[] args) {
         // 测试生成多个唯一ID

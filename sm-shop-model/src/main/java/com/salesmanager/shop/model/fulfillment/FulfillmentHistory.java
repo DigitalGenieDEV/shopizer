@@ -18,7 +18,7 @@ public class FulfillmentHistory  {
 
     private Long orderId;
 
-    private Long productId;
+    private Long orderProductId;
 
     private String status;
 
