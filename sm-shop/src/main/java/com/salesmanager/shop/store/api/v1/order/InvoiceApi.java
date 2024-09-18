@@ -74,10 +74,10 @@ public class InvoiceApi {
         }
     }
 
-    @PatchMapping(value = {"/auth/orders/{id}/invoice"})
+    @PostMapping(value = {"/auth/orders/{id}/invoice"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public CommonResultDTO<Boolean> patchInvoice(@PathVariable Long id, @Valid @RequestBody PersistableOrderInvoice persistableInvoice,
+    public CommonResultDTO<Boolean> updateInvoice(@PathVariable Long id, @Valid @RequestBody PersistableOrderInvoice persistableInvoice,
                                                  HttpServletRequest request) throws Exception {
         try {
             Principal userPrincipal = request.getUserPrincipal();
@@ -105,24 +105,4 @@ public class InvoiceApi {
         }
     }
 
-    @PutMapping(value = {"/auth/orders/{id}/invoice"})
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public CommonResultDTO<Boolean> updateInvoice(@PathVariable Long id, @Valid @RequestBody PersistableOrderInvoice persistableInvoice,
-                                                  HttpServletRequest request) throws Exception {
-        try {
-            Principal userPrincipal = request.getUserPrincipal();
-            String name = userPrincipal.getName();
-            Customer customer = customerService.getByNick(name);
-            Order order = orderService.getOrder(id, customer.getMerchantStore());
-            if (order == null) {
-                return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
-            }
-            Boolean success = orderInvoiceService.updateInvoice(order, persistableOrderInvoicePopulator.populate(persistableInvoice, order.getInvoice(), null, null), customer.getMerchantStore());
-            return CommonResultDTO.ofSuccess(success);
-        } catch (Exception e) {
-            LOGGER.error("Error while patching persistableInvoice [" + id + "]", e);
-            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
-        }
-    }
 }
