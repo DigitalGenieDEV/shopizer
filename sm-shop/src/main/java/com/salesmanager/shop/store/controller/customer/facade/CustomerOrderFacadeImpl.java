@@ -11,6 +11,9 @@ import com.salesmanager.core.business.services.payments.combine.CombineTransacti
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
+import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.customer.Customer;
@@ -59,6 +62,7 @@ import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFa
 import com.salesmanager.shop.utils.LabelUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,6 +216,15 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
                 persistableOrder.setAddress(customerOrder.getAddress());
                 persistableOrder.setStatus(customerOrder.getStatus());
+
+
+                persistableOrder.setTruckType(customerOrder.getTruckType());
+                persistableOrder.setTruckModel(customerOrder.getTruckModel());
+                persistableOrder.setShippingType(customerOrder.getShippingType());
+                persistableOrder.setShippingTransportationType(customerOrder.getShippingTransportationType());
+                persistableOrder.setNationalTransportationMethod(customerOrder.getNationalTransportationMethod());
+                persistableOrder.setInternationalTransportationMethod(customerOrder.getInternationalTransportationMethod());
+                persistableOrder.setPlayThroughOption(customerOrder.getPlayThroughOption());
 
 
                 LOGGER.debug("[processCustomerOrder] calculate order total summary, [store id: " + store.getId() + "]");

@@ -103,6 +103,34 @@ public class ReadableOrderPopulator extends
 		target.setDateCreated(source.getAuditSection() == null ? null : source.getAuditSection().getDateCreated());
 		target.setDateModified(source.getAuditSection() == null ? null :source.getAuditSection().getDateModified());
 
+		if (source.getTruckType() != null) {
+			target.setTruckType(source.getTruckType().name());
+		}
+
+		if (source.getTruckModel() != null) {
+			target.setTruckModel(source.getTruckModel().name());
+		}
+
+		if (source.getShippingType() != null) {
+			target.setShippingType(source.getShippingType().name());
+		}
+
+		if (source.getShippingTransportationType() != null) {
+			target.setShippingTransportationType(source.getShippingTransportationType().name());
+		}
+
+		if (source.getNationalTransportationMethod() != null) {
+			target.setNationalTransportationMethod(source.getNationalTransportationMethod().name());
+		}
+
+		if (source.getInternationalTransportationMethod() != null) {
+			target.setInternationalTransportationMethod(source.getInternationalTransportationMethod().name());
+		}
+
+		if (source.getPlayThroughOption() != null) {
+			target.setPlayThroughOption(source.getPlayThroughOption().name());
+		}
+
 		Long customerId = source.getCustomerId();
 		if (source.getCustomerId() != null) {
 			ReadableCustomer readableCustomer = customerFacade.getCustomerById(customerId,
