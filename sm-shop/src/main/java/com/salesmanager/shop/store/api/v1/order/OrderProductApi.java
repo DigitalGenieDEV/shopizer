@@ -125,12 +125,12 @@ public class OrderProductApi {
     }
 
 
-    @RequestMapping(value = { "/auth/order_products/{id}/design" }, method = RequestMethod.PATCH)
+    @PostMapping(value = { "/auth/order_products/{id}/design" })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-    public CommonResultDTO<Boolean> patchDesign(
+    public CommonResultDTO<Boolean> updateDesign(
             @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
             @Valid @RequestBody PersistableOrderProductDesign persistableOrderProductDesign,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws IOException {
