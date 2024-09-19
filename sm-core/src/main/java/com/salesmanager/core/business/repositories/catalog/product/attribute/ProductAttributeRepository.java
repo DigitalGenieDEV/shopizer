@@ -14,7 +14,7 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
 
 	@Query("select p from ProductAttribute p left join fetch p.productOption po left join fetch p.productOptionValue pov left join fetch po.descriptions pod left join fetch pov.descriptions povd  where p.id = ?1")
 	ProductAttribute findOne(Long id);
-	
+
 	@Query("select distinct p from ProductAttribute p left join fetch p.productOption po left join fetch p.productOptionValue pov left join fetch po.descriptions pod left join fetch pov.descriptions povd where p.id in ?1")
 	List<ProductAttribute> findByIds(List<Long> ids);
 	
