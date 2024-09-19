@@ -48,6 +48,11 @@ public class InvoicePackingForm {
      */
     private Long orderId;
 
+    /**
+     * 交易单商品id
+     */
+    private List<Long> orderProductIds;
+
     private String localTransportationCharge;
 
     private String oceanFreightCharges;

@@ -120,6 +120,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             detail.setInvoicePackingForm(invoicePackingForm);
             invoicePackingFormDetailList.add(detail);
         }
+        invoicePackingForm.setOrderProductIds(persistableInvoicePackingForm.getOrderProductIds());
         invoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
         invoicePackingFormService.saveInvoicePackingForm(invoicePackingForm);
         if (persistableInvoicePackingForm.getShippingOrderId() !=null){

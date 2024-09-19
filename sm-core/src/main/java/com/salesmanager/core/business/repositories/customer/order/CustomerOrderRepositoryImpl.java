@@ -31,7 +31,7 @@ public class CustomerOrderRepositoryImpl implements CustomerOrderRepositoryCusto
             }
         }
 
-        String baseQuery = "select co from CustomerOrder as co left join fetch co.orders o left join fetch o.delivery.country left join fetch o.delivery.zone left join fetch o.billing.country left join fetch o.billing.zone left join fetch o.orderTotal ot left join fetch o.orderProducts op left join fetch o.orderAttributes oa left join fetch op.orderAttributes opo left join fetch op.prices opp";
+        String baseQuery = "select co from CustomerOrder as co ";
         String countBaseQuery = "select count(o) from Order as o";
 
         countBuilderSelect.append(countBaseQuery);

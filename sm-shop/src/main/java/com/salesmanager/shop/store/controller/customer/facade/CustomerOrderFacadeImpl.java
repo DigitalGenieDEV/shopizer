@@ -408,7 +408,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
     @Override
     public ReadableCustomerOrder getReadableCustomerOrder(Long customerOrderId, MerchantStore store, Language language) {
-        CustomerOrder modelOrder = customerOrderService.getCustomerOrder(customerOrderId);
+        CustomerOrder modelOrder = customerOrderService.getById(customerOrderId);
         if (modelOrder == null) {
             throw new ResourceNotFoundException("CustomerOrder not found with id " + customerOrderId);
         }

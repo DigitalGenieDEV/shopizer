@@ -1912,7 +1912,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			List<ReadableShippingDocumentOrder> readableShippingDocumentOrders = new ArrayList<>();
 
-			if (CollectionUtils.isEmpty(readableShippingDocumentOrders)){
+			if (CollectionUtils.isEmpty(content)){
 				return readableList;
 			}
 

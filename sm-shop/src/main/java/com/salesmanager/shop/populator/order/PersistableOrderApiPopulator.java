@@ -185,8 +185,8 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
 			target.setOrderNo(source.getOrderNo());
 
-			target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
-					TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+			target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckType())?
+					TruckTypeEnums.valueOf(source.getTruckType()) : null);
 			target.setTruckModel(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
 					TruckModelEnums.valueOf(source.getTruckModel()) : null);
 			target.setShippingType(source.getShippingType() == null ? null : ShippingType.valueOf(source.getShippingType()));

@@ -11,10 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -87,9 +84,10 @@ public class InvoicePackingForm extends SalesManagerEntity<Long, InvoicePackingF
     @Column(name = "INSURANCE_CHARGES")
     private String insuranceCharges;
 
-
-    @Column(name = "PRODUCT_ID")
-    private Long productId;
+    @ElementCollection
+    @CollectionTable(name = "INVOICE_PACKING_ORDER_PRODUCT", joinColumns = @JoinColumn(name = "INVOICE_PACKING_FORM_ID"))
+    @Column(name = "ORDER_PRODUCT_ID")
+    private List<Long> orderProductIds = new ArrayList<>();
 
     @Embedded
     private AuditSection auditSection = new AuditSection();

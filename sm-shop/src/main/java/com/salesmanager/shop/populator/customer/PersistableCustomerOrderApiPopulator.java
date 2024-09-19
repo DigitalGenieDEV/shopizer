@@ -148,8 +148,8 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setCustomerAgreement(source.isCustomerAgreement());
             target.setConfirmedAddress(true);
 
-            target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
-                    TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+            target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckType())?
+                    TruckTypeEnums.valueOf(source.getTruckType()) : null);
             target.setTruckModel(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
                     TruckModelEnums.valueOf(source.getTruckModel()) : null);
             target.setShippingType(source.getShippingType() == null ? null : ShippingType.valueOf(source.getShippingType()));
