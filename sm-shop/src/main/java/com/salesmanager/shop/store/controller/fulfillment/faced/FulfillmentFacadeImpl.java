@@ -86,17 +86,24 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             return null;
         }
 
+        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = null;
         com.salesmanager.core.model.fulfillment.ShippingDocumentOrder shippingDocumentOrder = orderProduct.getShippingDocumentOrder();
         if (shippingDocumentOrder == null || shippingDocumentOrder.getInvoicePackingFormId() == null){
-            return null;
+            List<com.salesmanager.core.model.fulfillment.InvoicePackingForm> invoicePackingForms = invoicePackingFormService.queryInvoicePackingFormByOrderIdAndProductId(orderId, orderProductId);
+            if (CollectionUtils.isEmpty(invoicePackingForms)){
+                return null;
+            }
+            invoicePackingForm = invoicePackingForms.get(0);
+
+        }else {
+            Long invoicePackingFormId = shippingDocumentOrder.getInvoicePackingFormId();
+
+            invoicePackingForm = invoicePackingFormService.getById(invoicePackingFormId);
+            if (invoicePackingForm == null){
+                return null;
+            }
         }
 
-        Long invoicePackingFormId = shippingDocumentOrder.getInvoicePackingFormId();
-
-        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(invoicePackingFormId);
-        if (invoicePackingForm == null){
-            return null;
-        }
         ReadableInvoicePackingForm convert = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
 
         Set<com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();

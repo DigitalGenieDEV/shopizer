@@ -6,18 +6,20 @@ import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 
 public interface InvoicePackingFormRepository extends JpaRepository<InvoicePackingForm, Long> {
 
 
     @Query("select c from InvoicePackingForm c "
-            + " where c.orderId=?1 and c.orderProductIds=?2")
-    InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
+            + " where c.orderId = ?1 and ?2 member of c.orderProductIds")
+    List<InvoicePackingForm> queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
 
 
     @Query("select c from InvoicePackingForm c "
             + " where c.orderId=?1")
-    InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId);
+    List<InvoicePackingForm> queryInvoicePackingFormByOrderId(Long orderId);
 
 
 }

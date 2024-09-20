@@ -4,16 +4,18 @@ import com.salesmanager.core.business.services.common.generic.SalesManagerEntity
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 
+import java.util.List;
+
 
 public interface InvoicePackingFormService extends SalesManagerEntityService<Long, InvoicePackingForm> {
 
     Long saveInvoicePackingForm(InvoicePackingForm invoicePackingForm);
 
-    InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
+    List<InvoicePackingForm> queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId);
 
 
 
-    InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId);
+    List<InvoicePackingForm> queryInvoicePackingFormByOrderId(Long orderId);
 
 
 }
