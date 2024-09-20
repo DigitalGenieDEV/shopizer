@@ -8,10 +8,7 @@ import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
-import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
-import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
-import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
-import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrder;
+import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
 
 import java.io.Serializable;
@@ -82,6 +79,9 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	 * @see TruckTypeEnums
 	 */
 	private String truckType;
+
+
+	private Long qcInfoId;
 
 
 	private ReadableFulfillmentSubOrder readableFulfillmentSubOrder;
@@ -249,6 +249,7 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 		this.truckType = truckType;
 	}
 
+
 	public String getOrderType() {
 		return orderType;
 	}
@@ -263,6 +264,14 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setReadableShippingDocumentOrder(ReadableShippingDocumentOrder readableShippingDocumentOrder) {
 		this.readableShippingDocumentOrder = readableShippingDocumentOrder;
+	}
+
+	public Long getQcInfoId() {
+		return qcInfoId;
+	}
+
+	public void setQcInfoId(Long qcInfoId) {
+		this.qcInfoId = qcInfoId;
 	}
 
 	public ReadableOrderProductDesign getReadableOrderProductDesign() {

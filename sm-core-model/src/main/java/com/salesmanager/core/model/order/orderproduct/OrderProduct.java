@@ -118,7 +118,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 
 	@Column (name="IS_IN_SHIPPING_ORDER")
-	private Boolean isInShippingOrder;
+	private Boolean isInShippingOrder = false;
 
 	@Column (name="PRODUCT_QUANTITY")
 	private int productQuantity;

@@ -107,7 +107,9 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
-
+		if(source.getQcInfo() != null){
+			target.setQcInfoId(source.getQcInfo().getId());
+		}
 
 		if (source.getShippingDocumentOrder() !=null){
 			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
