@@ -1,4 +1,3 @@
-//tmpzk
 package com.salesmanager.core.model.catalog.product.dataservice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

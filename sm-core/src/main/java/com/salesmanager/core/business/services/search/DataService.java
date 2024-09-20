@@ -1,4 +1,3 @@
-//tmpzk
 package com.salesmanager.core.business.services.search;
 
 import com.salesmanager.core.model.catalog.product.dataservice.*;

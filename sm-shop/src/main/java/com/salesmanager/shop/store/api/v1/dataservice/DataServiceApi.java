@@ -1,4 +1,3 @@
-//tmpzk
 package com.salesmanager.shop.store.api.v1.dataservice;
 
 import java.util.Map;

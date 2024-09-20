@@ -1,4 +1,3 @@
-//tmpzk
 package com.salesmanager.shop.model.catalog;
 
 import java.io.Serializable;
