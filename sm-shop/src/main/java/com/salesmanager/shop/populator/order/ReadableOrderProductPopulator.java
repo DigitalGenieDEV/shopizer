@@ -255,9 +255,10 @@ public class ReadableOrderProductPopulator extends
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
 					ProductVariant productVariant = productVariantService.queryBySku(productSku);
-
-					ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
-					productProxy.setVariants(Collections.singletonList(convert));
+					if (productVariant != null) {
+						ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
+						productProxy.setVariants(Collections.singletonList(convert));
+					}
 
 					target.setProduct(productProxy);
 					Set<ProductImage> images = product.getImages();
