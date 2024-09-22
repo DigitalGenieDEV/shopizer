@@ -8,14 +8,15 @@ import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
-import com.salesmanager.core.model.shoppingcart.ShoppingCart;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "CUSTOMER_SHOPPING_CART_ITEM")
@@ -85,6 +86,11 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     @Enumerated(EnumType.STRING)
     private ShippingTransportationType shippingTransportationType;
 
+    @Column(name = "CART_ITEM_TYPE")
+    @Enumerated(EnumType.STRING)
+    @Getter
+    @Setter
+    private CartItemType cartItemType;
 
     /**
      * 货车型号

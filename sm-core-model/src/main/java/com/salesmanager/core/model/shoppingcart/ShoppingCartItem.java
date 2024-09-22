@@ -18,9 +18,12 @@ import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
@@ -151,6 +154,13 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 */
 	@Column(name = "PLAY_THROUGH_OPTION")
 	private String playThroughOption;
+
+
+	@Column(name = "CART_ITEM_TYPE")
+	@Enumerated(EnumType.STRING)
+	@Getter
+	@Setter
+	private CartItemType cartItemType;
 
 
 

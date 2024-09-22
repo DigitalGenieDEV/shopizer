@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -400,6 +401,7 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 			item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
 			item.setTruckType(shoppingCartItem.getTruckType());
 			item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
+			item.setCartItemType(CartItemType.valueOf(shoppingCartItem.getItemType()));
 
 			LOG.info("createCartItems item sku:" + item.getSku() + ", quantity:" + item.getQuantity());
 

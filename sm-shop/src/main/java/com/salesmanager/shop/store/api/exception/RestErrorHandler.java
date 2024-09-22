@@ -46,11 +46,11 @@ public class RestErrorHandler {
     public @ResponseBody ErrorEntity handleServiceException(ServiceRuntimeException exception) {
         log.error(exception.getErrorMessage(), exception);
         Throwable rootCause = exception.getCause();
-        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+        while (rootCause != null && rootCause.getCause() != null && rootCause.getCause() != rootCause) {
             rootCause = rootCause.getCause();
         }
         ErrorEntity errorEntity = createErrorEntity(exception.getErrorCode()!=null?exception.getErrorCode():"500", exception.getErrorMessage(),
-        		rootCause.getMessage());
+        		rootCause != null ? rootCause.getMessage() : null);
         return errorEntity;
     }
 

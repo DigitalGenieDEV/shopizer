@@ -80,4 +80,21 @@ public class ProductEntity extends Product implements Serializable {
 
 	private String orderQuantityType;
 
+	/**
+	 * mark whether support booking sample.
+	 * if booking sample, quantity must be 1.
+	 */
+	private Boolean supportSample;
+
+	/**
+	 * sample price, must lower than 150 dollar
+	 */
+	private BigDecimal samplePrice;
+
+	/**
+	 * sample currency
+	 */
+	private String samplePriceCurrency;
+
+
 }

@@ -525,6 +525,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 
 		destination.setSortOrder(source.getSortOrder());
 
+		destination.setSupportSample(source.getSupportSample());
+		destination.setSamplePrice(source.getSamplePrice());
+		destination.setSamplePriceCurrency(source.getSamplePriceCurrency());
+
 		return destination;
 	}
 

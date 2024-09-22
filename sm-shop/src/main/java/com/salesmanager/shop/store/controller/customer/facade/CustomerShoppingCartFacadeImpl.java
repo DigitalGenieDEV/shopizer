@@ -2,21 +2,24 @@ package com.salesmanager.shop.store.controller.customer.facade;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartCalculationService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
+import com.salesmanager.core.business.utils.ProductPriceUtils;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
-import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
@@ -34,7 +37,6 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -44,7 +46,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -85,6 +86,11 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
     @Autowired
     private ReadableCustomerShoppingCartMapper readableCustomerShoppingCartMapper;
+
+    @Autowired
+    private ExchangeRateConfig exchangeRateConfig;
+    @Autowired
+    private ProductPriceUtils priceUtil;
 
     @Override
     public CustomerShoppingCartData addItemsToCart(CustomerShoppingCartData customerShoppingCartData, CustomerShoppingCartItem item, Language language, Customer customer) throws Exception {
@@ -379,9 +385,30 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
         }
 
 
-
         if (instance != null) {
             item.setVariant(instance.getId());
+        }
+
+
+        // handle sample cart type
+        boolean isSampleCartItemType = CartItemType.SAMPLE.name().equals(customerShoppingCartItem.getCartItemType());
+        if (isSampleCartItemType) {
+            Boolean supportSample = product.getSupportSample();
+            if (!Boolean.TRUE.equals(supportSample)) {
+                throw new ServiceRuntimeException("Product don't support booking sample");
+            }
+
+            CartItemType cartItemType;
+            try {
+                cartItemType = CartItemType.valueOf(customerShoppingCartItem.getCartItemType());
+            } catch (IllegalArgumentException e) {
+                throw new ServiceRuntimeException("Unknown cart item type:" + customerShoppingCartItem.getCartItemType());
+            }
+            item.setCartItemType(cartItemType);
+
+            if (customerShoppingCartItem.getQuantity() > 1) {
+                throw new ServiceRuntimeException("Sample quantity must be one");
+            }
         }
 
         // TODO attributes
@@ -888,6 +915,10 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                 if (cartItem.getSku().equals(item.getSku())) {
                     if (!duplicateFound) {
                         cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
+                        boolean isSampleCartItemType = CartItemType.SAMPLE.equals(itemModel.getCartItemType());
+                        if (isSampleCartItemType && cartItem.getQuantity() > 1) {
+                            throw new ServiceRuntimeException("Sample quantity must be one");
+                        }
                         cartItem.setChecked(itemModel.isChecked());
                         cartItem.setAdditionalServicesIdMap(itemModel.getAdditionalServicesIdMap());
                         cartItem.setShippingType(itemModel.getShippingType());
