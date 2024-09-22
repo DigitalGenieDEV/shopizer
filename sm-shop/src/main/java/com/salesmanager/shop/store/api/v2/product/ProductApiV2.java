@@ -6,9 +6,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1171,51 +1168,25 @@ public class ProductApiV2 {
 			@ApiResponse(code = 200, message = "Single product found", response = ReadableProductDetailShippingPrice.class) })
 	@ResponseBody
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public CommonResultDTO<Void> deleteProductsByCategoryId(Long categoryId) {
+	public CommonResultDTO<Void> deleteProductsByCategoryId(@PathVariable Long categoryId,
+															@RequestParam(value = "lang", required = false) String lang,
+															@ApiIgnore Language language) {
 		List<Long> productIdsByCategoryId = productRepository.findProductIdsByCategoryId(categoryId);
-		if (CollectionUtils.isEmpty(productIdsByCategoryId)) {
-			return CommonResultDTO.ofSuccess();
+		if(CollectionUtils.isEmpty(productIdsByCategoryId)){
+			return null;
 		}
-
-		// 创建线程池，设定合适的线程数
-		ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 		for (Long id : productIdsByCategoryId) {
-			executorService.submit(() -> {
-				Optional<Product> byId = productRepository.findById(id);
-				if (byId.isPresent()) {
-					try {
-						Product product = byId.get();
-						productAnnouncementAttributeRepository.deleteByProductId(product.getId());
 
-						List<ProductAttribute> attributes = productAttributeRepository.findByProductId(product.getId());
-						List<Long> collect = attributes.stream().map(ProductAttribute::getId).collect(Collectors.toList());
-
-						productAttributeRepository.deleteProductAttributesByIds(collect);
-						productFeatureRepository.deleteByProductId(product.getId());
-						productService.delete(product);
-					} catch (ServiceException e) {
-						LOGGER.error("delete product error", e);
-					}
-				}
-			});
-		}
-
-		// 关闭线程池
-		executorService.shutdown();
-		try {
-			// 等待所有任务完成
-			if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-				executorService.shutdownNow();
+			try {
+				productCommonFacade.deleteProduct(id, null);
+			}catch (Exception e){
+				LOGGER.error("deleteProductsByCategoryId error", e);
 			}
-		} catch (InterruptedException e) {
-			executorService.shutdownNow();
-			Thread.currentThread().interrupt();
 		}
 
 		return CommonResultDTO.ofSuccess();
 	}
-
 
 
 

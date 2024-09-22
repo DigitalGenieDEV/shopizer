@@ -59,6 +59,7 @@ import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -468,7 +469,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void deleteProductsInParallel(Product product) throws ServiceException {
 		productMaterialService.deleteProductMaterialByProductId(product.getId());
 
