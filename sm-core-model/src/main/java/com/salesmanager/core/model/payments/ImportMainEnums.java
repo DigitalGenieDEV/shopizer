@@ -10,5 +10,10 @@ public enum ImportMainEnums {
 	/**
 	 * 买家责任
 	 */
-     SELLER_RESPONSIBILITY
+     SELLER_RESPONSIBILITY,
+
+	/**
+	 * 买家责任(个人购买)
+	 */
+	SELLER_RESPONSIBILITY_PERSONAL
 }
