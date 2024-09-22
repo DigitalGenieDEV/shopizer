@@ -2,6 +2,7 @@ package com.salesmanager.shop.model.fulfillment.facade;
 
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.fulfillment.PersistableQcInfo;
 import com.salesmanager.shop.model.fulfillment.PersistableQcInfoHistory;
 import com.salesmanager.shop.model.fulfillment.ReadableQcInfo;
@@ -20,7 +21,7 @@ public interface ProductQcFacade {
 
     void saveQcInfoHistory(PersistableQcInfoHistory qcInfoHistory) throws ServiceException;
 
-    ReadableQcInfo queryQcInfoById(Long id) throws ConversionException;
+    ReadableQcInfo queryQcInfoById(Long id, Language language) throws ConversionException;
 
 }
 

@@ -108,9 +108,9 @@ public class ProductFulfillmentApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Void> updateSellerShippingStatusByOrder(
-            @Valid @RequestBody List<Long> ids,
-            @Valid @RequestBody String status,
-            @Valid @RequestBody String type) {
+            @Valid @RequestParam List<Long> ids,
+            @Valid @RequestParam String status,
+            @Valid @RequestParam String type) {
         try {
             if (type.equals("ORDER")){
                 //更新所有履约单状态

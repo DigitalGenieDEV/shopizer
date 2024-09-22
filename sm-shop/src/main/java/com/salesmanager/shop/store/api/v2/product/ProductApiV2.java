@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.modules.AnnouncementInfo;
+import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
@@ -147,6 +148,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private SellerTextInfoFacade sellerTextInfoFacade;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -1147,6 +1151,27 @@ public class ProductApiV2 {
 	}
 
 
+
+
+
+	@RequestMapping(value = "/private/delete/products/categoryId/{categoryId}", method = RequestMethod.GET)
+	@ApiOperation(httpMethod = "GET", value = "Get a product shipping price", notes = "product detail get shipping price" )
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Single product found", response = ReadableProductDetailShippingPrice.class) })
+	@ResponseBody
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public CommonResultDTO<Void> deleteProductsByCategoryId(@PathVariable Long categoryId,
+															@RequestParam(value = "lang", required = false) String lang,
+															@ApiIgnore Language language) {
+		List<Long> productIdsByCategoryId = productRepository.findProductIdsByCategoryId(categoryId);
+		if(CollectionUtils.isEmpty(productIdsByCategoryId)){
+			return null;
+		}
+		productIdsByCategoryId.parallelStream().forEach(id->{
+			productCommonFacade.deleteProduct(id, null);
+		});
+		return CommonResultDTO.ofSuccess();
+	}
 
 
 

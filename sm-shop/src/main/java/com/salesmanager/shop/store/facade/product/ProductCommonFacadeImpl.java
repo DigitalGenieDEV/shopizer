@@ -452,7 +452,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	public void deleteProduct(Long id, MerchantStore store) {
 
 		Validate.notNull(id, "Product id cannot be null");
-		Validate.notNull(store, "store cannot be null");
 
 		Product p = productService.getById(id);
 
@@ -460,10 +459,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			throw new ResourceNotFoundException("Product with id [" + id + " not found");
 		}
 
-		if (p.getMerchantStore().getId().intValue() != store.getId().intValue()) {
-			throw new ResourceNotFoundException(
-					"Product with id [" + id + " not found for store [" + store.getCode() + "]");
-		}
 
 		try {
 			deleteProductsInParallel(p);

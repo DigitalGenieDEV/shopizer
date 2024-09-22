@@ -41,8 +41,8 @@ public class FulfillmentSubOrderServiceImpl extends SalesManagerEntityServiceImp
 
 
     @Override
-    public FulfillmentSubOrder queryFulfillmentSubOrderByProductOrderId(Long productOrderId) {
-        return fulfillmentSubOrderRepository.queryFulfillmentSubOrderByProductOrderId(productOrderId);
+    public FulfillmentSubOrder queryFulfillmentSubOrderByOrderProductId(Long productOrderId) {
+        return fulfillmentSubOrderRepository.queryFulfillmentSubOrderByProductOrderProductId(productOrderId);
     }
 
 }

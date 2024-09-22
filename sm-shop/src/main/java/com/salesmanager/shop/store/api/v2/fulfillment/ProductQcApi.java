@@ -41,9 +41,10 @@ public class ProductQcApi {
     @ApiOperation(httpMethod = "GET", value = "Get qc info by id", notes = "Get qc info by id")
     @ResponseBody
     @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-    public CommonResultDTO<ReadableQcInfo> getQcInfoById(@PathVariable Long qcInfoId) {
+    public CommonResultDTO<ReadableQcInfo> getQcInfoById(@PathVariable Long qcInfoId,
+                                                         @ApiIgnore Language language) {
         try {
-            ReadableQcInfo readableQcInfo = productQcFacade.queryQcInfoById(qcInfoId);
+            ReadableQcInfo readableQcInfo = productQcFacade.queryQcInfoById(qcInfoId, language);
             return CommonResultDTO.ofSuccess(readableQcInfo);
         }catch (Exception e){
             LOGGER.error("Error  to get qc info By id", e);
