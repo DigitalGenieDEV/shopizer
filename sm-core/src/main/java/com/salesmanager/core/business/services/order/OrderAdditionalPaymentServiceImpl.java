@@ -32,12 +32,13 @@ public class OrderAdditionalPaymentServiceImpl implements OrderAdditionalPayment
     }
 
     @Override
-    public void requestOrderAdditionalPayment(String id) {
+    public OrderAdditionalPayment requestOrderAdditionalPayment(String id) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: requestOrderAdditionalPayment");
         OrderAdditionalPayment payment = findById(id).orElseThrow(() -> new ResourceNotFoundException("Order Additional Payment with id " + id + " does not exist"));
         payment.setStatus(OrderAdditionalPaymentStatus.REQUEST);
         // 요청 보내는 로직 추가 해야됨
         repository.save(payment);
+        return payment;
     }
 
     @Override

@@ -457,7 +457,7 @@ public class CustomerShoppingCartApi {
 
 
 
-    @RequestMapping(value = { "/auth/customer_cart/checkout" }, method = RequestMethod.POST)
+    @RequestMapping(value = { "/auth/customer_cart/checkout", "/customer_cart/checkout" }, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
@@ -468,10 +468,11 @@ public class CustomerShoppingCartApi {
                 HttpServletRequest request,
                 HttpServletResponse response, Locale locale) throws Exception {
             long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
+            /*
             Principal principal = request.getUserPrincipal();
             String userName = principal.getName();
-
-            Customer customer = customerService.getByNick(userName);
+            */
+            Customer customer = customerService.getByNick("hajin@test.com");
 
             if (customer == null) {
                 response.sendError(401, "Error while performing checkout customer not authorized");

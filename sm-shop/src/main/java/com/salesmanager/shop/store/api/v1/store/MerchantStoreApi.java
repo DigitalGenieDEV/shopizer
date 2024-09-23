@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.salesmanager.core.model.customer.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -631,7 +633,10 @@ public class MerchantStoreApi {
 		return new ResponseEntity<EntityExists>(new EntityExists(isStoreExist), HttpStatus.OK);
 	}
 
-
+	@GetMapping(value = { "/auth/merchant/{code}/customers", "/merchant/{code}/customers" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<String> getCustomersByStoreCode(@PathVariable String code) {
+		return customerFacade.getCustomerByStoreCode(code).stream().map(Customer::getNick).collect(Collectors.toList());
+	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping(value = { "/private/store/{code}" })

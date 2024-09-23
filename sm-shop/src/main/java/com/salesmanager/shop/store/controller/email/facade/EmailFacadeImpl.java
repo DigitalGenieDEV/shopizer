@@ -14,7 +14,6 @@ import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.system.EmailService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.shop.model.references.EmailVerificationDTO;
-import com.salesmanager.shop.store.api.exception.GenericRuntimeException;
 import com.salesmanager.shop.store.api.exception.RestApiException;
 import com.salesmanager.shop.store.clients.external.ExternalClient;
 
@@ -28,7 +27,7 @@ public class EmailFacadeImpl implements EmailFacade{
 	
 	private final CustomerService customerService;
 	
-	private final ExternalClient emailClient;
+	private final ExternalClient externalClient;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailFacadeImpl.class);
 	
@@ -51,7 +50,7 @@ public class EmailFacadeImpl implements EmailFacade{
 			else {
 				String code = createCode();
 				emailService.sendVerificationEmail(to, code);
-				emailClient.emailVerification(
+				externalClient.emailVerification(
 						EmailVerificationDTO
 							.builder()
 							.email(to)

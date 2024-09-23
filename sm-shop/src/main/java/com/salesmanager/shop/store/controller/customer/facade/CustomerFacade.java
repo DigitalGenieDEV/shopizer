@@ -79,7 +79,8 @@ public interface CustomerFacade
     
     public Customer getCustomerByUserName(final String userName, final MerchantStore store);
     public Customer getCustomerByUserName(final String userName);
-    
+    public List<Customer> getCustomerByStoreCode(String storeCode);
+
     public boolean checkIfUserExists(final String userName,final MerchantStore store) throws Exception;
     
     public PersistableCustomer  registerCustomer( final PersistableCustomer customer,final MerchantStore merchantStore, final Language language) throws Exception;
