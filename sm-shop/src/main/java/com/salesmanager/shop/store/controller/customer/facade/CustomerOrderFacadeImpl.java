@@ -15,7 +15,6 @@ import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
-import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
@@ -33,6 +32,7 @@ import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.customer.ReadableCustomerMapper;
@@ -42,13 +42,10 @@ import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.*;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
-import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
-import com.salesmanager.shop.model.order.shipping.PersistableDeliveryAddress;
 import com.salesmanager.shop.model.order.total.ReadableOrderTotal;
 import com.salesmanager.shop.model.order.total.ReadableTotal;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
-import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
 import com.salesmanager.shop.model.order.v1.PersistableOrder;
 import com.salesmanager.shop.model.shoppingcart.PersistableShoppingCartItem;
 import com.salesmanager.shop.populator.customer.PersistableCustomerOrderApiPopulator;
@@ -163,14 +160,19 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 throw new ServiceException("Customer Shopping cart with Customer id " + customer.getId() + " does not have checked cart items");
             }
 
+            // check whether sample type
+            boolean isSampleType = checkedCartItems.stream().allMatch(p -> CartItemType.SAMPLE.equals(p.getCartItemType()));
+            // check whether 1688 order type
             boolean allAre1688Products = checkedCartItems.stream()
                     .map(CustomerShoppingCartItem::getProduct)
                     .allMatch(product -> product.getPublishWay() != null && product.getPublishWay().equals(PublishWayEnums.IMPORT_BY_1688));
-
-            if (allAre1688Products){
+            if (isSampleType) {
+                customerOrder.setOrderType(OrderType.SAMPLE.name());
+            } else if (allAre1688Products){
                 customerOrder.setStatus(OrderStatus.PENDING_REVIEW.getValue());
                 customerOrder.setOrderType(OrderType.PRODUCT_1688.name());
             }
+
 
             LOGGER.info("[processCustomerOrder] populate customer order model");
             persistableCustomerOrderApiPopulator.populate(customerOrder, modelCustomerOrder, null, language);
@@ -211,7 +213,11 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setImportMain(customerOrder.getImportMain());
                 persistableOrder.setOrderNo(modelCustomerOrder.getOrderNo());
                 persistableOrder.setCustomsClearanceNumber(customerOrder.getCustomsClearanceNumber());
-                persistableOrder.setOrderType(customerOrder.getOrderType());
+
+                // OrderType is not get from front-end, use product type to replace it.
+                // check if whether type
+                boolean isMerchantSampleType = persistableShoppingCartItems.stream().allMatch(p -> CartItemType.SAMPLE.name().equals(p.getItemType()));
+                persistableOrder.setOrderType(isMerchantSampleType ? OrderType.SAMPLE.name() : customerOrder.getOrderType());
                 persistableOrder.setCurrency(customerOrder.getCurrency());
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
                 persistableOrder.setAddress(customerOrder.getAddress());
@@ -408,7 +414,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
     @Override
     public ReadableCustomerOrder getReadableCustomerOrder(Long customerOrderId, MerchantStore store, Language language) {
-        CustomerOrder modelOrder = customerOrderService.getCustomerOrder(customerOrderId);
+        CustomerOrder modelOrder = customerOrderService.getById(customerOrderId);
         if (modelOrder == null) {
             throw new ResourceNotFoundException("CustomerOrder not found with id " + customerOrderId);
         }
@@ -505,7 +511,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         item.setPlayThroughOption(lineItem.getPlayThroughOption());
         item.setTruckType(lineItem.getTruckType());
         item.setAdditionalServicesIdMap(lineItem.getAdditionalServicesIdMap());
-
+        item.setItemType(lineItem.getCartItemType() == null ? null : lineItem.getCartItemType().name());
 
 //                item.setAttributes(lineItem.getProduct().getAttributes());
 //                item.setPromoCode(lineItem.);

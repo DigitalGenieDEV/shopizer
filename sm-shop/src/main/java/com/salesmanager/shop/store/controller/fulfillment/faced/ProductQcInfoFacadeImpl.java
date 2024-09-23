@@ -3,6 +3,7 @@ package com.salesmanager.shop.store.controller.fulfillment.faced;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.*;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
@@ -12,12 +13,15 @@ import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.QcInfoHistory;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.fulfillment.facade.ProductQcFacade;
 import com.salesmanager.shop.populator.qc.PersistableQcInfoPopulator;
+import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import org.apache.commons.collections.CollectionUtils;
 import org.drools.core.util.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +45,12 @@ public class ProductQcInfoFacadeImpl implements ProductQcFacade {
 
     @Autowired
     private PersistableQcInfoPopulator persistableQcInfoPopulator;
+
+    @Autowired
+    private OrderProductService orderProductsService;
+
+    @Autowired
+    private AdditionalServicesConvert additionalServicesConvert;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductQcInfoFacadeImpl.class);
 
@@ -107,11 +117,17 @@ public class ProductQcInfoFacadeImpl implements ProductQcFacade {
     }
 
     @Override
-    public ReadableQcInfo queryQcInfoById(Long id) throws ConversionException {
+    public ReadableQcInfo queryQcInfoById(Long id, Language language) throws ConversionException {
         QcInfo qcInfo = qcInfoService.getById(id);
         if (qcInfo == null){
             return null;
         }
+        Long orderProductId = qcInfo.getOrderProductId();
+        OrderProduct orderProduct = orderProductsService.getOrderProduct(orderProductId);
+        String additionalServicesMap = orderProduct.getAdditionalServicesMap();
+
+        List<ReadableProductAdditionalService> readableProductAdditionalServices = additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(additionalServicesMap, language);
+
         List<QcInfoHistory> qcInfoHistories = qcinfoHistoryService.queryByQcInfoId(id);
 
         ReadableQcInfo convert = ObjectConvert.convert(qcInfo, ReadableQcInfo.class);
@@ -124,6 +140,7 @@ public class ProductQcInfoFacadeImpl implements ProductQcFacade {
             }).collect(Collectors.toList());
             convert.setReadableQcInfoHistoryList(collect);
         }
+        convert.setReadableProductAdditionalServices(readableProductAdditionalServices);
         convert.setDateCreated(qcInfo.getAuditSection().getDateCreated());
         return convert;
     }

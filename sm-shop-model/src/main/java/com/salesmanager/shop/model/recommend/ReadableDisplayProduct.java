@@ -1,5 +1,6 @@
 package com.salesmanager.shop.model.recommend;
 
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.ProductDescription;
 import com.salesmanager.shop.model.catalog.product.ReadableImage;
@@ -26,6 +27,10 @@ public class ReadableDisplayProduct extends Entity implements Serializable {
     private List<ReadableImage> images;
     private String sku;
     private BigDecimal price;
+
+
+    private String publishWay;
+
     /**
      * 0-无sku按商品数量报价，1-按sku规格报价 2-有sku按商品数量报价
      *
@@ -216,5 +221,13 @@ public class ReadableDisplayProduct extends Entity implements Serializable {
 
     public void setVariants(List<ReadableProductVariant> variants) {
         this.variants = variants;
+    }
+
+    public String getPublishWay() {
+        return publishWay;
+    }
+
+    public void setPublishWay(String publishWay) {
+        this.publishWay = publishWay;
     }
 }

@@ -51,7 +51,7 @@ public class InvoiceApi {
     @Inject
     private PersistableOrderInvoicePopulator persistableOrderInvoicePopulator;
 
-    @GetMapping(value = {"/auth/orders/{id}/invoice"})
+    @GetMapping(value = {"/auth/orders/invoice/{id}"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<ReadableOrderInvoice> getInvoice(@PathVariable Long id,
@@ -74,7 +74,7 @@ public class InvoiceApi {
         }
     }
 
-    @PostMapping(value = {"/auth/orders/{id}/invoice"})
+    @PostMapping(value = {"/auth/orders/invoice/save/{id}"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> updateInvoice(@PathVariable Long id, @Valid @RequestBody PersistableOrderInvoice persistableInvoice,

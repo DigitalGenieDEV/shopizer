@@ -248,6 +248,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getReadableProductAdditionalServices());
 
         readableCustomerShoppingCartItem.setInternationalTransportationMethod(readableShoppingCartItem.getInternationalTransportationMethod());
+        readableCustomerShoppingCartItem.setSupportSample(readableShoppingCartItem.getSupportSample());
+        readableCustomerShoppingCartItem.setSamplePrice(readableShoppingCartItem.getSamplePrice());
+        readableCustomerShoppingCartItem.setSamplePriceCurrency(readableShoppingCartItem.getSamplePriceCurrency());
 
         return readableCustomerShoppingCartItem;
     }

@@ -107,7 +107,9 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
-
+		if(source.getQcInfo() != null){
+			target.setQcInfoId(source.getQcInfo().getId());
+		}
 
 		if (source.getShippingDocumentOrder() !=null){
 			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
@@ -134,6 +136,11 @@ public class ReadableOrderProductPopulator extends
 			}
 
 			target.setReadableShippingDocumentOrder(readableShippingDocumentOrder);
+		}
+
+		if (source.getDesign() != null) {
+			ReadableOrderProductDesignPopulator readableOrderProductDesignPopulator = new ReadableOrderProductDesignPopulator();
+			target.setReadableOrderProductDesign(readableOrderProductDesignPopulator.populate(source.getDesign(), store, language));
 		}
 
 
@@ -248,9 +255,10 @@ public class ReadableOrderProductPopulator extends
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
 					ProductVariant productVariant = productVariantService.queryBySku(productSku);
-
-					ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
-					productProxy.setVariants(Collections.singletonList(convert));
+					if (productVariant != null) {
+						ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
+						productProxy.setVariants(Collections.singletonList(convert));
+					}
 
 					target.setProduct(productProxy);
 					Set<ProductImage> images = product.getImages();

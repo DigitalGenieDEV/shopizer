@@ -166,4 +166,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 			"Product p " +
 			"WHERE  p.id = ?1")
 	Product findByProductId(Long id);
+
+	@Query(value ="SELECT pc.PRODUCT_ID from  PRODUCT_CATEGORY pc WHERE   pc.CATEGORY_ID = :categoryId", nativeQuery = true)
+	List<Long> findProductIdsByCategoryId(@Param("categoryId") Long categoryId);
 }

@@ -19,5 +19,5 @@ public interface FulfillmentSubOrderRepository extends JpaRepository<Fulfillment
 
     @Query("select distinct f from FulfillmentSubOrder f " +
             " where f.orderProductId = ?1 order by f.auditSection.dateCreated")
-    FulfillmentSubOrder queryFulfillmentSubOrderByProductOrderId(Long productOrderId);
+    FulfillmentSubOrder queryFulfillmentSubOrderByProductOrderProductId(Long productOrderId);
 }

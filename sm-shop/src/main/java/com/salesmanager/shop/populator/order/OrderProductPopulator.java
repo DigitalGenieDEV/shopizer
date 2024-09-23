@@ -88,8 +88,8 @@ public class OrderProductPopulator {
 			target.setSku(source.getSku());
 			target.setProductId(source.getProductId());
 
-			target.setTruckType(StringUtils.isNotEmpty(source.getTruckModel())?
-					TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+			target.setTruckType(StringUtils.isNotEmpty(source.getTruckType())?
+					TruckTypeEnums.valueOf(source.getTruckType()) : null);
 			target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
 					TruckModelEnums.valueOf(source.getTruckModel()) : null);
 			target.setShippingType(source.getShippingType());

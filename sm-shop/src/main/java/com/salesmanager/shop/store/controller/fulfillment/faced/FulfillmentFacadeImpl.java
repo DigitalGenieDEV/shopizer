@@ -86,17 +86,24 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             return null;
         }
 
+        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = null;
         com.salesmanager.core.model.fulfillment.ShippingDocumentOrder shippingDocumentOrder = orderProduct.getShippingDocumentOrder();
         if (shippingDocumentOrder == null || shippingDocumentOrder.getInvoicePackingFormId() == null){
-            return null;
+            List<com.salesmanager.core.model.fulfillment.InvoicePackingForm> invoicePackingForms = invoicePackingFormService.queryInvoicePackingFormByOrderIdAndProductId(orderId, orderProductId);
+            if (CollectionUtils.isEmpty(invoicePackingForms)){
+                return null;
+            }
+            invoicePackingForm = invoicePackingForms.get(invoicePackingForms.size() - 1);
+
+        }else {
+            Long invoicePackingFormId = shippingDocumentOrder.getInvoicePackingFormId();
+
+            invoicePackingForm = invoicePackingFormService.getById(invoicePackingFormId);
+            if (invoicePackingForm == null){
+                return null;
+            }
         }
 
-        Long invoicePackingFormId = shippingDocumentOrder.getInvoicePackingFormId();
-
-        com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(invoicePackingFormId);
-        if (invoicePackingForm == null){
-            return null;
-        }
         ReadableInvoicePackingForm convert = ObjectConvert.convert(invoicePackingForm, ReadableInvoicePackingForm.class);
 
         Set<com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail> invoicePackingFormDetails = invoicePackingForm.getInvoicePackingFormDetails();
@@ -111,15 +118,22 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Override
     public void saveInvoicePackingForm(PersistableInvoicePackingForm persistableInvoicePackingForm) {
+        if (persistableInvoicePackingForm.getId()!=null && persistableInvoicePackingForm.getId() == 0){
+            persistableInvoicePackingForm.setId(null);
+        }
         com.salesmanager.core.model.fulfillment.InvoicePackingForm invoicePackingForm = ObjectConvert.convert(persistableInvoicePackingForm, com.salesmanager.core.model.fulfillment.InvoicePackingForm.class);
         Set<PersistableInvoicePackingFormDetail> invoicePackingFormDetails = persistableInvoicePackingForm.getInvoicePackingFormDetails();
 
         Set<com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail> invoicePackingFormDetailList = new HashSet<>();
         for(InvoicePackingFormDetail invoicePackingFormDetail : invoicePackingFormDetails){
             com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail detail = ObjectConvert.convert(invoicePackingFormDetail, com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail.class);
+            if (detail.getId()!=null && detail.getId() ==0){
+                detail.setId(null);
+            }
             detail.setInvoicePackingForm(invoicePackingForm);
             invoicePackingFormDetailList.add(detail);
         }
+        invoicePackingForm.setOrderProductIds(persistableInvoicePackingForm.getOrderProductIds());
         invoicePackingForm.setInvoicePackingFormDetails(invoicePackingFormDetailList);
         invoicePackingFormService.saveInvoicePackingForm(invoicePackingForm);
         if (persistableInvoicePackingForm.getShippingOrderId() !=null){
@@ -199,7 +213,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Override
     public ReadableFulfillmentSubOrder queryFulfillmentSubOrderListByProductOrderId(Long productOrderId) {
-        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(productOrderId);
+        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(productOrderId);
         return   convertToReadableFulfillmentSubOrder(fulfillmentSubOrder);
     }
 
@@ -231,11 +245,13 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         if (CollectionUtils.isEmpty(productOrderIds)){
             return;
         }
-        AtomicReference<Long> fulfillmentMainId = null;
-        AtomicReference<Long> orderId = null;
-        AtomicReference<FulfillmentTypeEnums> fulfillmentMainType = null;
+        AtomicReference<Long> fulfillmentMainId = new AtomicReference<>();
+        AtomicReference<Long> orderId = new AtomicReference<>();
+        AtomicReference<FulfillmentTypeEnums> fulfillmentMainType = new AtomicReference<>();
+
+
         productOrderIds.forEach(productOrderId->{
-            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(productOrderId);
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(productOrderId);
             if (orderId.get() == null){
                 orderId.set(fulfillmentSubOrder.getOrderId());
             }
@@ -247,8 +263,21 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             fulfillmentSubOrderService.updateFulfillmentMainOrder(fulfillmentSubOrder);
             fulfillmentHistoryService.saveFulfillmentHistory(orderId.get(), productOrderId, status, fulfillmentMainType.get() == null ? null : fulfillmentMainType.get().name());
         });
-        Long mainId =  fulfillmentMainId.get();
-        fulfillmentMainOrderService.updatePartialDelivery(mainId, true);
+
+        // 假设 fulfillmentMainOrderService 已经有方法可以查询主订单下的所有子订单
+        List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> allSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(orderId.get());
+
+        // 检查是否所有子订单状态都已为 "发货"
+        boolean allDelivered = allSubOrders.stream()
+                .allMatch(subOrder -> !FulfillmentTypeEnums.PAYMENT_COMPLETED.equals(subOrder.getFulfillmentMainType()) || !FulfillmentTypeEnums.PROCESSED.equals(subOrder.getFulfillmentMainType()));
+
+        Long mainId = fulfillmentMainId.get();
+        // 如果所有子订单都发货了，则更新主订单为全部发货
+        if (allDelivered) {
+            fulfillmentMainOrderService.updatePartialDelivery(mainId, false);
+        }else {
+            fulfillmentMainOrderService.updatePartialDelivery(mainId, true);
+        }
     }
 
     @Override
@@ -267,7 +296,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Override
     public ReadableFulfillmentShippingInfo queryShippingInformationByOrderProductId(Long orderProductId) {
-        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(orderProductId);
+        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(orderProductId);
         ReadableFulfillmentShippingInfo result = new ReadableFulfillmentShippingInfo();
 
         List<com.salesmanager.core.model.fulfillment.FulfillmentHistory> fulfillmentHistoryList = fulfillmentHistoryService.queryFulfillmentHistoryByOrderProductId(orderProductId);
@@ -308,7 +337,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             return ;
         }
         if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
-            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByProductOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(persistableFulfillmentSubOrderReqDTO.getId());
             fulfillmentSubOrder.setLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getLogisticsNumber());
             fulfillmentSubOrder.setNationalLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getNationalLogisticsCompany());
             fulfillmentSubOrder.setNationalDriverName(persistableFulfillmentSubOrderReqDTO.getNationalDriverName());

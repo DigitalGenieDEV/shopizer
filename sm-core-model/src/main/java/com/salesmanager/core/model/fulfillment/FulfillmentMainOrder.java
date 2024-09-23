@@ -34,8 +34,8 @@ public class FulfillmentMainOrder extends SalesManagerEntity<Long, FulfillmentMa
     private Long id;
 
 
-    @OneToOne(mappedBy = "fulfillmentMainOrder",  fetch = FetchType.LAZY)
-    @JoinColumn(name="MAIN_ORDER_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ORDER_ID", nullable=true)
     private Order order;
 
     /**

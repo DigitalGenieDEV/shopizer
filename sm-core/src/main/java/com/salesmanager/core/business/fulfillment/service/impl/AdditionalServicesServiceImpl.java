@@ -3,10 +3,10 @@ package com.salesmanager.core.business.fulfillment.service.impl;
 import com.salesmanager.core.business.fulfillment.service.AdditionalServicesService;
 import com.salesmanager.core.business.repositories.fulfillment.AdditionalServicesRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
+import com.salesmanager.core.constants.ProductType;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -64,6 +64,11 @@ public class AdditionalServicesServiceImpl extends SalesManagerEntityServiceImpl
     @Override
     public List<AdditionalServices> queryAdditionalServicesByMerchantId(Long merchantId, Language language) {
         return additionalServicesRepository.queryAdditionalServicesByMerchantId(merchantId);
+    }
+
+    @Override
+    public List<AdditionalServices> queryAdditionalServicesByMerchantIdAndCode(Long merchantId, String code, Language language) {
+        return additionalServicesRepository.queryAdditionalServicesByMerchantIdAndCode(merchantId, code);
     }
 }
 

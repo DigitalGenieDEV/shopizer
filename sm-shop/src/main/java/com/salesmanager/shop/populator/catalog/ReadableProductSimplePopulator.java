@@ -214,6 +214,10 @@ public class ReadableProductSimplePopulator extends
 
 			}
 
+			target.setSupportSample(source.getSupportSample());
+			target.setSamplePrice(source.getSamplePrice());
+			target.setSamplePriceCurrency(source.getSamplePriceCurrency());
+
 			return target;
 
 		} catch (Exception e) {

@@ -148,17 +148,17 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setCustomerAgreement(source.isCustomerAgreement());
             target.setConfirmedAddress(true);
 
-            target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
-                    TruckTypeEnums.valueOf(source.getTruckModel()) : null);
-            target.setTruckModel(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
-                    TruckModelEnums.valueOf(source.getTruckModel()) : null);
-            target.setShippingType(source.getShippingType() == null ? null : ShippingType.valueOf(source.getShippingType()));
-            target.setShippingTransportationType(source.getShippingTransportationType() ==null ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
-            target.setNationalTransportationMethod(source.getNationalTransportationMethod() == null? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
-            target.setInternationalTransportationMethod(source.getInternationalTransportationMethod() ==null? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
-            target.setPlayThroughOption(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getPlayThroughOption())?
-                    PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
 
+            target.setTruckType(StringUtils.isNotEmpty(source.getTruckType())?
+                    TruckTypeEnums.valueOf(source.getTruckType()) : null);
+            target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
+                    TruckModelEnums.valueOf(source.getTruckModel()) : null);
+            target.setShippingType(StringUtils.isEmpty(source.getShippingType())? null : ShippingType.valueOf(source.getShippingType()));
+            target.setShippingTransportationType(StringUtils.isEmpty(source.getShippingTransportationType()) ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
+            target.setNationalTransportationMethod(StringUtils.isEmpty(source.getNationalTransportationMethod())? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
+            target.setInternationalTransportationMethod(StringUtils.isEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
+            target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
+                    PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
 
             return target;
         } catch (Exception e) {

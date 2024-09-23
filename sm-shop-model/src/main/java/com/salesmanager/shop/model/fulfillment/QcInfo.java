@@ -36,11 +36,6 @@ public class QcInfo {
      */
     private String productImages;
 
-    /**
-     * 增值服务
-     */
-    private String additionalServicesIds;
-
 
     /**
      * 逗号分隔的包装图片

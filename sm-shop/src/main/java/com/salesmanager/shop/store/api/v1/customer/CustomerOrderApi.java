@@ -88,7 +88,7 @@ public class CustomerOrderApi {
             page = new Integer(0);
         }
         if (count == null) {
-            count = new Integer(100);
+            count = new Integer(10);
         }
 
         ReadableCustomer readableCustomer = new ReadableCustomer();

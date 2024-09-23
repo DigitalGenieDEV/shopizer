@@ -88,11 +88,4 @@ public class InvoicePackingFormDetail extends SalesManagerEntity<Long, InvoicePa
         return Objects.hash(id);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InvoicePackingFormDetail that = (InvoicePackingFormDetail) o;
-        return Objects.equals(id, that.getId());
-    }
 }

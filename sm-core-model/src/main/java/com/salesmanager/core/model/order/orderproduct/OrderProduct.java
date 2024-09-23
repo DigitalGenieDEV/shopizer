@@ -118,7 +118,7 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 
 	@Column (name="IS_IN_SHIPPING_ORDER")
-	private Boolean isInShippingOrder;
+	private Boolean isInShippingOrder = false;
 
 	@Column (name="PRODUCT_QUANTITY")
 	private int productQuantity;
@@ -317,5 +317,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	public void setQcInfo(QcInfo qcInfo) {
 		this.qcInfo = qcInfo;
+	}
+
+	public OrderProductDesign getDesign() {
+		return design;
+	}
+
+	public void setDesign(OrderProductDesign design) {
+		this.design = design;
 	}
 }
