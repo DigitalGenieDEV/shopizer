@@ -86,17 +86,14 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         fulfillmentMainOrder.setPartialDelivery(false);
         fulfillmentMainOrder.setDelivery(order.getDelivery());
         fulfillmentMainOrder.setBilling(order.getBilling());
-        fulfillmentMainOrder.setOrder(order);
-
         // 设置 Order 的 FulfillmentMainOrder 属性
         order.setFulfillmentMainOrder(fulfillmentMainOrder);
 
+        fulfillmentMainOrder.setOrder(order);
         // 先保存 FulfillmentMainOrder
         fulfillmentMainOrderRepository.save(fulfillmentMainOrder);
-
         // 再保存 Order，确保两者关系更新
         orderRepository.save(order);
-
         return fulfillmentMainOrder;
     }
 

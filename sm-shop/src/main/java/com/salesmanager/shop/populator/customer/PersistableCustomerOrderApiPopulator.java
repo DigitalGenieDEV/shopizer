@@ -153,10 +153,10 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
                     TruckTypeEnums.valueOf(source.getTruckType()) : null);
             target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
                     TruckModelEnums.valueOf(source.getTruckModel()) : null);
-            target.setShippingType(StringUtils.isNotEmpty(source.getShippingType())? null : ShippingType.valueOf(source.getShippingType()));
-            target.setShippingTransportationType(StringUtils.isNotEmpty(source.getShippingTransportationType()) ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
-            target.setNationalTransportationMethod(StringUtils.isNotEmpty(source.getNationalTransportationMethod())? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
-            target.setInternationalTransportationMethod(StringUtils.isNotEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
+            target.setShippingType(StringUtils.isEmpty(source.getShippingType())? null : ShippingType.valueOf(source.getShippingType()));
+            target.setShippingTransportationType(StringUtils.isEmpty(source.getShippingTransportationType()) ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
+            target.setNationalTransportationMethod(StringUtils.isEmpty(source.getNationalTransportationMethod())? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
+            target.setInternationalTransportationMethod(StringUtils.isEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
             target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
                     PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
 
