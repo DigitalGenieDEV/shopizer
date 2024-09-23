@@ -400,7 +400,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
             CartItemType cartItemType;
             try {
-                cartItemType = CartItemType.valueOf(customerShoppingCartItem.getCartItemType());
+                cartItemType = customerShoppingCartItem.getCartItemType() ==null ? null : CartItemType.valueOf(customerShoppingCartItem.getCartItemType());
             } catch (IllegalArgumentException e) {
                 throw new ServiceRuntimeException("Unknown cart item type:" + customerShoppingCartItem.getCartItemType());
             }

@@ -401,7 +401,7 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 			item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
 			item.setTruckType(shoppingCartItem.getTruckType());
 			item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
-			item.setCartItemType(CartItemType.valueOf(shoppingCartItem.getItemType()));
+			item.setCartItemType(shoppingCartItem.getItemType() == null? null : CartItemType.valueOf(shoppingCartItem.getItemType()));
 
 			LOG.info("createCartItems item sku:" + item.getSku() + ", quantity:" + item.getQuantity());
 
