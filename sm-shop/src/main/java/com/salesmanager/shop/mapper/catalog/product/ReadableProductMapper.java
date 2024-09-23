@@ -109,6 +109,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		// will contain options
 		TreeMap<Long, ReadableProductOption> /**/selectableOptions = new TreeMap<Long, ReadableProductOption>();
 
+		destination.setPublishWay(source.getPublishWay() == null? null : source.getPublishWay().name());
 		destination.setSku(source.getSku());
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
