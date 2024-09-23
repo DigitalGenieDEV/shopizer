@@ -137,9 +137,6 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Column(name = "CONFIRMED_ADDRESS")
 	private Boolean confirmedAddress = false;
 
-
-
-
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="FULFILLMENT_MAIN_ORDER_ID", nullable=true)
 	private FulfillmentMainOrder fulfillmentMainOrder;
