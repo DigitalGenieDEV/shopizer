@@ -10,6 +10,8 @@ import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -73,6 +75,15 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	 * @see TruckModelEnums
 	 */
 	private String truckModel;
+
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private String truckTransportationCompany;
+
 
 	/**
 	 * 货车类型

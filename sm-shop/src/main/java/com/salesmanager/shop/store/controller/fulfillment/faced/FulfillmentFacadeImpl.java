@@ -386,6 +386,9 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             if (fulfillmentSubOrder.getTruckType() != null) {
                 readableFulfillmentSubOrder.setTruckType(fulfillmentSubOrder.getTruckType().name());
             }
+            if (fulfillmentSubOrder.getTruckTransportationCompany() != null) {
+                readableFulfillmentSubOrder.setTruckTransportationCompany(fulfillmentSubOrder.getTruckTransportationCompany().name());
+            }
             if (fulfillmentSubOrder.getTruckModel() != null) {
                 readableFulfillmentSubOrder.setTruckModel(fulfillmentSubOrder.getTruckModel().name());
             }

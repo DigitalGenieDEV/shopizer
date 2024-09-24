@@ -5,6 +5,8 @@ import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,13 @@ public class FulfillmentSubOrder {
      * @see TruckModelEnums
      */
     private String truckModel;
+
+
+    /**
+     * 货车运输公司
+     * @see TruckModelEnums
+     */
+    private String truckTransportationCompany;
 
 
     /**

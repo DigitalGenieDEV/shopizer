@@ -16,6 +16,8 @@ import com.salesmanager.shop.model.catalog.product.variation.ReadableProductVari
 import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
 import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 
@@ -76,6 +78,11 @@ public class ReadableShoppingCartItem extends ReadableMinimalProduct implements 
 	private String truckModel;
 
 
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	private String truckTransportationCompany;
 	/**
 	 * 货车类型
 	 *

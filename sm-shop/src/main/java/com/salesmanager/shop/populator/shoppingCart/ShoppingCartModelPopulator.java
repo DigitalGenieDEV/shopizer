@@ -227,6 +227,7 @@ public class ShoppingCartModelPopulator
         item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
         item.setTruckType(shoppingCartItem.getTruckType());
         item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
+        item.setTruckTransportationCompany(shoppingCartItem.getTruckTransportationCompany());
 
 
         // attributes

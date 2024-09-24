@@ -11,6 +11,7 @@ import com.salesmanager.core.business.services.customer.shoppingcart.CustomerSho
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
 import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.business.utils.ProductPriceUtils;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
@@ -356,6 +357,9 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
             item.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
         }
 
+        if (customerShoppingCartItem.getTruckTransportationCompany() != null) {
+            item.setTruckTransportationCompany(TruckTransportationCompanyEnums.valueOf(customerShoppingCartItem.getTruckTransportationCompany()));
+        }
 
         if (customerShoppingCartItem.getTruckType() != null) {
             item.setTruckType(customerShoppingCartItem.getTruckType());
@@ -547,6 +551,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         anItem.setTruckModel(itemModel.getTruckModel());
                         anItem.setPlayThroughOption(itemModel.getPlayThroughOption());
                         anItem.setTruckType(itemModel.getTruckType());
+                        anItem.setTruckTransportationCompany(itemModel.getTruckTransportationCompany());
                         newItems.add(anItem);
                     }
                     itemModified = true;
@@ -665,6 +670,7 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                 oldCartItem.setTruckModel(newItemValue.getTruckModel());
                 oldCartItem.setPlayThroughOption(newItemValue.getPlayThroughOption());
                 oldCartItem.setTruckType(newItemValue.getTruckType());
+                oldCartItem.setTruckTransportationCompany(newItemValue.getTruckTransportationCompany());
                 ++itemUpdatedCnt;
             } else {
                 cartModel.getLineItems().add(newItemValue);
@@ -746,6 +752,10 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
 
             if (customerShoppingCartItem.getTruckType() != null) {
                 item.setTruckType(customerShoppingCartItem.getTruckType());
+            }
+
+            if (customerShoppingCartItem.getTruckTransportationCompany() != null) {
+                item.setTruckTransportationCompany(TruckTransportationCompanyEnums.valueOf(customerShoppingCartItem.getTruckTransportationCompany()));
             }
 
             if (customerShoppingCartItem.getInternationalTransportationMethod() != null) {
@@ -927,6 +937,8 @@ public class CustomerShoppingCartFacadeImpl implements CustomerShoppingCartFacad
                         cartItem.setShippingTransportationType(itemModel.getShippingTransportationType());
                         cartItem.setTruckModel(itemModel.getTruckModel());
                         cartItem.setTruckType(itemModel.getTruckType());
+                        cartItem.setTruckTransportationCompany(itemModel.getTruckTransportationCompany());
+
                         cartItem.setPlayThroughOption(itemModel.getPlayThroughOption());
                         duplicateFound = true;
                         break;

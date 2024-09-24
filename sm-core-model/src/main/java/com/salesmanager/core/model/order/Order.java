@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
@@ -236,6 +237,14 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Column(name = "TRUCK_MODEL")
 	@Enumerated(EnumType.STRING)
 	private TruckModelEnums truckModel;
+
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Column(name = "TRUCK_TRANSPORTATION_COMPANY")
+	@Enumerated(value = EnumType.STRING)
+	private TruckTransportationCompanyEnums truckTransportationCompany;
 
 
 	/**
@@ -610,5 +619,14 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 
 	public void setTruckType(TruckTypeEnums truckType) {
 		this.truckType = truckType;
+	}
+
+
+	public TruckTransportationCompanyEnums getTruckTransportationCompany() {
+		return truckTransportationCompany;
+	}
+
+	public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
+		this.truckTransportationCompany = truckTransportationCompany;
 	}
 }

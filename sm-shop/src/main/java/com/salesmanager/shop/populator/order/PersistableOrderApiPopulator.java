@@ -8,6 +8,7 @@ import java.util.Set;
 import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.payments.ImportMainEnums;
@@ -185,6 +186,8 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
 			target.setOrderNo(source.getOrderNo());
 
+			target.setTruckTransportationCompany(StringUtils.isNotEmpty(source.getTruckTransportationCompany())?
+					TruckTransportationCompanyEnums.valueOf(source.getTruckTransportationCompany()) : null);
 			target.setTruckType(StringUtils.isNotEmpty(source.getTruckType())?
 					TruckTypeEnums.valueOf(source.getTruckType()) : null);
 			target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?

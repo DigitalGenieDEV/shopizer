@@ -9,6 +9,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
@@ -85,6 +86,16 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 	@Column(name = "TRUCK_MODEL")
 	@Enumerated(value = EnumType.STRING)
 	private TruckModelEnums truckModel;
+
+
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Column(name = "TRUCK_TRANSPORTATION_COMPANY")
+	@Enumerated(value = EnumType.STRING)
+	private TruckTransportationCompanyEnums truckTransportationCompany;
+
 
 	/**
 	 * 货车类型
@@ -325,5 +336,13 @@ public class OrderProduct extends SalesManagerEntity<Long, OrderProduct> {
 
 	public void setDesign(OrderProductDesign design) {
 		this.design = design;
+	}
+
+	public TruckTransportationCompanyEnums getTruckTransportationCompany() {
+		return truckTransportationCompany;
+	}
+
+	public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
+		this.truckTransportationCompany = truckTransportationCompany;
 	}
 }

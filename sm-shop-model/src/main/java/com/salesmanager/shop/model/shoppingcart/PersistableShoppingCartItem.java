@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
@@ -62,6 +63,13 @@ public class PersistableShoppingCartItem implements Serializable {
 	 */
 	private String truckModel;
 
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private TruckTransportationCompanyEnums truckTransportationCompany;
 
 	/**
 	 * 通关选项

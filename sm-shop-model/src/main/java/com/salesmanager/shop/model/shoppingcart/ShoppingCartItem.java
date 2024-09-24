@@ -6,11 +6,14 @@ import java.util.List;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.entity.ShopEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -75,6 +78,13 @@ public class ShoppingCartItem extends ShopEntity implements Serializable {
 	 */
 	private String truckModel;
 
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private TruckTransportationCompanyEnums truckTransportationCompany;
 
 	/**
 	 * 通关选项

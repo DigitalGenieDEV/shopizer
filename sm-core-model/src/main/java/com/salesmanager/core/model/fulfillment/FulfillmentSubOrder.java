@@ -90,6 +90,15 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
 
 
     /**
+     * 货车运输公司
+     * @see TruckModelEnums
+     */
+    @Column(name = "TRUCK_TRANSPORTATION_COMPANY")
+    @Enumerated(value = EnumType.STRING)
+    private TruckTransportationCompanyEnums truckTransportationCompany;
+
+
+    /**
      * 货车类型
      * @see TruckTypeEnums
      */
