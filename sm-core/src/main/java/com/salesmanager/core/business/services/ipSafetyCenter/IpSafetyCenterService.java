@@ -10,7 +10,7 @@ import com.salesmanager.core.model.iprsafecenter.ReadIpSafetyCenter;
 public interface IpSafetyCenterService extends SalesManagerEntityService<Integer, IpSafetyCenter> {
 	
 	 Page<ReadIpSafetyCenter> getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword,
-			int page, int count) throws ServiceException;
+			int page, int count, String userId) throws ServiceException;
 	 
 	 void saveOrUpdate(IpSafetyCenter data) throws ServiceException;
 	 

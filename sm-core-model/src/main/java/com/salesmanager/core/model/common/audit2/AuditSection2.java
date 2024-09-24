@@ -16,14 +16,14 @@ public class AuditSection2 implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "REG_ID", length = 11, nullable = false, updatable = false , columnDefinition = "varchar(11) not null comment '등록ID'")
+	@Column(name = "REG_ID", length = 96, nullable = false, updatable = false , columnDefinition = "varchar(11) not null comment '등록ID'")
 	private String regId;
 
 	@NotEmpty
 	@Column(name = "REG_IP", length = 30, nullable = false, updatable = false, columnDefinition = "varchar(30) not null comment '등록IP'")
 	private String regIp;
 
-	@Column(name = "MOD_ID", updatable = true, columnDefinition = "varchar(11) not null comment '수정ID'")
+	@Column(name = "MOD_ID",  length = 96, updatable = true, columnDefinition = "varchar(11) not null comment '수정ID'")
 	private String modId;
 
 	@Column(name = "MOD_IP", updatable = true, columnDefinition = "varchar(30) not null comment '수정IP'")
