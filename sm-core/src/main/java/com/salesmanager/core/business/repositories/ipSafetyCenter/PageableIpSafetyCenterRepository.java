@@ -15,9 +15,12 @@ public interface PageableIpSafetyCenterRepository extends JpaRepository<IpSafety
 			+ "WHERE DATE_FORMAT(REG_DATE, '%Y-%m-%d') BETWEEN ?3 AND ?4  \r\n"
 			+ "	AND (CASE WHEN  ?1 != '' THEN  REPORT_TYPE = ?1 ELSE TRUE END  ) \r\n"
 			+ "	AND (CASE WHEN  ?2 = 'A' THEN  TITLE LIKE %?5% WHEN ?2 = 'B' THEN REG_NAME LIKE %?5%  ELSE TRUE  END )\r\n"
+			+ "	AND  (CASE WHEN ?6 != '' THEN REG_ID = ?6 ELSE TRUE END )\r\n"
 			+ "ORDER BY REG_DATE DESC ",
 	      countQuery = "SELECT  COUNT(ID)  FROM IPR_SAFETY_CENTER  WHERE DATE_FORMAT(REG_DATE, '%Y-%m-%d') BETWEEN ?3 AND ?4   \r\n"
 	    	    + "	AND (CASE WHEN  ?1 != '' THEN  REPORT_TYPE = ?1 ELSE TRUE END  )\r\n"
-	  			+ "	AND (CASE WHEN  ?2 = 'A' THEN  TITLE LIKE %?5% WHEN ?2 = 'B' THEN REG_NAME LIKE %?5%  ELSE TRUE  END )\r\n", nativeQuery=true)
-	Page<ReadIpSafetyCenter> getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword, Pageable pageable);
+	  			+ "	AND (CASE WHEN  ?2 = 'A' THEN  TITLE LIKE %?5% WHEN ?2 = 'B' THEN REG_NAME LIKE %?5%  ELSE TRUE  END )\r\n"
+	  			+ "	AND  (CASE WHEN ?6 != '' THEN REG_ID = ?6 ELSE  TRUE END )\r\n", nativeQuery=true)
+	
+	Page<ReadIpSafetyCenter> getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword, String userId, Pageable pageable);
 }

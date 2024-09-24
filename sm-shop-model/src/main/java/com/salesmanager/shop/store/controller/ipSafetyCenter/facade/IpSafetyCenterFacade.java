@@ -19,7 +19,7 @@ public interface IpSafetyCenterFacade {
 	 * @return ReadableBoardList
 	 */
 	ReadableIpSafetyCenterList getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword,
-			int page, int count) throws Exception;
+			int page, int count, String userId) throws Exception;
 	
 	PersistableIpSafetyCenter saveIpSafeCenter(PersistableIpSafetyCenter data) throws Exception;
 	
