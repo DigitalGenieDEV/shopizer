@@ -3,6 +3,7 @@ package com.salesmanager.core.business.services.order;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityService;
@@ -97,6 +98,8 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 	 * @return
 	 */
 	OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria);
+
+	Map<String, Integer> countCustomerOrderByType(Customer customer, OrderCustomerCriteria criteria);
 
 
 	/**

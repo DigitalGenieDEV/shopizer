@@ -6,14 +6,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.salesmanager.core.business.exception.ConversionException;
-import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
 import com.salesmanager.core.model.fulfillment.ShippingOrderProductQuery;
+import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.ReadableOrderProductShippingList;
 import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrderList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -34,9 +33,6 @@ import com.salesmanager.shop.model.order.ShopOrder;
 import com.salesmanager.shop.model.order.history.PersistableOrderStatusHistory;
 import com.salesmanager.shop.model.order.history.ReadableOrderStatusHistory;
 import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 public interface OrderFacade {
@@ -123,6 +119,9 @@ public interface OrderFacade {
 	 * @throws Exception
 	 */
 	com.salesmanager.shop.model.order.v0.ReadableOrder getCustomerReadableOrder(Long orderId, Customer customer, Language language);
+
+	Map<String, Integer> countCustomerOrderByType(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language);
+
 	/**
 	 * List of orderstatus history
 	 * @param orderId
@@ -146,6 +145,8 @@ public interface OrderFacade {
 
 	com.salesmanager.shop.model.order.v0.ReadableOrderList getReadableOrderList(MerchantStore store, Customer customer, int start,
 			int maxCount, Language language) throws Exception;
+
+	com.salesmanager.shop.model.order.v0.ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, OrderCustomerCriteria criteria, Language language) throws Exception;
 
 	/**
 	 * <p>Method used to fetch all orders associated with customer customer.
@@ -263,6 +264,5 @@ public interface OrderFacade {
 
 	ReadableCombineTransaction getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
 																					MerchantStore merchantStore, Language language) throws ServiceException, ConversionException;
-
 
 }

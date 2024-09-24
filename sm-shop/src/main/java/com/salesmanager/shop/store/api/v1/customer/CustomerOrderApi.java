@@ -5,6 +5,7 @@ import com.salesmanager.core.business.services.customer.order.CustomerOrderServi
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
@@ -13,6 +14,7 @@ import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.customer.ReadableCustomerPopulator;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacade;
@@ -29,6 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -246,6 +251,10 @@ public class CustomerOrderApi {
     public ReadableOrderList listOrders(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
+            @RequestParam(value = "startTime", required = false) Long startTime,
+            @RequestParam(value = "endTime", required = false) Long endTime,
+            @RequestParam(value = "orderStatus", required = false) String orderStatus,
+            @RequestParam(value = "productName", required = false) String productName,
             @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
     ) throws Exception {
@@ -271,7 +280,15 @@ public class CustomerOrderApi {
         ReadableCustomerPopulator customerPopulator = new ReadableCustomerPopulator();
         customerPopulator.populate(customer, readableCustomer, merchantStore, language);
 
-        ReadableOrderList readableOrderList = orderFacade.getCustomerReadableOrderList(merchantStore, customer, page, count, language);
+        OrderCustomerCriteria criteria = new OrderCustomerCriteria();
+        criteria.setStartIndex(page);
+        criteria.setMaxCount(count);
+        criteria.setStartTime(startTime);
+        criteria.setEndTime(endTime);
+        criteria.setOrderStatus(orderStatus);
+        criteria.setProductName(productName);
+
+        ReadableOrderList readableOrderList = orderFacade.getCustomerReadableOrderList(merchantStore, customer, criteria, language);
 
 //        ReadableCustomerOrderList returnList = customerOrderFacade.getReadableCustomerOrderList(customer, page, count, language);
 
@@ -280,6 +297,62 @@ public class CustomerOrderApi {
         }
 
         return readableOrderList;
+    }
+
+    @RequestMapping(value = { "/auth/customer/orders/overview" }, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+    public CommonResultDTO<Map<String, Integer>> countByType(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "count", required = false) Integer count,
+            @RequestParam(value = "startTime", required = false) Long startTime,
+            @RequestParam(value = "endTime", required = false) Long endTime,
+            @RequestParam(value = "orderType", required = false) String orderType,
+            @ApiIgnore MerchantStore merchantStore,
+            @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
+    ) throws Exception {
+
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            response.sendError(401, "Error while listing orders, customer not authorized");
+            return null;
+        }
+
+        if (page == null) {
+            page = new Integer(0);
+        }
+        if (count == null) {
+            count = new Integer(100);
+        }
+
+        if (startTime == null) {
+            Calendar instance = Calendar.getInstance();
+            instance.setTime(new Date());
+            instance.add(Calendar.MONTH, -3);
+            startTime = instance.getTimeInMillis();
+        }
+
+        ReadableCustomer readableCustomer = new ReadableCustomer();
+        ReadableCustomerPopulator customerPopulator = new ReadableCustomerPopulator();
+        customerPopulator.populate(customer, readableCustomer, merchantStore, language);
+
+        OrderCustomerCriteria criteria = new OrderCustomerCriteria();
+
+        criteria.setStartIndex(page);
+        criteria.setMaxCount(count);
+        criteria.setStartTime(startTime);
+        criteria.setEndTime(endTime);
+        criteria.setOrderType(orderType);
+
+        Map<String, Integer> countedMap = orderFacade.countCustomerOrderByType(merchantStore, customer, criteria, language);
+
+        return CommonResultDTO.ofSuccess(countedMap);
     }
 
     @RequestMapping(value = { "/auth/customer/orders/{id}" }, method = RequestMethod.GET)
