@@ -55,4 +55,8 @@ public class BoardServiceImpl extends SalesManagerEntityServiceImpl<Integer, Boa
 	public void updateReplyContent(Board board) throws  ServiceException{
 		 boardRepository.updateReplyContent(board);
 	}
+	
+	public void updateViewCnt(Integer id) throws  ServiceException{
+		 boardRepository.updateViewCnt(id);
+	}
 }

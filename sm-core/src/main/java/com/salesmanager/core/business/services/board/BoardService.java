@@ -16,4 +16,6 @@ public interface BoardService extends SalesManagerEntityService<Integer, Board> 
 	int getMaxId() throws ServiceException;
 	
 	void updateReplyContent(Board board) throws  ServiceException;
+	
+	void updateViewCnt(Integer id) throws  ServiceException;
 }

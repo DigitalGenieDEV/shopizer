@@ -18,5 +18,7 @@ public interface ReadBoard {
 	Integer getNotice();
 
 	Integer getOpen();
+	
+	Integer getViewCnt();
 
 }

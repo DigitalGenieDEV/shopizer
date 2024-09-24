@@ -57,7 +57,7 @@ public class BoardApi {
 
 	
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(value = { "/private/board" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = { "/private/board", "board" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get list of board", notes = "", response = ReadableBoardList.class)
 	public ReadableBoardList list(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
@@ -93,7 +93,7 @@ public class BoardApi {
 	}
 
 	
-	@GetMapping(value = "/private/board/{id}", produces = { APPLICATION_JSON_VALUE })
+	@GetMapping(value = { "/private/board/{id}", "board/{id}" }, produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get Board list for an given Board id", notes = "List current AccessControll and child access")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Board found", response = ReadableBoard.class) })
 	public ReadableBoard get(@PathVariable(name = "id") int id) throws Exception {

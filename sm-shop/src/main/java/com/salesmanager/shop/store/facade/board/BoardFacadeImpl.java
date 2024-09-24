@@ -120,6 +120,8 @@ public class BoardFacadeImpl implements BoardFacade {
 	
 	
 	public ReadableBoard getById(int id) throws Exception {
+		
+		boardService.updateViewCnt(id);
 		List<FileEntity> targetList = new ArrayList<FileEntity>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Board data = boardService.getById(id);
