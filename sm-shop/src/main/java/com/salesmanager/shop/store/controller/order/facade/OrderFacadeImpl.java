@@ -982,8 +982,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
-	public Map<String, Integer> countCustomerOrderByType(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language) {
-		return orderService.countCustomerOrderByType(customer, criteria);
+	public Map<String, Integer> countCustomerOrderByStatus(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language) {
+		return orderService.countCustomerOrderByStatus(customer, criteria);
 	}
 
 	@Override

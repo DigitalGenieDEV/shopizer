@@ -304,7 +304,7 @@ public class CustomerOrderApi {
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-    public CommonResultDTO<Map<String, Integer>> countByType(
+    public CommonResultDTO<Map<String, Integer>> countByStatus(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
             @RequestParam(value = "startTime", required = false) Long startTime,
@@ -350,7 +350,7 @@ public class CustomerOrderApi {
         criteria.setEndTime(endTime);
         criteria.setOrderType(orderType);
 
-        Map<String, Integer> countedMap = orderFacade.countCustomerOrderByType(merchantStore, customer, criteria, language);
+        Map<String, Integer> countedMap = orderFacade.countCustomerOrderByStatus(merchantStore, customer, criteria, language);
 
         return CommonResultDTO.ofSuccess(countedMap);
     }

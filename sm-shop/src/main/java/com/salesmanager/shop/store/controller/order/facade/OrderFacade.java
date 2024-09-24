@@ -120,7 +120,7 @@ public interface OrderFacade {
 	 */
 	com.salesmanager.shop.model.order.v0.ReadableOrder getCustomerReadableOrder(Long orderId, Customer customer, Language language);
 
-	Map<String, Integer> countCustomerOrderByType(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language);
+	Map<String, Integer> countCustomerOrderByStatus(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language);
 
 	/**
 	 * List of orderstatus history

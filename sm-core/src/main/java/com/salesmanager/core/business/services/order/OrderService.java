@@ -99,7 +99,7 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 	 */
 	OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria);
 
-	Map<String, Integer> countCustomerOrderByType(Customer customer, OrderCustomerCriteria criteria);
+	Map<String, Integer> countCustomerOrderByStatus(Customer customer, OrderCustomerCriteria criteria);
 
 
 	/**

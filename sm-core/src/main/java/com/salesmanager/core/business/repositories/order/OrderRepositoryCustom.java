@@ -14,5 +14,5 @@ public interface OrderRepositoryCustom {
 	OrderList listByStore(MerchantStore store, OrderCriteria criteria);
 	OrderList listOrders(MerchantStore store, OrderCriteria criteria);
 	OrderList listByCustomer(Customer customer, OrderCustomerCriteria criteria);
-	Map<String, Integer> countCustomerOrderByType(Customer customer, OrderCustomerCriteria criteria);
+	Map<String, Integer> countCustomerOrderByStatus(Customer customer, OrderCustomerCriteria criteria);
 }

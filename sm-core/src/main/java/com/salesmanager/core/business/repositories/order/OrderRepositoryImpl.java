@@ -398,7 +398,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 	}
 
 	@Override
-	public Map<String, Integer> countCustomerOrderByType(Customer customer, OrderCustomerCriteria criteria) {
+	public Map<String, Integer> countCustomerOrderByStatus(Customer customer, OrderCustomerCriteria criteria) {
 
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select o.status as orderStatus, count(o) as num from Order as o");

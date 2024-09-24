@@ -753,8 +753,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
     @Override
-    public Map<String, Integer> countCustomerOrderByType(Customer customer, OrderCustomerCriteria criteria) {
-        return orderRepository.countCustomerOrderByType(customer, criteria);
+    public Map<String, Integer> countCustomerOrderByStatus(Customer customer, OrderCustomerCriteria criteria) {
+        return orderRepository.countCustomerOrderByStatus(customer, criteria);
     }
 
     @Override
