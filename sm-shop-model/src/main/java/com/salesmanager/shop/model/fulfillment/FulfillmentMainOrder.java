@@ -32,7 +32,7 @@ public class FulfillmentMainOrder  {
 
     private ReadableDelivery delivery;
 
-    private Set<ReadableFulfillmentSubOrder> fulfillSubOrders =  new HashSet<>();
+    private List<ReadableFulfillmentSubOrder> fulfillSubOrders;
 
 
     private List<ReadableGeneralDocument> generalDocuments;

@@ -148,10 +148,10 @@ public class ReadableOrderPopulator extends
 
 			Set<FulfillmentSubOrder> fulfillmentSubOrders = fulfillmentMainOrder.getFulfillSubOrders();;
 			if (fulfillmentSubOrders != null) {
-				Set<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.stream()
+				List<ReadableFulfillmentSubOrder> collect = fulfillmentSubOrders.stream()
 						.map(this::convertToReadableFulfillmentSubOrder)
 						.filter(Objects::nonNull)
-						.collect(Collectors.toSet());
+						.collect(Collectors.toList());
 
 				readableFulfillmentMainOrder.setFulfillSubOrders(collect);
 			}
