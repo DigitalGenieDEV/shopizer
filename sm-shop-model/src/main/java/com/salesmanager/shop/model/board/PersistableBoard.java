@@ -22,5 +22,6 @@ public class PersistableBoard {
 	private String replyContent="";
 	private String userIp="";
 	private String userId="";
+	private int viewCnt = 0;
 
 }

@@ -20,5 +20,7 @@ public interface ReadBoard {
 	Integer getOpen();
 	
 	Integer getViewCnt();
+	
+	String getContent();
 
 }

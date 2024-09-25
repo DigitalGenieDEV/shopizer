@@ -30,10 +30,10 @@ public class BoardServiceImpl extends SalesManagerEntityServiceImpl<Integer, Boa
 	}
 
 	
-	public Page<ReadBoard> getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count)
+	public Page<ReadBoard> getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count, String userId)
 			throws ServiceException {
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableMBoardRepository.getBoardList(gbn, keyword, bbsId, type, sdate, edate, pageRequest);
+		return pageableMBoardRepository.getBoardList(gbn, keyword, bbsId, type, sdate, edate, userId, pageRequest);
 	}
 	
 	@Override

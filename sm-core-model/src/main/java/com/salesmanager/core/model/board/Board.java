@@ -67,11 +67,11 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "STATE", length = 1, nullable = true, columnDefinition = "VARCHAR(20) not null comment '상태'")
 	private String state;
 
-	@Column(name = "VIEWCNT", nullable = true, columnDefinition = "INT(11) not null comment '조회수'")
+	@Column(name = "VIEWCNT", nullable = true, updatable = false, columnDefinition = "INT(11) not null comment '조회수'")
 	private Integer viewCnt;
 
 	@Lob
-	@Column(name = "REPLY_CONTENT", nullable = true, columnDefinition = "VARCHAR(20) not null comment '답변내용'")
+	@Column(name = "REPLY_CONTENT", nullable = true,  columnDefinition = "VARCHAR(20) not null comment '답변내용'")
 	private String replyContent;
 
 	@Embedded

@@ -3,10 +3,12 @@ package com.salesmanager.shop.store.api.v1.board;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.security.Principal;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.board.PersistableBoard;
@@ -54,6 +58,36 @@ public class BoardApi {
 	
 	@Inject
 	private ManagerFacade managerFacade;
+	
+	@Inject
+	private CustomerService customerService;
+	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping(value = { "/auth/board" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "GET", value = "Get list of board", notes = "", response = ReadableBoardList.class)
+	public ReadableBoardList listUser(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
+			@RequestParam(value = "gbn", required = false) String gbn,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "bbsId", required = false) String bbsId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "sdate", required = false) String sdate,
+			@RequestParam(value = "edate", required = false) String edate,
+			HttpServletRequest request,  HttpServletResponse response) throws Exception {
+		
+		Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+        
+        if (customer == null) {
+            response.sendError(401, "Error while listing orders, customer not authorized");
+          
+        }
+
+		return boardFacade.getBoardList(gbn, keyword, bbsId, type, sdate, edate, page, count, customer.getEmailAddress());
+	}
 
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -69,7 +103,7 @@ public class BoardApi {
 			@RequestParam(value = "edate", required = false) String edate,
 			HttpServletRequest request) throws Exception {
 
-		return boardFacade.getBoardList(gbn, keyword, bbsId, type, sdate, edate, page, count);
+		return boardFacade.getBoardList(gbn, keyword, bbsId, type, sdate, edate, page, count, "");
 	}
 	
 	
@@ -88,6 +122,32 @@ public class BoardApi {
 		managerFacade.authorizedMenu(authenticatedManager, multiRequest.getRequestURI().toString());
 		board.setUserId(authenticatedManager);
 		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
+		
+		return boardFacade.saveBoard(board, files, merchantStore);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/auth/board", produces = { APPLICATION_JSON_VALUE })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public PersistableBoard createUser(PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,  HttpServletResponse response)
+			throws Exception {
+		
+		Principal principal = multiRequest.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+        
+        if (customer == null) {
+            response.sendError(401, "Error while listing orders, customer not authorized");
+          
+        }
+
+        board.setUserId(customer.getEmailAddress());
+        board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
+		
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+
 		
 		return boardFacade.saveBoard(board, files, merchantStore);
 	}
