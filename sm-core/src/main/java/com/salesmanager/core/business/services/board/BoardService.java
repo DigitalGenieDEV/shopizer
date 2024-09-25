@@ -9,7 +9,7 @@ import com.salesmanager.core.model.board.ReadBoard;
 
 public interface BoardService extends SalesManagerEntityService<Integer, Board> {
 
-	Page<ReadBoard> getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count) throws ServiceException;
+	Page<ReadBoard> getBoardList(String gbn, String keyword, String bbsId, String type, String sdate, String edate, int page, int count, String userId) throws ServiceException;
 
 	void saveOrUpdate(Board board) throws ServiceException;
 	

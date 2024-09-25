@@ -47,6 +47,7 @@ public class PersistableBoardPopulator extends AbstractDataPopulator<Persistable
 			target.getAuditSection().setRegIp(source.getUserIp());
 			target.getAuditSection().setModId(source.getUserId());
 			target.getAuditSection().setModIp(source.getUserIp());
+			target.setViewCnt(source.getViewCnt());
 		
 			return target;
 
