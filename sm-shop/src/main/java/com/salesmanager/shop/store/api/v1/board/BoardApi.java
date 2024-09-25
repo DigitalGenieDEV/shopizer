@@ -187,6 +187,21 @@ public class BoardApi {
 		boardFacade.deleteBoard(id);
 	}
 	
+	@DeleteMapping(value = "/auth/board/{id}", produces = { APPLICATION_JSON_VALUE })
+	@ResponseStatus(OK)
+	public void deleteUser(@PathVariable int id,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+        
+        if (customer == null) {
+            response.sendError(401, "Error while listing orders, customer not authorized");
+          
+        }
+		boardFacade.deleteBoard(id);
+	}
+	
 	@PatchMapping(value = "/private/board/{id}", produces = { APPLICATION_JSON_VALUE })
 	@ResponseStatus(OK)
 	public void updateReplyContent(@PathVariable int id, @RequestBody PersistableBoard board, HttpServletRequest request) throws Exception {
