@@ -155,9 +155,15 @@ public class PaymentAuthorizeApi {
 
 
         if (resultCode.equalsIgnoreCase("0000")) {
-            ReadableCombineTransaction readableCombineTransaction = paymentAuthorizeFacade.processNicepayAuthorizeResponse(getAuthorizeResponseMap(responseNode), merchantStore, language);
-            response.sendRedirect(REDIRECT_CHECK_IN);
-            return readableCombineTransaction;
+            ReadableCombineTransaction readableCombineTransaction = null;
+            try {
+                readableCombineTransaction = paymentAuthorizeFacade.processNicepayAuthorizeResponse(getAuthorizeResponseMap(responseNode), merchantStore, language);
+                response.sendRedirect(REDIRECT_CHECK_IN);
+                return readableCombineTransaction;
+            } catch (Exception e) {
+                LOG.error("unexpected exception:{}", e.getMessage(), e);
+                response.sendRedirect(REDIRECT_CHECK_NG);
+            }
         } else {
             LOG.error("unexpected result code:" + resultCode +", msg:" + responseNode.get("resultMsg").asText());
             response.sendRedirect(REDIRECT_CHECK_NG);
