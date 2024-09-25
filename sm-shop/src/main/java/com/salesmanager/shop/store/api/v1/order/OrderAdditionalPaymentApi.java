@@ -49,7 +49,7 @@ public class OrderAdditionalPaymentApi {
     }
 
     @RequestMapping(
-            value = {"/private/order/{id}/additional/payment"},
+            value = {"/private/order/{id}/additional/payment", "/auth/order/{id}/additional/payment"},
             method = RequestMethod.GET)
     @ResponseBody
     public ReadableOrderAdditionalPayment getAdditionalPayment(
@@ -71,7 +71,7 @@ public class OrderAdditionalPaymentApi {
         LOGGER.info("OrderAdditionalPaymentApi :: requestAdditionalPayment id: {}", id);
         OrderAdditionalPayment payment = service.requestOrderAdditionalPayment(id);
         ReadableOrderAdditionalPayment result = readableOrderAdditionalPaymentPopulator.populate(payment, new ReadableOrderAdditionalPayment() ,null ,null);
-        body.getValues().put("payment_reason", "1차 결제");
+        body.getValues().put("payment_reason", "2차 결제");
         body.getValues().put("amount_requested", String.valueOf(result.getAdditionalPaymentTotal().intValue()));
 
         externalClient.sendAlimTalk(
