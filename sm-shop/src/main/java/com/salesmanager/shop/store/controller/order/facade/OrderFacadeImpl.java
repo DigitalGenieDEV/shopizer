@@ -1085,7 +1085,10 @@ public class OrderFacadeImpl implements OrderFacade {
 			readableOrders.add(readableOrder);
 
 		}
-
+		returnList.setTotalPages(orderList.getTotalPages());
+		returnList.setNumber(orderList.getOrders().size());
+		returnList.setRecordsTotal(orderList.getTotalCount());
+		returnList.setRecordsFiltered(orderList.getOrders().size());
 		returnList.setOrders(readableOrders);
 		return returnList;
 
@@ -1177,7 +1180,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			readableOrders.add(readableOrder);
 		}
 
-		returnList.setRecordsTotal(orderList.getTotalCount());
 		return this.populateOrderList(orderList, store, language);
 
 	}

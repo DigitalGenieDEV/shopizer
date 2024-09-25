@@ -281,11 +281,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		StringBuilder countBuilderSelect = new StringBuilder();
 		StringBuilder objectBuilderSelect = new StringBuilder();
 
-		String orderByCriteria = " order by o.id desc";
+		String orderByCriteria = " order by o.auditSection.dateCreated desc";
 
-		if(criteria.getOrderBy()!=null) {
+		if(criteria.getOrderBy() != null) {
 			if(CriteriaOrderBy.ASC.name().equals(criteria.getOrderBy().name())) {
-				orderByCriteria = " order by o.id asc";
+				orderByCriteria = " order by o.auditSection.dateCreated asc";
 			}
 		}
 
@@ -464,16 +464,19 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		List result = countQ.getResultList();
 
+		int totalCount = 0;
 		HashMap<String, Integer> orderStatusCountMap = new HashMap<>();
 		for (Object o : result) {
 			Object[] objects = (Object[]) o;
 			OrderStatus status = (OrderStatus) objects[0];
 			Long num = (Long) objects[1];
+			totalCount += num.intValue();
 			orderStatusCountMap.put(status.toString(), num.intValue());
         }
 		for (OrderStatus value : OrderStatus.values()) {
 			orderStatusCountMap.merge(value.toString(), 0, Integer::sum);
 		}
+		orderStatusCountMap.put("TOTAL", totalCount);
 
 		return orderStatusCountMap;
 	}
