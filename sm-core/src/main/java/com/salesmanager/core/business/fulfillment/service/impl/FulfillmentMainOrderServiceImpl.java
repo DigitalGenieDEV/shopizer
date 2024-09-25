@@ -140,6 +140,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         FulfillmentSubOrder fulfillmentSubOrder = new FulfillmentSubOrder();
         fulfillmentSubOrder.setFulfillmentMainType(FulfillmentTypeEnums.PAYMENT_COMPLETED);
         fulfillmentSubOrder.setTruckModel(orderProduct.getTruckModel());
+        fulfillmentSubOrder.setTruckTransportationCompany(orderProduct.getTruckTransportationCompany());
         fulfillmentSubOrder.setTruckType(orderProduct.getTruckType());
         fulfillmentSubOrder.setNationalTransportationMethod(orderProduct.getNationalTransportationMethod());
         fulfillmentSubOrder.setShippingType(orderProduct.getShippingType());

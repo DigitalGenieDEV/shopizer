@@ -2,6 +2,7 @@ package com.salesmanager.shop.model.customer.shoppingcart;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingType;
@@ -9,6 +10,9 @@ import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.List;
 
@@ -60,6 +64,12 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
      * @see TruckModelEnums
      */
     private String truckModel;
+
+    /**
+     * 货车运输公司
+     * @see TruckModelEnums
+     */
+    private String truckTransportationCompany;
 
 
     /**

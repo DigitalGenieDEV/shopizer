@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -324,6 +325,8 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 		item.setTruckModel(shoppingCartItem.getTruckModel());
 		item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
 		item.setTruckType(shoppingCartItem.getTruckType());
+		item.setTruckTransportationCompany(shoppingCartItem.getTruckTransportationCompany());
+
 		item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
 
 		if (instance != null) {
@@ -400,6 +403,8 @@ public class ShoppingCartFacadeImpl implements ShoppingCartFacade {
 			item.setTruckModel(shoppingCartItem.getTruckModel());
 			item.setPlayThroughOption(shoppingCartItem.getPlayThroughOption());
 			item.setTruckType(shoppingCartItem.getTruckType());
+
+			item.setTruckTransportationCompany(shoppingCartItem.getTruckTransportationCompany());
 			item.setAdditionalServicesIdMap(shoppingCartItem.getAdditionalServicesIdMap());
 			item.setCartItemType(shoppingCartItem.getItemType() == null? null : CartItemType.valueOf(shoppingCartItem.getItemType()));
 

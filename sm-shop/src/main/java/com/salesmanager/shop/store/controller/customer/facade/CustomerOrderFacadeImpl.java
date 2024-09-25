@@ -13,6 +13,7 @@ import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculat
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.customer.Customer;
@@ -58,8 +59,8 @@ import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.LabelUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,6 +225,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setStatus(customerOrder.getStatus());
 
 
+                persistableOrder.setTruckTransportationCompany(customerOrder.getTruckTransportationCompany());
                 persistableOrder.setTruckType(customerOrder.getTruckType());
                 persistableOrder.setTruckModel(customerOrder.getTruckModel());
                 persistableOrder.setShippingType(customerOrder.getShippingType());
@@ -510,6 +512,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         item.setTruckModel(lineItem.getTruckModel());
         item.setPlayThroughOption(lineItem.getPlayThroughOption());
         item.setTruckType(lineItem.getTruckType());
+        item.setTruckTransportationCompany(lineItem.getTruckTransportationCompany());
         item.setAdditionalServicesIdMap(lineItem.getAdditionalServicesIdMap());
         item.setItemType(lineItem.getCartItemType() == null ? null : lineItem.getCartItemType().name());
 

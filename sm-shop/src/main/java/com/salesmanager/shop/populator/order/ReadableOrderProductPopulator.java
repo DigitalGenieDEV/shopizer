@@ -11,6 +11,7 @@ import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
@@ -107,6 +108,8 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
+
+		target.setTruckTransportationCompany(source.getTruckTransportationCompany() == null? null : source.getTruckTransportationCompany().name());
 		if(source.getQcInfo() != null){
 			target.setQcInfoId(source.getQcInfo().getId());
 		}

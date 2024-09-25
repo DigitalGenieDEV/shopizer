@@ -30,7 +30,6 @@ import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.payments.*;
 import com.salesmanager.core.utils.LogPermUtil;
-import com.salesmanager.shop.listener.alibaba.tuna.util.GenericsUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -48,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -970,12 +968,22 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
+	public ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, OrderCustomerCriteria criteria, Language language) throws Exception {
+		return this.getCustomerReadableOrderList(customer, criteria, store, language);
+	}
+
+	@Override
 	public ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, int start, int maxCount, Language language) throws Exception {
 		OrderCustomerCriteria criteria = new OrderCustomerCriteria();
 		criteria.setStartIndex(start);
 		criteria.setMaxCount(maxCount);
 
 		return this.getCustomerReadableOrderList(customer, criteria, store, language);
+	}
+
+	@Override
+	public Map<String, Integer> countCustomerOrderByStatus(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language) {
+		return orderService.countCustomerOrderByStatus(customer, criteria);
 	}
 
 	@Override
@@ -1167,7 +1175,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
 			readableOrderPopulator.populate(order, readableOrder, store, language);
 			readableOrders.add(readableOrder);
-
 		}
 
 		returnList.setRecordsTotal(orderList.getTotalCount());

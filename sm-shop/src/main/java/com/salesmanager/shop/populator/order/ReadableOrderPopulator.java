@@ -12,6 +12,7 @@ import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormServ
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
@@ -106,6 +107,11 @@ public class ReadableOrderPopulator extends
 		if (source.getTruckType() != null) {
 			target.setTruckType(source.getTruckType().name());
 		}
+
+		if (source.getTruckTransportationCompany() != null) {
+			target.setTruckTransportationCompany(source.getTruckTransportationCompany().name());
+		}
+
 
 		if (source.getTruckModel() != null) {
 			target.setTruckModel(source.getTruckModel().name());
