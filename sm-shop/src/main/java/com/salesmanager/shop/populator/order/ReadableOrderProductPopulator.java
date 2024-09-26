@@ -23,6 +23,7 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
@@ -71,6 +72,8 @@ public class ReadableOrderProductPopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+	private ReadableCategoryMapper readableCategoryMapper;
 
 	private InvoicePackingFormService invoicePackingFormService;
 
@@ -254,6 +257,7 @@ public class ReadableOrderProductPopulator extends
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);
+					populator.setReadableCategoryMapper(readableCategoryMapper);
 					populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
@@ -372,5 +376,13 @@ public class ReadableOrderProductPopulator extends
 
 	public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
 		this.readableMerchantStorePopulator = readableMerchantStorePopulator;
+	}
+
+	public ReadableCategoryMapper getReadableCategoryMapper() {
+		return readableCategoryMapper;
+	}
+
+	public void setReadableCategoryMapper(ReadableCategoryMapper readableCategoryMapper) {
+		this.readableCategoryMapper = readableCategoryMapper;
 	}
 }

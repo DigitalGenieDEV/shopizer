@@ -18,6 +18,7 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductDesign;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsMapper;
 import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsTraceMapper;
@@ -94,6 +95,8 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
     private AdditionalServicesConvert additionalServicesConvert;
     @Autowired
     private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+    @Autowired
+    private ReadableCategoryMapper readableCategoryMapper;
 
     @Inject
     private PersistableOrderProductDesignPopulator persistableOrderProductDesignPopulator;
@@ -135,6 +138,7 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
             readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
             readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
             readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+            readableOrderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 
             readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             List<ReadableOrderProduct> readableOrderProducts = new ArrayList<>();
@@ -174,6 +178,7 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
         readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
         readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
         readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+        readableOrderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 
         ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 
