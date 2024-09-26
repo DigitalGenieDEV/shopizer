@@ -13,20 +13,20 @@ import com.salesmanager.core.model.adminmenu.ReadAdminMenu;
 public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 
 	@Query(value = "WITH RECURSIVE MENU_CTE AS (    \r\n" + "			SELECT     \r\n"
-			+ "				ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE   \r\n"
+			+ "				ID, PARENT_ID, MENU_NAME, MENU_NAME_EN, MENU_NAME_CN, MENU_NAME_JP, MENU_URL, MENU_DESC, ORD, VISIBLE   \r\n"
 			+ "				, CAST(IFNULL(REPLACE(@level,'3', ''),1) AS SIGNED INTEGER) AS DEPTH    \r\n"
 			+ "				, CAST(CONCAT(LPAD(CAST(IFNULL(REPLACE(@level,'3', ''),1) AS CHAR), 5, '0'), '', LPAD(CAST(A.ORD AS CHAR), 5, '0')) AS CHAR(255)) AS AMENU_SORT    \r\n"
 			+ "				, A.MENU_NAME AS MENU_NAME_PATH    \r\n"
 			+ "			FROM ADMINMENU AS A    \r\n" + "			WHERE A.PARENT_ID = '0'    \r\n"
 			+ "		 AND  ((?1 = 0 AND A.VISIBLE = 'Y') OR (?1 = 1 AND A.VISIBLE IN ('Y', 'N')))        \r\n"
 			+ "			UNION ALL    \r\n" + "			    \r\n" + "			SELECT    \r\n"
-			+ "				  B.ID, B.PARENT_ID, B.MENU_NAME, B.MENU_URL, B.MENU_DESC, B.ORD, B.VISIBLE   \r\n"
+			+ "				   B.ID, B.PARENT_ID, B.MENU_NAME, B.MENU_NAME_EN, B.MENU_NAME_CN, B.MENU_NAME_JP, B.MENU_URL, B.MENU_DESC, B.ORD, B.VISIBLE      \r\n"
 			+ "				, C.DEPTH + 1 AS DEPTH    \r\n"
 			+ "				, CAST(CONCAT(CONCAT (C.AMENU_SORT, LPAD(CAST(C.DEPTH + 1 AS CHAR), 5, '0')), '', LPAD(CAST(B.ORD AS CHAR), 5, '0')) AS CHAR(255)) AS AMENU_SORT    \r\n"
 			+ "				, CONCAT(C.MENU_NAME_PATH, '&gt;', B.MENU_NAME) AS MENU_NAME_PATH    \r\n"
 			+ "			FROM    \r\n" + "				ADMINMENU AS B    \r\n" + "				, MENU_CTE AS C    \r\n"
 			+ "			WHERE B.PARENT_ID = C.ID    \r\n" + " )    \r\n" + "		    \r\n"
-			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE WHERE 1=1    \r\n"
+			+ " SELECT  ID, PARENT_ID, MENU_NAME, MENU_NAME_EN, MENU_NAME_CN, MENU_NAME_JP, MENU_URL, MENU_DESC, ORD, VISIBLE, DEPTH, MENU_NAME_PATH FROM MENU_CTE WHERE 1=1    \r\n"
 			+ "  	AND (CASE WHEN ?2 > 1 THEN  ID IN (SELECT MENU_ID FROM MANAGER_MENU_AUTH WHERE GRP_ID = ?2) ELSE TRUE END )   "
 			+ " ORDER BY AMENU_SORT ASC", nativeQuery = true)
 	List<ReadAdminMenu> getListAdminMenu(int visible, int grpId);
@@ -59,7 +59,7 @@ public interface AdminMenuRepository extends JpaRepository<AdminMenu, Integer> {
 	String  getNamePath(int id);
 
 	@Query(value = " SELECT \r\n"
-			+ "		A.ID, A.PARENT_ID, A.MENU_NAME, A.MENU_DESC, A.MENU_URL, A.API_URL, A.ORD,A.VISIBLE  \r\n"
+			+ "		A.ID, A.PARENT_ID, A.MENU_NAME, A.MENU_NAME_EN, A.MENU_NAME_CN, A.MENU_NAME_JP, A.MENU_DESC, A.MENU_URL, A.API_URL, A.ORD,A.VISIBLE  \r\n"
 			+ " FROM ADMINMENU AS A \r\n" 
 			+ "	WHERE A.ID = ?1 ", nativeQuery = true)
 	ReadAdminMenu getById(int id);
