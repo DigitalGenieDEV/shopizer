@@ -15,6 +15,7 @@ import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
@@ -46,6 +47,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -61,7 +63,6 @@ public class ReadableOrderProductPopulator extends
 		AbstractDataPopulator<OrderProduct, ReadableOrderProduct> {
 
 	private AdditionalServicesConvert additionalServicesConvert;
-
 	private ProductVariantService productVariantService;
 	private ReadableProductVariantMapper readableProductVariantMapper;
 	private FulfillmentFacade fulfillmentFacade;
@@ -116,6 +117,8 @@ public class ReadableOrderProductPopulator extends
 		if(source.getQcInfo() != null){
 			target.setQcInfoId(source.getQcInfo().getId());
 		}
+
+		target.setReadableFulfillmentSubOrder(fulfillmentFacade.queryFulfillmentSubOrderListByProductOrderId(source.getId()));
 
 		if (source.getShippingDocumentOrder() !=null){
 			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
@@ -385,4 +388,6 @@ public class ReadableOrderProductPopulator extends
 	public void setReadableCategoryMapper(ReadableCategoryMapper readableCategoryMapper) {
 		this.readableCategoryMapper = readableCategoryMapper;
 	}
+
+
 }

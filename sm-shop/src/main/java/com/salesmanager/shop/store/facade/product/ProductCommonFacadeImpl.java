@@ -450,6 +450,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void deleteProduct(Long id, MerchantStore store) {
 
 		Validate.notNull(id, "Product id cannot be null");
