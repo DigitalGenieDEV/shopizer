@@ -30,13 +30,20 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Integer id;
 
-
 	@Column(name = "PARENT_ID", nullable = false, length = 30, updatable = false)
 	private Integer parentId;
 
-
 	@Column(name = "MENU_NAME", nullable = false, length = 100)
 	private String menuName;
+
+	@Column(name = "MENU_NAME_EN", nullable = true, length = 100)
+	private String menuNameEn;
+
+	@Column(name = "MENU_NAME_CN", nullable = true, length = 100)
+	private String menuNameCn;
+
+	@Column(name = "MENU_NAME_JP", nullable = true, length = 100)
+	private String menuNameJp;
 
 	@Column(name = "TOP", length = 1, updatable = true)
 	private String top;
@@ -49,7 +56,6 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 
 	@Column(name = "TAB", length = 1, updatable = true)
 	private String tab;
-
 
 	@Column(name = "URL", nullable = false, length = 255)
 	private String url;
@@ -65,7 +71,6 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
-
 
 	@Column(name = "VISIBLE", nullable = false)
 	private Integer visible;
@@ -95,6 +100,30 @@ public class UserMenu extends SalesManagerEntity<Integer, UserMenu> implements A
 
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+
+	public String getMenuNameEn() {
+		return menuNameEn;
+	}
+
+	public void setMenuNameEn(String menuNameEn) {
+		this.menuNameEn = menuNameEn;
+	}
+
+	public String getMenuNameCn() {
+		return menuNameCn;
+	}
+
+	public void setMenuNameCn(String menuNameCn) {
+		this.menuNameCn = menuNameCn;
+	}
+
+	public String getMenuNameJp() {
+		return menuNameJp;
+	}
+
+	public void setMenuNameJp(String menuNameJp) {
+		this.menuNameJp = menuNameJp;
 	}
 
 	public String getTop() {
