@@ -41,8 +41,8 @@ public class PersistableBoardPopulator extends AbstractDataPopulator<Persistable
 			target.setContent(source.getContent());
 			target.setContent(source.getContent());
 			target.setReplyContent(source.getReplyContent());
-			target.setSdate(source.getSdate().equals("") ? formattedDate : source.getSdate()+":00");
-			target.setEdate(source.getEdate().equals("") ? "9999-12-31 23:59:59" : source.getEdate()+":59");
+			target.setSdate(source.getSdate().equals("") ? formattedDate : source.getSdate()+" 01:00:00");
+			target.setEdate(source.getEdate().equals("") ? "9999-12-31 23:59:59" : source.getEdate()+" 23:59:59");
 			target.getAuditSection().setRegId(source.getUserId());
 			target.getAuditSection().setRegIp(source.getUserIp());
 			target.getAuditSection().setModId(source.getUserId());
