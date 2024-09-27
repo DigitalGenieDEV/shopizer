@@ -103,6 +103,9 @@ public class AdminMenuFacadeImpl implements AdminMenuFacade {
 			  sendData.setId(data.getId());
 			  sendData.setParentId(data.getParent_Id());
 			  sendData.setMenuName(data.getMenu_Name());
+			  sendData.setMenuNameEn(data.getMenu_Name_En());
+			  sendData.setMenuNameCn(data.getMenu_Name_Cn());
+			  sendData.setMenuNameJp(data.getMenu_Name_Jp());
 			  sendData.setMenuDesc(data.getMenu_Desc());
 			  sendData.setMenuNamePath(adminMenuService.getNamePath(data.getId()).replaceAll("&gt;", " > "));
 			  sendData.setMenuUrl(data.getMenu_Url());

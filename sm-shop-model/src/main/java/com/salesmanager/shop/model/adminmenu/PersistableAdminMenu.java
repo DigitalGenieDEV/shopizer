@@ -4,6 +4,9 @@ public class PersistableAdminMenu {
 	private int id;
 	private int parentId;
 	private String menuName = "";
+	private String menuNameEn = "";
+	private String menuNameCn = "";
+	private String menuNameJp = "";
 	private String menuDesc = "";
 	private String menuUrl = "";
 	private String apiUrl = "";
@@ -34,6 +37,30 @@ public class PersistableAdminMenu {
 
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+
+	public String getMenuNameEn() {
+		return menuNameEn;
+	}
+
+	public void setMenuNameEn(String menuNameEn) {
+		this.menuNameEn = menuNameEn;
+	}
+
+	public String getMenuNameCn() {
+		return menuNameCn;
+	}
+
+	public void setMenuNameCn(String menuNameCn) {
+		this.menuNameCn = menuNameCn;
+	}
+
+	public String getMenuNameJp() {
+		return menuNameJp;
+	}
+
+	public void setMenuNameJp(String menuNameJp) {
+		this.menuNameJp = menuNameJp;
 	}
 
 	public String getMenuDesc() {

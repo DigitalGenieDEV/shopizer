@@ -33,25 +33,29 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> implements
 	@Column(name = "PARENT_ID", nullable = false, length = 30, updatable = false)
 	private Integer parentId;
 
-
 	@Column(name = "MENU_NAME", nullable = false, length = 30)
 	private String menuName;
+
+	@Column(name = "MENU_NAME_EN", nullable = true, length = 100)
+	private String menuNameEn;
+
+	@Column(name = "MENU_NAME_CN", nullable = true, length = 100)
+	private String menuNameCn;
+
+	@Column(name = "MENU_NAME_JP", nullable = true, length = 100)
+	private String menuNameJp;
 
 	@Column(name = "MENU_DESC")
 	private String menuDesc;
 
-
 	@Column(name = "MENU_URL", nullable = false, length = 255)
 	private String menuUrl;
-
 
 	@Column(name = "API_URL", nullable = false, length = 255)
 	private String apiUrl;
 
-
 	@Column(name = "ORD", nullable = false, updatable = false)
 	private Integer ord;
-
 
 	@Column(name = "VISIBLE", nullable = false)
 	private int visible;
@@ -77,6 +81,30 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> implements
 
 	public String getMenuName() {
 		return menuName;
+	}
+
+	public String getMenuNameEn() {
+		return menuNameEn;
+	}
+
+	public void setMenuNameEn(String menuNameEn) {
+		this.menuNameEn = menuNameEn;
+	}
+
+	public String getMenuNameCn() {
+		return menuNameCn;
+	}
+
+	public void setMenuNameCn(String menuNameCn) {
+		this.menuNameCn = menuNameCn;
+	}
+
+	public String getMenuNameJp() {
+		return menuNameJp;
+	}
+
+	public void setMenuNameJp(String menuNameJp) {
+		this.menuNameJp = menuNameJp;
 	}
 
 	public void setMenuName(String menuName) {
@@ -122,7 +150,6 @@ public class AdminMenu extends SalesManagerEntity<Integer, AdminMenu> implements
 	public void setVisible(int visible) {
 		this.visible = visible;
 	}
-
 
 	public AuditSection2 getAuditSection() {
 		return auditSection;
