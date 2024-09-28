@@ -17,7 +17,7 @@ public class SanitizeUtils {
 	/**
 	 * should not contain /
 	 */
-    private static List<Character> blackList = Arrays.asList(';','%', '&', '=', '|', '*', '+', '_',
+    private static List<Character> blackList = Arrays.asList(';','%', '&', '|', '*', '+', '_',
             '^', '%','$','(', ')', '{', '}', '<', '>', '[',
             ']', '`', '\'', '~','\\', '?','\'');
     
@@ -49,8 +49,10 @@ public class SanitizeUtils {
 
 	        AntiSamy as = new AntiSamy();
 	        CleanResults cr = as.scan(value, policy);
-	        
-	        return cr.getCleanHTML();
+	        if(value.indexOf("img src") != -1) 
+	        	return value;
+	        else
+	        	return cr.getCleanHTML();
 	        
 		} catch (Exception e) {
 			throw new ServiceRuntimeException(e);

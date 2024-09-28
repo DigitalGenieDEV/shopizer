@@ -113,7 +113,6 @@ public class BoardApi {
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public PersistableBoard create(PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore)
 			throws Exception {
-		System.out.println(board.toString());
 		String authenticatedManager = managerFacade.authenticatedManager();
 		if (authenticatedManager == null) {
 			throw new UnauthorizedException();
@@ -169,7 +168,6 @@ public class BoardApi {
 		}
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 		managerFacade.authorizedMenu(authenticatedManager, multiRequest.getRequestURI().toString());
-		board.setId(id);
 		board.setUserId(authenticatedManager);
 		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
 		return boardFacade.saveBoard(board,files,merchantStore);

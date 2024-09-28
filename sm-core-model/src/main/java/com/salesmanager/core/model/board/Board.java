@@ -33,7 +33,7 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "BBS_ID", length = 20, nullable = false, updatable = false, columnDefinition = "varchar(20) not null comment '게시판 ID'")
 	private String bbsId;
 
-	@Column(name = "TITLE", length = 50, nullable = false, columnDefinition = "varchar(50) not null comment '제목'")
+	@Column(name = "TITLE", length = 200, nullable = false, columnDefinition = "varchar(200) not null comment '제목'")
 	private String title;
 
 	@Lob
