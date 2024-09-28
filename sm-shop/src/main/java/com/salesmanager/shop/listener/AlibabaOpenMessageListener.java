@@ -120,7 +120,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
     public void orderBuyerViewAnnounceSendGoods(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
         OrderBuyerViewAnnounceSendGoodsMsg msg = new OrderBuyerViewAnnounceSendGoodsMsg();
-        msg.setOrderId((Long) data.get("orderId"));
+        msg.setOrderId(Long.valueOf((String) data.get("orderId")));
 //        msg.setOrderId(orderId);
         msg.setCurrentStatus((String)data.get("currentStatus"));
         msg.setBuyerMemberId((String)data.get("buyerMemberId"));
@@ -132,7 +132,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
     public void orderBuyerViewPartPartSendGoods(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
         OrderBuyerViewPartPartSendGoodsMsg msg = new OrderBuyerViewPartPartSendGoodsMsg();
-        msg.setOrderId((Long) data.get("orderId"));
+        msg.setOrderId(Long.valueOf((String) data.get("orderId")));
         msg.setCurrentStatus((String)data.get("currentStatus"));
         msg.setBuyerMemberId((String)data.get("buyerMemberId"));
         msg.setSellerMemberId((String)data.get("sellerMemberId"));
@@ -143,7 +143,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
     public void orderBuyerViewOrderConfirmReceiveGoods(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
         OrderBuyerViewOrderConfirmReceiveGoodsMsg msg = new OrderBuyerViewOrderConfirmReceiveGoodsMsg();
-        msg.setOrderId((Long) data.get("orderId"));
+        msg.setOrderId(Long.valueOf((String) data.get("orderId")));
 //        msg.setOrderId(orderId);
         msg.setCurrentStatus((String)data.get("currentStatus"));
         msg.setBuyerMemberId((String)data.get("buyerMemberId"));
@@ -155,7 +155,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
     public void orderBuyerViewOrderSuccess(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
         OrderBuyerViewOrderSuccessMsg msg = new OrderBuyerViewOrderSuccessMsg();
-        msg.setOrderId((Long) data.get("orderId"));
+        msg.setOrderId(Long.valueOf((String) data.get("orderId")));
 //        msg.setOrderId(orderId);
         msg.setCurrentStatus((String)data.get("currentStatus"));
         msg.setBuyerMemberId((String)data.get("buyerMemberId"));
@@ -167,7 +167,7 @@ public class AlibabaOpenMessageListener implements ApplicationListener<Applicati
     public void orderBuyerViewOrderBuyerClose(HttpCbMessage message) throws ServiceException {
         Map<String, Object> data = message.getData();
         OrderBuyerViewOrderBuyerCloseMsg msg = new OrderBuyerViewOrderBuyerCloseMsg();
-        msg.setOrderId((Long) data.get("orderId"));
+        msg.setOrderId(Long.valueOf((String) data.get("orderId")));
         msg.setCurrentStatus((String)data.get("currentStatus"));
         msg.setBuyerMemberId((String)data.get("buyerMemberId"));
         msg.setSellerMemberId((String)data.get("sellerMemberId"));

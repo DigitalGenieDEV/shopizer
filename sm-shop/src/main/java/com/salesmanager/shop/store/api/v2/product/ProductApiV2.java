@@ -6,6 +6,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1162,29 +1166,43 @@ public class ProductApiV2 {
 
 
 
-	@RequestMapping(value = "/private/delete/products/categoryId/{categoryId}", method = RequestMethod.GET)
-	@ApiOperation(httpMethod = "GET", value = "Get a product shipping price", notes = "product detail get shipping price" )
+	@RequestMapping(value = "/private/delete/products/categoryIds", method = RequestMethod.POST)
+	@ApiOperation(httpMethod = "POST", value = "Delete products by category IDs", notes = "Delete products for the given category IDs")
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Single product found", response = ReadableProductDetailShippingPrice.class) })
+			@ApiResponse(code = 200, message = "Products deleted successfully") })
 	@ResponseBody
-	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public CommonResultDTO<Void> deleteProductsByCategoryId(@PathVariable Long categoryId,
-															@RequestParam(value = "lang", required = false) String lang,
-															@ApiIgnore Language language) {
-		List<Long> productIdsByCategoryId = productRepository.findProductIdsByCategoryId(categoryId);
-		if(CollectionUtils.isEmpty(productIdsByCategoryId)){
-			return null;
-		}
+	public CommonResultDTO<Void> deleteProductsByCategoryIds(@RequestBody List<Long> categoryIds) {
+		ExecutorService executorService = Executors.newFixedThreadPool(50); // 创建线程池
+		List<Future<Void>> futures = new ArrayList<>();
 
-		for (Long id : productIdsByCategoryId) {
+		for (Long categoryId : categoryIds) {
+			List<Long> productIdsByCategoryId = productRepository.findProductIdsByCategoryId(categoryId);
+			if (CollectionUtils.isEmpty(productIdsByCategoryId)) {
+				continue;
+			}
 
-			try {
-				productCommonFacade.deleteProduct(id, null);
-			}catch (Exception e){
-				LOGGER.error("deleteProductsByCategoryId error", e);
+			for (Long id : productIdsByCategoryId) {
+				futures.add(executorService.submit(() -> {
+					try {
+						productCommonFacade.deleteProduct(id, null);
+					} catch (Exception e) {
+						LOGGER.error("deleteProductsByCategoryIds error for productId: " + id, e);
+					}
+					return null;
+				}));
 			}
 		}
 
+		// 等待所有任务完成
+		for (Future<Void> future : futures) {
+			try {
+				future.get(); // 等待任务完成
+			} catch (InterruptedException | ExecutionException e) {
+				LOGGER.error("Error while deleting product", e);
+			}
+		}
+
+		executorService.shutdown(); // 关闭线程池
 		return CommonResultDTO.ofSuccess();
 	}
 

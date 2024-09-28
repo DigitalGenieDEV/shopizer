@@ -8,6 +8,8 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.board.ReadableBoard;
+import com.salesmanager.shop.model.catalog.catalog.ReadableCatalog;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
@@ -34,6 +36,8 @@ import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -118,13 +122,12 @@ public class CustomerOrderApi {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = { "/auth/customer_orders/{id}" }, method = RequestMethod.GET)
+    @GetMapping(value = { "/auth/customer_orders/{id}" })
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableCustomerOrder getCustomerOrder(
-            @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+            @PathVariable Long id, @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
     ) throws Exception {
         Principal principal = request.getUserPrincipal();

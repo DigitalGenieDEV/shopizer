@@ -654,7 +654,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			query.setParameter("name", like(criteria.getCustomerName()));
 		}
 		//delivery name
-		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
+		if(!StringUtils.isEmpty(criteria.getDeliveryName())) {
 			query.setParameter("deliveryName", like(criteria.getDeliveryName()));
 		}
 

@@ -15,6 +15,7 @@ import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
@@ -23,6 +24,7 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
@@ -45,6 +47,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -60,7 +63,6 @@ public class ReadableOrderProductPopulator extends
 		AbstractDataPopulator<OrderProduct, ReadableOrderProduct> {
 
 	private AdditionalServicesConvert additionalServicesConvert;
-
 	private ProductVariantService productVariantService;
 	private ReadableProductVariantMapper readableProductVariantMapper;
 	private FulfillmentFacade fulfillmentFacade;
@@ -71,6 +73,8 @@ public class ReadableOrderProductPopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+	private ReadableCategoryMapper readableCategoryMapper;
 
 	private InvoicePackingFormService invoicePackingFormService;
 
@@ -113,6 +117,8 @@ public class ReadableOrderProductPopulator extends
 		if(source.getQcInfo() != null){
 			target.setQcInfoId(source.getQcInfo().getId());
 		}
+
+		target.setReadableFulfillmentSubOrder(fulfillmentFacade.queryFulfillmentSubOrderListByProductOrderId(source.getId()));
 
 		if (source.getShippingDocumentOrder() !=null){
 			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
@@ -254,6 +260,7 @@ public class ReadableOrderProductPopulator extends
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);
+					populator.setReadableCategoryMapper(readableCategoryMapper);
 					populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
@@ -373,4 +380,14 @@ public class ReadableOrderProductPopulator extends
 	public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
 		this.readableMerchantStorePopulator = readableMerchantStorePopulator;
 	}
+
+	public ReadableCategoryMapper getReadableCategoryMapper() {
+		return readableCategoryMapper;
+	}
+
+	public void setReadableCategoryMapper(ReadableCategoryMapper readableCategoryMapper) {
+		this.readableCategoryMapper = readableCategoryMapper;
+	}
+
+
 }
