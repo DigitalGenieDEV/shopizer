@@ -1,6 +1,7 @@
 package com.salesmanager.shop.store.api.v1.order;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.salesmanager.core.business.services.order.OrderService;
+import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.PaymentType;
@@ -235,8 +237,8 @@ public class OrderApi {
 								  @RequestParam(value = "buyerName", required = false) String buyerName,
 								  @RequestParam(value = "startTime", required = false) Long startTime,
 								  @RequestParam(value = "endTime", required = false) Long endTime,
-								  @RequestParam(value = "orderStatus", required = false) String orderStatus,
-								  @RequestParam(value = "shippingStatus", required = false) String shippingStatus,
+								  @RequestParam(value = "orderStatus", required = false) List<String> orderStatus,
+								  @RequestParam(value = "shippingStatus", required = false) List<String> shippingStatus,
 								  @RequestParam(value = "orderType", required = false) String orderType,
 								  @RequestParam(value = "shippingType", required = false) String shippingType,
 								  @RequestParam(value = "orderNo", required = false) String orderNo,
@@ -260,8 +262,32 @@ public class OrderApi {
 		orderCriteria.setTransportationMethod(transportationMethod);
 		orderCriteria.setStartTime(startTime);
 		orderCriteria.setEndTime(endTime);
-		orderCriteria.setStatus(orderStatus);
-		orderCriteria.setShippingStatus(shippingStatus);
+		if (CollectionUtils.isNotEmpty(orderStatus)) {
+			try {
+				List<OrderStatus> orderStatuses = new ArrayList<>();
+				for (String status : orderStatus) {
+					OrderStatus statusEnum = OrderStatus.fromValue(status.toUpperCase());
+					orderStatuses.add(statusEnum);
+				}
+				orderCriteria.setStatus(orderStatuses);
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), e.getMessage());
+			}
+		}
+		if (CollectionUtils.isNotEmpty(shippingStatus)) {
+			try {
+				List<FulfillmentTypeEnums> shippingStatuses = new ArrayList<>();
+				for (String status : shippingStatus) {
+					FulfillmentTypeEnums statusEnum = FulfillmentTypeEnums.fromString(status.toUpperCase());
+					if (statusEnum != null) {
+						shippingStatuses.add(statusEnum);
+					}
+				}
+				orderCriteria.setShippingStatus(shippingStatuses);
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), e.getMessage());
+			}
+		}
 		orderCriteria.setLanguage(language.getCode());
 		orderCriteria.setOrderNo(orderNo);
 		try {
@@ -290,8 +316,8 @@ public class OrderApi {
 	public CommonResultDTO<ReadableOrderList> list(
 			@RequestParam(value = "count", required = false, defaultValue = DEFAULT_ORDER_LIST_COUNT) Integer count,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(value = "orderStatus", required = false) String orderStatus,
-			@RequestParam(value = "shippingStatus", required = false) String shippingStatus,
+			@RequestParam(value = "orderStatus", required = false) List<String> orderStatus,
+			@RequestParam(value = "shippingStatus", required = false) List<String> shippingStatus,
 			@RequestParam(value = "startTime", required = false) Long startTime,
 			@RequestParam(value = "endTime", required = false) Long endTime,
 			@RequestParam(value = "queryType", required = false) String queryType,
@@ -351,17 +377,35 @@ public class OrderApi {
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("STORE_CODE")) {
 			orderCriteria.setStoreCode(queryValue);
 		}
-		if (StringUtils.isNotBlank(orderStatus)) {
+		if (CollectionUtils.isNotEmpty(orderStatus)) {
 			try {
-				OrderStatus.fromValue(orderStatus.toUpperCase());
+				List<OrderStatus> orderStatuses = new ArrayList<>();
+				for (String status : orderStatus) {
+					OrderStatus statusEnum = OrderStatus.fromValue(status.toUpperCase());
+					orderStatuses.add(statusEnum);
+				}
+				orderCriteria.setStatus(orderStatuses);
 			} catch (Exception e) {
-				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), "Invalid order status: " + orderStatus);
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), e.getMessage());
 			}
-			orderCriteria.setStatus(orderStatus);
 		}
 		orderCriteria.setStartTime(startTime);
 		orderCriteria.setEndTime(endTime);
-		orderCriteria.setShippingStatus(shippingStatus);
+
+		if (CollectionUtils.isNotEmpty(shippingStatus)) {
+			try {
+				List<FulfillmentTypeEnums> shippingStatuses = new ArrayList<>();
+				for (String status : shippingStatus) {
+					FulfillmentTypeEnums statusEnum = FulfillmentTypeEnums.fromString(status.toUpperCase());
+					if (statusEnum != null) {
+						shippingStatuses.add(statusEnum);
+					}
+				}
+				orderCriteria.setShippingStatus(shippingStatuses);
+			} catch (Exception e) {
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), e.getMessage());
+			}
+		}
 		orderCriteria.setLanguage(language.getCode());
 
 		try {
@@ -629,6 +673,33 @@ public class OrderApi {
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("updateAdminOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+	@RequestMapping(value = { "/private/orders/status" }, method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
+	public CommonResultDTO<Integer> batchUpdateOrderStatus(
+			@Valid @RequestParam List<Long> ids,
+			@Valid @RequestParam String status,
+			@ApiIgnore MerchantStore merchantStore) {
+		try {
+			// check status is valid
+			OrderStatus statusEnum = OrderStatus.fromValue(status);
+
+			int affectRows = 0;
+			for (Long id : ids) {
+				CommonResultDTO<Void> voidCommonResultDTO = updateOrderStatus(id, status, merchantStore);
+				if (voidCommonResultDTO.getSuccess()) {
+					affectRows++;
+				}
+			}
+			return CommonResultDTO.ofSuccess(affectRows);
+		}catch (Exception e){
+			LOGGER.error("batchUpdateAdminOrderStatus error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
 	}

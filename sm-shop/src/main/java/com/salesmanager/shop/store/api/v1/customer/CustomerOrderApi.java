@@ -281,8 +281,9 @@ public class CustomerOrderApi {
         customerPopulator.populate(customer, readableCustomer, merchantStore, language);
 
         OrderCustomerCriteria criteria = new OrderCustomerCriteria();
-        criteria.setStartIndex(page);
-        criteria.setMaxCount(count);
+        criteria.setLegacyPagination(false);
+        criteria.setStartPage(page);
+        criteria.setPageSize(count);
         criteria.setStartTime(startTime);
         criteria.setEndTime(endTime);
         criteria.setOrderStatus(orderStatus);
@@ -343,9 +344,9 @@ public class CustomerOrderApi {
         customerPopulator.populate(customer, readableCustomer, merchantStore, language);
 
         OrderCustomerCriteria criteria = new OrderCustomerCriteria();
-
-        criteria.setStartIndex(page);
-        criteria.setMaxCount(count);
+        criteria.setLegacyPagination(false);
+        criteria.setStartPage(page);
+        criteria.setPageSize(count);
         criteria.setStartTime(startTime);
         criteria.setEndTime(endTime);
         criteria.setOrderType(orderType);

@@ -102,8 +102,8 @@ public class PaymentAuthorizeApi {
      * @param language
      * @return
      */
-    @RequestMapping("/payment/nicepay/server_auth")
-    @ApiOperation(httpMethod = "GET", value = "List list of payment modules", notes = "Requires administration access", produces = "application/json", response = List.class)
+    @PostMapping("/payment/nicepay/server_auth")
+    @ApiOperation(httpMethod = "POST", value = "List list of payment modules", notes = "Requires administration access", produces = "application/json", response = List.class)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
     public ReadableCombineTransaction paymentModules2(
             @RequestParam(required = false) String tid,

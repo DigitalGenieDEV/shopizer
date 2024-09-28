@@ -337,6 +337,7 @@ public class OrderShippingApi {
 
 
         ShippingOrderProductQuery query = new ShippingOrderProductQuery();
+        query.setLegacyPagination(false);
         query.setOrderId(orderId);
         query.setProductName(productName);
         if (page != null) {
@@ -344,7 +345,7 @@ public class OrderShippingApi {
         }
 
         if (count != null) {
-            query.setMaxCount(count);
+            query.setPageSize(count);
         }
 
         try {
@@ -372,6 +373,7 @@ public class OrderShippingApi {
 
 
         ShippingOrderProductQuery query = new ShippingOrderProductQuery();
+        query.setLegacyPagination(false);
         query.setOrderId(orderId);
         query.setProductName(productName);
         if (page != null) {
@@ -379,7 +381,7 @@ public class OrderShippingApi {
         }
 
         if (count != null) {
-            query.setMaxCount(count);
+            query.setPageSize(count);
         }
         query.setCreateStartTime(createStartTime);
         query.setCreateEndTime(createEndTime);

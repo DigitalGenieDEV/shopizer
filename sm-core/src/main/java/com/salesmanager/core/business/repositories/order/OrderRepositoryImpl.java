@@ -11,6 +11,7 @@ import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
@@ -203,8 +204,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			String nameQuery =  " and o.status =:status";
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			String nameQuery =  " and o.status in :status";
 			objectBuilderWhere.append(nameQuery);
 			countBuilderSelect.append(nameQuery);
 		}
@@ -244,9 +245,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			countQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
-			objectQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			countQ.setParameter("status", criteria.getStatus());
+			objectQ.setParameter("status", criteria.getStatus());
 		}
 		
 
@@ -565,8 +566,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			String nameQuery =  " and p.status =:status";
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			String nameQuery =  " and p.status in :status";
 			queryBuilder.append(nameQuery);
 		}
 		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
@@ -577,8 +578,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String nameQuery = " and p.auditSection.dateCreated <= :endTime";
 			queryBuilder.append(nameQuery);
 		}
-		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
-			String nameQuery =  " and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType = :shippingStatus)";
+		if (CollectionUtils.isNotEmpty(criteria.getShippingStatus())) {
+			String nameQuery =  " and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType in :shippingStatus)";
 			queryBuilder.append(nameQuery);
 		}
 		if (StringUtils.isNotBlank(criteria.getOrderType())) {
@@ -677,8 +678,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			query.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			query.setParameter("status", criteria.getStatus());
 		}
 
 		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
@@ -687,8 +688,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			query.setParameter("endTime", new Date(criteria.getEndTime()));
 		}
-		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
-			query.setParameter("shippingStatus", FulfillmentTypeEnums.valueOf(criteria.getShippingStatus().toUpperCase()));
+		if (CollectionUtils.isNotEmpty(criteria.getShippingStatus())) {
+			query.setParameter("shippingStatus",criteria.getShippingStatus());
 		}
 		if (StringUtils.isNotBlank(criteria.getOrderType())) {
 			query.setParameter("orderType", OrderType.valueOf(criteria.getOrderType().toUpperCase()));
