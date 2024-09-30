@@ -19,7 +19,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.utils.CloneUtils;
 
 @Entity
-@Table(name = "COMMON_FILE", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRG_CODE", "DATA_ID", "ORD" }) })
+@Table(name = "COMMON_FILE", uniqueConstraints = { @UniqueConstraint(columnNames = { "PRG_CODE", "DATA_ID", "FILE_ID" }) })
 public class CommonFile extends SalesManagerEntity<Integer, CommonFile> implements Serializable {
 	private static final long serialVersionUID = 1321251632883237664L;
 
