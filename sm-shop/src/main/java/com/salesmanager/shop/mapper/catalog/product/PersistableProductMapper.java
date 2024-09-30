@@ -198,7 +198,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			 * SPEIFICATIONS
 			 */
 			if(source.getProductSpecifications()!=null) {
-				System.out.println("source.getProductSpecifications().getLength()"+source.getProductSpecifications().getLength());
 				destination.setProductHeight(source.getProductSpecifications().getHeight());
 				destination.setProductLength(source.getProductSpecifications().getLength());
 				destination.setProductWeight(source.getProductSpecifications().getWeight());

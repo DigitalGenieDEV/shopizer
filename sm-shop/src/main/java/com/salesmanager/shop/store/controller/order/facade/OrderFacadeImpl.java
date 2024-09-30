@@ -1955,12 +1955,14 @@ public class OrderFacadeImpl implements OrderFacade {
 							.filter(Objects::nonNull)
 							.collect(Collectors.toList());
 
-					InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(shippingDocumentOrder.getInvoicePackingFormId());
-					if (invoicePackingForm != null) {
-						readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
-					}
+					if (shippingDocumentOrder.getInvoicePackingFormId()!=null){
+						InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(shippingDocumentOrder.getInvoicePackingFormId());
+						if (invoicePackingForm != null) {
+							readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+						}
 
-					readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+						readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+					}
 				}
 				readableShippingDocumentOrders.add(readableShippingDocumentOrder);
 			}

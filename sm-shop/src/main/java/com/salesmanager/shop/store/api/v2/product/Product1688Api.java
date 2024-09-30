@@ -109,7 +109,7 @@ public class Product1688Api {
 					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
 					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
-					alibabaProductSearchKeywordQueryParam.setSort("{\"price\":\"asc\"}");
+//					alibabaProductSearchKeywordQueryParam.setSort("{\"price\":\"asc\"}");
 					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
 
@@ -129,7 +129,7 @@ public class Product1688Api {
 							pageParam.setCountry(paramData.getCountry());
 							pageParam.setKeyword(keyword.getKeyword());
 							pageParam.setCategoryId(keyword.getCategoryId1688());
-							pageParam.setSort("{\"price\":\"asc\"}");
+//							pageParam.setSort("{\"price\":\"asc\"}");
 							return retrySearch(pageParam);
 						});
 					}
