@@ -343,7 +343,7 @@ public class OrderApi {
 			orderCriteria.setOrderNo(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")) {
-			orderCriteria.setCustomerName(queryValue);
+			orderCriteria.setDeliveryName(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PHONE")) {
 			orderCriteria.setCustomerPhone(queryValue);
