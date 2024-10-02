@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 public class PersistableOrderProductAdditionalServiceInstance extends OrderProductAdditionalServiceInstance {
 
     private String content;
+    private Boolean sendNotice = Boolean.FALSE;
 
     private String replyContent;
     private String replyFrom;

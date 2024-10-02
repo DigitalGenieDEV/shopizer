@@ -142,6 +142,11 @@ public class OrderProductAdditionalServiceInstanceApi {
         Boolean success = null;
         try {
             success = orderProductAdditionalServiceInstanceFacade.saveAdditionalServiceInstance(readableOrderProduct, persistableOrderProductAdditionalServiceInstance, merchantStore, language);
+
+            // TODO: send notice
+            if (persistableOrderProductAdditionalServiceInstance.getSendNotice()) {
+                // do nothing
+            }
         } catch (Exception e) {
             return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), e.getMessage());
         }
