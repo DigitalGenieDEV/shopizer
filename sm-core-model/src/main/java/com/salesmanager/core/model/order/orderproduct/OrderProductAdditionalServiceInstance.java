@@ -18,7 +18,7 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 @Entity
 @EntityListeners(value = AutoCloseable.class)
-@Table(name = "ORDER_PRODUCT_ADDTIONAL_SERBICE_INSTANCE",
+@Table(name = "ORDER_PRODUCT_ADDITIONAL_SERVICE_INSTANCE",
     uniqueConstraints = @UniqueConstraint(columnNames = {"ORDER_PRODUCT_ID", "ADDITIONAL_SERVICE_ID"}))
 public class OrderProductAdditionalServiceInstance extends SalesManagerEntity<Long, OrderProductAdditionalServiceInstance> implements Auditable {
 
