@@ -2,6 +2,7 @@ package com.salesmanager.core.model.order.orderproduct;
 
 
 import com.salesmanager.core.enmus.AdditionalServiceInstanceStatusEnums;
+import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@EntityListeners(value = AutoCloseable.class)
+@EntityListeners(value = AuditListener.class)
 @Table(name = "ORDER_PRODUCT_ADDITIONAL_SERVICE_INSTANCE",
     uniqueConstraints = @UniqueConstraint(columnNames = {"ORDER_PRODUCT_ID", "ADDITIONAL_SERVICE_ID"}))
 public class OrderProductAdditionalServiceInstance extends SalesManagerEntity<Long, OrderProductAdditionalServiceInstance> implements Auditable {
