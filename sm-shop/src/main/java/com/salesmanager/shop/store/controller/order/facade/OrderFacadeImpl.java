@@ -2058,7 +2058,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		orderProductRepository.updateShippingDocumentOrderIdById(null, orderProductId);
 
-		orderProductRepository.updateIsInShippingOrderById(null, orderProductId);
+		orderProductRepository.updateIsInShippingOrderById(false, orderProductId);
 	}
 
 	@Override

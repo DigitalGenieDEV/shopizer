@@ -71,9 +71,9 @@ public class Product1688Api {
 		// 存储异常的itemId和对应的错误信息
 		Queue<Long> errorQueue = new ConcurrentLinkedQueue<>();
 
-		int corePoolSize = 100;  // 核心线程数
-		int maxPoolSize = 100;   // 最大线程数
-		int queueCapacity = 400; // 有界队列大小
+		int corePoolSize = 30;  // 核心线程数
+		int maxPoolSize = 30;   // 最大线程数
+		int queueCapacity = 100; // 有界队列大小
 
 		AtomicInteger importCount = new AtomicInteger();
 		AtomicInteger queryCount = new AtomicInteger();
