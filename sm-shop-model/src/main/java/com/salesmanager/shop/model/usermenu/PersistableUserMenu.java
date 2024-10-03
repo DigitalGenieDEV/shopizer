@@ -4,6 +4,9 @@ public class PersistableUserMenu {
 	private int id;
 	private int parentId;
 	private String menuName;
+	private String menuNameEn = "";
+	private String menuNameCn = "";
+	private String menuNameJp = "";
 	private String menuDesc;
 	private int visible = 0;
 	private String top = "";
@@ -35,6 +38,30 @@ public class PersistableUserMenu {
 
 	public String getMenuName() {
 		return menuName;
+	}
+
+	public String getMenuNameEn() {
+		return menuNameEn;
+	}
+
+	public void setMenuNameEn(String menuNameEn) {
+		this.menuNameEn = menuNameEn;
+	}
+
+	public String getMenuNameCn() {
+		return menuNameCn;
+	}
+
+	public void setMenuNameCn(String menuNameCn) {
+		this.menuNameCn = menuNameCn;
+	}
+
+	public String getMenuNameJp() {
+		return menuNameJp;
+	}
+
+	public void setMenuNameJp(String menuNameJp) {
+		this.menuNameJp = menuNameJp;
 	}
 
 	public void setMenuName(String menuName) {

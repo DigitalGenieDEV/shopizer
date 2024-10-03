@@ -24,10 +24,15 @@ public class OrderAdditionalPaymentServiceImpl implements OrderAdditionalPayment
     public void saveOrderAdditionalPayment(OrderAdditionalPayment orderAdditionalPayment) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: saveOrderAdditionalPayment");
         OrderAdditionalPayment payment = findById(orderAdditionalPayment.getId()).orElse(null);
-        if(payment == null)
+        if(payment == null){
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: save");
             repository.save(orderAdditionalPayment);
+            }
         else if(payment.getStatus().equals(OrderAdditionalPaymentStatus.WAITING)) {
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: save");
             repository.save(orderAdditionalPayment);
+        } else {
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: do not save");
         }
     }
 

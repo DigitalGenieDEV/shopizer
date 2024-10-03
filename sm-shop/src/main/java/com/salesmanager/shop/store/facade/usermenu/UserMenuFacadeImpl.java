@@ -43,6 +43,9 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 	    		  sendData.setId(data.getId());
 	    		  sendData.setParentId(data.getParent_Id());
 	    		  sendData.setMenuName(data.getMenu_Name());
+	    		  sendData.setMenuNameEn(data.getMenu_Name_En());
+	    		  sendData.setMenuNameCn(data.getMenu_Name_Cn());
+	    		  sendData.setMenuNameJp(data.getMenu_Name_Jp());
 	    		  sendData.setUrl(data.getUrl());
 	    		  sendData.setMenuDesc(data.getMenu_Desc());
 	    		  sendData.setOrd(data.getOrd());
@@ -103,6 +106,9 @@ public class UserMenuFacadeImpl implements UserMenuFacade {
 			  sendData.setId(data.getId());
     		  sendData.setParentId(data.getParent_Id());
     		  sendData.setMenuName(data.getMenu_Name());
+    		  sendData.setMenuNameEn(data.getMenu_Name_En());
+			  sendData.setMenuNameCn(data.getMenu_Name_Cn());
+			  sendData.setMenuNameJp(data.getMenu_Name_Jp());
     		  sendData.setUrl(data.getUrl());
     		  sendData.setMenuDesc(data.getMenu_Desc());
     		  sendData.setOrd(data.getOrd());
