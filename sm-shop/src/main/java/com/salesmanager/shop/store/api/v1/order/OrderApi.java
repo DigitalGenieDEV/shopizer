@@ -243,7 +243,6 @@ public class OrderApi {
 								  @RequestParam(value = "shippingType", required = false) String shippingType,
 								  @RequestParam(value = "orderNo", required = false) String orderNo,
 								  @RequestParam(value = "transportationMethod", required = false) String transportationMethod,
-								  // TODO(yuxunhui):결제사 不知道是什么意思 结算公司，没找到对应的概念
 								  @RequestParam(value = "paymentType", required = false) String paymentType,
 								  // TODO(yuxunhui):주문플랫폼 不知道是什么意思 订购平台，没找到对应的概念
 								  @ApiIgnore MerchantStore merchantStore,
@@ -343,7 +342,7 @@ public class OrderApi {
 			orderCriteria.setOrderNo(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("NAME")) {
-			orderCriteria.setCustomerName(queryValue);
+			orderCriteria.setDeliveryName(queryValue);
 		}
 		if (StringUtils.isNotEmpty(queryType) && queryType.equals("PHONE")) {
 			orderCriteria.setCustomerPhone(queryValue);
