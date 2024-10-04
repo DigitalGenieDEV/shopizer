@@ -55,6 +55,8 @@ public interface StoreFacade {
 
 	ReadableMerchantStore getFullByCode(String code, Language language);
 
+	ReadableMerchantStore storeApprove(String code, Language language);
+
 	boolean existByCode(String code);
 
 	/**

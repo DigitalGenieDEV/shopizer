@@ -190,7 +190,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			productMaterialService.saveAll(collect);
 		}
 
-		if (product.getAnnouncement() !=null) {
+		if (product.getAnnouncement() !=null && CollectionUtils.isNotEmpty(product.getAnnouncement().getAnnouncementFields())) {
 			Boolean result = productAnnouncementAttributeService.existsByProductId(target.getId());
 			if (result){
 				productAnnouncementAttributeService.deleteByProductId(target.getId());

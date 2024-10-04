@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.utils;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.salesmanager.core.business.modules.AnnouncementInfo;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,86 +18,53 @@ import java.util.*;
 
 public class ExcelToJson {
 
+    public static void main(String[] args) {
+        String excelFilePath = "/Users/yuguanghui/Desktop/cleandata1688.xlsx"; // Excel 文件路径
+        List<Map<String, Object>> keywordList = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
-        FileInputStream file = new FileInputStream("/Users/yuguanghui/Downloads/2222.xlsx");
-        XSSFWorkbook workbook = new XSSFWorkbook(file);
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        try (FileInputStream fis = new FileInputStream(new File(excelFilePath));
+             Workbook workbook = new XSSFWorkbook(fis)) {
 
-        Map<String, List<AnnouncementInfo>> announcementInfoMap = new HashMap<>(20);
+            Sheet sheet = workbook.getSheetAt(0); // 读取第一个工作表
 
-        for (Row row : sheet) {
-            String category = null;
-            AnnouncementInfo announcementInfo = new AnnouncementInfo();
-            List<AnnouncementInfo.AnnouncementField> announcementFields = new ArrayList<>();
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue; // 跳过标题行
 
-            for (Cell cell : row) {
-                String cellValue = getCellValue(cell);
-                String cellComment = getCellComment(cell);
-                AnnouncementInfo.AnnouncementField announcementField = new AnnouncementInfo.AnnouncementField();
+                int categoryId = (int) row.getCell(0).getNumericCellValue();
+                Integer categoryId1688 = null;
 
-                if (cell.getColumnIndex() == 0 && StringUtils.isNotBlank(cellValue)) {
-                    // 第一个 field 作为类目，用于 map 的键
-                    category = cellValue;
-                    continue;
+                Cell cell = row.getCell(1);
+                if (cell.getCellType() == CellType.NUMERIC.getCode()) {
+                    categoryId1688 = (int) cell.getNumericCellValue();
                 }
 
-                if (StringUtils.isNotBlank(cellValue)) {
-                    announcementField.setField(cellValue);
-                    if (cellComment != null) {
-                        announcementField.setComment(cellComment);
-                    }
-                    announcementFields.add(announcementField);
-                }
+                String keyword = row.getCell(2).getStringCellValue();
+
+                keywordList.add(createKeyword(categoryId, categoryId1688, keyword));
             }
 
-            if (category != null) {
-                announcementInfo.setAnnouncementFields(announcementFields);
-                announcementInfoMap.computeIfAbsent(category, k -> new ArrayList<>()).add(announcementInfo);
-            }
-        }
+            // 创建最终 JSON 结构
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("beginPage", 0);
+            jsonMap.put("country", "ko");
+            jsonMap.put("keywordList", keywordList);
+            jsonMap.put("pageSize", 100);
 
-        Gson gson = new Gson();
-        String json = gson.toJson(announcementInfoMap);
-        System.out.println(json);
+            // 转换为 JSON 字符串
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonMap);
+            System.out.println(jsonString);
 
-        // 将JSON写入文件
-//        try (FileOutputStream fos = new FileOutputStream("/path/to/output/file.json")) {
-//            fos.write(json.getBytes());
-//        }
-//        System.out.println("Excel data converted to JSON successfully.");
-//
-//        workbook.close();
-//        file.close();
-    }
-
-    private static String getCellValue(Cell cell) {
-        switch (cell.getCellTypeEnum()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    return cell.getDateCellValue().toString();
-                } else {
-                    double numericCellValue = cell.getNumericCellValue();
-                    return String.valueOf((int)numericCellValue);
-                }
-            case BOOLEAN:
-                return Boolean.toString(cell.getBooleanCellValue());
-            case FORMULA:
-                return cell.getCellFormula();
-            case BLANK:
-                return "";
-            default:
-                return "";
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private static String getCellComment(Cell cell) {
-        Comment comment = cell.getCellComment();
-        if (comment != null) {
-            return comment.getString().getString();
-        }
-        return null;
+    private static Map<String, Object> createKeyword(int categoryId, Integer categoryId1688, String keyword) {
+        Map<String, Object> keywordMap = new HashMap<>();
+        keywordMap.put("categoryId", categoryId);
+        keywordMap.put("categoryId1688", categoryId1688);
+        keywordMap.put("keyword", keyword);
+        return keywordMap;
     }
 }

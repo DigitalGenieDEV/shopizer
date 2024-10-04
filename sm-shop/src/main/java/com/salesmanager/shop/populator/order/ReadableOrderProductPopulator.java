@@ -136,9 +136,11 @@ public class ReadableOrderProductPopulator extends
 						.filter(Objects::nonNull)
 						.collect(Collectors.toList());
 
-				InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(source.getShippingDocumentOrder().getInvoicePackingFormId());
-				if (invoicePackingForm != null) {
-					readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+				if (source.getShippingDocumentOrder().getInvoicePackingFormId()!=null){
+					InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(source.getShippingDocumentOrder().getInvoicePackingFormId());
+					if (invoicePackingForm != null) {
+						readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+					}
 				}
 
 				readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);

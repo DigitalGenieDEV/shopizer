@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.salesmanager.core.model.merchant.ApproveStatus;
 import com.salesmanager.core.model.merchant.BusinessType;
 import com.salesmanager.shop.model.references.MeasureUnit;
 import com.salesmanager.shop.model.references.WeightUnit;
@@ -49,4 +50,6 @@ public class MerchantStoreEntity implements Serializable {
 	
 	private String businessNumber;
 	private String businessRegistration;
+
+	private ApproveStatus status = ApproveStatus.WAITING;
 }
