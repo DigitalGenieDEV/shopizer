@@ -130,7 +130,7 @@ public class OrderProductAdditionalServiceInstanceFacadeImpl implements OrderPro
         OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance = orderProductAdditionalServiceInstanceService.getById(persistableOrderProductAdditionalServiceInstance.getId());
 
         try {
-            persistableOrderProductAdditionalServiceInstance.getMessageContent().updateReply(persistableOrderProductAdditionalServiceInstance.getContent());
+            persistableOrderProductAdditionalServiceInstance.getMessageContent().updateReply(persistableOrderProductAdditionalServiceInstance.getReplyContent());
             orderProductAdditionalServiceInstance = persistableOrderProductAdditionalServiceInstancePopulator.populate(persistableOrderProductAdditionalServiceInstance, orderProductAdditionalServiceInstance, merchantStore, language);
         } catch (ConversionException e) {
             throw new ServiceRuntimeException("Error while reply order product additional service instance ", e);
