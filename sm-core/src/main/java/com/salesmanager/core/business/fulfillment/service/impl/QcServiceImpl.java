@@ -41,6 +41,12 @@ public class QcServiceImpl extends SalesManagerEntityServiceImpl<Long, QcInfo>  
         qcInfoRepository.updateQcStatusById(QcStatusEnums.valueOf(qcStatus), id);
     }
 
+    @Override
+    public void updateQcOrderIdById(Long orderId, Long id) {
+        Validate.notNull(orderId, "orderId must be no null");
+        qcInfoRepository.updateQcOrderIdById(orderId, id);
+    }
+
     public List<QcInfo> queryQcInfoByStatus(QcStatusEnums qcStatus) {
         Validate.notNull(qcStatus, "qcStatus must be no null");
         return qcInfoRepository.queryQcInfoByStatus(qcStatus);

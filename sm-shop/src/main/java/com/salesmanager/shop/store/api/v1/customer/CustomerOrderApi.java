@@ -257,6 +257,7 @@ public class CustomerOrderApi {
             @RequestParam(value = "startTime", required = false) Long startTime,
             @RequestParam(value = "endTime", required = false) Long endTime,
             @RequestParam(value = "orderStatus", required = false) String orderStatus,
+            @RequestParam(value = "orderType", required = false) String orderType,
             @RequestParam(value = "productName", required = false) String productName,
             @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
@@ -288,6 +289,7 @@ public class CustomerOrderApi {
         criteria.setStartPage(page);
         criteria.setPageSize(count);
         criteria.setStartTime(startTime);
+        criteria.setOrderType(orderType);
         criteria.setEndTime(endTime);
         criteria.setOrderStatus(orderStatus);
         criteria.setProductName(productName);

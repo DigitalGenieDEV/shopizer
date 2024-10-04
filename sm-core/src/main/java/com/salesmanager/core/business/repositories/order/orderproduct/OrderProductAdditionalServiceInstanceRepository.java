@@ -22,4 +22,8 @@ public interface OrderProductAdditionalServiceInstanceRepository extends JpaRepo
     @Query("UPDATE OrderProductAdditionalServiceInstance o set o.status = :status where o.id = :id")
     Integer updateStatusById(@Param("id") Long id , @Param("status")AdditionalServiceInstanceStatusEnums status);
 
+
+
+    @Query("select o from OrderProductAdditionalServiceInstance o where o.orderProductId = ?1 and o.additionalServiceId = ?2 ")
+    OrderProductAdditionalServiceInstance queryByOrderProductIdAndAdditionalServiceId(Long orderProductId, Long additionalServiceId);
 }

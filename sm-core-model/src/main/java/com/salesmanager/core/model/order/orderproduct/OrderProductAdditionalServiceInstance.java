@@ -20,7 +20,7 @@ import javax.persistence.*;
 @Entity
 @EntityListeners(value = AuditListener.class)
 @Table(name = "ORDER_PRODUCT_ADDITIONAL_SERVICE_INSTANCE",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"ORDER_PRODUCT_ID", "ADDITIONAL_SERVICE_ID"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"ORDER_PRODUCT_ID", "ADDITIONAL_SERVICE_ID"}))
 public class OrderProductAdditionalServiceInstance extends SalesManagerEntity<Long, OrderProductAdditionalServiceInstance> implements Auditable {
 
     @Id
@@ -29,11 +29,10 @@ public class OrderProductAdditionalServiceInstance extends SalesManagerEntity<Lo
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
     private Long id;
 
-    @Column(name = "ORDER_PRODUCT_ID", unique = true, nullable = false)
+    @Column(name = "ORDER_PRODUCT_ID", nullable = false)
     private Long orderProductId;
 
-
-    @Column(name = "ADDITIONAL_SERVICE_ID", unique = true, nullable = false)
+    @Column(name = "ADDITIONAL_SERVICE_ID", nullable = false)
     private Long additionalServiceId;
 
     @Column(name = "CONTENT", length = 4096)
@@ -51,5 +50,4 @@ public class OrderProductAdditionalServiceInstance extends SalesManagerEntity<Lo
 
     @Embedded
     private AuditSection auditSection = new AuditSection();
-
 }

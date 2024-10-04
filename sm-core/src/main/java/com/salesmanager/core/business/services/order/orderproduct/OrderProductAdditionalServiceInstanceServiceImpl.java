@@ -29,6 +29,12 @@ public class OrderProductAdditionalServiceInstanceServiceImpl implements OrderPr
     }
 
     @Override
+    public OrderProductAdditionalServiceInstance queryByOrderProductIdAndAdditionalServiceId(Long orderProductId, Long additionalServiceId) {
+        return orderProductAdditionalServiceInstanceRepository.queryByOrderProductIdAndAdditionalServiceId(orderProductId, additionalServiceId);
+    }
+
+
+    @Override
     public Boolean save(OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance) {
         try {
             orderProductAdditionalServiceInstanceRepository.save(orderProductAdditionalServiceInstance);

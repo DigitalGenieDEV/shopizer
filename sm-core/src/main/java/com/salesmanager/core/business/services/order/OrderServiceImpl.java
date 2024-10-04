@@ -18,6 +18,8 @@ import com.salesmanager.core.business.services.shipping.ShippingService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.business.services.tax.TaxService;
 import com.salesmanager.core.business.utils.AdditionalServicesUtils;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
@@ -29,6 +31,7 @@ import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.order.orderproduct.OrderProductPrice;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.payments.Payment;
@@ -567,6 +570,299 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
 
     }
 
+//
+//    public OrderTotalSummary caculateOrder(List<OrderProduct> orderProducts, Customer customer, final MerchantStore store, final Language language) throws Exception {
+//        long start = LogPermUtil.start("OrderService/caculateOrder");
+//        OrderTotalSummary totalSummary = new OrderTotalSummary();
+//        List<OrderTotal> orderTotals = new ArrayList<OrderTotal>();
+//        Map<String,OrderTotal> otherPricesTotals = new HashMap<String,OrderTotal>();
+//
+//        ShippingConfiguration shippingConfiguration = null;
+//
+//        BigDecimal grandTotal = new BigDecimal(0);
+//        grandTotal.setScale(0, RoundingMode.HALF_UP);
+//
+//        LOGGER.debug("[caculateOrder] calculate order qty price");
+//        //price by item
+//        /**
+//         * qty * price
+//         * subtotal
+//         */
+//        BigDecimal subTotal = new BigDecimal(0);
+//
+//        //手续费
+//        BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+//
+//        //运费
+//        BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+//
+//        //增值服务费
+//        BigDecimal totalAdditionalServicesPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+//
+//        //erp费用
+//        BigDecimal erpPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+//
+//        subTotal.setScale(0, RoundingMode.UP);
+//        for(OrderProduct item : orderProducts) {
+//            if (item.getPrices() == null) {
+//                throw new ServiceException("shopping cart item sku = [" +item.getSku()+"] price is null");
+//            }
+//            Set<OrderProductPrice> prices = item.getPrices();
+//            OrderProductPrice price = prices.iterator().next();
+//
+//            BigDecimal st = price.getProductPrice().multiply(new BigDecimal(item.getProductQuantity()));
+//            subTotal = subTotal.add(st);
+//
+//            Set<Category> categories = item.getCategories();
+//            List<Category> sortedCategories = new ArrayList<>(categories);
+//            sortedCategories.sort((c1, c2) -> c2.getDepth().compareTo(c1.getDepth()));
+//
+//            for (Category category : sortedCategories) {
+//                if (category != null ) {
+//                    if (StringUtils.isNotEmpty(category.getHandlingFeeFor1688())
+//                            && item.getPublishWay() != null
+//                            && item.getPublishWay() == PublishWayEnums.IMPORT_BY_1688 ){
+//                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(3, RoundingMode.UP);
+//                        BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
+//                        BigDecimal itemPrice = item.getItemPrice();
+//                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+//                        finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getQuantity()));
+//                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+//                        break;
+//                    }
+//                    if (StringUtils.isNotEmpty(category.getHandlingFee())){
+//                        BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(3, RoundingMode.UP);
+//                        BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
+//                        BigDecimal itemPrice = item.getItemPrice();
+//                        BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+//                        finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getQuantity()));
+//                        totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//
+//            //运费
+//            ShippingType shippingType = item.getShippingType();
+//            //跨境运费处理
+//            if (shippingType != null && shippingType == shippingType.INTERNATIONAL){
+//                switch(item.getNationalTransportationMethod()){
+//                    case SHIPPING:
+//                        //todo 计算价格
+//                        break;
+//                    case AIR_TRANSPORTATION:
+//                        //todo 计算价格
+//                        break;
+//                }
+//
+//            }
+//
+//            //国内运费处理逻辑
+//            if (shippingType != null && shippingType == shippingType.NATIONAL){
+//                //委托配送价格
+//                if (ShippingTransportationType.COMMISSIONED_DELIVERY == item.getShippingTransportationType()
+//                        && item.getNationalTransportationMethod() !=null){
+//                    switch(item.getNationalTransportationMethod()){
+//                        case TRUCK:
+//                            TruckModelEnums truckModel = item.getTruckModel();
+//                            TruckTypeEnums truckType = item.getTruckType();
+//                            //todo计算金额
+//                            break;
+//                        case SHIPPING:
+//                            break;
+//
+//                        case LOGISTICS:
+//                            break;
+//
+//                        case URGENT_DELIVERY:
+//                            break;
+//
+//                        case DIRECT_DELIVERY:
+//                            break;
+//                    }
+//                    //todo 计算费用
+//                }
+//            }
+//
+//            //additionalServicePrice
+//            String additionalServicesMap = item.getAdditionalServicesMap();
+//            if (StringUtils.isNotEmpty(additionalServicesMap)){
+//                Map<String, String> additionalServiceMapFromJson = (Map<String, String>) JSON.parse(additionalServicesMap);
+//
+//                Set<String> keySet = additionalServiceMapFromJson.keySet();
+//
+//                for(String id : keySet){
+//                    AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
+//
+//                    String price = AdditionalServicesUtils.getPrice(additionalServices, additionalServiceMapFromJson.get(id) == null ? 0 :Integer.valueOf(additionalServiceMapFromJson.get(id)), item.getProductQuantity());
+//
+//                    totalAdditionalServicesPrice = totalAdditionalServicesPrice.add(new BigDecimal(price).setScale(0, RoundingMode.UP));
+//                }
+//            }
+//
+//
+////            //erp
+////            List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(item.getProductId());
+////            if (CollectionUtils.isNotEmpty(productMaterials)){
+////                for (ProductMaterial productMaterial : productMaterials ){
+////                    Long materialId = productMaterial.getMaterialId();
+////                    Material material  = erpService.getById(materialId);
+////                    BigDecimal price = material.getPrice();
+////                    Long weight = productMaterial.getWeight();
+////                    BigDecimal productErpPrice = price.multiply(BigDecimal.valueOf(weight)).setScale(2, RoundingMode.HALF_UP);
+////                    erpPrice = erpPrice.add(productErpPrice);
+////                }
+////            }
+//
+//
+//        }
+//
+//        LOGGER.debug("[caculateOrder] calculate order total");
+//
+//
+//        //计算折扣
+//        OrderTotalVariation orderTotalVariation = orderTotalService.findOrderTotalVariation(summary, customer, store, language);
+//
+//        int currentCount = 10;
+//        if(CollectionUtils.isNotEmpty(orderTotalVariation.getVariations())) {
+//            for(OrderTotal variation : orderTotalVariation.getVariations()) {
+//                variation.setSortOrder(currentCount++);
+//                orderTotals.add(variation);
+//                subTotal = subTotal.subtract(variation.getValue());
+//            }
+//        }
+//
+//        totalSummary.setSubTotal(subTotal);
+//
+//
+//        //商品费用
+//        OrderTotal orderTotalSubTotal = new OrderTotal();
+//        orderTotalSubTotal.setModule(Constants.OT_SUBTOTAL_MODULE_CODE);
+//        orderTotalSubTotal.setOrderTotalType(OrderTotalType.SUBTOTAL);
+//        orderTotalSubTotal.setOrderTotalCode("order.total.subtotal");
+//        orderTotalSubTotal.setTitle(Constants.OT_SUBTOTAL_MODULE_CODE);
+//        orderTotalSubTotal.setSortOrder(5);
+//        orderTotalSubTotal.setValue(subTotal);
+//        orderTotals.add(orderTotalSubTotal);
+//
+//
+//        //加价费用
+//        OrderTotal handlingubTotal = new OrderTotal();
+//        handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
+//        handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
+//        handlingubTotal.setOrderTotalCode("order.total.handling");
+//        handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
+//        handlingubTotal.setText("order.total.handling");
+//        handlingubTotal.setSortOrder(100);
+//        handlingubTotal.setValue(totalProductHandlingFeePrice);
+//        orderTotals.add(handlingubTotal);
+//
+//
+//        //运费
+//        OrderTotal shippingSubTotal = new OrderTotal();
+//        shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+//        shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+//        shippingSubTotal.setOrderTotalCode("order.total.shipping");
+//        shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+//        shippingSubTotal.setSortOrder(103);
+//        shippingSubTotal.setText("order.total.shipping");
+//        shippingSubTotal.setValue(totalShippingPrice);
+//        orderTotals.add(shippingSubTotal);
+//
+//
+//        //增值服务费用
+//        OrderTotal additionalServicesSubTotal = new OrderTotal();
+//        additionalServicesSubTotal.setModule(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+//        additionalServicesSubTotal.setOrderTotalType(OrderTotalType.ADDITIONAL_SERVICE);
+//        additionalServicesSubTotal.setOrderTotalCode("order.total.additionalServices");
+//        additionalServicesSubTotal.setSortOrder(102);
+//        additionalServicesSubTotal.setText("order.total.additionalServices");
+//        additionalServicesSubTotal.setValue(totalAdditionalServicesPrice);
+//        additionalServicesSubTotal.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+//        orderTotals.add(additionalServicesSubTotal);
+//
+//
+//        //erp费用
+////        OrderTotal erpSubTotal = new OrderTotal();
+////        erpSubTotal.setModule(Constants.OT_ERP_MODULE_CODE);
+////        erpSubTotal.setOrderTotalType(OrderTotalType.ERP);
+////        erpSubTotal.setOrderTotalCode("order.total.erp");
+////        erpSubTotal.setSortOrder(102);
+////        erpSubTotal.setText("order.total.erp");
+////        erpSubTotal.setValue(erpPrice);
+////        erpSubTotal.setTitle(Constants.OT_ERP_MODULE_CODE);
+////        grandTotal=grandTotal.add(erpPrice);
+//
+//        LOGGER.debug("[caculateOrder] calculate order shipping");
+//        //shipping
+////        if(summary.getShippingSummary()!=null) {
+////            //check handling fees
+////            shippingConfiguration = shippingService.getShippingConfiguration(store);
+////            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {
+////                if(shippingConfiguration.getHandlingFees()!=null && shippingConfiguration.getHandlingFees().doubleValue()>0) {
+////
+////                }
+////            }
+////        }
+//
+//        LOGGER.info("[caculateOrder] calculate order tax");
+//
+////        //tax
+////        List<TaxItem> taxes = taxService.calculateTax(summary, customer, store, language);
+////        if(taxes!=null && taxes.size()>0) {
+////            BigDecimal totalTaxes = new BigDecimal(0);
+////            totalTaxes.setScale(0, RoundingMode.UP);
+////            int taxCount = 200;
+////            for(TaxItem tax : taxes) {
+////
+////                OrderTotal taxLine = new OrderTotal();
+////                taxLine.setModule(Constants.OT_TAX_MODULE_CODE);
+////                taxLine.setOrderTotalType(OrderTotalType.TAX);
+////                taxLine.setOrderTotalCode(tax.getLabel());
+////                taxLine.setSortOrder(taxCount);
+////                taxLine.setTitle(Constants.OT_TAX_MODULE_CODE);
+////                taxLine.setText(tax.getLabel());
+////                taxLine.setValue(tax.getItemPrice());
+////
+////                totalTaxes = totalTaxes.add(tax.getItemPrice());
+////                orderTotals.add(taxLine);
+////                //grandTotal=grandTotal.add(tax.getItemPrice());
+////
+////                taxCount ++;
+////
+////            }
+////            totalSummary.setTaxTotal(totalTaxes);
+////        }
+//
+//        grandTotal = grandTotal.add(totalProductHandlingFeePrice)
+//                .add(erpPrice).add(subTotal)
+//                .add(totalShippingPrice)
+//                .add(totalAdditionalServicesPrice);
+//
+//        // grand total
+//        OrderTotal orderTotal = new OrderTotal();
+//        orderTotal.setModule(Constants.OT_TOTAL_MODULE_CODE);
+//        orderTotal.setOrderTotalType(OrderTotalType.TOTAL);
+//        orderTotal.setOrderTotalCode("order.total.total");
+//        orderTotal.setTitle(Constants.OT_TOTAL_MODULE_CODE);
+//        //orderTotal.setText("order.total.total");
+//        orderTotal.setSortOrder(500);
+//        orderTotal.setValue(grandTotal);
+//
+//        orderTotals.add(orderTotal);
+//
+//        totalSummary.setProductHandlingFeePriceTotal(totalProductHandlingFeePrice);
+//        totalSummary.setErpPriceTotal(erpPrice);
+//        totalSummary.setShippingPriceTotal(totalShippingPrice);
+//        totalSummary.setAdditionalServicesPriceTotal(totalAdditionalServicesPrice);
+//        totalSummary.setTotal(grandTotal);
+//        totalSummary.setTotals(orderTotals);
+//
+//        LogPermUtil.end("OrderService/caculateOrder", start);
+//        return totalSummary;
+//
+//    }
 
 
 
