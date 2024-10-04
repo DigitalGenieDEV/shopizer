@@ -186,6 +186,10 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "merchantStore", cascade = CascadeType.ALL)
 	private Set<MerchantStoreImage> storeImages = Collections.emptySet();
+
+	@Enumerated(EnumType.STRING)
+	@Column (name = "APPROVE_STATUS")
+	private ApproveStatus status = ApproveStatus.WAITING;
 	
 	public Boolean isRetailer() {
 		return retailer;

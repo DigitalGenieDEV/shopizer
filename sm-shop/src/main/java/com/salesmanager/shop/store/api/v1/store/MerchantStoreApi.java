@@ -127,8 +127,25 @@ public class MerchantStoreApi {
 			throw new UnauthorizedException();
 		}
 
-		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI().toString());
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI());
 		return storeFacade.getFullByCode(code, language);
+	}
+
+	@PostMapping(value = { "/private/store/{code}/approve" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Merchant Store Approve", notes = "", response = ReadableMerchantStore.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public ReadableMerchantStore storeApprove(
+			@PathVariable String code,
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception{
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI());
+		return storeFacade.storeApprove(code, language);
 	}
 
 	@GetMapping(value = { "/private/merchant/{code}/stores" }, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -214,6 +214,7 @@ public class ReadableMerchantStorePopulator extends AbstractDataPopulator<Mercha
 			storeImages.add(readableMerchantStoreImage);
 		}
 		target.setStoreImages(storeImages);
+		target.setStatus(source.getStatus());
 		
 		// end
 
