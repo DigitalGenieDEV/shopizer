@@ -68,13 +68,13 @@ public class OrderProductAdditionalServiceInstance extends Entity {
                     .orElse(null);
         }
 
-        public void delReply() {
-            details.removeIf(detail -> detail.getReplyTo() != null);
+        public void delReply(Integer sequence) {
+            details.removeIf(detail -> detail.getReplyTo() != null && Objects.equals(detail.getSequence(), sequence));
         }
 
-        public void updateReply(String content) {
+        public void updateReply(String content, Integer sequence) {
             details.stream()
-                    .filter(detail -> detail.getReplyTo() != null)
+                    .filter(detail -> detail.getReplyTo() != null && Objects.equals(detail.getSequence(), sequence))
                     .findFirst()
                     .ifPresent(detail -> detail.setContext(content));
         }
