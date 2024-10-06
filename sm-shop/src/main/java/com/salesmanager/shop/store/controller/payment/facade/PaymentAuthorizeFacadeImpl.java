@@ -22,10 +22,13 @@ import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.populator.customer.ReadableCombineTransactionPopulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,8 @@ import java.util.Set;
 
 @Service("paymentCallbackFacade")
 public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
+
+    public static final Logger LOG = LoggerFactory.getLogger(PaymentAuthorizeFacadeImpl.class);
 
     @Inject
     private CombinePaymentService combinePaymentService;
@@ -66,6 +71,15 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
         CustomerOrder customerOrder = customerOrderService.getCustomerOrder(Long.valueOf(responseMap.get("orderId")));
         if (customerOrder == null) {
             throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
+        }
+
+        // check pay amount and order amount
+        String payAmount = responseMap.get("amount");
+        BigDecimal pay = new BigDecimal(payAmount);
+        BigDecimal orderAmount = customerOrder.getTotal();
+        if (pay.compareTo(orderAmount) != 0) {
+            LOG.error("pay amount is not equals to order amount. pay amount:{}, order amount:{}, response detail:{}", pay.toPlainString(), orderAmount.toPlainString(), responseMap);
+            throw new ServiceException("pay amount is not equals to order amount. pay amount:" + pay.toPlainString() + ", order amount:" + orderAmount.toPlainString());
         }
 
         Customer customer = customerService.getById(customerOrder.getCustomerId());

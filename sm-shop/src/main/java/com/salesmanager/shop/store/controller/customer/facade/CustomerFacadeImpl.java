@@ -1090,4 +1090,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 		return target;
 	}
+
+	@Override
+	public List<Customer> getCustomerByStoreCode(String storeCode) {
+		return customerService.getListByStoreCode(storeCode);
+	}
 }

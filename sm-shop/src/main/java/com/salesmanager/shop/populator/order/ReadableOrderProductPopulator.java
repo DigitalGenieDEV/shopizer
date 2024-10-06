@@ -11,9 +11,11 @@ import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.business.utils.ObjectConvert;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
@@ -22,6 +24,7 @@ import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shipping.ShippingOption;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
@@ -44,6 +47,7 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -59,7 +63,6 @@ public class ReadableOrderProductPopulator extends
 		AbstractDataPopulator<OrderProduct, ReadableOrderProduct> {
 
 	private AdditionalServicesConvert additionalServicesConvert;
-
 	private ProductVariantService productVariantService;
 	private ReadableProductVariantMapper readableProductVariantMapper;
 	private FulfillmentFacade fulfillmentFacade;
@@ -70,6 +73,8 @@ public class ReadableOrderProductPopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+	private ReadableCategoryMapper readableCategoryMapper;
 
 	private InvoicePackingFormService invoicePackingFormService;
 
@@ -108,6 +113,12 @@ public class ReadableOrderProductPopulator extends
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
 
+		target.setTruckTransportationCompany(source.getTruckTransportationCompany() == null? null : source.getTruckTransportationCompany().name());
+		if(source.getQcInfo() != null){
+			target.setQcInfoId(source.getQcInfo().getId());
+		}
+
+		target.setReadableFulfillmentSubOrder(fulfillmentFacade.queryFulfillmentSubOrderListByProductOrderId(source.getId()));
 
 		if (source.getShippingDocumentOrder() !=null){
 			ReadableShippingDocumentOrder readableShippingDocumentOrder = new ReadableShippingDocumentOrder();
@@ -125,15 +136,22 @@ public class ReadableOrderProductPopulator extends
 						.filter(Objects::nonNull)
 						.collect(Collectors.toList());
 
-				InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(source.getShippingDocumentOrder().getInvoicePackingFormId());
-				if (invoicePackingForm != null) {
-					readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+				if (source.getShippingDocumentOrder().getInvoicePackingFormId()!=null){
+					InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(source.getShippingDocumentOrder().getInvoicePackingFormId());
+					if (invoicePackingForm != null) {
+						readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+					}
 				}
 
 				readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
 			}
 
 			target.setReadableShippingDocumentOrder(readableShippingDocumentOrder);
+		}
+
+		if (source.getDesign() != null) {
+			ReadableOrderProductDesignPopulator readableOrderProductDesignPopulator = new ReadableOrderProductDesignPopulator();
+			target.setReadableOrderProductDesign(readableOrderProductDesignPopulator.populate(source.getDesign(), store, language));
 		}
 
 
@@ -244,13 +262,15 @@ public class ReadableOrderProductPopulator extends
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);
+					populator.setReadableCategoryMapper(readableCategoryMapper);
 					populator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 					ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 					//没用的数据直接返回null
 					ProductVariant productVariant = productVariantService.queryBySku(productSku);
-
-					ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
-					productProxy.setVariants(Collections.singletonList(convert));
+					if (productVariant != null) {
+						ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, store, language, false);
+						productProxy.setVariants(Collections.singletonList(convert));
+					}
 
 					target.setProduct(productProxy);
 					Set<ProductImage> images = product.getImages();
@@ -362,4 +382,14 @@ public class ReadableOrderProductPopulator extends
 	public void setReadableMerchantStorePopulator(ReadableMerchantStorePopulator readableMerchantStorePopulator) {
 		this.readableMerchantStorePopulator = readableMerchantStorePopulator;
 	}
+
+	public ReadableCategoryMapper getReadableCategoryMapper() {
+		return readableCategoryMapper;
+	}
+
+	public void setReadableCategoryMapper(ReadableCategoryMapper readableCategoryMapper) {
+		this.readableCategoryMapper = readableCategoryMapper;
+	}
+
+
 }

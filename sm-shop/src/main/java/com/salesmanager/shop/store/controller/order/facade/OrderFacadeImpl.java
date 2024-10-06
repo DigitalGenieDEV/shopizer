@@ -30,7 +30,7 @@ import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
 import com.salesmanager.core.model.payments.*;
 import com.salesmanager.core.utils.LogPermUtil;
-import com.salesmanager.shop.listener.alibaba.tuna.util.GenericsUtil;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -48,7 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -206,6 +205,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private AdditionalServicesConvert additionalServicesConvert;
 	@Autowired
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+	@Autowired
+	private ReadableCategoryMapper  readableCategoryMapper;
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStore store, Customer customer, ShoppingCart shoppingCart,
@@ -970,12 +971,22 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
+	public ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, OrderCustomerCriteria criteria, Language language) throws Exception {
+		return this.getCustomerReadableOrderList(customer, criteria, store, language);
+	}
+
+	@Override
 	public ReadableOrderList getCustomerReadableOrderList(MerchantStore store, Customer customer, int start, int maxCount, Language language) throws Exception {
 		OrderCustomerCriteria criteria = new OrderCustomerCriteria();
 		criteria.setStartIndex(start);
 		criteria.setMaxCount(maxCount);
 
 		return this.getCustomerReadableOrderList(customer, criteria, store, language);
+	}
+
+	@Override
+	public Map<String, Integer> countCustomerOrderByStatus(MerchantStore merchantStore, Customer customer, OrderCustomerCriteria criteria, Language language) {
+		return orderService.countCustomerOrderByStatus(customer, criteria);
 	}
 
 	@Override
@@ -1077,7 +1088,10 @@ public class OrderFacadeImpl implements OrderFacade {
 			readableOrders.add(readableOrder);
 
 		}
-
+		returnList.setTotalPages(orderList.getTotalPages());
+		returnList.setNumber(orderList.getOrders().size());
+		returnList.setRecordsTotal(orderList.getTotalCount());
+		returnList.setRecordsFiltered(orderList.getOrders().size());
 		returnList.setOrders(readableOrders);
 		return returnList;
 
@@ -1094,10 +1108,13 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
+			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
 			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
+			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
+
 			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 			orderProductPopulator.populate(p, orderProduct, store, language);
@@ -1167,10 +1184,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			com.salesmanager.shop.model.order.v0.ReadableOrder readableOrder = new com.salesmanager.shop.model.order.v0.ReadableOrder();
 			readableOrderPopulator.populate(order, readableOrder, store, language);
 			readableOrders.add(readableOrder);
-
 		}
 
-		returnList.setRecordsTotal(orderList.getTotalCount());
 		return this.populateOrderList(orderList, store, language);
 
 	}
@@ -1223,6 +1238,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, store, language);
@@ -1263,6 +1279,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
 				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
@@ -1804,6 +1821,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
 
 			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 			try {
@@ -1838,6 +1856,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setimageUtils(imageUtils);
 			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
+
 			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 			orderProductPopulator.setProductVariantService(productVariantService);
 			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
@@ -1878,6 +1898,8 @@ public class OrderFacadeImpl implements OrderFacade {
 				orderProductPopulator.setimageUtils(imageUtils);
 				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
 				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
+				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
+
 				orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
 				orderProductPopulator.setProductVariantService(productVariantService);
 				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
@@ -1912,7 +1934,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			List<ReadableShippingDocumentOrder> readableShippingDocumentOrders = new ArrayList<>();
 
-			if (CollectionUtils.isEmpty(readableShippingDocumentOrders)){
+			if (CollectionUtils.isEmpty(content)){
 				return readableList;
 			}
 
@@ -1933,12 +1955,14 @@ public class OrderFacadeImpl implements OrderFacade {
 							.filter(Objects::nonNull)
 							.collect(Collectors.toList());
 
-					InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(shippingDocumentOrder.getInvoicePackingFormId());
-					if (invoicePackingForm != null) {
-						readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
-					}
+					if (shippingDocumentOrder.getInvoicePackingFormId()!=null){
+						InvoicePackingForm invoicePackingForm = invoicePackingFormService.getById(shippingDocumentOrder.getInvoicePackingFormId());
+						if (invoicePackingForm != null) {
+							readableShippingDocumentOrder.setInvoicePackingForm(convertToReadableInvoicePackingForm(invoicePackingForm));
+						}
 
-					readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+						readableShippingDocumentOrder.setGeneralDocuments(readableGeneralDocuments);
+					}
 				}
 				readableShippingDocumentOrders.add(readableShippingDocumentOrder);
 			}
@@ -2034,7 +2058,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		orderProductRepository.updateShippingDocumentOrderIdById(null, orderProductId);
 
-		orderProductRepository.updateIsInShippingOrderById(null, orderProductId);
+		orderProductRepository.updateIsInShippingOrderById(false, orderProductId);
 	}
 
 	@Override

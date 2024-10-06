@@ -3,19 +3,21 @@ package com.salesmanager.core.model.customer.shoppingcart;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
-import com.salesmanager.core.model.shoppingcart.ShoppingCart;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "CUSTOMER_SHOPPING_CART_ITEM")
@@ -85,6 +87,11 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
     @Enumerated(EnumType.STRING)
     private ShippingTransportationType shippingTransportationType;
 
+    @Column(name = "CART_ITEM_TYPE")
+    @Enumerated(EnumType.STRING)
+    @Getter
+    @Setter
+    private CartItemType cartItemType;
 
     /**
      * 货车型号
@@ -92,6 +99,15 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
      */
     @Column(name = "TRUCK_MODEL")
     private String truckModel;
+
+
+    /**
+     * 货车运输公司
+     * @see TruckModelEnums
+     */
+    @Column(name = "TRUCK_TRANSPORTATION_COMPANY")
+    @Enumerated(value = EnumType.STRING)
+    private TruckTransportationCompanyEnums truckTransportationCompany;
 
 
     /**
@@ -326,5 +342,13 @@ public class CustomerShoppingCartItem extends SalesManagerEntity<Long, CustomerS
 
     public void setTruckType(String truckType) {
         this.truckType = truckType;
+    }
+
+    public TruckTransportationCompanyEnums getTruckTransportationCompany() {
+        return truckTransportationCompany;
+    }
+
+    public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
+        this.truckTransportationCompany = truckTransportationCompany;
     }
 }

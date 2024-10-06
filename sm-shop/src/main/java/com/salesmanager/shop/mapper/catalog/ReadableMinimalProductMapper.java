@@ -103,6 +103,13 @@ public class ReadableMinimalProductMapper implements Mapper<Product, ReadableMin
 		} catch (ServiceException e) {
 			throw new ConversionRuntimeException("An error occured during price calculation", e);
 		}
+
+		// sample
+		if (source.getSupportSample() != null) {
+			destination.setSupportSample(source.getSupportSample());
+			destination.setSamplePrice(source.getSamplePrice());
+			destination.setSamplePriceCurrency(source.getSamplePriceCurrency());
+		}
 		
 
 		

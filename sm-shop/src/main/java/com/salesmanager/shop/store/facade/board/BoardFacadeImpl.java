@@ -56,13 +56,13 @@ public class BoardFacadeImpl implements BoardFacade {
 	private ImageFilePath imageUtils;
 
 	public ReadableBoardList getBoardList(String gbn, String keyword, String bbsId, String type, String sdate,
-			String edate, int page, int count) throws Exception {
+			String edate, int page, int count, String userId) throws Exception {
 		try {
 			List<ReadBoard> board = null;
 			List<ReadableBoard> targetList = new ArrayList<ReadableBoard>();
 			ReadableBoardList returnList = new ReadableBoardList();
 			org.springframework.data.domain.Page<ReadBoard> pageable = boardService.getBoardList(gbn, keyword, bbsId,
-					type, sdate, edate, page, count);
+					type, sdate, edate, page, count, userId);
 			board = pageable.getContent();
 			returnList.setRecordsTotal(pageable.getTotalElements());
 			returnList.setTotalPages(pageable.getTotalPages());
@@ -120,6 +120,8 @@ public class BoardFacadeImpl implements BoardFacade {
 	
 	
 	public ReadableBoard getById(int id) throws Exception {
+		
+		boardService.updateViewCnt(id);
 		List<FileEntity> targetList = new ArrayList<FileEntity>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Board data = boardService.getById(id);

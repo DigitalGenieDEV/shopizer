@@ -8,7 +8,8 @@ import java.util.List;
 public class ReadableQcInfo extends QcInfo{
 
 
+    private List<ReadableProductAdditionalService> readableProductAdditionalServices;
 
-    List<ReadableQcInfoHistory> readableQcInfoHistoryList;
+    private List<ReadableQcInfoHistory> readableQcInfoHistoryList;
 
 }

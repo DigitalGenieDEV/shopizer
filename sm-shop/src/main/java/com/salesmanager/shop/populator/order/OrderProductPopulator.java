@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
 import com.salesmanager.core.utils.LogPermUtil;
@@ -87,9 +88,9 @@ public class OrderProductPopulator {
 			target.setProductQuantity(source.getQuantity());
 			target.setSku(source.getSku());
 			target.setProductId(source.getProductId());
-
-			target.setTruckType(StringUtils.isNotEmpty(source.getTruckModel())?
-					TruckTypeEnums.valueOf(source.getTruckModel()) : null);
+			target.setTruckTransportationCompany(source.getTruckTransportationCompany());
+			target.setTruckType(StringUtils.isNotEmpty(source.getTruckType())?
+					TruckTypeEnums.valueOf(source.getTruckType()) : null);
 			target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
 					TruckModelEnums.valueOf(source.getTruckModel()) : null);
 			target.setShippingType(source.getShippingType());

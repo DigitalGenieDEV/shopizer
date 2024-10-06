@@ -34,6 +34,7 @@ public class ReadableBoard {
 	private String modId="";
 	private String modIp="";
 	private String modDate="";
+	private int viewCnt=0;
 	
 	private List<FileEntity> fileList = new ArrayList<FileEntity>();
 	

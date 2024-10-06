@@ -33,9 +33,8 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "BBS_ID", length = 20, nullable = false, updatable = false, columnDefinition = "varchar(20) not null comment '게시판 ID'")
 	private String bbsId;
 
-	@Column(name = "TITLE", length = 50, nullable = false, columnDefinition = "varchar(50) not null comment '제목'")
+	@Column(name = "TITLE", length = 200, nullable = false, columnDefinition = "varchar(200) not null comment '제목'")
 	private String title;
-
 
 	@Lob
 	@Column(name = "CONTENT", nullable = false, columnDefinition = "LONGTEXT not null comment '내용'")
@@ -68,9 +67,11 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 	@Column(name = "STATE", length = 1, nullable = true, columnDefinition = "VARCHAR(20) not null comment '상태'")
 	private String state;
 
+	@Column(name = "VIEWCNT", nullable = true, updatable = false, columnDefinition = "INT(11) not null comment '조회수'")
+	private Integer viewCnt;
 
 	@Lob
-	@Column(name = "REPLY_CONTENT", nullable = true, columnDefinition = "VARCHAR(20) not null comment '답변내용'")
+	@Column(name = "REPLY_CONTENT", nullable = true,  columnDefinition = "VARCHAR(20) not null comment '답변내용'")
 	private String replyContent;
 
 	@Embedded
@@ -186,6 +187,14 @@ public class Board extends SalesManagerEntity<Integer, Board> implements Auditab
 
 	public void setReplyContent(String replyContent) {
 		this.replyContent = replyContent;
+	}
+
+	public Integer getViewCnt() {
+		return viewCnt;
+	}
+
+	public void setViewCnt(Integer viewCnt) {
+		this.viewCnt = viewCnt;
 	}
 
 	public AuditSection2 getAuditSection() {

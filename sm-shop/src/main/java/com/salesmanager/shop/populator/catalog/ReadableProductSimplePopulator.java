@@ -19,6 +19,7 @@ import com.salesmanager.core.model.catalog.product.price.ProductPriceDescription
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.ReadableImage;
@@ -50,6 +51,16 @@ public class ReadableProductSimplePopulator extends
 	private ImageFilePath imageUtils;
 
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+	public ReadableCategoryMapper getReadableCategoryMapper() {
+		return readableCategoryMapper;
+	}
+
+	public void setReadableCategoryMapper(ReadableCategoryMapper readableCategoryMapper) {
+		this.readableCategoryMapper = readableCategoryMapper;
+	}
+
+	private ReadableCategoryMapper readableCategoryMapper;
 
 	public ImageFilePath getimageUtils() {
 		return imageUtils;
@@ -139,8 +150,15 @@ public class ReadableProductSimplePopulator extends
 				target.setType(this.type(source.getType(), language));
 			}
 
+			if (!CollectionUtils.isEmpty(source.getCategories())) {
+				List<ReadableCategory> categoryList = new ArrayList<ReadableCategory>();
+				for (Category category : source.getCategories()) {
+					ReadableCategory readableCategory = readableCategoryMapper.convert(category, store, language);
+					categoryList.add(readableCategory);
 
-
+				}
+				target.setCategories(categoryList);
+			}
 /*			if(source.getProductReviewAvg()!=null) {
 				double avg = source.getProductReviewAvg().doubleValue();
 				double rating = Math.round(avg * 2) / 2.0f;
@@ -213,6 +231,10 @@ public class ReadableProductSimplePopulator extends
 				}
 
 			}
+
+			target.setSupportSample(source.getSupportSample());
+			target.setSamplePrice(source.getSamplePrice());
+			target.setSamplePriceCurrency(source.getSamplePriceCurrency());
 
 			return target;
 

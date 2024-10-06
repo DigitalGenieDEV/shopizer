@@ -8,11 +8,10 @@ import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
-import com.salesmanager.shop.model.fulfillment.ReadableAdditionalServices;
-import com.salesmanager.shop.model.fulfillment.ReadableFulfillmentSubOrder;
-import com.salesmanager.shop.model.fulfillment.ReadableProductAdditionalService;
-import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrder;
+import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.order.transaction.ReadablePayment;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -78,10 +77,22 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	private String truckModel;
 
 	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private String truckTransportationCompany;
+
+
+	/**
 	 * 货车类型
 	 * @see TruckTypeEnums
 	 */
 	private String truckType;
+
+
+	private Long qcInfoId;
 
 
 	private ReadableFulfillmentSubOrder readableFulfillmentSubOrder;
@@ -94,6 +105,9 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 
 	private ReadableShippingDocumentOrder readableShippingDocumentOrder;
+
+	private ReadableOrderProductDesign readableOrderProductDesign;
+
 	private String sku;
 	private String image;
 	public String getProductName() {
@@ -246,6 +260,7 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 		this.truckType = truckType;
 	}
 
+
 	public String getOrderType() {
 		return orderType;
 	}
@@ -260,5 +275,21 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setReadableShippingDocumentOrder(ReadableShippingDocumentOrder readableShippingDocumentOrder) {
 		this.readableShippingDocumentOrder = readableShippingDocumentOrder;
+	}
+
+	public Long getQcInfoId() {
+		return qcInfoId;
+	}
+
+	public void setQcInfoId(Long qcInfoId) {
+		this.qcInfoId = qcInfoId;
+	}
+
+	public ReadableOrderProductDesign getReadableOrderProductDesign() {
+		return readableOrderProductDesign;
+	}
+
+	public void setReadableOrderProductDesign(ReadableOrderProductDesign readableOrderProductDesign) {
+		this.readableOrderProductDesign = readableOrderProductDesign;
 	}
 }

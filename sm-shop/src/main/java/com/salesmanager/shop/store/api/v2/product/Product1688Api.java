@@ -71,9 +71,9 @@ public class Product1688Api {
 		// 存储异常的itemId和对应的错误信息
 		Queue<Long> errorQueue = new ConcurrentLinkedQueue<>();
 
-		int corePoolSize = 100;  // 核心线程数
-		int maxPoolSize = 100;   // 最大线程数
-		int queueCapacity = 400; // 有界队列大小
+		int corePoolSize = 30;  // 核心线程数
+		int maxPoolSize = 30;   // 最大线程数
+		int queueCapacity = 100; // 有界队列大小
 
 		AtomicInteger importCount = new AtomicInteger();
 		AtomicInteger queryCount = new AtomicInteger();
@@ -109,7 +109,7 @@ public class Product1688Api {
 					alibabaProductSearchKeywordQueryParam.setBeginPage(paramData.getBeginPage());
 					alibabaProductSearchKeywordQueryParam.setPageSize(paramData.getPageSize());
 					alibabaProductSearchKeywordQueryParam.setCountry(paramData.getCountry());
-					alibabaProductSearchKeywordQueryParam.setSort("{\"price\":\"asc\"}");
+//					alibabaProductSearchKeywordQueryParam.setSort("{\"price\":\"asc\"}");
 					alibabaProductSearchKeywordQueryParam.setCategoryId(keyword.getCategoryId1688());
 					alibabaProductSearchKeywordQueryParam.setKeyword(keyword.getKeyword());
 
@@ -129,7 +129,7 @@ public class Product1688Api {
 							pageParam.setCountry(paramData.getCountry());
 							pageParam.setKeyword(keyword.getKeyword());
 							pageParam.setCategoryId(keyword.getCategoryId1688());
-							pageParam.setSort("{\"price\":\"asc\"}");
+//							pageParam.setSort("{\"price\":\"asc\"}");
 							return retrySearch(pageParam);
 						});
 					}

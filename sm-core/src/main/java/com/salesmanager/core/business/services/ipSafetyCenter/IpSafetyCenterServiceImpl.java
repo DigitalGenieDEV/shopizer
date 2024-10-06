@@ -29,9 +29,15 @@ public class IpSafetyCenterServiceImpl  extends SalesManagerEntityServiceImpl<In
 	}
 	
 	public Page<ReadIpSafetyCenter> getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword,
-			int page, int count) throws ServiceException{
+			int page, int count, String userId) throws ServiceException{
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableIpSafetyCenterRepository.getIpSafetyList(type, gbn, sdate, edate, keyword, pageRequest);
+		System.out.println("userId"+userId);
+		System.out.println("sdate"+sdate);
+		System.out.println("edate"+edate);
+		System.out.println("type"+type);
+		System.out.println("gbn"+gbn);
+		System.out.println("keyword"+keyword);
+		return pageableIpSafetyCenterRepository.getIpSafetyList(type, gbn, sdate, edate, keyword,userId, pageRequest);
 	}
 	
 	public void saveOrUpdate(IpSafetyCenter data) throws ServiceException {

@@ -241,6 +241,8 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
 
         readableCustomerShoppingCartItem.setTruckType(readableShoppingCartItem.getTruckType());
         readableCustomerShoppingCartItem.setTruckModel(readableShoppingCartItem.getTruckModel());
+        readableCustomerShoppingCartItem.setTruckTransportationCompany(readableShoppingCartItem.getTruckTransportationCompany());
+
         readableCustomerShoppingCartItem.setShippingType(readableShoppingCartItem.getShippingType());
         readableCustomerShoppingCartItem.setShippingTransportationType(readableShoppingCartItem.getShippingTransportationType());
         readableCustomerShoppingCartItem.setNationalTransportationMethod(readableShoppingCartItem.getNationalTransportationMethod());
@@ -248,6 +250,9 @@ public class ReadableCustomerShoppingCartMapper implements Mapper<CustomerShoppi
         readableCustomerShoppingCartItem.setAdditionalServices(readableShoppingCartItem.getReadableProductAdditionalServices());
 
         readableCustomerShoppingCartItem.setInternationalTransportationMethod(readableShoppingCartItem.getInternationalTransportationMethod());
+        readableCustomerShoppingCartItem.setSupportSample(readableShoppingCartItem.getSupportSample());
+        readableCustomerShoppingCartItem.setSamplePrice(readableShoppingCartItem.getSamplePrice());
+        readableCustomerShoppingCartItem.setSamplePriceCurrency(readableShoppingCartItem.getSamplePriceCurrency());
 
         return readableCustomerShoppingCartItem;
     }

@@ -5,12 +5,15 @@ import java.util.List;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.catalog.product.attribute.ProductAttribute;
-import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Compatible with v1
@@ -60,6 +63,13 @@ public class PersistableShoppingCartItem implements Serializable {
 	 */
 	private String truckModel;
 
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private TruckTransportationCompanyEnums truckTransportationCompany;
 
 	/**
 	 * 通关选项
@@ -74,6 +84,13 @@ public class PersistableShoppingCartItem implements Serializable {
 	 * @see TruckTypeEnums
 	 */
 	private String truckType;
+
+	/**
+	 * @see CartItemType
+	 */
+	@Getter
+	@Setter
+	private String itemType;
 
 
 	public String getPromoCode() {

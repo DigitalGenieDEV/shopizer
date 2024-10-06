@@ -24,20 +24,34 @@ public class OrderAdditionalPaymentServiceImpl implements OrderAdditionalPayment
     public void saveOrderAdditionalPayment(OrderAdditionalPayment orderAdditionalPayment) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: saveOrderAdditionalPayment");
         OrderAdditionalPayment payment = findById(orderAdditionalPayment.getId()).orElse(null);
-        if(payment == null)
+        if(payment == null){
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: save");
             repository.save(orderAdditionalPayment);
+            }
         else if(payment.getStatus().equals(OrderAdditionalPaymentStatus.WAITING)) {
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: save");
             repository.save(orderAdditionalPayment);
+        } else {
+            LOGGER.info("OrderAdditionalPaymentServiceImpl :: do not save");
         }
     }
 
     @Override
-    public void requestOrderAdditionalPayment(String id) {
+    public void completeAdditionalPayment(String id) {
+        LOGGER.info("OrderAdditionalPaymentServiceImpl :: completeAdditionalPayment");
+        OrderAdditionalPayment payment = findById(id).orElseThrow(() -> new ResourceNotFoundException("Order Additional Payment with id " + id + " does not exist"));
+        payment.setStatus(OrderAdditionalPaymentStatus.COMPLETE);
+        repository.save(payment);
+    }
+
+    @Override
+    public OrderAdditionalPayment requestOrderAdditionalPayment(String id) {
         LOGGER.info("OrderAdditionalPaymentServiceImpl :: requestOrderAdditionalPayment");
         OrderAdditionalPayment payment = findById(id).orElseThrow(() -> new ResourceNotFoundException("Order Additional Payment with id " + id + " does not exist"));
         payment.setStatus(OrderAdditionalPaymentStatus.REQUEST);
         // 요청 보내는 로직 추가 해야됨
         repository.save(payment);
+        return payment;
     }
 
     @Override

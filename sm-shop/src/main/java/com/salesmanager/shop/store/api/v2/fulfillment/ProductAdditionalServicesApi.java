@@ -30,16 +30,17 @@ public class ProductAdditionalServicesApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductAdditionalServicesApi.class);
 
-    @RequestMapping(value = {"/auth/additional/services", "/private/additional/services"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/additional/services", "/auth/additional/services", "/private/additional/services"}, method = RequestMethod.GET)
     @ApiOperation(httpMethod = "GET", value = "Get additionalServices by merchant code", notes = "Get additionalServices by merchant code")
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
     public CommonResultDTO<List<ReadableAdditionalServices>> getAdditionalServicesByMerchantId(@RequestParam(value = "lang", required = false) String lang,
+                                                  @RequestParam(value = "productType", required = false) String productType,
                                                   @ApiIgnore MerchantStore merchantStore,
                                                   @ApiIgnore Language language) {
         try {
-            List<ReadableAdditionalServices> readableAdditionalServices = additionalServicesFacade.queryAdditionalServicesByMerchantId(Long.valueOf(merchantStore.getId()), language);
+            List<ReadableAdditionalServices> readableAdditionalServices = additionalServicesFacade.queryAdditionalServicesByMerchantIdAndProductType(Long.valueOf(merchantStore.getId()), productType, language);
             return CommonResultDTO.ofSuccess(readableAdditionalServices);
         }catch (Exception e){
             LOGGER.error("Error  to get additionalServices By MerchantId", e);

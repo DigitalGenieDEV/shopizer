@@ -8,6 +8,7 @@ import java.util.Set;
 import com.salesmanager.core.business.services.reference.country.CountryService;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.payments.ImportMainEnums;
@@ -185,16 +186,19 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setOrderType(StringUtils.isEmpty(source.getOrderType())? null : OrderType.valueOf(source.getOrderType()));
 			target.setOrderNo(source.getOrderNo());
 
-			target.setTruckType(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
-					TruckTypeEnums.valueOf(source.getTruckModel()) : null);
-			target.setTruckModel(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getTruckModel())?
+			target.setTruckTransportationCompany(StringUtils.isNotEmpty(source.getTruckTransportationCompany())?
+					TruckTransportationCompanyEnums.valueOf(source.getTruckTransportationCompany()) : null);
+			target.setTruckType(StringUtils.isNotEmpty(source.getTruckType())?
+					TruckTypeEnums.valueOf(source.getTruckType()) : null);
+			target.setTruckModel(StringUtils.isNotEmpty(source.getTruckModel())?
 					TruckModelEnums.valueOf(source.getTruckModel()) : null);
-			target.setShippingType(source.getShippingType() == null ? null : ShippingType.valueOf(source.getShippingType()));
-			target.setShippingTransportationType(source.getShippingTransportationType() ==null ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
-			target.setNationalTransportationMethod(source.getNationalTransportationMethod() == null? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
-			target.setInternationalTransportationMethod(source.getInternationalTransportationMethod() ==null? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
-			target.setPlayThroughOption(org.codehaus.plexus.util.StringUtils.isNotEmpty(source.getPlayThroughOption())?
+			target.setShippingType(StringUtils.isEmpty(source.getShippingType())? null : ShippingType.valueOf(source.getShippingType()));
+			target.setShippingTransportationType(StringUtils.isEmpty(source.getShippingTransportationType()) ? null : ShippingTransportationType.valueOf(source.getShippingTransportationType()));
+			target.setNationalTransportationMethod(StringUtils.isEmpty(source.getNationalTransportationMethod())? null : TransportationMethod.valueOf(source.getNationalTransportationMethod()));
+			target.setInternationalTransportationMethod(StringUtils.isEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
+			target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
 					PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
+
 
 			if(!StringUtils.isBlank(source.getComments())) {
 				OrderStatusHistory statusHistory = new OrderStatusHistory();

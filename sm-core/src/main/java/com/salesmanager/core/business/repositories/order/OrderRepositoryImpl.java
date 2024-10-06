@@ -4,12 +4,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.salesmanager.core.business.utils.RepositoryHelper;
@@ -18,8 +20,7 @@ import com.salesmanager.core.model.common.GenericEntityList;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
@@ -203,8 +204,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			String nameQuery =  " and o.status =:status";
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			String nameQuery =  " and o.status in :status";
 			objectBuilderWhere.append(nameQuery);
 			countBuilderSelect.append(nameQuery);
 		}
@@ -244,9 +245,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 		
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			countQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
-			objectQ.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			countQ.setParameter("status", criteria.getStatus());
+			objectQ.setParameter("status", criteria.getStatus());
 		}
 		
 
@@ -281,11 +282,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		StringBuilder countBuilderSelect = new StringBuilder();
 		StringBuilder objectBuilderSelect = new StringBuilder();
 
-		String orderByCriteria = " order by o.id desc";
+		String orderByCriteria = " order by o.auditSection.dateCreated desc";
 
-		if(criteria.getOrderBy()!=null) {
+		if(criteria.getOrderBy() != null) {
 			if(CriteriaOrderBy.ASC.name().equals(criteria.getOrderBy().name())) {
-				orderByCriteria = " order by o.id asc";
+				orderByCriteria = " order by o.auditSection.dateCreated asc";
 			}
 		}
 
@@ -297,7 +298,26 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		StringBuilder objectBuilderWhere = new StringBuilder();
 
-		String storeQuery =" where o.customerId =:cid";
+		String storeQuery = " where o.customerId =:cid";
+
+		// append sql
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			storeQuery += " AND o.auditSection.dateCreated >= :startTime";
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			storeQuery += " AND o.auditSection.dateCreated <= :endTime";
+		}
+		if (criteria.getOrderStatus() != null) {
+			storeQuery += " and o.status = :status";
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			storeQuery += " and (exists (select oops.id from o.orderProducts oops where oops.productName like :productName) or o.merchant.storename like :productName)";
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			storeQuery += " and o.orderType in :orderType";
+		}
+
+
 		objectBuilderWhere.append(storeQuery);
 		countBuilderSelect.append(storeQuery);
 
@@ -314,6 +334,48 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		countQ.setParameter("cid", customer.getId());
 		objectQ.setParameter("cid", customer.getId());
+
+		// replace placeholder
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			countQ.setParameter("startTime", new Date(criteria.getStartTime()));
+			objectQ.setParameter("startTime", new Date(criteria.getStartTime()));
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			countQ.setParameter("endTime", new Date(criteria.getEndTime()));
+			objectQ.setParameter("endTime", new Date(criteria.getEndTime()));
+		}
+		if (criteria.getOrderStatus() != null) {
+			OrderStatus orderStatusEnum;
+			try {
+				orderStatusEnum = OrderStatus.fromValue(criteria.getOrderStatus().toUpperCase());
+			} catch (Exception ignore) {
+				throw new IllegalArgumentException("Unknown order status:" + criteria.getOrderStatus());
+			}
+
+			countQ.setParameter("status", orderStatusEnum);
+			objectQ.setParameter("status", orderStatusEnum);
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			countQ.setParameter("productName", like(criteria.getProductName()));
+			objectQ.setParameter("productName", like(criteria.getProductName()));
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			OrderType orderTypeEnum;
+			try {
+				orderTypeEnum = OrderType.valueOf(criteria.getOrderType().toUpperCase());
+			} catch (Exception ignore) {
+				throw new IllegalArgumentException("Unknown order type:" + criteria.getOrderType());
+			}
+			List<OrderType> list;
+			if (orderTypeEnum == OrderType.PRODUCT) {
+				list = Lists.newArrayList(OrderType.PRODUCT, OrderType.PRODUCT_1688);
+			} else {
+				list = Lists.newArrayList(orderTypeEnum);
+			}
+
+			countQ.setParameter("orderType", list);
+			objectQ.setParameter("orderType", list);
+		}
 
 		Number count = (Number) countQ.getSingleResult();
 
@@ -336,8 +398,89 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		return orderList;
 	}
 
+	@Override
+	public Map<String, Integer> countCustomerOrderByStatus(Customer customer, OrderCustomerCriteria criteria) {
 
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("select o.status as orderStatus, count(o) as num from Order as o");
+		sqlBuilder.append(" where o.customerId =:cid");
+		// append sql
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			sqlBuilder.append(" AND o.auditSection.dateCreated >= :startTime");
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			sqlBuilder.append(" AND o.auditSection.dateCreated <= :endTime");
+		}
+		if (criteria.getOrderStatus() != null) {
+			sqlBuilder.append(" and o.status in :orderStatus");
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			sqlBuilder.append("and (exists (select pops.id from o.orderProducts oops where oops.productName like :productName) or o.merchant.storename like :productName)");
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			sqlBuilder.append(" and o.orderType in :orderType");
+		}
+		sqlBuilder.append(" group by o.status");
 
+		//count query
+		Query countQ = em.createQuery(sqlBuilder.toString());
+
+		countQ.setParameter("cid", customer.getId());
+		// replace placeholder
+		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
+			countQ.setParameter("startTime", new Date(criteria.getStartTime()));
+		}
+		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
+			countQ.setParameter("endTime", new Date(criteria.getEndTime()));
+		}
+		if (criteria.getOrderStatus() != null) {
+			OrderStatus orderStatusEnum;
+			try {
+				orderStatusEnum = OrderStatus.fromValue(criteria.getOrderStatus().toUpperCase());
+			} catch (Exception ignore) {
+				throw new IllegalArgumentException("Unknown order status:" + criteria.getOrderStatus());
+			}
+
+			countQ.setParameter("status", orderStatusEnum);
+		}
+		if (StringUtils.isNotBlank(criteria.getProductName())) {
+			countQ.setParameter("productName", like(criteria.getProductName()));
+		}
+		if (StringUtils.isNotBlank(criteria.getOrderType())) {
+			OrderType orderTypeEnum;
+			try {
+				orderTypeEnum = OrderType.valueOf(criteria.getOrderType().toUpperCase());
+			} catch (Exception ignore) {
+				throw new IllegalArgumentException("Unknown order type:" + criteria.getOrderType());
+			}
+			List<OrderType> list;
+			if (orderTypeEnum == OrderType.PRODUCT) {
+				list = Lists.newArrayList(OrderType.PRODUCT, OrderType.PRODUCT_1688);
+			} else {
+				list = Lists.newArrayList(orderTypeEnum);
+			}
+
+			countQ.setParameter("orderType", list);
+		}
+
+		List result = countQ.getResultList();
+
+		int totalCount = 0;
+		HashMap<String, Integer> orderStatusCountMap = new HashMap<>();
+		for (Object o : result) {
+			Object[] objects = (Object[]) o;
+			OrderStatus status = (OrderStatus) objects[0];
+			Long num = (Long) objects[1];
+			totalCount += num.intValue();
+			orderStatusCountMap.put(status.toString(), num.intValue());
+        }
+		for (OrderStatus value : OrderStatus.values()) {
+			orderStatusCountMap.merge(value.toString(), 0, Integer::sum);
+		}
+		orderStatusCountMap.put("TOTAL", totalCount);
+
+		return orderStatusCountMap;
+	}
 
 	@Override
 	public OrderList listOrders(MerchantStore store, OrderCriteria criteria) {
@@ -423,8 +566,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			String nameQuery =  " and p.status =:status";
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			String nameQuery =  " and p.status in :status";
 			queryBuilder.append(nameQuery);
 		}
 		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
@@ -435,8 +578,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String nameQuery = " and p.auditSection.dateCreated <= :endTime";
 			queryBuilder.append(nameQuery);
 		}
-		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
-			String nameQuery =  " and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType = :shippingStatus)";
+		if (CollectionUtils.isNotEmpty(criteria.getShippingStatus())) {
+			String nameQuery =  " and exists (select pff.id from p.fulfillmentMainOrder.fulfillSubOrders pff where pff.fulfillmentMainType in :shippingStatus)";
 			queryBuilder.append(nameQuery);
 		}
 		if (StringUtils.isNotBlank(criteria.getOrderType())) {
@@ -511,7 +654,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			query.setParameter("name", like(criteria.getCustomerName()));
 		}
 		//delivery name
-		if(!StringUtils.isEmpty(criteria.getCustomerName())) {
+		if(!StringUtils.isEmpty(criteria.getDeliveryName())) {
 			query.setParameter("deliveryName", like(criteria.getDeliveryName()));
 		}
 
@@ -535,8 +678,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		}
 
 		//status
-		if(!StringUtils.isEmpty(criteria.getStatus())) {
-			query.setParameter("status", OrderStatus.fromValue(criteria.getStatus().toUpperCase()));
+		if(CollectionUtils.isNotEmpty(criteria.getStatus())) {
+			query.setParameter("status", criteria.getStatus());
 		}
 
 		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
@@ -545,8 +688,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			query.setParameter("endTime", new Date(criteria.getEndTime()));
 		}
-		if (StringUtils.isNotBlank(criteria.getShippingStatus())) {
-			query.setParameter("shippingStatus", FulfillmentTypeEnums.valueOf(criteria.getShippingStatus().toUpperCase()));
+		if (CollectionUtils.isNotEmpty(criteria.getShippingStatus())) {
+			query.setParameter("shippingStatus",criteria.getShippingStatus());
 		}
 		if (StringUtils.isNotBlank(criteria.getOrderType())) {
 			query.setParameter("orderType", OrderType.valueOf(criteria.getOrderType().toUpperCase()));

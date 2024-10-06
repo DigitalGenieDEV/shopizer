@@ -8,6 +8,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 import com.salesmanager.core.model.feature.ProductFeature;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import com.salesmanager.core.model.catalog.category.Category;
@@ -272,6 +274,22 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	 */
 	@Column(name="price")
 	private BigDecimal price;
+
+	@Column(name = "SUPPORT_SAMPLE")
+	@Getter
+	@Setter
+	private Boolean supportSample;
+
+	@Column(name = "SAMPLE_PRICE")
+	@Getter
+	@Setter
+	private BigDecimal samplePrice;
+
+	@Column(name = "SAMPLE_PRICE_CURRENCY")
+	@Getter
+	@Setter
+	private String samplePriceCurrency;
+
 
 	private Integer featureSort;
 

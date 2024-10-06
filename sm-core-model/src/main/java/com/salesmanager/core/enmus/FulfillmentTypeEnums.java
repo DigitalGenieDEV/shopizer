@@ -8,11 +8,29 @@ public enum FulfillmentTypeEnums {
     //商品准备
     PROCESSED,
 
+    /**
+     * 中国本地配送中
+     */
+    CHINA_LOCAL_DELIVERY,
+
     ARRIVING_AT_WHW,
 
+    SELLER_QC,
+
+    SELLER_QC_FINISH,
+
+    /**
+     * 跨境运输中
+     */
     CROSS_BORDER_TRANSPORTATION,
 
+    /**
+     * 海关进行中
+     */
+    CUSTOMS_IN_PROGRESS,
+
     ARRIVING_AT_ICW,
+
 
     //配送中
     DELIVERING,

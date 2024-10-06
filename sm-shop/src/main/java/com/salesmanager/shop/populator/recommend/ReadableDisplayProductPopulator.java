@@ -146,6 +146,7 @@ public class ReadableDisplayProductPopulator extends
 
             final Language lang = language;
 
+            target.setPublishWay(source.getPublishWay() == null? null : source.getPublishWay().name());
             target.setId(source.getId());
             target.setAvailable(source.isAvailable());
             target.setProductShipeable(source.isProductShipeable());

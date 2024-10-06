@@ -59,6 +59,7 @@ import com.salesmanager.shop.store.controller.product.facade.ProductCommonFacade
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -189,7 +190,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			productMaterialService.saveAll(collect);
 		}
 
-		if (product.getAnnouncement() !=null) {
+		if (product.getAnnouncement() !=null && CollectionUtils.isNotEmpty(product.getAnnouncement().getAnnouncementFields())) {
 			Boolean result = productAnnouncementAttributeService.existsByProductId(target.getId());
 			if (result){
 				productAnnouncementAttributeService.deleteByProductId(target.getId());
@@ -449,10 +450,10 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void deleteProduct(Long id, MerchantStore store) {
 
 		Validate.notNull(id, "Product id cannot be null");
-		Validate.notNull(store, "store cannot be null");
 
 		Product p = productService.getById(id);
 
@@ -460,10 +461,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			throw new ResourceNotFoundException("Product with id [" + id + " not found");
 		}
 
-		if (p.getMerchantStore().getId().intValue() != store.getId().intValue()) {
-			throw new ResourceNotFoundException(
-					"Product with id [" + id + " not found for store [" + store.getCode() + "]");
-		}
 
 		try {
 			deleteProductsInParallel(p);
@@ -473,7 +470,7 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void deleteProductsInParallel(Product product) throws ServiceException {
 		productMaterialService.deleteProductMaterialByProductId(product.getId());
 

@@ -6,11 +6,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.google.inject.Inject;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
-import com.salesmanager.core.model.catalog.product.Material;
-import com.salesmanager.core.model.catalog.product.ProductMaterial;
-import com.salesmanager.core.model.catalog.product.PublishWayEnums;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
+import com.salesmanager.core.model.catalog.product.*;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,7 +28,6 @@ import com.salesmanager.core.business.services.catalog.product.type.ProductTypeS
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.category.Category;
-import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
@@ -88,6 +88,9 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	@Autowired
 	private ProductRepository productRepository;
 
+	@Inject
+	private ExchangeRateConfig exchangeRateConfig;
+
 	@Override
 	public Product convert(PersistableProduct source, MerchantStore store, Language language) {
 		Product product = new Product();
@@ -141,6 +144,22 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				destination.setGeneralMixedBatch(source.getGeneralMixedBatch());
 			}
 
+			// SAMPLE
+			if (Boolean.TRUE.equals(source.getSupportSample())) {
+				destination.setSupportSample(source.getSupportSample());
+				// Check sample price
+				BigDecimal rate = exchangeRateConfig.getRate(ExchangeRateEnums.KRW_USD);
+				BigDecimal usdPrice = rate.multiply(source.getSamplePrice());
+				if (usdPrice.compareTo(new BigDecimal("150")) > 0) {
+					throw new ConversionRuntimeException("Sample price can not be greater than 150 USD");
+				}
+				// sample price unit is WON， should convert to CNY
+				BigDecimal krw2cnyRate = exchangeRateConfig.getRate(ExchangeRateEnums.KRW_CNY);
+				BigDecimal cnyPrice = krw2cnyRate.multiply(source.getSamplePrice());
+				destination.setSamplePrice(cnyPrice);
+				destination.setSamplePriceCurrency("CNY");
+			}
+
 			//MANUFACTURER
 			if(!StringUtils.isBlank(source.getManufacturer())) {
 				Manufacturer manufacturer = manufacturerService.getByCode(store, source.getManufacturer());
@@ -179,7 +198,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			 * SPEIFICATIONS
 			 */
 			if(source.getProductSpecifications()!=null) {
-				System.out.println("source.getProductSpecifications().getLength()"+source.getProductSpecifications().getLength());
 				destination.setProductHeight(source.getProductSpecifications().getHeight());
 				destination.setProductLength(source.getProductSpecifications().getLength());
 				destination.setProductWeight(source.getProductSpecifications().getWeight());

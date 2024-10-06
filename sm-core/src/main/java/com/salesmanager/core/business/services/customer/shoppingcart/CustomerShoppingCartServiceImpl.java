@@ -1,22 +1,28 @@
 package com.salesmanager.core.business.services.customer.shoppingcart;
 
 import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.customer.shoppingcart.CustomerShoppingCartItemRepository;
 import com.salesmanager.core.business.repositories.customer.shoppingcart.CustomerShoppingCartRepository;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
+import com.salesmanager.core.business.utils.ExchangeRateConfig;
+import com.salesmanager.core.business.utils.ProductPriceUtils;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
+import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
 import com.salesmanager.core.model.common.UserContext;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.shipping.CartItemType;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +51,12 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
     @Inject
     private ProductAttributeService productAttributeService;
+    @Autowired
+    private ExchangeRateConfig exchangeRateConfig;
+    @Autowired
+    private ProductPriceUtils priceUtil;
 
+    @Inject
     public CustomerShoppingCartServiceImpl(CustomerShoppingCartRepository customerShoppingCartRepository) {
         super(customerShoppingCartRepository);
         this.customerShoppingCartRepository = customerShoppingCartRepository;
@@ -181,9 +192,26 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
 
         // TODO attributes
         // set item price
-        FinalPrice price = pricingService.calculateProductPrice(product, false);
-        item.setItemPrice(price.getFinalPrice());
-        item.setFinalPrice(price);
+        boolean isSampleCartItemType = CartItemType.SAMPLE.equals(item.getCartItemType());
+        if (isSampleCartItemType) {
+            // use sample price
+            FinalPrice finalPrice = new FinalPrice();
+            BigDecimal samplePrice = product.getSamplePrice();;
+            if ("CNY".equals(product.getSamplePriceCurrency())) {
+                samplePrice = exchangeRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(product.getSamplePrice());
+            }
+            finalPrice.setOriginalPrice(samplePrice);
+            finalPrice.setFinalPrice(samplePrice);
+            finalPrice.setProductPrice(new ProductPriceDO());
+            finalPrice.setStringPrice(priceUtil.getStringAmount(samplePrice));
+            item.setFinalPrice(finalPrice);
+            item.setItemPrice(samplePrice);
+        } else {
+            FinalPrice price = pricingService.calculateProductPrice(product, false);
+            item.setItemPrice(price.getFinalPrice());
+            item.setFinalPrice(price);
+        }
+
 
         BigDecimal subTotal = item.getItemPrice().multiply(new BigDecimal(item.getQuantity()));
         item.setSubTotal(subTotal);

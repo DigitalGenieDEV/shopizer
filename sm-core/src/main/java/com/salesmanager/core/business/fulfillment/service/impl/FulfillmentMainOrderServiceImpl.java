@@ -3,6 +3,7 @@ package com.salesmanager.core.business.fulfillment.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.fulfillment.service.*;
 import com.salesmanager.core.business.repositories.fulfillment.FulfillmentMainOrderRepository;
+import com.salesmanager.core.business.repositories.order.OrderRepository;
 import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.enmus.*;
@@ -44,6 +45,9 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
     @Autowired
     private OrderProductRepository orderProductRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
 
     @Inject
     public FulfillmentMainOrderServiceImpl(FulfillmentMainOrderRepository fulfillmentMainOrderRepository) {
@@ -82,8 +86,14 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         fulfillmentMainOrder.setPartialDelivery(false);
         fulfillmentMainOrder.setDelivery(order.getDelivery());
         fulfillmentMainOrder.setBilling(order.getBilling());
+        // 设置 Order 的 FulfillmentMainOrder 属性
+        order.setFulfillmentMainOrder(fulfillmentMainOrder);
+
         fulfillmentMainOrder.setOrder(order);
+        // 先保存 FulfillmentMainOrder
         fulfillmentMainOrderRepository.save(fulfillmentMainOrder);
+        // 再保存 Order，确保两者关系更新
+        orderRepository.save(order);
         return fulfillmentMainOrder;
     }
 
@@ -119,7 +129,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         QcInfo qcInfo = new QcInfo();
         qcInfo.setOrderId(order.getId());
         qcInfo.setProductId(orderProduct.getProductId());
-        qcInfo.setOrderId(orderProduct.getId());
+        qcInfo.setOrderProductId(orderProduct.getId());
         qcInfo.setStatus(status);
         Long id = qcInfoService.saveQcInfo(qcInfo);
         orderProductRepository.updateQcInfoIdByOrderProductId(id, orderProduct.getId());
@@ -130,6 +140,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
         FulfillmentSubOrder fulfillmentSubOrder = new FulfillmentSubOrder();
         fulfillmentSubOrder.setFulfillmentMainType(FulfillmentTypeEnums.PAYMENT_COMPLETED);
         fulfillmentSubOrder.setTruckModel(orderProduct.getTruckModel());
+        fulfillmentSubOrder.setTruckTransportationCompany(orderProduct.getTruckTransportationCompany());
         fulfillmentSubOrder.setTruckType(orderProduct.getTruckType());
         fulfillmentSubOrder.setNationalTransportationMethod(orderProduct.getNationalTransportationMethod());
         fulfillmentSubOrder.setShippingType(orderProduct.getShippingType());

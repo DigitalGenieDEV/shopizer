@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.controller.crossorder.facade;
 
+import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.alibaba.param.*;
 import com.salesmanager.core.business.constants.CrossOrderConstants;
 import com.salesmanager.core.business.exception.ServiceException;
@@ -11,9 +12,11 @@ import com.salesmanager.core.business.services.crossorder.SupplierCrossOrderServ
 import com.salesmanager.core.business.services.purchaseorder.PurchaseOrderService;
 import com.salesmanager.core.business.services.purchaseorder.supplier.PurchaseSupplierOrderProductService;
 import com.salesmanager.core.business.services.purchaseorder.supplier.PurchaseSupplierOrderService;
+import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.crossorder.SupplierCrossOrder;
 import com.salesmanager.core.model.crossorder.SupplierCrossOrderProduct;
 import com.salesmanager.core.model.crossorder.logistics.*;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.purchaseorder.*;
 import com.salesmanager.shop.listener.AlibabaOpenMessageListener;
 import com.salesmanager.shop.mapper.crossorder.ReadableSupplierCrossOrderLogisticsMapper;
@@ -22,6 +25,7 @@ import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrder;
 import com.salesmanager.shop.model.crossorder.ReadableSupplierCrossOrderLogistics;
 import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsMsg;
 import com.salesmanager.shop.model.crossorder.SupplierCrossOrderLogisticsStatusChangeMsg;
+import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.purchaseorder.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -69,6 +73,10 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
 
     @Autowired
     private ReadableSupplierCrossOrderMapper readableSupplierCrossOrderMapper;
+
+
+    @Autowired
+    private FulfillmentFacade fulfillmentFacade;
 
     @Override
     public List<ReadableSupplierCrossOrderLogistics> processSupplierCrossOrderLogisticsMsg(SupplierCrossOrderLogisticsMsg msg) throws ServiceException {
@@ -379,6 +387,23 @@ public class SupplierCrossOrderFacadeImpl implements SupplierCrossOrderFacade{
 
                 purchaseSupplierOrderProductService.saveAndUpdate(purchaseSupplierOrderProduct);
             });
+
+            //处理履约单状态
+            if (purchaseSupplierOrderProductStatus == PurchaseSupplierOrderProductStatus.SHIPPED ||
+                    purchaseSupplierOrderProductStatus == PurchaseSupplierOrderProductStatus.RECEIVED){
+                Set<SupplierCrossOrderProduct> products = supplierCrossOrder.getProducts();
+                List<Long> orderProductIds = products.stream().map(product -> {
+                    return product.getPsoOrderProduct().getOrderProduct().getId();
+                }).collect(Collectors.toList());
+                //更新履约单状态
+                if (purchaseSupplierOrderProductStatus == PurchaseSupplierOrderProductStatus.SHIPPED ){
+                    fulfillmentFacade.updateFulfillmentOrderStatusByProductOrderId(orderProductIds, FulfillmentTypeEnums.CHINA_LOCAL_DELIVERY.name());
+                }
+                if (purchaseSupplierOrderProductStatus == PurchaseSupplierOrderProductStatus.RECEIVED ){
+                    fulfillmentFacade.updateFulfillmentOrderStatusByProductOrderId(orderProductIds, FulfillmentTypeEnums.ARRIVING_AT_WHW.name());
+                }
+            }
+
         });
 
 

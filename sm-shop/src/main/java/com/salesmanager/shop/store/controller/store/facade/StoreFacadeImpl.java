@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import com.salesmanager.core.model.merchant.ApproveStatus;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.drools.core.util.StringUtils;
@@ -129,6 +130,20 @@ public class StoreFacadeImpl implements StoreFacade {
 	@Override
 	public ReadableMerchantStore getFullByCode(String code, Language language) {
 		MerchantStore store = getMerchantStoreByCode(code);
+		return convertMerchantStoreToReadableMerchantStoreWithFullDetails(language, store);
+	}
+
+	@Override
+	public ReadableMerchantStore storeApprove(String code, Language language) {
+		MerchantStore store = getMerchantStoreByCode(code);
+
+		store.setStatus(ApproveStatus.APPROVE);
+		try {
+			merchantStoreService.saveOrUpdate(store);
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
+
 		return convertMerchantStoreToReadableMerchantStoreWithFullDetails(language, store);
 	}
 

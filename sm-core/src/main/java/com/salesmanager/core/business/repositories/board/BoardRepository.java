@@ -23,4 +23,12 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 				+ "WHERE ID = :#{#board.id} "
 				, nativeQuery = true)
 	void updateReplyContent(@Param("board") Board board);
+	
+	
+	@Modifying
+	@Query(value ="UPDATE BOARD SET "
+				+ "VIEWCNT = (VIEWCNT + 1) "
+				+ "WHERE ID = ?1 "
+				, nativeQuery = true)
+	void updateViewCnt(Integer id);
 }

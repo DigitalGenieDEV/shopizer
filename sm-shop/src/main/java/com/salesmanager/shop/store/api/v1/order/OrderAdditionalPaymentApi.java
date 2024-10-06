@@ -5,12 +5,19 @@ import com.salesmanager.core.business.services.order.OrderAdditionalPaymentServi
 import com.salesmanager.core.model.order.OrderAdditionalPayment;
 import com.salesmanager.shop.model.order.v1.PersistableOrderAdditionalPayment;
 import com.salesmanager.shop.model.order.v1.ReadableOrderAdditionalPayment;
+import com.salesmanager.shop.model.references.KakaoAlim;
+import com.salesmanager.shop.model.references.KakaoAlimRequest;
+import com.salesmanager.shop.model.references.KakaoTemplateCode;
+import com.salesmanager.shop.model.references.NicepayPayment;
 import com.salesmanager.shop.populator.order.PersistableOrderAdditionalPaymentPopulator;
 import com.salesmanager.shop.populator.order.ReadableOrderAdditionalPaymentPopulator;
+import com.salesmanager.shop.store.clients.external.ExternalClient;
+import com.salesmanager.shop.store.clients.payments.PaymentClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
+import org.opensearch.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -27,6 +34,9 @@ public class OrderAdditionalPaymentApi {
     private final OrderAdditionalPaymentService service;
     private final PersistableOrderAdditionalPaymentPopulator persistableOrderAdditionalPaymentPopulator;
     private final ReadableOrderAdditionalPaymentPopulator readableOrderAdditionalPaymentPopulator;
+    private final ExternalClient externalClient;
+    private final PaymentClient paymentClient;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderAdditionalPaymentApi.class);
 
     @RequestMapping(
@@ -44,7 +54,28 @@ public class OrderAdditionalPaymentApi {
     }
 
     @RequestMapping(
-            value = {"/private/order/{id}/additional/payment"},
+            value = {"/auth/order/{id}/additional/payment/complete", "/private/order/{id}/additional/payment/complete"},
+            method = RequestMethod.POST)
+    @ResponseBody
+    public void completeAdditionalPayment(
+            @PathVariable final String id,
+            @RequestParam final String orderId
+    ) {
+        LOGGER.info("OrderAdditionalPaymentApi :: completeAdditionalPayment id: {}", id);
+        NicepayPayment payment = paymentClient.getNicepayPayments(orderId);
+        if(payment != null) {
+            if(payment.getResultCode().equals("0000")) {
+                service.completeAdditionalPayment(id);
+            } else {
+                throw new ResourceNotFoundException("Nice Payment Info with id " + orderId + " does not paid");
+            }
+        } else {
+            throw new ResourceNotFoundException("Nice Payment Info with id " + orderId + " does not exist");
+        }
+    }
+
+    @RequestMapping(
+            value = {"/private/order/{id}/additional/payment", "/auth/order/{id}/additional/payment"},
             method = RequestMethod.GET)
     @ResponseBody
     public ReadableOrderAdditionalPayment getAdditionalPayment(
@@ -60,9 +91,22 @@ public class OrderAdditionalPaymentApi {
             method = RequestMethod.POST)
     @ResponseBody
     public void requestAdditionalPayment(
-            @PathVariable final String id
-    ) {
+            @PathVariable final String id,
+            @RequestBody KakaoAlim body
+            ) throws Exception {
         LOGGER.info("OrderAdditionalPaymentApi :: requestAdditionalPayment id: {}", id);
-        service.requestOrderAdditionalPayment(id);
+        OrderAdditionalPayment payment = service.requestOrderAdditionalPayment(id);
+        ReadableOrderAdditionalPayment result = readableOrderAdditionalPaymentPopulator.populate(payment, new ReadableOrderAdditionalPayment() ,null ,null);
+        body.getValues().put("payment_reason", "2차 결제");
+        body.getValues().put("amount_requested", String.valueOf(result.getAdditionalPaymentTotal().intValue()));
+
+        externalClient.sendAlimTalk(
+                KakaoAlimRequest.builder()
+                        .templateCode(KakaoTemplateCode.ORDER_PREX)
+                        .to(body.getTo())
+                        .values(body.getValues())
+                        .ref(body.getRef())
+                        .build()
+        );
     }
 }

@@ -4,6 +4,9 @@ public interface ReadUserMenu {
 	 Integer getId();
 	 Integer getParent_Id();
 	 String getMenu_Name();
+	 String getMenu_Name_En();
+	 String getMenu_Name_Cn();
+	 String getMenu_Name_Jp();
 	 String getMenu_Desc();
 	 String getUrl();
 	 String getTop();

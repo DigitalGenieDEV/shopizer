@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.payment.CreditCard;
@@ -15,6 +16,12 @@ import com.salesmanager.core.model.shipping.TransportationMethod;
 import com.salesmanager.shop.model.fulfillment.ReadableGeneralDocument;
 import com.salesmanager.shop.model.order.total.OrderTotal;
 import com.salesmanager.shop.model.order.v0.Order;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 public class OrderEntity extends Order implements Serializable {
 
@@ -72,6 +79,15 @@ public class OrderEntity extends Order implements Serializable {
 	 * @see TruckModelEnums
 	 */
 	private String truckModel;
+
+
+	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Getter
+	@Setter
+	private String truckTransportationCompany;
 
 
 	/**

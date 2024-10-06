@@ -1,13 +1,12 @@
 package com.salesmanager.shop.model.customer.shoppingcart;
 
-import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
-import com.salesmanager.core.model.shipping.ShippingTransportationType;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
-import com.salesmanager.shop.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.shop.model.fulfillment.PersistableProductAdditionalService;
 import lombok.Data;
 
@@ -15,9 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class PersistableCustomerShoppingCartItem implements Serializable {
@@ -68,6 +65,12 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
      */
     private String truckModel;
 
+    /**
+     * 货车运输公司
+     * @see TruckModelEnums
+     */
+    private String truckTransportationCompany;
+
 
     /**
      * 货车类型
@@ -82,5 +85,10 @@ public class PersistableCustomerShoppingCartItem implements Serializable {
      */
     private String playThroughOption;
 
-
+    /**
+     * cart item type, include NORMAL and SAMPLE
+     *
+     * @see CartItemType
+     */
+    private String cartItemType;
 }

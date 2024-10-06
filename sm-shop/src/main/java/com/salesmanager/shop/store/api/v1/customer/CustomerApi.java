@@ -340,5 +340,4 @@ public class CustomerApi {
 		List<ReadableCustomerTerms> values =  customerTermsFacade.findByCustomerId(id, merchantStore, language);
 		return values;
 	}
-
 }

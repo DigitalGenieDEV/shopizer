@@ -47,7 +47,7 @@ public class DocumentationConfiguration {
 //	private static final String HOST = "3.35.47.170:8080";
 
 
-//	private static final String HOST = "52.79.223.118:8080";
+//	private static final String HOST = "52.79.160.169:8080";
 
 //	private static final String HOST = "localhost:8080";
 

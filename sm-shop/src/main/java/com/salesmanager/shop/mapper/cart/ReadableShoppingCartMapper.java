@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.model.entity.ReadableDescription;
 import com.salesmanager.shop.model.fulfillment.facade.AdditionalServicesFacade;
@@ -180,6 +181,8 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 					shoppingCartItem.setTruckType(item.getTruckType());
 					shoppingCartItem.setTruckModel(item.getTruckModel());
+					shoppingCartItem.setTruckTransportationCompany(item.getTruckTransportationCompany() == null? null : item.getTruckTransportationCompany().name());
+
 					shoppingCartItem.setPlayThroughOption(item.getPlayThroughOption());
 					shoppingCartItem.setShippingType(item.getShippingType() == null? null : item.getShippingType().name());
 					shoppingCartItem.setShippingTransportationType(item.getShippingTransportationType()== null? null : item.getShippingTransportationType().name());

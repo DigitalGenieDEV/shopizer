@@ -5,10 +5,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,10 @@ import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.modules.AnnouncementInfo;
+import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAnnouncementAttributeRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductAttributeRepository;
+import com.salesmanager.core.business.repositories.catalog.product.feature.ProductFeatureRepository;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
@@ -108,6 +113,11 @@ import springfox.documentation.annotations.ApiIgnore;
 		@Tag(name = "Product management resource, add product to category", description = "View product, Add product, edit product and delete product") })
 public class ProductApiV2 {
 
+	@Autowired
+	private ProductAnnouncementAttributeRepository productAnnouncementAttributeRepository;
+
+	@Autowired
+	private ProductAttributeRepository productAttributeRepository;
 
 	@Autowired
 	private ProductDefinitionFacade productDefinitionFacade;
@@ -134,6 +144,9 @@ public class ProductApiV2 {
 	private ProductService productService;
 
 	@Autowired
+	private ProductFeatureRepository productFeatureRepository;
+
+	@Autowired
 	private AlibabaProductFacade alibabaProductFacade;
 
 	@Autowired
@@ -147,6 +160,9 @@ public class ProductApiV2 {
 
 	@Autowired
 	private SellerTextInfoFacade sellerTextInfoFacade;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductApiV2.class);
 	
@@ -1147,6 +1163,48 @@ public class ProductApiV2 {
 	}
 
 
+
+
+
+	@RequestMapping(value = "/private/delete/products/categoryIds", method = RequestMethod.POST)
+	@ApiOperation(httpMethod = "POST", value = "Delete products by category IDs", notes = "Delete products for the given category IDs")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Products deleted successfully") })
+	@ResponseBody
+	public CommonResultDTO<Void> deleteProductsByCategoryIds(@RequestBody List<Long> categoryIds) {
+		ExecutorService executorService = Executors.newFixedThreadPool(50); // 创建线程池
+		List<Future<Void>> futures = new ArrayList<>();
+
+		for (Long categoryId : categoryIds) {
+			List<Long> productIdsByCategoryId = productRepository.findProductIdsByCategoryId(categoryId);
+			if (CollectionUtils.isEmpty(productIdsByCategoryId)) {
+				continue;
+			}
+
+			for (Long id : productIdsByCategoryId) {
+				futures.add(executorService.submit(() -> {
+					try {
+						productCommonFacade.deleteProduct(id, null);
+					} catch (Exception e) {
+						LOGGER.error("deleteProductsByCategoryIds error for productId: " + id, e);
+					}
+					return null;
+				}));
+			}
+		}
+
+		// 等待所有任务完成
+		for (Future<Void> future : futures) {
+			try {
+				future.get(); // 等待任务完成
+			} catch (InterruptedException | ExecutionException e) {
+				LOGGER.error("Error while deleting product", e);
+			}
+		}
+
+		executorService.shutdown(); // 关闭线程池
+		return CommonResultDTO.ofSuccess();
+	}
 
 
 

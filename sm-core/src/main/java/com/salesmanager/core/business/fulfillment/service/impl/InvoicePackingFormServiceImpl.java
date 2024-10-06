@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.fulfillment.service.impl;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
 import com.salesmanager.core.business.repositories.fulfillment.InvoicePackingFormRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 
 @Service("invoicePackingFormService")
 public class InvoicePackingFormServiceImpl extends SalesManagerEntityServiceImpl<Long, InvoicePackingForm>  implements InvoicePackingFormService {
@@ -32,12 +35,12 @@ public class InvoicePackingFormServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public InvoicePackingForm queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId) {
+    public List<InvoicePackingForm> queryInvoicePackingFormByOrderIdAndProductId(Long orderId, Long productId) {
         return invoicePackingFormRepository.queryInvoicePackingFormByOrderIdAndProductId(orderId, productId);
     }
 
     @Override
-    public InvoicePackingForm queryInvoicePackingFormByOrderId(Long orderId) {
+    public List<InvoicePackingForm> queryInvoicePackingFormByOrderId(Long orderId) {
         return invoicePackingFormRepository.queryInvoicePackingFormByOrderId(orderId);
     }
 }

@@ -11,6 +11,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
@@ -18,9 +19,12 @@ import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.shipping.CartItemType;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.core.model.shipping.TransportationMethod;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
@@ -138,6 +142,15 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 
 	/**
+	 * 货车运输公司
+	 * @see TruckModelEnums
+	 */
+	@Column(name = "TRUCK_TRANSPORTATION_COMPANY")
+	@Enumerated(value = EnumType.STRING)
+	private TruckTransportationCompanyEnums truckTransportationCompany;
+
+
+	/**
 	 * 货车类型
 	 * @see TruckTypeEnums
 	 */
@@ -151,6 +164,13 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 	 */
 	@Column(name = "PLAY_THROUGH_OPTION")
 	private String playThroughOption;
+
+
+	@Column(name = "CART_ITEM_TYPE")
+	@Enumerated(EnumType.STRING)
+	@Getter
+	@Setter
+	private CartItemType cartItemType;
 
 
 
@@ -366,5 +386,13 @@ public class ShoppingCartItem extends SalesManagerEntity<Long, ShoppingCartItem>
 
 	public void setTruckType(String truckType) {
 		this.truckType = truckType;
+	}
+
+	public TruckTransportationCompanyEnums getTruckTransportationCompany() {
+		return truckTransportationCompany;
+	}
+
+	public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
+		this.truckTransportationCompany = truckTransportationCompany;
 	}
 }

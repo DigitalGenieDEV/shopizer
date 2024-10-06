@@ -123,6 +123,7 @@ public class CustomerShoppingCartCalculationServiceImpl implements CustomerShopp
 
         shoppingCartItem.setTruckType(customerShoppingCartItem.getTruckType());
         shoppingCartItem.setTruckModel(customerShoppingCartItem.getTruckModel());
+        shoppingCartItem.setTruckTransportationCompany(customerShoppingCartItem.getTruckTransportationCompany());
         shoppingCartItem.setPlayThroughOption(customerShoppingCartItem.getPlayThroughOption());
         shoppingCartItem.setShippingType(customerShoppingCartItem.getShippingType());
         shoppingCartItem.setShippingTransportationType(customerShoppingCartItem.getShippingTransportationType());

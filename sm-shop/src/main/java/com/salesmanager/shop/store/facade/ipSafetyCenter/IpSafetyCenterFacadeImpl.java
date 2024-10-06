@@ -40,13 +40,13 @@ public class IpSafetyCenterFacadeImpl implements IpSafetyCenterFacade {
 	private ObjectMapper objectMapper;
 	
 	public ReadableIpSafetyCenterList getIpSafetyList(String type, String gbn, String sdate, String edate, String keyword,
-			int page, int count) throws Exception{
+			int page, int count, String userId) throws Exception{
 		
 		try {
 			List<ReadIpSafetyCenter> ipsafeCenter = null;
 			List<IpSafetyCenterEntity> targetList = new ArrayList<IpSafetyCenterEntity>();
 			ReadableIpSafetyCenterList returnList = new ReadableIpSafetyCenterList();
-			Page<ReadIpSafetyCenter> pageable = ipSafetyCenterService.getIpSafetyList(type,gbn, sdate,edate, keyword, page, count);
+			Page<ReadIpSafetyCenter> pageable = ipSafetyCenterService.getIpSafetyList(type,gbn, sdate,edate, keyword, page, count, userId);
 			ipsafeCenter = pageable.getContent();
 			returnList.setRecordsTotal(pageable.getTotalElements());
 			returnList.setTotalPages(pageable.getTotalPages());
