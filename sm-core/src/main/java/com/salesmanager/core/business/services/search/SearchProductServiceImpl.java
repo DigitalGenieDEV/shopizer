@@ -72,6 +72,7 @@ public class SearchProductServiceImpl implements SearchProductService{
 //            }
 //        }
 //        products.add(productResult);
+
         SearchProductResult searchProductResult = new SearchProductResult();
         searchProductResult.setProductResults(productResults);
         searchProductResult.setHitNumber(searchResult.getHitNumber());
@@ -119,7 +120,15 @@ public class SearchProductServiceImpl implements SearchProductService{
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String response = "";
         try {
+            //tmpzk1
+            long startTime = System.currentTimeMillis();
+
             response = lambdaInvokeService.invoke(LAMBDA_SR_SEARCH, objectMapper.writeValueAsString(request));
+
+            //tmpzk1
+            long endTime = System.currentTimeMillis();
+//            System.out.println("SpentTime-2-1: " + (endTime - startTime) + " ms");
+
             return objectMapper.readValue(response, SearchResult.class);
         } catch (Exception e) {
             System.out.println(e.getMessage());

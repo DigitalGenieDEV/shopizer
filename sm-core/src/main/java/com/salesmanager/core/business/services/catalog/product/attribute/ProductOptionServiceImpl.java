@@ -39,11 +39,15 @@ public class ProductOptionServiceImpl extends
 	
 	@Override
 	public List<ProductOption> listByStore(MerchantStore store, Language language) throws ServiceException {
-		
-		
+
 		return productOptionRepository.findByStoreId(store.getId(), language.getId());
 		
 		
+	}
+	//tmpzk2
+	@Override
+	public List<ProductOption> getByIds(List<Long> optionIds, Language language) {
+		return productOptionRepository.findByIds(optionIds, language.getId());
 	}
 	
 	@Override

@@ -22,9 +22,11 @@ public class LambdaInvokeServiceImpl implements LambdaInvokeService {
 
     @Override
     public String invoke(String functionName, String payload) throws Exception {
+
         InvokeRequest invokeRequest = new InvokeRequest()
                 .withFunctionName(functionName)
-                .withPayload(payload);
+                .withPayload(payload)
+                .withQualifier("1");//tmpzk2
 
         InvokeResult invokeResult = null;
 

@@ -30,6 +30,9 @@ public interface ProductOptionValueService extends SalesManagerEntityService<Lon
 
 
 	ProductOptionValue getById(MerchantStore store, Long optionValueId);
+
+	//tmpzk2
+	List<ProductOptionValue> getByIds(List<Long> optionValueIds, Language language);
 	
 	Page<ProductOptionValue> getByMerchant(MerchantStore store, Language language, String name, int page, int count);
 	

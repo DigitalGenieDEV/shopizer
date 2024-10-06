@@ -249,11 +249,15 @@ public class SearchFacadeImpl implements SearchFacade {
 		searchProductRequest.setDeviceid(searchProductRequestV2.getDeviceId());
 		searchProductRequest.setSort(searchProductRequestV2.getSort());
 		searchProductRequest.setSortOrder(searchProductRequestV2.getSortOrder());
+
 		SearchProductResult searchProductResult = searchProductService.search(searchProductRequest);
 
-
+		//tmpzk1
+//		long startTime1 = System.currentTimeMillis();
 
 		ReadableSearchResult result = new ReadableSearchResult();
+
+		//Get display product info: details
 		for(ProductResult productResult : searchProductResult.getProductResults()) {
 			//create new proxy product
 			ReadableDisplayProduct readProduct = getReadableDisplayProduct(Long.valueOf(productResult.getProductId()), language);
@@ -262,11 +266,23 @@ public class SearchFacadeImpl implements SearchFacade {
 			}
 
 		}
+		//tmpzk1
+//		long endTime1 = System.currentTimeMillis();
+//		System.out.println("SpentTime-3-1: " + (endTime1 - startTime1) + " ms");
+
+		//Mainly get filter options
+
+		//tmpzk1
+//		long startTime2 = System.currentTimeMillis();
 
 		result.setNumber(searchProductRequestV2.getNumber());
 		result.setRecordsTotal(searchProductResult.getHitNumber());
 		result.setTotalPages((int) Math.ceil(searchProductResult.getHitNumber() / searchProductRequestV2.getSize()));
 		result.setFilterOptions(searchAttrFiltUtils.getAttrFilt(searchProductResult.getFilterOptions(), merchantStore, language));
+
+		//tmpzk1
+//		long endTime2 = System.currentTimeMillis();
+//		System.out.println("SpentTime-3-2: " + (endTime2 - startTime2) + " ms");
 
 		return result;
 	}
@@ -274,6 +290,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public ReadableDisplayProduct getReadableDisplayProduct(Long productId, Language language) {
+
 		ReadableDisplayProductPopulator populator = new ReadableDisplayProductPopulator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
@@ -281,8 +298,16 @@ public class SearchFacadeImpl implements SearchFacade {
 		populator.setReadableProductVariantMapper(readableProductVariantMapper);
 		populator.setProductFeatureService(productFeatureService);
 
+		//tmpzk1
+//		long startTime = System.currentTimeMillis();
+
 		try {
 			Product product = productService.getProductByCache(productId);
+
+			//tmpzk1
+//			long endTime = System.currentTimeMillis();
+//			System.out.println("Display product info - 1: " + (endTime-startTime) + " ms");
+
 			if(product == null || product.getId() == null) {
 				return null;
 			}
@@ -293,7 +318,14 @@ public class SearchFacadeImpl implements SearchFacade {
 			populator.setReadableProductVariantMapper(readableProductVariantMapper);
 			populator.setProductFeatureService(productFeatureService);
 
+			//tmpzk1
+//			startTime = System.currentTimeMillis();
+
 			ReadableDisplayProduct readProduct = populator.populate(product, new ReadableDisplayProduct(), product.getMerchantStore(), language);
+
+			//tmpzk1
+//			endTime = System.currentTimeMillis();
+//			System.out.println("Display product info - 2: " + (endTime-startTime) + " ms");
 
 			return readProduct;
 		} catch (Exception e) {
