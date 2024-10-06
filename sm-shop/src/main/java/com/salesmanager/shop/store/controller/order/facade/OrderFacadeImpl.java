@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import com.salesmanager.core.business.fulfillment.service.FulfillmentHistoryService;
 import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
+import com.salesmanager.core.business.fulfillment.service.QcInfoService;
 import com.salesmanager.core.business.fulfillment.service.ShippingOrderService;
 import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentOrderRepository;
 import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
@@ -25,6 +26,7 @@ import com.salesmanager.core.model.fulfillment.*;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
+import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
@@ -207,6 +209,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
 	@Autowired
 	private ReadableCategoryMapper  readableCategoryMapper;
+	@Autowired
+	private QcInfoService qcInfoService;
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStore store, Customer customer, ShoppingCart shoppingCart,
@@ -1508,6 +1512,158 @@ public class OrderFacadeImpl implements OrderFacade {
 		}
 
 	}
+
+
+//	/**
+//	 * 订单拆分
+//	 * @param order
+//	 * @param customer
+//	 * @param store
+//	 * @param language
+//	 * @param locale
+//	 * @return
+//	 * @throws ServiceException
+//	 */
+//	public Order processOrderSplit(Long orderId, List<Long> orderProductIdList, com.salesmanager.shop.model.order.v1.PersistableOrder order, Customer customer,
+//							  MerchantStore store, Language language, Locale locale) throws ServiceException {
+//
+//		Validate.notNull(order, "Order cannot be null");
+//		Validate.notNull(customer, "Customer cannot be null");
+//		Validate.notNull(store, "MerchantStore cannot be null");
+//		Validate.notNull(language, "Language cannot be null");
+//		Validate.notNull(locale, "Locale cannot be null");
+//
+//		long start = LogPermUtil.start("processOrder");
+//		try {
+//			Order modelOrder = new Order();
+//
+//			modelOrder =  orderService.getById(orderId);
+//			modelOrder.setId(null);
+//
+//			Set<OrderProduct> orderProducts = new LinkedHashSet<OrderProduct>();
+//
+//			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
+//			orderProductPopulator.setDigitalProductService(digitalProductService);
+//			orderProductPopulator.setProductAttributeService(productAttributeService);
+//			orderProductPopulator.setProductService(productService);
+//
+//			for (Long orderProductId : orderProductIdList) {
+//				OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
+//				orderProducts.add(orderProduct);
+//			}
+//
+//			modelOrder.setOrderProducts(orderProducts);
+//
+//
+//			//开始计算新创建的订单金额；
+//			LOGGER.debug("[processOrder] process order shopping cart calculate order total");
+//			OrderTotalSummary orderTotalSummary = null;
+//
+//			//这个地方是计算订单商品金额
+//			OrderSummary orderSummary = new OrderSummary();
+//			List<ShoppingCartItem> itemsSet = new ArrayList<ShoppingCartItem>(cart.getLineItems());
+//			orderSummary.setProducts(itemsSet);
+//
+//			orderTotalSummary = orderService.caculateOrderTotal(orderSummary, customer, store, language);
+//
+//			if (order.getPayment().getAmount() == null) {
+//				throw new ConversionException("Requires Payment.amount");
+//			}
+//
+//			String submitedAmount = order.getPayment().getAmount();
+//
+//			BigDecimal formattedSubmittedAmount = productPriceUtils.getAmount(submitedAmount);
+//
+//
+//			BigDecimal calculatedAmount = orderTotalSummary.getTotal();
+//			String strCalculatedTotal = calculatedAmount.toPlainString();
+//
+//			// compare both prices
+//			if (calculatedAmount.compareTo(formattedSubmittedAmount) != 0) {
+//
+//
+//				throw new ConversionException("Payment.amount does not match what the system has calculated "
+//						+ strCalculatedTotal + " (received " + submitedAmount + ") please recalculate the order and submit again");
+//			}
+//
+//			modelOrder.setTotal(calculatedAmount);
+//			List<com.salesmanager.core.model.order.OrderTotal> totals = orderTotalSummary.getTotals();
+//			Set<com.salesmanager.core.model.order.OrderTotal> set = new HashSet<com.salesmanager.core.model.order.OrderTotal>();
+//
+//			if (!CollectionUtils.isEmpty(totals)) {
+//				for (com.salesmanager.core.model.order.OrderTotal total : totals) {
+//					total.setOrder(modelOrder);
+//					set.add(total);
+//				}
+//			}
+//			modelOrder.setOrderTotal(set);
+//
+//			LOGGER.debug("[processOrder] process order shopping cart payment");
+//			PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
+//			paymentPopulator.setPricingService(pricingService);
+//			Payment paymentModel = new Payment();
+//			paymentPopulator.populate(order.getPayment(), paymentModel, store, language);
+//
+//			modelOrder.setShoppingCartCode(cart.getShoppingCartCode());
+//
+//			//lookup existing customer
+//			//if customer exist then do not set authentication for this customer and send an instructions email
+//			/** **/
+//			if(!StringUtils.isBlank(customer.getNick()) && !customer.isAnonymous()) {
+//				if(order.getCustomerId() == null && (customerFacade.checkIfUserExists(customer.getNick(), store))) {
+//					customer.setAnonymous(true);
+//					customer.setNick(null);
+//					//send email instructions
+//				}
+//			}
+//
+//
+//			LOGGER.debug("[processOrder] process order shopping cart process order");
+//			//order service
+//			modelOrder = orderService.processOrder(modelOrder, customer, items, orderTotalSummary, paymentModel, store);
+//
+//			// update cart
+//			try {
+//				LOGGER.info("[processOrder] process order shopping cart save update");
+//				cart.setOrderId(modelOrder.getId());
+//				shoppingCartFacade.saveOrUpdateShoppingCart(cart);
+//			} catch (Exception e) {
+//				LOGGER.error("Cannot delete cart " + cart.getId(), e);
+//			}
+//
+//			//email management
+//			if ("true".equals(coreConfiguration.getProperty("ORDER_EMAIL_API"))) {
+//				// send email
+//				try {
+//
+//					notify(modelOrder, customer, store, language, locale);
+//
+//
+//				} catch (Exception e) {
+//					LOGGER.error("Cannot send order confirmation email", e);
+//				}
+//			}
+//
+//
+//			//删除订单商品id
+//			orderProductRepository.deleteById(orderProductId);
+//			//更新qc
+//
+//			qcInfoService.updateQcStatusById();
+//			//更新履约子单 orderId
+//
+//
+//			LogPermUtil.end("processOrderSplit", start);
+//
+//			return modelOrder;
+//
+//		} catch (Exception e) {
+//			LOGGER.error("processOrder error", e);
+//			throw new ServiceException(e);
+//
+//		}
+//
+//	}
 
 	@Async
 	private void notify(Order order, Customer customer, MerchantStore store, Language language, Locale locale) throws Exception {

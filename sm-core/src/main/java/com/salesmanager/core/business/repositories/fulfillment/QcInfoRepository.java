@@ -12,6 +12,11 @@ import java.util.List;
 public interface QcInfoRepository extends JpaRepository<QcInfo, Long> {
 
 
+    @Transactional
+    @Modifying
+    @Query("update QcInfo qc set qc.orderId = ?1, qc.passedDate = CURRENT_TIMESTAMP where qc.id = ?2")
+    void updateQcOrderIdById(Long orderId, Long id);
+
 
     @Transactional
     @Modifying

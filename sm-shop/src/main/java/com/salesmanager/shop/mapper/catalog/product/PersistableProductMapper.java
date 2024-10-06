@@ -153,11 +153,8 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				if (usdPrice.compareTo(new BigDecimal("150")) > 0) {
 					throw new ConversionRuntimeException("Sample price can not be greater than 150 USD");
 				}
-				// sample price unit is WON， should convert to CNY
-				BigDecimal krw2cnyRate = exchangeRateConfig.getRate(ExchangeRateEnums.KRW_CNY);
-				BigDecimal cnyPrice = krw2cnyRate.multiply(source.getSamplePrice());
-				destination.setSamplePrice(cnyPrice);
-				destination.setSamplePriceCurrency("CNY");
+				destination.setSamplePrice(source.getSamplePrice());
+				destination.setSamplePriceCurrency("KRW");
 			}
 
 			//MANUFACTURER

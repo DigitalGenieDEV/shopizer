@@ -13,5 +13,6 @@ public class PersistableOrderProductAdditionalServiceInstance extends OrderProdu
     private String replyContent;
     private String replyFrom;
     private Integer replyTo;
+    private Integer sequence;
 
 }

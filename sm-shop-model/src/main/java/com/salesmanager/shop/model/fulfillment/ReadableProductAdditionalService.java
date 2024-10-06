@@ -8,4 +8,5 @@ import lombok.Data;
 public class ReadableProductAdditionalService extends ProductAdditionalService{
 
 
+    private String status;
 }

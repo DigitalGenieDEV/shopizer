@@ -60,7 +60,7 @@ public class OrderProductAdditionalServiceInstanceApi {
      * @param response
      * @return
      */
-    @GetMapping(value = {"/auth/order_products/{id}/additional_service"})
+    @GetMapping(value = {"/auth/order_products/{id}/additional_service/history"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<List<ReadableOrderProductAdditionalServiceInstance>> getAdditionalServiceForCustomer(@PathVariable Long id,
@@ -107,7 +107,7 @@ public class OrderProductAdditionalServiceInstanceApi {
      * @param response
      * @return
      */
-    @GetMapping(value = {"/private/order_products/{id}/additional_service"})
+    @GetMapping(value = {"/private/order_products/{id}/additional_service/history"})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<List<ReadableOrderProductAdditionalServiceInstance>> getAdditionalServiceForAdmin(@PathVariable Long id,
@@ -126,7 +126,7 @@ public class OrderProductAdditionalServiceInstanceApi {
         return CommonResultDTO.ofSuccess(readableOrderProductAdditionalService);
     }
 
-    @PostMapping(value = "/private/order_products/additional_service")
+    @PostMapping(value = "/private/order_products/additional_service/history")
     @ResponseStatus
     @ResponseBody
     public CommonResultDTO<Boolean> save(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
@@ -153,7 +153,7 @@ public class OrderProductAdditionalServiceInstanceApi {
         return CommonResultDTO.ofSuccess(success);
     }
 
-    @PostMapping(value = "/auth/order_products/additional_service/reply")
+    @PostMapping(value = "/auth/order_products/additional_service/history/reply")
     @ResponseStatus
     @ResponseBody
     public CommonResultDTO<Boolean> reply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
@@ -197,7 +197,7 @@ public class OrderProductAdditionalServiceInstanceApi {
         return CommonResultDTO.ofSuccess(success);
     }
 
-    @DeleteMapping(value = "/auth/order_products/additional_service/reply")
+    @DeleteMapping(value = "/auth/order_products/additional_service/history/reply")
     @ResponseStatus
     @ResponseBody
     public CommonResultDTO<Boolean> delReply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
@@ -241,7 +241,7 @@ public class OrderProductAdditionalServiceInstanceApi {
         return CommonResultDTO.ofSuccess(success);
     }
 
-    @PutMapping(value = "/auth/order_products/additional_service/reply")
+    @PutMapping(value = "/auth/order_products/additional_service/history/reply")
     @ResponseStatus
     @ResponseBody
     public CommonResultDTO<Boolean> updateReply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
@@ -285,7 +285,7 @@ public class OrderProductAdditionalServiceInstanceApi {
         return CommonResultDTO.ofSuccess(success);
     }
 
-    @PutMapping(value = "/auth/order_products/additional_service/confirm")
+    @PutMapping(value = "/auth/order_products/additional_service/history/confirm")
     @ResponseStatus
     @ResponseBody
     public CommonResultDTO<Boolean> updateStatus(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalService,

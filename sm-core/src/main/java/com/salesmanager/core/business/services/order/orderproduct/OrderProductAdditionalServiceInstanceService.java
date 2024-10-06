@@ -12,6 +12,7 @@ public interface OrderProductAdditionalServiceInstanceService {
 
     Boolean save(OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance);
 
+    OrderProductAdditionalServiceInstance queryByOrderProductIdAndAdditionalServiceId(Long orderProductId, Long additionalServiceId);
     Boolean updateStatus(OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance);
 
 }

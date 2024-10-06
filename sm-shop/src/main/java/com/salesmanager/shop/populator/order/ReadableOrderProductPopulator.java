@@ -245,7 +245,7 @@ public class ReadableOrderProductPopulator extends
 		target.setPaymentModule(source.getOrder().getPaymentModuleCode());
 
 		target.setReadableProductAdditionalServices(
-				additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(source.getAdditionalServicesMap(), language));
+				additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(source.getAdditionalServicesMap(), language, null));
 
 
 		String productSku = source.getSku();

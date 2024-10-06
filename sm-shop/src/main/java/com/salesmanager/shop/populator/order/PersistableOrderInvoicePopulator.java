@@ -9,6 +9,7 @@ import com.salesmanager.core.model.order.OrderInvoice;
 import com.salesmanager.core.model.order.TaxType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.order.v1.PersistableOrderInvoice;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,9 +26,15 @@ public class PersistableOrderInvoicePopulator extends AbstractDataPopulator<Pers
         }
 
         orderInvoice.setInvoiceType(InvoiceType.valueOf(persistableOrderInvoice.getInvoiceType()));
-        orderInvoice.setInvoicingMethod(InvoicingMethod.valueOf(persistableOrderInvoice.getInvoicingMethod()));
-        orderInvoice.setTaxType(TaxType.valueOf(persistableOrderInvoice.getTaxType()));
-        orderInvoice.setInvoicingEmail(persistableOrderInvoice.getInvoicingEmail());
+        if (StringUtils.isNotBlank(persistableOrderInvoice.getInvoicingMethod())) {
+            orderInvoice.setInvoicingMethod(InvoicingMethod.valueOf(persistableOrderInvoice.getInvoicingMethod()));
+        }
+        if (StringUtils.isNotBlank(persistableOrderInvoice.getTaxType())) {
+            orderInvoice.setTaxType(TaxType.valueOf(persistableOrderInvoice.getTaxType()));
+        }
+        if (StringUtils.isNotBlank(persistableOrderInvoice.getInvoicingEmail())) {
+            orderInvoice.setInvoicingEmail(persistableOrderInvoice.getInvoicingEmail());
+        }
 
         return orderInvoice;
     }

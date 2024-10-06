@@ -28,9 +28,9 @@ public class ReadableOrderInvoicePopulator extends AbstractDataPopulator<OrderIn
         }
 
         readableOrderInvoice.setId(orderInvoice.getId());
-        readableOrderInvoice.setInvoiceType(orderInvoice.getInvoiceType().name());
-        readableOrderInvoice.setInvoicingMethod(orderInvoice.getInvoicingMethod().name());
-        readableOrderInvoice.setTaxType(orderInvoice.getTaxType().name());
+        readableOrderInvoice.setInvoiceType(orderInvoice.getInvoiceType() == null? null: orderInvoice.getInvoiceType().name());
+        readableOrderInvoice.setInvoicingMethod(orderInvoice.getInvoicingMethod() == null ? null : orderInvoice.getInvoicingMethod().name());
+        readableOrderInvoice.setTaxType(orderInvoice.getTaxType() ==null? null : orderInvoice.getTaxType().name());
         readableOrderInvoice.setInvoicingEmail(orderInvoice.getInvoicingEmail());
 
         return readableOrderInvoice;

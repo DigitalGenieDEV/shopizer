@@ -126,7 +126,7 @@ public class ProductQcInfoFacadeImpl implements ProductQcFacade {
         OrderProduct orderProduct = orderProductsService.getOrderProduct(orderProductId);
         String additionalServicesMap = orderProduct.getAdditionalServicesMap();
 
-        List<ReadableProductAdditionalService> readableProductAdditionalServices = additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(additionalServicesMap, language);
+        List<ReadableProductAdditionalService> readableProductAdditionalServices = additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(additionalServicesMap, language, orderProduct.getId());
 
         List<QcInfoHistory> qcInfoHistories = qcinfoHistoryService.queryByQcInfoId(id);
 

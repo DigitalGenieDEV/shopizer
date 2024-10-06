@@ -116,7 +116,7 @@ public class OrderProductAdditionalServiceInstanceFacadeImpl implements OrderPro
         OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance = orderProductAdditionalServiceInstanceService.getById(persistableOrderProductAdditionalServiceInstance.getId());
 
         try {
-            persistableOrderProductAdditionalServiceInstance.getMessageContent().delReply();
+            persistableOrderProductAdditionalServiceInstance.getMessageContent().delReply(persistableOrderProductAdditionalServiceInstance.getSequence());
             orderProductAdditionalServiceInstance = persistableOrderProductAdditionalServiceInstancePopulator.populate(persistableOrderProductAdditionalServiceInstance, orderProductAdditionalServiceInstance, merchantStore, language);
         } catch (ConversionException e) {
             throw new ServiceRuntimeException("Error while reply order product additional service instance ", e);
@@ -130,7 +130,7 @@ public class OrderProductAdditionalServiceInstanceFacadeImpl implements OrderPro
         OrderProductAdditionalServiceInstance orderProductAdditionalServiceInstance = orderProductAdditionalServiceInstanceService.getById(persistableOrderProductAdditionalServiceInstance.getId());
 
         try {
-            persistableOrderProductAdditionalServiceInstance.getMessageContent().updateReply(persistableOrderProductAdditionalServiceInstance.getContent());
+            persistableOrderProductAdditionalServiceInstance.getMessageContent().updateReply(persistableOrderProductAdditionalServiceInstance.getReplyContent(), persistableOrderProductAdditionalServiceInstance.getSequence());
             orderProductAdditionalServiceInstance = persistableOrderProductAdditionalServiceInstancePopulator.populate(persistableOrderProductAdditionalServiceInstance, orderProductAdditionalServiceInstance, merchantStore, language);
         } catch (ConversionException e) {
             throw new ServiceRuntimeException("Error while reply order product additional service instance ", e);
