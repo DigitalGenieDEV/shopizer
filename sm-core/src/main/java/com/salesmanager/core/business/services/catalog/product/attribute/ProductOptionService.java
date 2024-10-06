@@ -13,6 +13,8 @@ public interface ProductOptionService extends SalesManagerEntityService<Long, Pr
 	List<ProductOption> listByStore(MerchantStore store, Language language)
 			throws ServiceException;
 
+	//tmpzk2
+	List<ProductOption> getByIds(List<Long> optionIds, Language language);
 
 	List<ProductOption> getByName(MerchantStore store, String name,
 			Language language) throws ServiceException;

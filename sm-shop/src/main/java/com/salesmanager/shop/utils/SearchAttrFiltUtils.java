@@ -2,6 +2,7 @@ package com.salesmanager.shop.utils;
 
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionValueService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.category.CategoryDescription;
@@ -28,8 +29,11 @@ public class SearchAttrFiltUtils {
     @Inject
     private CategoryService categoryService;
 
+//    @Inject
+//    private ProductAttributeService productAttributeService;
+    //tmpzk2
     @Inject
-    private ProductAttributeService productAttributeService;
+    private ProductOptionService productOptionService;
 
     @Inject
     private ProductOptionValueService productOptionValueService;
@@ -46,6 +50,9 @@ public class SearchAttrFiltUtils {
 
     public ReadableAttrForFilt getAttrFilt(Map<String, List<String>> attrForFilt, MerchantStore merchantStore, Language language) {
         ReadableAttrForFilt readableAttrForFilt = new ReadableAttrForFilt();
+
+        //tmpzk1
+//        long startTime = System.currentTimeMillis();
 
         List<ReadableAttrFiltKv> categorys = getAttrFiltCategorys(attrForFilt, merchantStore, language);
         if (categorys != null) {
@@ -66,11 +73,21 @@ public class SearchAttrFiltUtils {
         if (prodType != null) {
             readableAttrForFilt.setProductType(prodType);
         }
+        //tmpzk1
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("getAttrFilt-1: " + (endTime - startTime) + " ms");
+
+        //tmpzk1
+//        startTime = System.currentTimeMillis();
 
         List<ReadableAttrFiltAttrKv> attrs = getAttrFiltAttrs(attrForFilt, merchantStore, language);
         if (attrs != null) {
             readableAttrForFilt.setAttrs(attrs);
         }
+
+        //tmpzk1
+//        endTime = System.currentTimeMillis();
+//        System.out.println("getAttrFilt-2: " + (endTime - startTime) + " ms");
 
         return readableAttrForFilt;
     }
@@ -83,8 +100,26 @@ public class SearchAttrFiltUtils {
             return null;
         }
 
-        return categoryIds.stream().map(categoryId -> getCategoryAttrFiltKv(Long.valueOf(categoryId), merchantStore, language))
-                .filter(readableAttrFiltKv -> readableAttrFiltKv != null).collect(Collectors.toList());
+        //tmpzk2
+        List<Long> categoryIdsWithLong = categoryIds.stream().map(Long::parseLong).collect(Collectors.toList());
+        List<Category> categoryList = categoryService.getByIds(language.getId(), categoryIdsWithLong);
+
+        List<ReadableAttrFiltKv> rltList= new ArrayList<>();
+        for(Category c : categoryList){
+            ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
+            kv.setValue(c.getId());
+            Optional<CategoryDescription> firstElement = c.getDescriptions().stream().findFirst();
+            if(firstElement.isPresent()){
+                kv.setLabel(firstElement.get().getName());
+            }else {
+                kv.setLabel("Unkown");
+            }
+            rltList.add(kv);
+        }
+
+        return rltList;
+//        return categoryIds.stream().map(categoryId -> getCategoryAttrFiltKv(Long.valueOf(categoryId), merchantStore, language))
+//                .filter(readableAttrFiltKv -> readableAttrFiltKv != null).collect(Collectors.toList());
     }
 
     // 查询过滤条件-产地
@@ -95,10 +130,28 @@ public class SearchAttrFiltUtils {
             return null;
         }
 
+        //tmpzk2
+        List<Long> opsIds = ops.stream().map(Long::parseLong).collect(Collectors.toList());
 
-        return ops.stream().map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
-                .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-                .collect(Collectors.toList());
+        List<ProductOptionValue> opsList = productOptionValueService.getByIds(opsIds, language);
+
+        List<ReadableAttrFiltKv> rltList= new ArrayList<>();
+        for(ProductOptionValue p : opsList){
+            ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
+            kv.setValue(p.getId());
+            Optional<ProductOptionValueDescription> firstElement = p.getDescriptions().stream().findFirst();
+            if(firstElement.isPresent()){
+                kv.setLabel(firstElement.get().getName());
+            }else {
+                kv.setLabel("Unkown");
+            }
+            rltList.add(kv);
+        }
+
+        return rltList;
+//        return ops.stream().map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
+//                .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
+//                .collect(Collectors.toList());
     }
 
     // 查询过滤条件-价格
@@ -132,6 +185,7 @@ public class SearchAttrFiltUtils {
     private List<ReadableAttrFiltAttrKv> getAttrFiltAttrs(Map<String, List<String>> attrForFilt, MerchantStore merchantStore, Language language) {
 
         List<ReadableAttrFiltAttrKv> kvs = new ArrayList<>();
+
         Set<Map.Entry<String, List<String>>> entrySets = attrForFilt.entrySet();
 
         List<String> attrIdsWithPrefix = new ArrayList<>();
@@ -144,25 +198,58 @@ public class SearchAttrFiltUtils {
         List<Long> attrIds = attrIdsWithPrefix.stream()
                 .map(attrIdWithPrefix -> Long.valueOf(attrIdWithPrefix.replace(FILT_KEY_ATTR_PREFIX, ""))).collect(Collectors.toList());
 
-        List<ProductAttribute> productAttributes = productAttributeService.getByIdList(attrIds);
+//        List<ProductAttribute> productAttributes = productAttributeService.getByIdList(attrIds);
+//        for (ProductAttribute productAttribute : productAttributes) {
+//            try {
+//                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
+//
+//                List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + productAttribute.getId()).stream()
+//                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
+//                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
+//                        .collect(Collectors.toList());
+//                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
+//
+//                attrKv.setAttrName(attrName);
+//                attrKv.setAttrValues(attrValues);
+//
+//                kvs.add(attrKv);
+//            } catch (Exception e) {
+//                LOG.error("attr kv exception, product attribute Id = [" + productAttribute.getId() + "]", e);
+//            }
+//        }
 
-        for (ProductAttribute productAttribute : productAttributes) {
-            try {
-                ReadableAttrFiltKv attrName = getAttibuteAttrFiltKv(productAttribute, language);
+        //tmpzk2
+        List<ProductOption> productOptions = productOptionService.getByIds(attrIds, language);
+        for(ProductOption po : productOptions){
+            List<Long> optionValueIdslist = attrForFilt.get(FILT_KEY_ATTR_PREFIX + po.getId()).stream().map(Long::parseLong).collect(Collectors.toList());
+            List<ProductOptionValue> optionValueList = productOptionValueService.getByIds(optionValueIdslist, language);
 
-                List<ReadableAttrFiltKv> attrValues = attrForFilt.get(FILT_KEY_ATTR_PREFIX + productAttribute.getId()).stream()
-                        .map(optionValueId -> getOptionValueAttrFiltKv(Long.valueOf(optionValueId), merchantStore, language))
-                        .filter(readableAttrFiltKv -> readableAttrFiltKv != null)
-                        .collect(Collectors.toList());
-                ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
+            ReadableAttrFiltAttrKv attrKv = new ReadableAttrFiltAttrKv();
 
-                attrKv.setAttrName(attrName);
-                attrKv.setAttrValues(attrValues);
-
-                kvs.add(attrKv);
-            } catch (Exception e) {
-                LOG.error("attr kv exception, product attribute Id = [" + productAttribute.getId() + "]", e);
+            ReadableAttrFiltKv kvOption = new ReadableAttrFiltKv();
+            kvOption.setValue(po.getId());
+            Optional<ProductOptionDescription> firstOptionElement = po.getDescriptions().stream().findFirst();
+            if(firstOptionElement.isPresent()){
+                kvOption.setLabel(firstOptionElement.get().getName());
+            }else {
+                kvOption.setLabel("Unkown");
             }
+            attrKv.setAttrName(kvOption);
+
+            List<ReadableAttrFiltKv> optionValues = new ArrayList<>();
+            for(ProductOptionValue pov : optionValueList){
+                ReadableAttrFiltKv kvValue = new ReadableAttrFiltKv();
+                kvValue.setValue(pov.getId());
+                Optional<ProductOptionValueDescription> firstValueElement = pov.getDescriptions().stream().findFirst();
+                if(firstValueElement.isPresent()){
+                    kvValue.setLabel(firstValueElement.get().getName());
+                }else {
+                    kvValue.setLabel("Unkown");
+                }
+                optionValues.add(kvValue);
+            }
+            attrKv.setAttrValues(optionValues);
+            kvs.add(attrKv);
         }
 
         return kvs;
@@ -184,6 +271,16 @@ public class SearchAttrFiltUtils {
                     break;
                 }
             }
+
+//            Category category = categoryService.getById(language.getId(), categoryId);
+//            ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
+//            kv.setValue(category.getId());
+//            Optional<CategoryDescription> firstElement = category.getDescriptions().stream().findFirst();
+//            if(firstElement.isPresent()){
+//                kv.setLabel(firstElement.get().getName());
+//            }else {
+//                kv.setLabel("Unkown");
+//            }
 
             return kv;
         } catch (Exception e) {
@@ -208,6 +305,18 @@ public class SearchAttrFiltUtils {
                     break;
                 }
             }
+
+//            ProductOptionValue optionValue = productOptionValueService.getById(optionValueId, language);
+//
+//            ReadableAttrFiltKv kv = new ReadableAttrFiltKv();
+//            kv.setValue(optionValue.getId());
+//
+//            Optional<ProductOptionValueDescription> firstElement = optionValue.getDescriptions().stream().findFirst();
+//            if(firstElement.isPresent()){
+//                kv.setLabel(firstElement.get().getName());
+//            }else {
+//                kv.setLabel("Unkown");
+//            }
 
             return kv;
         } catch (Exception e) {

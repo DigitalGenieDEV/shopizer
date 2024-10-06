@@ -119,7 +119,6 @@ public class ReadableDisplayProductPopulator extends
 
             List<ProductDescription> fulldescriptions = new ArrayList<ProductDescription>();
 
-
             if(target==null) {
                 target = new ReadableDisplayProduct();
             }
@@ -186,9 +185,10 @@ public class ReadableDisplayProductPopulator extends
                 owner.setAddress(address);
             }
 
-            if (source.getMerchantStore() != null) {
-                target.setMerchantStore(readableMerchantStorePopulator.populate(source.getMerchantStore(), new ReadableMerchantStore(), store, language));
-            }
+            //tmpzk2
+//            if (source.getMerchantStore() != null) {
+//                target.setMerchantStore(readableMerchantStorePopulator.populate(source.getMerchantStore(), new ReadableMerchantStore(), store, language));
+//            }
 
             if (source.getManufacturer() != null) {
                 target.setManufacturer(readableManufacturerPopulator.populate(source.getManufacturer(), new ReadableManufacturer(), store, language));
@@ -263,7 +263,6 @@ public class ReadableDisplayProductPopulator extends
             if (target.getImage() == null && (target.getImages() != null && target.getImages().size() > 0)) {
                 target.setImage(target.getImages().get(0));
             }
-
 
 //            LOGGER.info("populate recommend product [" + source.getId() + "] 3333");
             if(!CollectionUtils.isEmpty(source.getAttributes())) {
@@ -436,13 +435,16 @@ public class ReadableDisplayProductPopulator extends
                 }
             }
 
-
             //LOGGER.info("populate display product [" + source.getId() + "] feature");
-            List<ProductFeature> listByProductId = productFeatureService.findListByProductId(source.getId());
-            if (!CollectionUtils.isEmpty(listByProductId)){
-                List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
-                target.setProductTags(collect);
-            }
+            //tmpzk2
+//            List<ProductFeature> listByProductId = productFeatureService.findListByProductId(source.getId());
+//            if (!CollectionUtils.isEmpty(listByProductId)){
+//                List<String> collect = listByProductId.stream().filter(s -> s.getValue().equals("1")).map(ProductFeature::getKey).collect(Collectors.toList());
+//                target.setProductTags(collect);
+//            }
+
+            //tmpzk1
+//            long startTime = System.currentTimeMillis();
 
 //            target.setSku(source.getSku());
 
@@ -461,6 +463,11 @@ public class ReadableDisplayProductPopulator extends
 //            }
 
             FinalPrice price = pricingService.calculateProductPrice(source, false);
+
+            //tmpzk1
+//            long endTime = System.currentTimeMillis();
+//            System.out.println("populate-1: " + (endTime-startTime) + " ms");
+//            startTime = System.currentTimeMillis();
 
             if(price != null) {
                 target.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
@@ -502,6 +509,9 @@ public class ReadableDisplayProductPopulator extends
 
             }
 
+            //tmpzk1
+//            endTime = System.currentTimeMillis();
+//            System.out.println("populate-2: " + (endTime-startTime) + " ms");
 
             //LOGGER.info("populate display product [" + source.getId() + "] done");
 

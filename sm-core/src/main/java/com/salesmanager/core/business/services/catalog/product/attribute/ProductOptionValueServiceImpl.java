@@ -115,6 +115,11 @@ public class ProductOptionValueServiceImpl extends
 		return productOptionValueRepository.findOne(store.getId(), optionValueId);
 	}
 
+	//tmzk2
+	@Override
+	public List<ProductOptionValue> getByIds(List<Long> optionValueIds, Language language) {
+		return productOptionValueRepository.findMany(optionValueIds, language.getId());
+	}
 
 	@Override
 	public Page<ProductOptionValue> getByMerchant(MerchantStore store, Language language, String name, int page,
