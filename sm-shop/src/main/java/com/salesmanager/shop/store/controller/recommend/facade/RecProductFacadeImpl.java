@@ -7,6 +7,7 @@ import com.salesmanager.core.business.services.search.RecProductService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.recommend.*;
 import com.salesmanager.shop.populator.recommend.ReadableDisplayProductPopulator;
@@ -49,6 +50,8 @@ public class RecProductFacadeImpl implements RecProductFacade{
 
     @Override
     public ReadableRecProductList getRecGuessULike(RecGuessULikeRequest request, Language language) throws Exception {
+        long start = LogPermUtil.start("RecAPI/getRecGuessULike");
+
         GuessULikeRequest guessULikeRequest = new GuessULikeRequest();
         guessULikeRequest.setDeviceid(request.getDeviceId());
         guessULikeRequest.setUid(request.getUid());
@@ -65,11 +68,14 @@ public class RecProductFacadeImpl implements RecProductFacade{
         readableRecProductList.setRecordsTotal(guessULikeResult.getHitNumber());
         readableRecProductList.setTotalPages((int) Math.ceil(guessULikeResult.getHitNumber() / request.getSize()));
 
+        LogPermUtil.end("RecAPI/getRecGuessULike", start);
         return readableRecProductList;
     }
 
     @Override
     public ReadableRecProductList getRecRelateItem(RecRelateItemRequest request, Language language) throws Exception {
+        long start = LogPermUtil.start("RecAPI/getRecRelateItem");
+
         RelateItemRequest relateItemRequest = new RelateItemRequest();
         relateItemRequest.setDeviceid(request.getDeviceId());
         relateItemRequest.setUid(request.getUid());
@@ -87,11 +93,14 @@ public class RecProductFacadeImpl implements RecProductFacade{
         readableRecProductList.setRecordsTotal(relateItemResult.getHitNumber());
         readableRecProductList.setTotalPages((int) Math.ceil(relateItemResult.getHitNumber() / request.getSize()));
 
+        LogPermUtil.end("RecAPI/getRecRelateItem", start);
         return readableRecProductList;
     }
 
     @Override
     public ReadableRecProductList getRecSelectionProduct(RecSelectionProductRequest request, Language language) throws Exception {
+        long start = LogPermUtil.start("RecAPI/getRecSelectionProduct");
+
         SelectionItemRequest selectionItemRequest = new SelectionItemRequest();
         selectionItemRequest.setDeviceid(request.getDeviceId());
         selectionItemRequest.setCategoryId(request.getCategoryId());
@@ -110,11 +119,14 @@ public class RecProductFacadeImpl implements RecProductFacade{
         readableRecProductList.setRecordsTotal(selectionItemResult.getHitNumber());
         readableRecProductList.setTotalPages((int) Math.ceil(selectionItemResult.getHitNumber() / request.getSize()));
 
+        LogPermUtil.end("RecAPI/getRecSelectionProduct", start);
         return readableRecProductList;
     }
 
     @Override
     public ReadableRecProductList getRecentView(RecFootPrintRequest request, Language language) throws Exception {
+        long start = LogPermUtil.start("RecAPI/getRecentView");
+
         FootPrintRequest footPrintRequest = new FootPrintRequest();
         footPrintRequest.setUid(request.getUid());
         footPrintRequest.setSize(request.getSize());
@@ -128,6 +140,7 @@ public class RecProductFacadeImpl implements RecProductFacade{
         readableRecProductList.setRecordsTotal(footPrintResult.getHitNumber());
         readableRecProductList.setTotalPages((int) Math.ceil(footPrintResult.getHitNumber() / request.getSize()));
 
+        LogPermUtil.end("RecAPI/getRecentView", start);
         return readableRecProductList;
     }
 

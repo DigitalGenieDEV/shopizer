@@ -14,6 +14,7 @@ import com.salesmanager.core.business.services.amazonaws.LambdaInvokeService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.recommend.*;
 import com.salesmanager.core.model.catalog.product.search.*;
+import com.salesmanager.core.utils.LogPermUtil;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -122,12 +123,14 @@ public class SearchProductServiceImpl implements SearchProductService{
         try {
             //tmpzk1
             long startTime = System.currentTimeMillis();
+            long start = LogPermUtil.start("SearchAPI/searchV2/LambdaInvoke");
 
             response = lambdaInvokeService.invoke(LAMBDA_SR_SEARCH, objectMapper.writeValueAsString(request));
 
             //tmpzk1
             long endTime = System.currentTimeMillis();
 //            System.out.println("SpentTime-2-1: " + (endTime - startTime) + " ms");
+            LogPermUtil.end("SearchAPI/searchV2/LambdaInvoke", start);
 
             return objectMapper.readValue(response, SearchResult.class);
         } catch (Exception e) {

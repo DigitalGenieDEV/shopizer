@@ -14,6 +14,7 @@ import com.salesmanager.core.model.catalog.product.search.AutocompleteRequest;
 import com.salesmanager.core.model.catalog.product.search.AutocompleteResult;
 import com.salesmanager.core.model.catalog.product.search.SearchProductResult;
 import com.salesmanager.core.model.catalog.product.search.SearchRequest;
+import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.SearchProductAutocompleteRequestV2;
 import com.salesmanager.shop.model.catalog.SearchProductRequestV2;
@@ -239,6 +240,8 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	@Override
 	public ReadableSearchResult searchV2(SearchProductRequestV2 searchProductRequestV2, MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
+		long start = LogPermUtil.start("SearchAPI/searchV2");
+
 		SearchRequest searchProductRequest = new SearchRequest();
 		searchProductRequest.setLang(language.getCode());
 		searchProductRequest.setSize(searchProductRequestV2.getSize());
@@ -254,6 +257,7 @@ public class SearchFacadeImpl implements SearchFacade {
 
 		//tmpzk1
 //		long startTime1 = System.currentTimeMillis();
+		long start_1 = LogPermUtil.start("SearchAPI/searchV2/getDisplayInfo");
 
 		ReadableSearchResult result = new ReadableSearchResult();
 
@@ -269,11 +273,13 @@ public class SearchFacadeImpl implements SearchFacade {
 		//tmpzk1
 //		long endTime1 = System.currentTimeMillis();
 //		System.out.println("SpentTime-3-1: " + (endTime1 - startTime1) + " ms");
+		LogPermUtil.end("SearchAPI/searchV2/getDisplayInfo", start_1);
 
 		//Mainly get filter options
 
 		//tmpzk1
 //		long startTime2 = System.currentTimeMillis();
+		long start_2 = LogPermUtil.start("SearchAPI/searchV2/filterOptions");
 
 		result.setNumber(searchProductRequestV2.getNumber());
 		result.setRecordsTotal(searchProductResult.getHitNumber());
@@ -283,7 +289,9 @@ public class SearchFacadeImpl implements SearchFacade {
 		//tmpzk1
 //		long endTime2 = System.currentTimeMillis();
 //		System.out.println("SpentTime-3-2: " + (endTime2 - startTime2) + " ms");
+		LogPermUtil.end("SearchAPI/searchV2/filterOptions", start_2);
 
+		LogPermUtil.end("SearchAPI/searchV2", start);
 		return result;
 	}
 
