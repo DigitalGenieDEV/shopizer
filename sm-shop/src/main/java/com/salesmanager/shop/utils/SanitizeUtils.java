@@ -21,14 +21,14 @@ public class SanitizeUtils {
             '^', '%','$','(', ')', '{', '}', '<', '>', '[',
             ']', '`', '\'', '~','\\', '?','\'');
     
-    private final static String POLICY_FILE = "antisamy-slashdot.xml";
-    
+    private final static String POLICY_FILE = "antisamy/custom-antisamy-slashdot.xml";
+
     private static Policy policy = null;
     
     static { 
 		try {
-			ClassLoader loader = Policy.class.getClassLoader();
-	        InputStream configStream = loader.getResourceAsStream(POLICY_FILE);
+            ClassLoader classLoader = SanitizeUtils.class.getClassLoader();
+            InputStream configStream = classLoader.getResourceAsStream(POLICY_FILE);
 			policy = Policy.getInstance(configStream);
 	        
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class SanitizeUtils {
 		}
 
 
-    	
+
     }
     
     
