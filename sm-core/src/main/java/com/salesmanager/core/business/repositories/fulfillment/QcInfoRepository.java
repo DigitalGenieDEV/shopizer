@@ -14,7 +14,7 @@ public interface QcInfoRepository extends JpaRepository<QcInfo, Long> {
 
     @Transactional
     @Modifying
-    @Query("update QcInfo qc set qc.orderId = ?1, qc.passedDate = CURRENT_TIMESTAMP where qc.id = ?2")
+    @Query("update QcInfo qc set qc.orderId = ?1 where qc.id = ?2")
     void updateQcOrderIdById(Long orderId, Long id);
 
 
@@ -26,5 +26,9 @@ public interface QcInfoRepository extends JpaRepository<QcInfo, Long> {
 
     @Query("select  qc from QcInfo qc where qc.status = ?1")
     List<QcInfo> queryQcInfoByStatus(QcStatusEnums qcStatus);
+
+
+    @Query("select  qc from QcInfo qc where qc.orderProductId = ?1")
+    QcInfo queryQcInfoByOrderProductId(Long orderProductId);
 
 }

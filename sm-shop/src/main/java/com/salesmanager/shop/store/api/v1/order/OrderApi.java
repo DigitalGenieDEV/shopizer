@@ -820,4 +820,27 @@ public class OrderApi {
 	}
 
 
+	/**
+	 * 拆单
+	 * @param oldOrderId
+	 * @param orderProductIdList
+	 * @return
+	 */
+	@RequestMapping(value = { "/private/order/{oldOrderId}/split" }, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> orderSplit(
+			@PathVariable final Long oldOrderId,
+			@Valid @RequestBody  List<Long> orderProductIdList) {
+
+		try {
+			orderFacade.processOrderSplit(oldOrderId, orderProductIdList);
+			return CommonResultDTO.ofSuccess();
+		}catch (Exception e){
+			LOGGER.error("updateSellerOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
 }

@@ -2,6 +2,7 @@ package com.salesmanager.core.business.repositories.fulfillment;
 
 import com.salesmanager.core.model.fulfillment.FulfillmentHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -21,4 +22,9 @@ public interface FulfillmentHistoryRepository extends JpaRepository<FulfillmentH
     @Query("select distinct f from FulfillmentHistory f " +
             " where f.orderId = ?1 and f.orderProductId = ?2 order by f.auditSection.dateCreated")
     List<FulfillmentHistory> queryFulfillmentHistoryByOrderIdAndProductId(Long orderId, Long orderProductId);
+
+    @Modifying
+    @Query("update FulfillmentHistory fl set fl.orderId = ?1 where fl.orderProductId = ?2")
+    void updateOrderIdByOrderProductId(Long orderId, Long orderProductId);
+
 }

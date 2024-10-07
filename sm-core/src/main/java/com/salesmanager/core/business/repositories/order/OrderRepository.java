@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.repositories.order;
 
 import com.salesmanager.core.model.order.OrderInvoice;
+import com.salesmanager.core.model.order.OrderProductSnapshot;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import com.salesmanager.core.model.order.Order;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
@@ -37,6 +40,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
     Order findOneByCustomer(Long id, Long customerId);
 
 
+
 	@Query("select o from Order o join fetch o.merchant om "
 			+ "join fetch o.orderProducts op "
 			+ "left join fetch o.delivery od left join fetch od.country left join fetch od.zone "
@@ -50,6 +54,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 	Order findOrderListByCustomerOrderId(Long customerOrderId);
 
 
+	@Query(value = "SELECT ods.CUSTOMER_ORDER_ID FROM ORDERS ods WHERE ods.ORDER_ID = :orderId", nativeQuery = true)
+	Long findCustomerOrderIdByOrderId(@Param("orderId") Long orderId);
+
 
 	@Modifying
 	@Transactional
@@ -60,4 +67,11 @@ public interface OrderRepository extends JpaRepository<Order, Long>, OrderReposi
 	@Transactional
 	@Query("UPDATE Order o set o.orderInvoice.id = :invoiceId WHERE o.id = :orderId")
 	void updateOrderInvoice(@Param("orderId") Long orderId, @Param("invoiceId") Long invoiceId);
+
+
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Order o SET o.total = :total WHERE o.id = :orderId")
+	void updateOrderTotalPriceByOrderId(@Param("orderId") Long orderId, @Param("total") BigDecimal total);
 }

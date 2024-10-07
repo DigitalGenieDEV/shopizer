@@ -16,6 +16,9 @@ public interface FulfillmentSubOrderService extends SalesManagerEntityService<Lo
     void updateFulfillmentMainOrder(FulfillmentSubOrder fulfillmentSubOrder);
 
 
+    void updateFulfillmentSubOrderIdAndFulfillmentMainIdByOrderProductId(Long orderId, Long fulfillmentMainId, Long orderProductId);
+
+
     List<FulfillmentSubOrder> queryFulfillmentSubOrderListByOrderId(Long orderId);
 
     FulfillmentSubOrder queryFulfillmentSubOrderByOrderProductId(Long productOrderId);

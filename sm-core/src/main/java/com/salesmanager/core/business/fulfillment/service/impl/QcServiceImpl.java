@@ -52,5 +52,10 @@ public class QcServiceImpl extends SalesManagerEntityServiceImpl<Long, QcInfo>  
         return qcInfoRepository.queryQcInfoByStatus(qcStatus);
     }
 
+    @Override
+    public QcInfo queryQcInfoByOrderProductId(Long orderProductId) {
+        return qcInfoRepository.queryQcInfoByOrderProductId(orderProductId);
+    }
+
 }
 

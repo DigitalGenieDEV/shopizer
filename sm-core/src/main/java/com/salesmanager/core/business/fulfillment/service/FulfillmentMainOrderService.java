@@ -16,6 +16,8 @@ public interface FulfillmentMainOrderService extends SalesManagerEntityService<L
     FulfillmentMainOrder queryFulfillmentMainOrderByOrderId(Long orderId);
 
 
+    FulfillmentMainOrder onlyCreateFulfillmentMainOrder(Order order, Boolean partialDelivery);
+
     void updatePartialDelivery(Long id, Boolean partialDelivery);
 }
 

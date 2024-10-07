@@ -50,4 +50,11 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Long
     @Query("select op from OrderProduct op join fetch op.order o join fetch o.merchant om "
             + " left join fetch op.prices opp where op.order.id = ?1 ")
     List<OrderProduct> findListByOrderId(Long orderId);
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE OrderProduct p SET p.order.id = :orderId WHERE p.id = :id")
+    void updateOrderIdById(@Param("orderId") Long orderId, @Param("id") Long id);
+
 }
