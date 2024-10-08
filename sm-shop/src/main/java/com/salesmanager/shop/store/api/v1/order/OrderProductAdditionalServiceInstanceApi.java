@@ -127,7 +127,7 @@ public class OrderProductAdditionalServiceInstanceApi {
     }
 
     @PostMapping(value = "/private/order_products/additional_service/history")
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> save(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
                                          @ApiIgnore MerchantStore merchantStore,
