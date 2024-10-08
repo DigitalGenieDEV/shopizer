@@ -25,6 +25,8 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String currency;
+
 	private SellerProductShippingTextInfo sellerProductShippingTextInfo;
 
 	private ReadableMerchantStore merchantStore;
@@ -271,5 +273,13 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setProductMaterials(List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials) {
 		this.productMaterials = productMaterials;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 }

@@ -442,7 +442,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
 				destination.setPrice(price.getFinalPrice());
 				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));
-
+				destination.setCurrency(price.getProductPrice() == null? null : price.getProductPrice().getCurrency());
 				if (price.isDiscounted()) {
 					destination.setDiscounted(true);
 				}
@@ -455,6 +455,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 						readableProductPrice.setDiscounted(destination.isDiscounted());
 						readableProductPrice.setFinalPrice(destination.getFinalPrice());
 						readableProductPrice.setOriginalPrice(destination.getOriginalPrice());
+						readableProductPrice.setCurrency(price.getProductPrice() == null? null : price.getProductPrice().getCurrency());
 
 						Optional<ProductPrice> pr = prices.stream()
 								.filter(p -> p.getCode().equals(ProductPrice.DEFAULT_PRICE_CODE)).findFirst();

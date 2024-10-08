@@ -419,6 +419,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 				destination.setFinalPrice(pricingService.getDisplayAmount(price.getFinalPrice(), store));
 				destination.setPrice(price.getFinalPrice());
 				destination.setOriginalPrice(pricingService.getDisplayAmount(price.getOriginalPrice(), store));
+				destination.setCurrency(price.getProductPrice() == null? null : price.getProductPrice().getCurrency());
 
 				if (price.isDiscounted()) {
 					destination.setDiscounted(true);
@@ -432,13 +433,13 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 						readableProductPrice.setDiscounted(destination.isDiscounted());
 						readableProductPrice.setFinalPrice(destination.getFinalPrice());
 						readableProductPrice.setOriginalPrice(destination.getOriginalPrice());
-
 						Optional<ProductPrice> pr = prices.stream()
 								.filter(p -> p.getCode().equals(ProductPrice.DEFAULT_PRICE_CODE)).findFirst();
 
 						destination.setProductPrice(readableProductPrice);
 
 						if (pr.isPresent() && language !=null) {
+							readableProductPrice.setCurrency(pr.get().getCurrency());
 							readableProductPrice.setId(pr.get().getId());
 							Optional<ProductPriceDescription> d = pr.get().getDescriptions().stream()
 									.filter(desc -> desc.getLanguage().getCode().equals(finalLanguage.getCode()))
