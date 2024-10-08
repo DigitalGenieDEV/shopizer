@@ -510,7 +510,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		countBuilderSelect.append("select p.id from Order as p");
 		//  appendComplexConditions(countBuilderWhere, criteria);
 
-		String fullQuery = countBuilderSelect.toString() + countBuilderWhere.toString() + " ORDER BY p.datePurchased DESC";
+		String fullQuery = countBuilderSelect.toString() + countBuilderWhere.toString() + " ORDER BY p.datePurchased DESC, p.id DESC ";
 		Query orderIdsQ = this.em.createQuery(fullQuery);
 		if (store !=null){
 			orderIdsQ.setParameter("mId", store.getId());
