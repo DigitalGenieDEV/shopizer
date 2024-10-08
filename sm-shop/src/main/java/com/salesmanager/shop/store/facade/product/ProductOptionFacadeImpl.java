@@ -163,7 +163,7 @@ public class ProductOptionFacadeImpl implements ProductOptionFacade {
 	public ReadableProductOptionList options(MerchantStore store, Language language, String name, int page, int count) {
 		Validate.notNull(store, "MerchantStore should not be null");
 
-		Page<ProductOption> options = productOptionService.getByMerchant(store, null, name, page, count);
+		Page<ProductOption> options = productOptionService.getByMerchant(store, language, name, page, count);
 		ReadableProductOptionList valueList = new ReadableProductOptionList();
 		valueList.setTotalPages(options.getTotalPages());
 		valueList.setRecordsTotal(options.getTotalElements());

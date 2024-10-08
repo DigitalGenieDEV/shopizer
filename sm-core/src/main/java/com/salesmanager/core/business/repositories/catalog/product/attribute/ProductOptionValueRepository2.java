@@ -25,8 +25,9 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ " INNER JOIN PRODUCT_OPT_SET_OPT_VALUE C ON A.PRODUCT_OPTION_VALUE_ID = C.VALUES_PRODUCT_OPTION_VALUE_ID\r\n"
 			+ " AND C.PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID = ?1 \r\n"
 			+ " INNER JOIN PRODUCT_OPTION_SET D ON C.PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID = D.PRODUCT_OPTION_SET_ID \r\n"
-			+ " AND D.CATEGORY_ID = ?2 ", nativeQuery=true)
-	public List<ReadProductOptionValue> getListOptionValues(int setId, int categoryId);
+			+ " AND D.CATEGORY_ID = ?2 "
+			+ " AND B.LANGUAGE_ID= ?3 \r\n", nativeQuery=true)
+	public List<ReadProductOptionValue> getListOptionValues(int setId, int categoryId, Integer laguaageId);
 	
 	
 	@Modifying
