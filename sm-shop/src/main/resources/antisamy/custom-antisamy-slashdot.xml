@@ -73,6 +73,7 @@ Slashdot allowed tags taken from "Reply" page:
             <regexp-list>
                 <regexp name="onsiteURL"/>
                 <regexp name="offsiteURL"/>
+                <regexp value="\s+?"/>
             </regexp-list>
         </attribute>
 
@@ -84,6 +85,12 @@ Slashdot allowed tags taken from "Reply" page:
                 <literal value="justify"/>
                 <literal value="char"/>
             </literal-list>
+        </attribute>
+
+        <attribute name="class">
+            <regexp-list>
+                <regexp name="htmlTitle"/>
+            </regexp-list>
         </attribute>
 
     </common-attributes>
@@ -128,7 +135,9 @@ Slashdot allowed tags taken from "Reply" page:
             <attribute name="align"/>
         </tag>
 
-        <tag name="div" action="validate"/>
+        <tag name="div" action="validate">
+            <attribute name="class"/>
+        </tag>
         <tag name="i" action="validate"/>
         <tag name="b" action="validate"/>
         <tag name="em" action="validate"/>
@@ -147,7 +156,6 @@ Slashdot allowed tags taken from "Reply" page:
         <!-- Anchor and anchor related tags -->
 
         <tag name="a" action="validate">
-
             <attribute name="href" onInvalid="filterTag"/>
             <attribute name="nohref">
                 <literal-list>
@@ -160,6 +168,16 @@ Slashdot allowed tags taken from "Reply" page:
                     <literal value="nofollow"/>
                 </literal-list>
             </attribute>
+            <attribute name="target">
+                <literal-list>
+                    <literal value="_blank"/>
+                    <literal value="_self"/>
+                    <literal value="_parent"/>
+                    <literal value="_top"/>
+                </literal-list>
+            </attribute>
+            <attribute name="title"/>
+            <attribute name="class"/>
         </tag>
 
         <!-- List tags -->
@@ -191,6 +209,10 @@ Slashdot allowed tags taken from "Reply" page:
                 </regexp-list>
             </attribute>
         </tag>
+        <tag name="span" action="validate">
+            <attribute name="class"/>
+        </tag>
+
     </tag-rules>
 
 
