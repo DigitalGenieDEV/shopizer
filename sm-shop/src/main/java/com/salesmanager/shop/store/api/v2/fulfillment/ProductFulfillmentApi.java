@@ -162,6 +162,21 @@ public class ProductFulfillmentApi {
     }
 
 
+    @GetMapping(value = {"/auth/order_products/{orderProductId}/fulfillment/shipping/international" ,
+            "/private/order_products/{orderProductId}/fulfillment/shipping/international"})
+    @ApiOperation(httpMethod = "GET", value = "query international shipping information by order_product_id ", notes = "query international shipping information by order_product_id ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "query international shipping information by order_product_id ", response = ReadableProduct.class) })
+    @ResponseBody
+    public CommonResultDTO<List<ReadableLogisticsTrackInformation>> queryInternationalShippingInformationByOrderProductId(@PathVariable Long orderProductId) {
+        try {
+            List<ReadableLogisticsTrackInformation> readableFulfillmentShippingInfos = fulfillmentFacade.queryInternationalShippingInformationByOrderProductId(orderProductId);
+            return CommonResultDTO.ofSuccess(readableFulfillmentShippingInfos);
+        }catch (Exception e){
+            LOGGER.error("query international shipping information by order_product_id error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
 
     @RequestMapping(value = { "/auth/update/national/logistics", "/private/update/national/logistics" }, method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)

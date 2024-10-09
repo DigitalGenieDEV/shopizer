@@ -183,6 +183,21 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     @JoinColumn(name = "FULFILLMENT_MAIN_ORDER_ID", nullable = false)
     private FulfillmentMainOrder fulfillmentMainOrder;
 
+    /**
+     * 国际物流单号
+     */
+    @Column(name = "INTERNATIONAL_LOGISTICS_NUMBER")
+    private String internationalLogisticsNumber;
+
+
+    /**
+     * 国际物流公司
+     */
+    @Column(name = "INTERNATIONAL_LOGISTICS_COMPANY")
+    @Enumerated(EnumType.STRING)
+    private InternationalLogisticsCompany internationalLogisticsCompany;
+
+
 
     @Embedded
     private AuditSection auditSection = new AuditSection();

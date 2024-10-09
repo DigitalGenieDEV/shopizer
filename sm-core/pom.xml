@@ -255,6 +255,12 @@
 		      <groupId>com.querydsl</groupId>
 		      <artifactId>querydsl-jpa</artifactId>
 	    </dependency>
+
+		<dependency>
+			<groupId>com.github.kuaidi100-api</groupId>
+			<artifactId>sdk</artifactId>
+			<version>1.0.11</version>
+		</dependency>
     </dependencies>
 	
 

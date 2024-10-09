@@ -9,6 +9,8 @@ import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.fulfillment.InternationalLogisticsCompany;
+import com.salesmanager.core.model.fulfillment.outer.LogisticsTrackInformation;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
@@ -43,6 +45,9 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Autowired
     private FulfillmentHistoryService fulfillmentHistoryService;
+
+    @Autowired
+    private InternationalShippingInformationQueryService internationalShippingInformationQueryService;
 
     @Autowired
     private ShippingDocumentOrderRepository shippingDocumentOrderRepository;
@@ -402,5 +407,35 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         }
 
         return readableFulfillmentSubOrder;
+    }
+
+    @Override
+    public List<ReadableLogisticsTrackInformation> queryInternationalShippingInformationByOrderProductId(Long orderProductId) {
+        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(orderProductId);
+
+        List<LogisticsTrackInformation> logisticsTracingInfos;
+        if (fulfillmentSubOrder.getInternationalLogisticsCompany() == null) {
+            logisticsTracingInfos = internationalShippingInformationQueryService.queryByLogisticsNumber(fulfillmentSubOrder.getInternationalLogisticsNumber(), fulfillmentSubOrder.getNationalDriverPhone());
+        } else {
+            logisticsTracingInfos = internationalShippingInformationQueryService.queryByLogisticsNumber(fulfillmentSubOrder.getInternationalLogisticsCompany().getCode(), fulfillmentSubOrder.getInternationalLogisticsNumber(), fulfillmentSubOrder.getNationalDriverPhone());
+        }
+
+        List<ReadableLogisticsTrackInformation> list = logisticsTracingInfos.stream()
+                .map(this::mapLogisticsTrackInformation)
+                .collect(Collectors.toList());
+
+        return list;
+    }
+
+    private ReadableLogisticsTrackInformation mapLogisticsTrackInformation(LogisticsTrackInformation logisticsTrackInformation) {
+        ReadableLogisticsTrackInformation readableLogisticsTrackInformation = new ReadableLogisticsTrackInformation();
+        readableLogisticsTrackInformation.setTime(logisticsTrackInformation.getTime());
+        readableLogisticsTrackInformation.setContext(logisticsTrackInformation.getContext());
+        readableLogisticsTrackInformation.setFormatTime(logisticsTrackInformation.getFormatTime());
+        readableLogisticsTrackInformation.setAreaCode(logisticsTrackInformation.getAreaCode());
+        readableLogisticsTrackInformation.setAreaName(logisticsTrackInformation.getAreaName());
+        readableLogisticsTrackInformation.setStatus(logisticsTrackInformation.getStatus());
+        readableLogisticsTrackInformation.setStatusCode(logisticsTrackInformation.getStatusCode());
+        return readableLogisticsTrackInformation;
     }
 }

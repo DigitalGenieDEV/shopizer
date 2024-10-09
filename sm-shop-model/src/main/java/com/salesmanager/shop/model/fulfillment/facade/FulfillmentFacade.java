@@ -44,5 +44,7 @@ public interface FulfillmentFacade {
     void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) throws ServiceException;
 
 
+    List<ReadableLogisticsTrackInformation> queryInternationalShippingInformationByOrderProductId(Long orderProductId);
+
 }
 
