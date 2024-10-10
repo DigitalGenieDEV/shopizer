@@ -355,6 +355,72 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         return;
     }
 
+    /**
+     * 更新中国的物流单号
+     * @param persistableFulfillmentSubOrderReqDTO
+     * @throws ServiceException
+     */
+    @Override
+    public void updateInternationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException{
+        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(persistableFulfillmentSubOrderReqDTO.getType())){
+            return;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("ORDER")){
+            //更新所有履约单状态
+            List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            if (CollectionUtils.isEmpty(fulfillSubOrders)){
+                return;
+            }
+            for (com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder : fulfillSubOrders){
+                fulfillmentSubOrder.setInternationalLogisticsCompany(InternationalLogisticsCompany.valueOf(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsCompany()));
+                fulfillmentSubOrder.setInternationalLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsNumber());
+                fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            }
+            return ;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(persistableFulfillmentSubOrderReqDTO.getId());
+            fulfillmentSubOrder.setInternationalLogisticsCompany(InternationalLogisticsCompany.valueOf(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsCompany()));
+            fulfillmentSubOrder.setInternationalLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsNumber());
+            fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            return;
+        }
+        return;
+    }
+
+
+    /**
+     * 更新中国的物流单号
+     * @param persistableFulfillmentSubOrderReqDTO
+     */
+    @Override
+    public void updateCrossBorderTransportation(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException {
+        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(persistableFulfillmentSubOrderReqDTO.getType())){
+            return;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("ORDER")){
+            //更新所有履约单状态
+            List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            if (CollectionUtils.isEmpty(fulfillSubOrders)){
+                return;
+            }
+            for (com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder : fulfillSubOrders){
+                fulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsCompany());
+                fulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsNumber());
+                fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            }
+            return ;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(persistableFulfillmentSubOrderReqDTO.getId());
+            fulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsCompany());
+            fulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsNumber());
+            fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            return;
+        }
+        return;
+    }
+
 
     private ReadableFulfillmentSubOrder convertToReadableFulfillmentSubOrder(com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder) {
         if (fulfillmentSubOrder == null) {
@@ -397,7 +463,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             if (fulfillmentSubOrder.getTruckModel() != null) {
                 readableFulfillmentSubOrder.setTruckModel(fulfillmentSubOrder.getTruckModel().name());
             }
-
+            readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(fulfillmentSubOrder.getCrossBorderTransportationLogisticsCompany());
             readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(fulfillmentSubOrder.getCrossBorderTransportationLogisticsNumber());
             readableFulfillmentSubOrder.setTransportInformation(fulfillmentSubOrder.getTransportInformation());
 

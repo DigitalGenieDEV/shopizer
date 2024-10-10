@@ -102,6 +102,7 @@ public class ReadableOrderProductSnapshotMapper implements Mapper<Product, Reada
 
 		destination.setPublishWay(source.getPublishWay() == null? null : source.getPublishWay().name());
 		destination.setSku(source.getSku());
+		destination.setOutProductId(source.getOutProductId());
 		destination.setIdentifier(source.getSku());
 		destination.setRefSku(source.getRefSku());
 		destination.setId(source.getId());
