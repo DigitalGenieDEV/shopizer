@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +25,11 @@ import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.review.CustomerReviewService;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.model.catalog.product.ReadableProductReviewList;
 import com.salesmanager.shop.model.customer.PersistableCustomerReview;
 import com.salesmanager.shop.model.customer.ReadableCustomerReview;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
+import com.salesmanager.shop.store.controller.review.facade.ReviewCommonFacade;
 import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.utils.LanguageUtils;
 
@@ -52,7 +57,10 @@ public class CustomerReviewApi {
 	
 	@Inject
 	private CustomerReviewService customerReviewService;
-
+	
+	@Inject
+	private ReviewCommonFacade reviewCommonFacade;
+	
   /**
    * Reviews made for a given customer
    *
@@ -84,8 +92,19 @@ public class CustomerReviewApi {
       @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) {
     return customerFacade.getAllCustomerReviewsByReviewed(id, merchantStore, language);
   }
+  
+	@GetMapping("/auth/customers/{id}/product-reviews")
+	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")})
+	public ReadableProductReviewList getAllProductReviews(
+			@PathVariable final Long id,
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "size", required = false) Integer size,
+			@ApiIgnore MerchantStore merchantStore,
+			@ApiIgnore Language language) throws Exception {
+		return reviewCommonFacade.getReviewByCustomer(id, language, PageRequest.of(page==null?0:page, size==null?Integer.MAX_VALUE:size));
+	}
 
-	@PutMapping("/private/customers/{id}/reviews/{reviewid}")
+  @PutMapping("/private/customers/{id}/reviews/{reviewid}")
   public PersistableCustomerReview update(
       @PathVariable final Long id,
       @PathVariable final Long reviewId,
