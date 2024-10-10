@@ -15,13 +15,16 @@ public interface PageableProductOptionRepository2  extends PagingAndSortingRepos
 			+ "ON A.PRODUCT_OPTION_ID = D.PRODUCT_OPTION_ID AND A.MERCHANT_ID = D.MERCHANT_ID\r\n"
 			+ "WHERE B.MERCHANT_ID = ?1 \r\n"
 			+ "	AND (CASE WHEN ?2 <> '' THEN C.NAME LIKE %?2%  ELSE TRUE  END ) \r\n"
-			+ "AND D.CATEGORY_ID= ?3 ",
+			+ " AND D.CATEGORY_ID= ?3 \r\n"
+			+ " AND C.LANGUAGE_ID= ?4 \r\n"
+			,
 		    countQuery =  "SELECT COUNT(*) FROM PRODUCT_OPTION A INNER JOIN MERCHANT_STORE B ON A.MERCHANT_ID = B.MERCHANT_ID\r\n"
 					+ "LEFT JOIN PRODUCT_OPTION_DESC C ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID LEFT JOIN PRODUCT_OPTION_SET D\r\n"
 					+ "ON A.PRODUCT_OPTION_ID = D.PRODUCT_OPTION_ID AND A.MERCHANT_ID = D.MERCHANT_ID\r\n"
 					+ "WHERE B.MERCHANT_ID = ?1 \r\n"
-					+ "AND (CASE WHEN ?2 <> '' THEN C.NAME LIKE %?2%  ELSE TRUE  END ) \r\n"
-					+ "AND D.CATEGORY_ID= ?3 " , nativeQuery=true)
-		Page<ReadProductOption> listOptions(int merchantStoreId, String name, int categoryId, Pageable pageable);
+					+ " AND (CASE WHEN ?2 <> '' THEN C.NAME LIKE %?2%  ELSE TRUE  END ) \r\n"
+					+ " AND D.CATEGORY_ID= ?3 "
+					+ " AND C.LANGUAGE_ID= ?4 \r\n", nativeQuery=true)
+		Page<ReadProductOption> listOptions(int merchantStoreId, String name, int categoryId, Integer languageId, Pageable pageable);
 
 }

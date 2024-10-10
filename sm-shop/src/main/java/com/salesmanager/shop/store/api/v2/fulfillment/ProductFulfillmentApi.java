@@ -208,4 +208,33 @@ public class ProductFulfillmentApi {
         }
     }
 
+    @RequestMapping(value = { "/auth/update/china/logistics", "/private/update/china/logistics" }, method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public CommonResultDTO<Void> updateChainLocalLogistics(
+            @Valid @RequestBody PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) {
+        try {
+            fulfillmentFacade.updateInternationalLogistics(persistableFulfillmentLogisticsUpdateReqDTO);
+            return CommonResultDTO.ofSuccess();
+        }catch (Exception e){
+            LOGGER.error("updateNationalLogistics error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = { "/auth/update/cross_border/logistics", "/private/update/cross_border/logistics" }, method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public CommonResultDTO<Void> updateCrossBorderLogistics(
+            @Valid @RequestBody PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) {
+        try {
+            fulfillmentFacade.updateCrossBorderTransportation(persistableFulfillmentLogisticsUpdateReqDTO);
+            return CommonResultDTO.ofSuccess();
+        }catch (Exception e){
+            LOGGER.error("updateNationalLogistics error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
+
 }

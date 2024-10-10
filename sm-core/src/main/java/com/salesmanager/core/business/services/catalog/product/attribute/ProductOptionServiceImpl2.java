@@ -44,11 +44,11 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 			int page, int count) throws ServiceException {
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Pageable p = PageRequest.of(page, count);
-		return pageableProductOptionRepository2.listOptions(store.getId(), name, categoryId, p);
+		return pageableProductOptionRepository2.listOptions(store.getId(), name, categoryId, language.getId(), p);
 	}
 	
 	public List<ReadProductOptionValue>  getListOptionValues(MerchantStore store, Language language,  int setId, int categoryId) throws ServiceException{
-		return productOptionValueRepository2.getListOptionValues(setId, categoryId);
+		return productOptionValueRepository2.getListOptionValues(setId, categoryId, language.getId());
 	}
 	
 	@Transactional

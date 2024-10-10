@@ -32,6 +32,8 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 	private String orderType;
 
 
+	private String productLinkBy1688;
+
 	private List<ReadableOrderProductAttribute> attributes = null;
 
 	private ReadableBilling billing;
@@ -291,5 +293,13 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 
 	public void setReadableOrderProductDesign(ReadableOrderProductDesign readableOrderProductDesign) {
 		this.readableOrderProductDesign = readableOrderProductDesign;
+	}
+
+	public String getProductLinkBy1688() {
+		return productLinkBy1688;
+	}
+
+	public void setProductLinkBy1688(String productLinkBy1688) {
+		this.productLinkBy1688 = productLinkBy1688;
 	}
 }

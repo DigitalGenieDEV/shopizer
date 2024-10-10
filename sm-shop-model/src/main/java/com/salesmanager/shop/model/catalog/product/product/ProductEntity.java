@@ -42,6 +42,8 @@ public class ProductEntity extends Product implements Serializable {
 	private int quantity = 0;
 	private String sku;
 
+	private Long outProductId;
+
 	private boolean preOrder = false;
 
 	private Integer batchNumber;

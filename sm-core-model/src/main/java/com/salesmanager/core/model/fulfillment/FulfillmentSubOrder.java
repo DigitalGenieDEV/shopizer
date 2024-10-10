@@ -155,6 +155,12 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
 
 
     /**
+     * 跨境运输公司
+     */
+    @Column(name = "CROSS_BORDER_TRANSPORTATION_LOGISTICS_COMPANY")
+    private String crossBorderTransportationLogisticsCompany;
+
+    /**
      * 送货单
      */
     @Column(name = "DELIVERY_ORDER")

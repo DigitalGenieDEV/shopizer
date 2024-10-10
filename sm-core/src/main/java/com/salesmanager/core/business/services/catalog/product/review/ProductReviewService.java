@@ -24,4 +24,6 @@ public interface ProductReviewService extends SalesManagerEntityService<Long, Pr
 	Page<ReadProductReview> listByKeyword(Product product, String keyword, Language lang, Pageable pageRequest);
 	Page<ReadProductReview> listByStore(Integer id, String keyword, Language lang, Pageable pageRequest);
 	ProductReview findById(Long id);
+	Page<ReadProductReview> listByCustomerId(Long customerId, Language language, Pageable pageRequest);
+	Integer getRecommendCountByCustomerId(Long customerId);
 }

@@ -119,6 +119,18 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 		// TODO Auto-generated method stub
 		return productReviewRepository.listByProductId(product.getId(), lang.getId(), keyword, pageRequest);
 	}
+	
+	@Override
+	public Page<ReadProductReview> listByCustomerId(Long customerId, Language lang, Pageable pageRequest) {
+		// TODO Auto-generated method stub
+		return productReviewRepository.listByCustomerId(customerId, lang.getId(), pageRequest);
+	}
+	
+	@Override
+	public Integer getRecommendCountByCustomerId(Long customerId) {
+		// TODO Auto-generated method stub
+		return productReviewRepository.getRecommendCountByCustomerId(customerId);
+	}
 
 	@Override
 	public Page<ReadProductReview> listByStore(Integer storeId, String keyword, Language lang, Pageable pageRequest) {

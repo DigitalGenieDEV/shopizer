@@ -15,4 +15,6 @@ public interface ReadProductReview {
 	String getProduct_title();
 	int getRecommend_count();
 	int getImage_count();
+	int getProduct_quantity();
+	int getProduct_price();
 }

@@ -15,6 +15,7 @@ import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
@@ -45,6 +46,7 @@ import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
+import com.salesmanager.shop.utils.UrlGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -118,7 +120,6 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
-
 		target.setTruckTransportationCompany(source.getTruckTransportationCompany() == null? null : source.getTruckTransportationCompany().name());
 		if(source.getQcInfo() != null){
 			target.setQcInfoId(source.getQcInfo().getId());
@@ -253,11 +254,15 @@ public class ReadableOrderProductPopulator extends
 		target.setReadableProductAdditionalServices(
 				additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(source.getAdditionalServicesMap(), language, null));
 
+		//优先查询快照
 		OrderProductSnapshot snapshotByOrderProductId = orderProductSnapshotService.findSnapshotByOrderProductId(source.getId());
 		if (snapshotByOrderProductId !=null){
 			String snapshot = snapshotByOrderProductId.getSnapshot();
 			ReadableProduct readableProductSnapshot = JSON.parseObject(snapshot, ReadableProduct.class);
 			target.setProduct(readableProductSnapshot);
+			if (PublishWayEnums.IMPORT_BY_1688.name().equals(readableProductSnapshot.getPublishWay())){
+				target.setProductLinkBy1688(UrlGenerator.generateUrl(readableProductSnapshot.getOutProductId()));
+			}
 		}else {
 			String productSku = source.getSku();
 			if(!StringUtils.isBlank(productSku)) {
@@ -268,7 +273,9 @@ public class ReadableOrderProductPopulator extends
 					throw new ServiceRuntimeException(e);
 				}
 				if(product!=null) {
-
+					if (PublishWayEnums.IMPORT_BY_1688 == product.getPublishWay()){
+						target.setProductLinkBy1688(UrlGenerator.generateUrl(product.getOutProductId()));
+					}
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);

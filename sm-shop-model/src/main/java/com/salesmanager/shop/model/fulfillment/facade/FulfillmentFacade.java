@@ -40,6 +40,9 @@ public interface FulfillmentFacade {
     void updateNationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) throws ServiceException;
 
 
+    void updateInternationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentLogisticsUpdateReqDTO) throws ServiceException;
+
+    void updateCrossBorderTransportation(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException;
     List<ReadableLogisticsTrackInformation> queryInternationalShippingInformationByOrderProductId(Long orderProductId);
 
     List<ReadableLogisticsCompany> getInternationalShippingCompany(Language language);

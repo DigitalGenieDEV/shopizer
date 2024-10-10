@@ -114,6 +114,42 @@ public class ReviewCommonFacadeImpl implements ReviewCommonFacade {
 	}
 	
 	@Override
+	public ReadableProductReviewList getReviewByCustomer(Long customerId, Language language, Pageable pageRequest)
+			throws Exception {
+		
+		ReadableProductReviewList readableProductReviews = new ReadableProductReviewList();
+		Page<ReadProductReview> reviews = productReviewService.listByCustomerId(customerId, language, pageRequest);
+		List<ProductReviewDTO> resultList = new ArrayList<ProductReviewDTO>();
+		
+		if(!CollectionUtils.isEmpty(reviews.getContent())) {
+			for(ReadProductReview review : reviews) {
+				ProductReviewDTO dto = new ProductReviewDTO(review);
+				dto.setImages(productReviewImageService.getByProductReviewId(dto.getProductReviewId()));
+				resultList.add(dto);
+			}
+		}
+		readableProductReviews.setData(resultList);
+		readableProductReviews.setRecordsTotal(reviews.getTotalElements());
+		readableProductReviews.setTotalPages(reviews.getTotalPages());
+		readableProductReviews.setNumber(reviews.getSize());
+		readableProductReviews.setRecordsFiltered(reviews.getSize());
+		
+		readableProductReviews.setRecommendCount(productReviewService.getRecommendCountByCustomerId(customerId));
+		
+//		ReadableProductReviewStat readableProductReviewStat = null;
+//		if(!CollectionUtils.isEmpty(reviews.getContent())) {
+//			ProductReviewStat reviewStat = productReviewStatService.getByProduct(product);
+//			ReadableProductReviewStatPopulator statPopulator = new ReadableProductReviewStatPopulator();
+//			readableProductReviewStat = statPopulator.populate(reviewStat, null, store, language);
+//		} else {
+//			readableProductReviewStat = new ReadableProductReviewStat(product.getId());
+//		}
+		readableProductReviews.setReviewStat(null);
+		
+		return readableProductReviews;
+	}
+	
+	@Override
 	public ReadableProductReview getReviewById(Long reviewId, Product product, MerchantStore merchantStore,
 			Language language) throws Exception {
 		// TODO Auto-generated method stub

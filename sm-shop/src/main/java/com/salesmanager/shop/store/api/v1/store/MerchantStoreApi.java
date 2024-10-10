@@ -148,6 +148,23 @@ public class MerchantStoreApi {
 		return storeFacade.storeApprove(code, language);
 	}
 
+	@PostMapping(value = { "/private/store/{code}/waiting" }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(httpMethod = "POST", value = "Merchant Store Approve", notes = "", response = ReadableMerchantStore.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	public ReadableMerchantStore storeWaiting(
+			@PathVariable String code,
+			@ApiIgnore Language language,
+			HttpServletRequest request) throws Exception{
+
+		String authenticatedManager = managerFacade.authenticatedManager();
+		if (authenticatedManager == null) {
+			throw new UnauthorizedException();
+		}
+
+		managerFacade.authorizedMenu(authenticatedManager, request.getRequestURI());
+		return storeFacade.storeWaiting(code, language);
+	}
+
 	@GetMapping(value = { "/private/merchant/{code}/stores" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get retailer child stores", notes = "Merchant (retailer) can have multiple stores", response = ReadableMerchantStore.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })

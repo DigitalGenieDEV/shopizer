@@ -148,6 +148,20 @@ public class StoreFacadeImpl implements StoreFacade {
 	}
 
 	@Override
+	public ReadableMerchantStore storeWaiting(String code, Language language) {
+		MerchantStore store = getMerchantStoreByCode(code);
+
+		store.setStatus(ApproveStatus.WAITING);
+		try {
+			merchantStoreService.saveOrUpdate(store);
+		} catch (ServiceException e) {
+			throw new ServiceRuntimeException(e);
+		}
+
+		return convertMerchantStoreToReadableMerchantStoreWithFullDetails(language, store);
+	}
+
+	@Override
 	public boolean existByCode(String code) {
 		try {
 			return merchantStoreService.getByCode(code) != null;

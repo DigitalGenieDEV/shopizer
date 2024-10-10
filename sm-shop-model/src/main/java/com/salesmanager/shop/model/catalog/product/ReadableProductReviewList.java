@@ -16,4 +16,5 @@ public class ReadableProductReviewList extends ReadableList {
 	private static final long serialVersionUID = 1L;
 	private List<ProductReviewDTO> data;
 	private ReadableProductReviewStat reviewStat;
+	private Integer recommendCount;
 }

@@ -116,6 +116,10 @@ public class FulfillmentSubOrder {
      */
     private String crossBorderTransportationLogisticsNumber;
 
+    /**
+     * 跨境运输公司
+     */
+    private String crossBorderTransportationLogisticsCompany;
 
 
     /**

@@ -22,13 +22,15 @@ public class ProductReviewDTO {
 	private String productTitle;
 	private int recommendCount;
 	private int imageCount;
+	private int productQuantity;
+	private int productPrice;
 	private List<ProductReviewImage> images;
 	public ProductReviewDTO() {
 
 	}
 	public ProductReviewDTO(Long productId, Long productReviewId, Date reviewDate, int reviewsRating,
 			String reviewDescription, Long customerId, String firstName, String lastName, String productTitle,
-			int recommendCount, int imageCount) {
+			int recommendCount, int imageCount, int productQuantity, int productPrice) {
 		this.productId = productId;
 		this.productReviewId = productReviewId;
 		this.reviewDate = reviewDate;
@@ -40,6 +42,8 @@ public class ProductReviewDTO {
 		this.productTitle = productTitle;
 		this.recommendCount = recommendCount;
 		this.imageCount = imageCount;
+		this.productQuantity = productQuantity;
+		this.productPrice = productPrice;
 	}
 	public ProductReviewDTO(ReadProductReview review) {
 		// TODO Auto-generated constructor stub
@@ -54,5 +58,7 @@ public class ProductReviewDTO {
 		this.productTitle = review.getProduct_title();
 		this.recommendCount = review.getRecommend_count();
 		this.imageCount = review.getImage_count();
+		this.productQuantity = review.getProduct_quantity();
+		this.productPrice = review.getProduct_price();
 	}
 }
