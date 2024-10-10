@@ -154,7 +154,7 @@ public class OrderProductAdditionalServiceInstanceApi {
     }
 
     @PostMapping(value = "/auth/order_products/additional_service/history/reply")
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> reply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
                                           @ApiIgnore MerchantStore merchantStore,
@@ -198,7 +198,7 @@ public class OrderProductAdditionalServiceInstanceApi {
     }
 
     @DeleteMapping(value = "/auth/order_products/additional_service/history/reply")
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> delReply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
                                              @ApiIgnore MerchantStore merchantStore,
@@ -242,7 +242,7 @@ public class OrderProductAdditionalServiceInstanceApi {
     }
 
     @PutMapping(value = "/auth/order_products/additional_service/history/reply")
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> updateReply(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalServiceInstance,
                                                 @ApiIgnore MerchantStore merchantStore,
@@ -286,7 +286,7 @@ public class OrderProductAdditionalServiceInstanceApi {
     }
 
     @PutMapping(value = "/auth/order_products/additional_service/history/confirm")
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResultDTO<Boolean> updateStatus(@Valid @RequestBody PersistableOrderProductAdditionalServiceInstance persistableOrderProductAdditionalService,
                                                  @ApiIgnore MerchantStore merchantStore,
