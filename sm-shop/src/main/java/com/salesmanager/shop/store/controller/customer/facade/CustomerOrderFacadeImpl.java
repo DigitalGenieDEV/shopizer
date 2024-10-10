@@ -162,11 +162,12 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 throw new ServiceException("Customer Shopping cart with Customer id " + customer.getId() + " does not have checked cart items");
             }
 
-            // check whether sample type
+            // check whether sample order type
             boolean isSampleType = checkedCartItems.stream().allMatch(p -> CartItemType.SAMPLE.equals(p.getCartItemType()));
+            // check whether oem order type
             boolean isOEMProducts = checkedCartItems.stream()
                     .map(CustomerShoppingCartItem::getProduct)
-                    .allMatch(product -> Objects.equals(product.getType().getCode(), ProductType.OEM.name()));
+                    .allMatch(product -> product.getType() != null && Objects.equals(product.getType().getCode(), ProductType.OEM.name()));
             // check whether 1688 order type
             boolean allAre1688Products = checkedCartItems.stream()
                     .map(CustomerShoppingCartItem::getProduct)
@@ -229,6 +230,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
                 persistableOrder.setShippingQuote(customerOrder.getShippingQuote());
                 persistableOrder.setAddress(customerOrder.getAddress());
                 persistableOrder.setStatus(customerOrder.getStatus());
+                persistableOrder.setSource(customerOrder.getSource());
 
 
                 persistableOrder.setTruckTransportationCompany(customerOrder.getTruckTransportationCompany());

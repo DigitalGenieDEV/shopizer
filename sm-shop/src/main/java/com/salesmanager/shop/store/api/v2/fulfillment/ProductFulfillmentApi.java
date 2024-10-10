@@ -178,6 +178,22 @@ public class ProductFulfillmentApi {
         }
     }
 
+    @GetMapping(value = {"/auth/order_products/fulfillment/shipping/international/company" ,
+            "/private/order_products/fulfillment/shipping/international/company"})
+    @ApiOperation(httpMethod = "GET", value = "get international shipping company define", notes = "get international shipping company define")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "get international shipping company define", response = ReadableProduct.class) })
+    @ResponseBody
+    public CommonResultDTO<List<ReadableLogisticsCompany>> getInternationalShippingCompany(@ApiIgnore Language language) {
+        try {
+            List<ReadableLogisticsCompany> logisticsCompanyList = fulfillmentFacade.getInternationalShippingCompany(language);
+            return CommonResultDTO.ofSuccess(logisticsCompanyList);
+        }catch (Exception e){
+            LOGGER.error("query international shipping information by order_product_id error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
+
     @RequestMapping(value = { "/auth/update/national/logistics", "/private/update/national/logistics" }, method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

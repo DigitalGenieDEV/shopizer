@@ -2,6 +2,10 @@ package com.salesmanager.core.model.fulfillment;
 
 import lombok.Getter;
 
+/**
+ * This enum is copy from {@link com.kuaidi100.sdk.contant.CompanyConstant}
+ */
+
 @Getter
 public enum InternationalLogisticsCompany {
     SF("shunfeng"),

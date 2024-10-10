@@ -1,14 +1,10 @@
 package com.salesmanager.shop.model.fulfillment.facade;
 
 import com.salesmanager.core.business.exception.ServiceException;
-import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.fulfillment.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 public interface FulfillmentFacade {
@@ -45,6 +41,8 @@ public interface FulfillmentFacade {
 
 
     List<ReadableLogisticsTrackInformation> queryInternationalShippingInformationByOrderProductId(Long orderProductId);
+
+    List<ReadableLogisticsCompany> getInternationalShippingCompany(Language language);
 
 }
 
