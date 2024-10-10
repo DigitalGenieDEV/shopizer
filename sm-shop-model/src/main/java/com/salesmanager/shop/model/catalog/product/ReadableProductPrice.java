@@ -13,6 +13,8 @@ public class ReadableProductPrice extends Entity implements Serializable {
 	 */
 	private List<PriceRange> priceRangeList;
 
+	private String currency;
+
 	private static final long serialVersionUID = 1L;
 	private String originalPrice;
 	private String finalPrice;
@@ -23,6 +25,7 @@ public class ReadableProductPrice extends Entity implements Serializable {
 	public String getOriginalPrice() {
 		return originalPrice;
 	}
+
 
 	public void setOriginalPrice(String originalPrice) {
 		this.originalPrice = originalPrice;
@@ -66,5 +69,13 @@ public class ReadableProductPrice extends Entity implements Serializable {
 
 	public void setPriceRangeList(List<PriceRange> priceRangeList) {
 		this.priceRangeList = priceRangeList;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 }

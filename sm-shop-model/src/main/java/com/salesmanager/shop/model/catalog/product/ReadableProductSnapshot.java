@@ -1,16 +1,10 @@
 package com.salesmanager.shop.model.catalog.product;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
-import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.model.catalog.ProductMaterial;
 import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAnnouncement;
-import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAttribute;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductProperty;
 import com.salesmanager.shop.model.catalog.product.product.ProductEntity;
@@ -18,14 +12,16 @@ import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProdu
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.store.ReadableMerchantStore;
 
-public class ReadableProduct extends ProductEntity implements Serializable {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ReadableProductSnapshot extends ProductEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private String currency;
 
 	private SellerProductShippingTextInfo sellerProductShippingTextInfo;
 
@@ -63,7 +59,7 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	private List<ReadableCategory> categories = new ArrayList<ReadableCategory>();
 	private ReadableProductType type;
 
-	private List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials = new ArrayList<>();
+	private List<ProductMaterial> productMaterials = new ArrayList<>();
 
 
 	private ReadableProductAnnouncement  productAnnouncement = new ReadableProductAnnouncement();
@@ -267,19 +263,11 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		this.sellerProductShippingTextInfo = sellerProductShippingTextInfo;
 	}
 
-	public List<com.salesmanager.shop.model.catalog.ProductMaterial> getProductMaterials() {
+	public List<ProductMaterial> getProductMaterials() {
 		return productMaterials;
 	}
 
-	public void setProductMaterials(List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials) {
+	public void setProductMaterials(List<ProductMaterial> productMaterials) {
 		this.productMaterials = productMaterials;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
 	}
 }

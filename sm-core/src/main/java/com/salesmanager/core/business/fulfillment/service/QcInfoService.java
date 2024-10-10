@@ -17,5 +17,9 @@ public interface QcInfoService extends SalesManagerEntityService<Long, QcInfo> {
     void updateQcOrderIdById(Long orderId, Long id);
 
     List<QcInfo> queryQcInfoByStatus(QcStatusEnums qcStatus);
+
+
+    QcInfo queryQcInfoByOrderProductId(Long orderProductId);
+
 }
 

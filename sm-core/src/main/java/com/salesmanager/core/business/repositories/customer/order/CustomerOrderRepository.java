@@ -19,4 +19,7 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
             + "join fetch op.orderAttributes opa "
             + "left join fetch op.prices opp where co.id = ?1")
     CustomerOrder findOne(Long id);
+
+
+
 }

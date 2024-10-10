@@ -9,6 +9,8 @@ import com.salesmanager.core.enmus.DocumentTypeEnums;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.fulfillment.InternationalLogisticsCompany;
+import com.salesmanager.core.model.fulfillment.outer.LogisticsTrackInformation;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
@@ -43,6 +45,9 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
 
     @Autowired
     private FulfillmentHistoryService fulfillmentHistoryService;
+
+    @Autowired
+    private InternationalShippingInformationQueryService internationalShippingInformationQueryService;
 
     @Autowired
     private ShippingDocumentOrderRepository shippingDocumentOrderRepository;
@@ -350,6 +355,72 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         return;
     }
 
+    /**
+     * 更新中国的物流单号
+     * @param persistableFulfillmentSubOrderReqDTO
+     * @throws ServiceException
+     */
+    @Override
+    public void updateInternationalLogistics(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException{
+        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(persistableFulfillmentSubOrderReqDTO.getType())){
+            return;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("ORDER")){
+            //更新所有履约单状态
+            List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            if (CollectionUtils.isEmpty(fulfillSubOrders)){
+                return;
+            }
+            for (com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder : fulfillSubOrders){
+                fulfillmentSubOrder.setInternationalLogisticsCompany(InternationalLogisticsCompany.valueOf(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsCompany()));
+                fulfillmentSubOrder.setInternationalLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsNumber());
+                fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            }
+            return ;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(persistableFulfillmentSubOrderReqDTO.getId());
+            fulfillmentSubOrder.setInternationalLogisticsCompany(InternationalLogisticsCompany.valueOf(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsCompany()));
+            fulfillmentSubOrder.setInternationalLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getInternationalLogisticsNumber());
+            fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            return;
+        }
+        return;
+    }
+
+
+    /**
+     * 更新中国的物流单号
+     * @param persistableFulfillmentSubOrderReqDTO
+     */
+    @Override
+    public void updateCrossBorderTransportation(PersistableFulfillmentLogisticsUpdateReqDTO persistableFulfillmentSubOrderReqDTO) throws ServiceException {
+        if (persistableFulfillmentSubOrderReqDTO == null || StringUtils.isEmpty(persistableFulfillmentSubOrderReqDTO.getType())){
+            return;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("ORDER")){
+            //更新所有履约单状态
+            List<com.salesmanager.core.model.fulfillment.FulfillmentSubOrder> fulfillSubOrders = fulfillmentSubOrderService.queryFulfillmentSubOrderListByOrderId(persistableFulfillmentSubOrderReqDTO.getId());
+            if (CollectionUtils.isEmpty(fulfillSubOrders)){
+                return;
+            }
+            for (com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder : fulfillSubOrders){
+                fulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsCompany());
+                fulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsNumber());
+                fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            }
+            return ;
+        }
+        if (persistableFulfillmentSubOrderReqDTO.getType().equals("PRODUCT")){
+            com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(persistableFulfillmentSubOrderReqDTO.getId());
+            fulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsCompany());
+            fulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(persistableFulfillmentSubOrderReqDTO.getCrossBorderTransportationLogisticsNumber());
+            fulfillmentSubOrderService.save(fulfillmentSubOrder);
+            return;
+        }
+        return;
+    }
+
 
     private ReadableFulfillmentSubOrder convertToReadableFulfillmentSubOrder(com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder) {
         if (fulfillmentSubOrder == null) {
@@ -392,7 +463,7 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             if (fulfillmentSubOrder.getTruckModel() != null) {
                 readableFulfillmentSubOrder.setTruckModel(fulfillmentSubOrder.getTruckModel().name());
             }
-
+            readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(fulfillmentSubOrder.getCrossBorderTransportationLogisticsCompany());
             readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(fulfillmentSubOrder.getCrossBorderTransportationLogisticsNumber());
             readableFulfillmentSubOrder.setTransportInformation(fulfillmentSubOrder.getTransportInformation());
 
@@ -402,5 +473,35 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         }
 
         return readableFulfillmentSubOrder;
+    }
+
+    @Override
+    public List<ReadableLogisticsTrackInformation> queryInternationalShippingInformationByOrderProductId(Long orderProductId) {
+        com.salesmanager.core.model.fulfillment.FulfillmentSubOrder fulfillmentSubOrder = fulfillmentSubOrderService.queryFulfillmentSubOrderByOrderProductId(orderProductId);
+
+        List<LogisticsTrackInformation> logisticsTracingInfos;
+        if (fulfillmentSubOrder.getInternationalLogisticsCompany() == null) {
+            logisticsTracingInfos = internationalShippingInformationQueryService.queryByLogisticsNumber(fulfillmentSubOrder.getInternationalLogisticsNumber(), fulfillmentSubOrder.getNationalDriverPhone());
+        } else {
+            logisticsTracingInfos = internationalShippingInformationQueryService.queryByLogisticsNumber(fulfillmentSubOrder.getInternationalLogisticsCompany().getCode(), fulfillmentSubOrder.getInternationalLogisticsNumber(), fulfillmentSubOrder.getNationalDriverPhone());
+        }
+
+        List<ReadableLogisticsTrackInformation> list = logisticsTracingInfos.stream()
+                .map(this::mapLogisticsTrackInformation)
+                .collect(Collectors.toList());
+
+        return list;
+    }
+
+    private ReadableLogisticsTrackInformation mapLogisticsTrackInformation(LogisticsTrackInformation logisticsTrackInformation) {
+        ReadableLogisticsTrackInformation readableLogisticsTrackInformation = new ReadableLogisticsTrackInformation();
+        readableLogisticsTrackInformation.setTime(logisticsTrackInformation.getTime());
+        readableLogisticsTrackInformation.setContext(logisticsTrackInformation.getContext());
+        readableLogisticsTrackInformation.setFormatTime(logisticsTrackInformation.getFormatTime());
+        readableLogisticsTrackInformation.setAreaCode(logisticsTrackInformation.getAreaCode());
+        readableLogisticsTrackInformation.setAreaName(logisticsTrackInformation.getAreaName());
+        readableLogisticsTrackInformation.setStatus(logisticsTrackInformation.getStatus());
+        readableLogisticsTrackInformation.setStatusCode(logisticsTrackInformation.getStatusCode());
+        return readableLogisticsTrackInformation;
     }
 }

@@ -66,7 +66,7 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
     @Transactional
     public void createFulfillmentOrderByOrder(Order order) {
         // 创建履约主订单
-        FulfillmentMainOrder fulfillmentMainOrder = createFulfillmentMainOrder(order);
+        FulfillmentMainOrder fulfillmentMainOrder = onlyCreateFulfillmentMainOrder(order, false);
 
         // 获取增值服务映射
         Map<Long, AdditionalServices> additionalServicesMap = additionalServicesService.queryAdditionalServicesByMerchantIds(Long.valueOf(order.getMerchant().getId()));
@@ -81,9 +81,10 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
     }
 
     // 创建履约主订单的方法
-    private FulfillmentMainOrder createFulfillmentMainOrder(Order order) {
+    @Override
+    public FulfillmentMainOrder onlyCreateFulfillmentMainOrder(Order order, Boolean partialDelivery) {
         FulfillmentMainOrder fulfillmentMainOrder = new FulfillmentMainOrder();
-        fulfillmentMainOrder.setPartialDelivery(false);
+        fulfillmentMainOrder.setPartialDelivery(partialDelivery == null? false : partialDelivery);
         fulfillmentMainOrder.setDelivery(order.getDelivery());
         fulfillmentMainOrder.setBilling(order.getBilling());
         // 设置 Order 的 FulfillmentMainOrder 属性
@@ -101,16 +102,22 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
     private void processOrderProduct(Order order, OrderProduct orderProduct, Map<Long, AdditionalServices> additionalServicesMap) {
         if (StringUtils.isNotEmpty(orderProduct.getAdditionalServicesMap())) {
             Map<String, String> additionalServiceMap = (Map<String, String>) JSON.parse(orderProduct.getAdditionalServicesMap());
+            boolean isApproved = false;
             for (Map.Entry<String, String> entry : additionalServiceMap.entrySet()) {
-                handleAdditionalService(order, orderProduct, additionalServicesMap, entry);
+                boolean result =  handleAdditionalService(order, orderProduct, additionalServicesMap, entry);
+                if (result){
+                    isApproved = true;
+                }
             }
+            // 自动创建增值服务订单并通过
+            createQcInfo(order, orderProduct, isApproved ? QcStatusEnums.APPROVE : null);
         } else {
             createQcInfo(order, orderProduct, QcStatusEnums.APPROVE);
         }
     }
 
     // 处理增值服务的方法
-    private void handleAdditionalService(Order order, OrderProduct orderProduct, Map<Long, AdditionalServices> additionalServicesMap, Map.Entry<String, String> entry) {
+    private boolean handleAdditionalService(Order order, OrderProduct orderProduct, Map<Long, AdditionalServices> additionalServicesMap, Map.Entry<String, String> entry) {
         Long serviceId = Long.parseLong(entry.getKey());
         AdditionalServices additionalServices = additionalServicesMap.get(serviceId);
 
@@ -119,9 +126,9 @@ public class FulfillmentMainOrderServiceImpl extends SalesManagerEntityServiceIm
                 (AdditionalServiceEnums.PACKAGING_SUPPLEMENT.name().equals(additionalServices.getCode()) ||
                         AdditionalServiceEnums.PRODUCT_PHOTOS.name().equals(additionalServices.getCode()))) {
 
-            // 自动创建增值服务订单并通过
-            createQcInfo(order, orderProduct, QcStatusEnums.APPROVE);
+           return true;
         }
+        return false;
     }
 
     // 创建QC信息的方法

@@ -1,32 +1,35 @@
 package com.salesmanager.core.business.services.order.ordertotal;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import com.salesmanager.core.business.repositories.order.OrderRepository;
+import com.salesmanager.core.business.repositories.order.OrderTotalRepository;
+import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.business.services.order.OrderServiceImpl;
+import com.salesmanager.core.model.order.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.OrderSummary;
-import com.salesmanager.core.model.order.OrderTotal;
-import com.salesmanager.core.model.order.OrderTotalVariation;
-import com.salesmanager.core.model.order.RebatesOrderTotalVariation;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.core.modules.order.total.OrderTotalPostProcessorModule;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("OrderTotalService")
-public class OrderTotalServiceImpl implements OrderTotalService {
+public class OrderTotalServiceImpl  extends SalesManagerEntityServiceImpl<Long, OrderTotal>  implements OrderTotalService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderTotalServiceImpl.class);
 
@@ -38,8 +41,18 @@ public class OrderTotalServiceImpl implements OrderTotalService {
 	@Inject
 	private ProductService productService;
 
+	private OrderTotalRepository orderTotalRepository;
+
+
+	@Inject
+	public OrderTotalServiceImpl(OrderTotalRepository orderTotalRepository) {
+		super(orderTotalRepository);
+		this.orderTotalRepository = orderTotalRepository;
+	}
+
 
 	@Override
+	@Transactional(readOnly = true)
 	public OrderTotalVariation findOrderTotalVariation(OrderSummary summary, Customer customer, MerchantStore store, Language language)
 			throws Exception {
 	
@@ -76,6 +89,11 @@ public class OrderTotalServiceImpl implements OrderTotalService {
 		
 		
 		return variation;
+	}
+
+	@Override
+	public void updateValueByOrderIdAndModule(BigDecimal value, Long orderId, String module) {
+		orderTotalRepository.updateValueByOrderIdAndModule(value, orderId, module);
 	}
 
 }

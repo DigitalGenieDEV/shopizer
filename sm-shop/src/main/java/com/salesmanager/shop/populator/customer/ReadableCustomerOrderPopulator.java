@@ -45,6 +45,7 @@ import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacadeImpl;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
+import com.salesmanager.shop.store.controller.order.facade.OrderProductPopulatorUtil;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.EmailTemplatesUtils;
 import com.salesmanager.shop.utils.ImageFilePath;
@@ -78,6 +79,9 @@ public class ReadableCustomerOrderPopulator extends AbstractDataPopulator<Custom
     @Inject
     @Qualifier("img")
     private ImageFilePath imageUtils;
+
+    @Autowired
+    private OrderProductPopulatorUtil orderProductPopulatorUtil;
 
     @Autowired
     private ProductVariantService productVariantService;
@@ -187,26 +191,8 @@ public class ReadableCustomerOrderPopulator extends AbstractDataPopulator<Custom
             throws ConversionException {
         List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
         for (OrderProduct p : order.getOrderProducts()) {
-            ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-            orderProductPopulator.setLocale(locale);
-            orderProductPopulator.setProductService(productService);
-            orderProductPopulator.setPricingService(pricingService);
-            orderProductPopulator.setimageUtils(imageUtils);
-            orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-            orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-            orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-            orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-            orderProductPopulator.setProductVariantService(productVariantService);
-            orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-            orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
-            orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-            orderProductPopulator.populate(p, orderProduct, store, language);
-
-            // image
-
-            // attributes
+            orderProductPopulatorUtil.buildReadableOrderProduct(p, orderProduct, store, language);
 
             orderProducts.add(orderProduct);
         }

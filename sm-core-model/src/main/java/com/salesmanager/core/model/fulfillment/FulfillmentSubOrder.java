@@ -155,6 +155,12 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
 
 
     /**
+     * 跨境运输公司
+     */
+    @Column(name = "CROSS_BORDER_TRANSPORTATION_LOGISTICS_COMPANY")
+    private String crossBorderTransportationLogisticsCompany;
+
+    /**
      * 送货单
      */
     @Column(name = "DELIVERY_ORDER")
@@ -182,6 +188,21 @@ public class FulfillmentSubOrder extends SalesManagerEntity<Long, FulfillmentSub
     @ManyToOne(targetEntity = FulfillmentMainOrder.class)
     @JoinColumn(name = "FULFILLMENT_MAIN_ORDER_ID", nullable = false)
     private FulfillmentMainOrder fulfillmentMainOrder;
+
+    /**
+     * 国际物流单号
+     */
+    @Column(name = "INTERNATIONAL_LOGISTICS_NUMBER")
+    private String internationalLogisticsNumber;
+
+
+    /**
+     * 国际物流公司
+     */
+    @Column(name = "INTERNATIONAL_LOGISTICS_COMPANY")
+    @Enumerated(EnumType.STRING)
+    private InternationalLogisticsCompany internationalLogisticsCompany;
+
 
 
     @Embedded

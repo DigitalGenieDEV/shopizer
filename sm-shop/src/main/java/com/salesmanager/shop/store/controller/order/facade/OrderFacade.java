@@ -76,6 +76,8 @@ public interface OrderFacade {
 	ShippingQuote getShippingQuote(Customer customer, ShoppingCart cart,
 			MerchantStore store, Language language) throws Exception;
 
+
+	Order processOrderSplit(Long oldOrderId, List<Long> orderProductIdList) throws ServiceException;
 	/**
 	 * Creates a ShippingSummary object for OrderTotal calculation based on a ShippingQuote
 	 * @param quote

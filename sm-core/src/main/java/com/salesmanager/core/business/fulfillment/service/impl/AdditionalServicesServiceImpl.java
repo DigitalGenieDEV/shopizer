@@ -8,6 +8,7 @@ import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.reference.language.Language;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class AdditionalServicesServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AdditionalServices queryAdditionalServicesById(Long id) {
         return additionalServicesRepository.getById(id);
     }

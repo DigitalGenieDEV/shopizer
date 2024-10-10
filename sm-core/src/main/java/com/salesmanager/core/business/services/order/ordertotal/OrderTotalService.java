@@ -5,6 +5,9 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderSummary;
 import com.salesmanager.core.model.order.OrderTotalVariation;
 import com.salesmanager.core.model.reference.language.Language;
+import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
 
 /**
  * Additional dynamic order total calculation
@@ -16,4 +19,7 @@ public interface OrderTotalService {
 	
 	OrderTotalVariation findOrderTotalVariation(final OrderSummary summary, final Customer customer, final MerchantStore store, final Language language) throws Exception;
 
+
+	void updateValueByOrderIdAndModule(BigDecimal value, Long orderId
+			, String module);
 }

@@ -34,6 +34,11 @@ public class OrderProductServiceImpl extends SalesManagerEntityServiceImpl<Long,
         return orderProductRepository.findListByOrderId(orderId);
     }
 
+    @Override
+    public void updateOrderIdById(Long orderId, Long id) {
+        orderProductRepository.updateOrderIdById(orderId, id);
+    }
+
 
     @Override
     public OrderProduct getOrderProduct(Long orderProductId, MerchantStore store) {

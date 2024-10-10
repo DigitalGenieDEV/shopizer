@@ -1,19 +1,33 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
+import com.alibaba.fastjson.JSON;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.FulfillmentMainOrderService;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.shoppingcart.CustomerShoppingCartService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductSnapshotService;
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.model.order.OrderProductSnapshot;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.mapper.catalog.product.ReadableOrderProductSnapshotMapper;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductMapper;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
+import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.ReadableProductSnapshot;
+import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.PersistableDirectCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
@@ -69,6 +83,21 @@ public class CustomerShoppingCartApi {
 
     @Inject
     private CustomerOrderFacade customerOrderFacade;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ReadableOrderProductSnapshotMapper readableOrderProductSnapshotMapper;
+
+    @Autowired
+    private ProductVariantService productVariantService;
+
+    @Autowired
+    private ReadableProductVariantMapper readableProductVariantMapper;
+
+    @Autowired
+    private OrderProductSnapshotService orderProductSnapshotService;
 
     @Autowired
     private com.salesmanager.shop.store.controller.customer.facade.v1.CustomerFacade customerFacadev1;
@@ -467,40 +496,81 @@ public class CustomerShoppingCartApi {
                 @ApiIgnore Language language,
                 HttpServletRequest request,
                 HttpServletResponse response, Locale locale) throws Exception {
-            long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
-            /*
+        long start = LogPermUtil.start("CustomerShoppingCartApi/checkout");
             Principal principal = request.getUserPrincipal();
             String userName = principal.getName();
-            */
-            Customer customer = customerService.getByNick("hajin@test.com");
+        Customer customer = customerService.getByNick(userName);
 
-            if (customer == null) {
-                response.sendError(401, "Error while performing checkout customer not authorized");
-                return null;
-            }
+        if (customer == null) {
+            response.sendError(401, "Error while performing checkout customer not authorized");
+            return null;
+        }
 
-            CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
-            if (cart == null) {
-                throw new ResourceNotFoundException("Cusotmer Cart [" + customer.getId() + "] does not exist");
-            }
-            persistableCustomerOrder.setCustomerId(customer.getId());
-            persistableCustomerOrder.setCurrency("KRW");
-            CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
-            Long customerOrderId = modelCustomerOrder.getId();
-            modelCustomerOrder.setId(customerOrderId);
+        CustomerShoppingCart cart = customerShoppingCartService.getCustomerShoppingCart(customer);
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cusotmer Cart [" + customer.getId() + "] does not exist");
+        }
+        persistableCustomerOrder.setCustomerId(customer.getId());
+        persistableCustomerOrder.setCurrency("KRW");
+        CustomerOrder modelCustomerOrder = customerOrderFacade.processCustomerOrder(persistableCustomerOrder, customer, language, locale);
+        Long customerOrderId = modelCustomerOrder.getId();
+        modelCustomerOrder.setId(customerOrderId);
 
-            //查询该笔订单下所有商家订单
-            List<Order> orders = modelCustomerOrder.getOrders();
+        //查询该笔订单下所有商家订单
+        List<Order> orders = modelCustomerOrder.getOrders();
 
-            orders.forEach(order -> {
-                //创建履约单
-                fulfillmentMainOrderService.createFulfillmentOrderByOrder(order);
+        orders.forEach(order -> {
+            //创建履约单
+            fulfillmentMainOrderService.createFulfillmentOrderByOrder(order);
+        });
+
+
+        List<OrderProductSnapshot> orderProductSnapshots = new ArrayList<>();
+
+        orders.forEach(order -> {
+            Set<OrderProduct> orderProducts = order.getOrderProducts();
+            orderProducts.forEach(orderProduct -> {
+                try {
+                    Product modelProduct = productService.getBySku(orderProduct.getSku());
+                    OrderProductSnapshot orderProductSnapshot = new OrderProductSnapshot();
+                    orderProductSnapshot.setProductId(modelProduct.getId());
+                    orderProductSnapshot.setSku(orderProduct.getSku());
+                    orderProductSnapshot.setOrderProductId(orderProduct.getId());
+                    orderProductSnapshot.setOrderId(order.getId());
+
+                    ReadableProductSnapshot productProxy = readableOrderProductSnapshotMapper.convert(modelProduct, order.getMerchant(), language);
+                    ProductVariant productVariant = productVariantService.queryBySku(orderProduct.getSku());
+                    if (productVariant != null) {
+                        ReadableProductVariant convert = readableProductVariantMapper.convert(productVariant, order.getMerchant(), language, true);
+                        productProxy.setVariants(Collections.singletonList(convert));
+                    }
+                    orderProductSnapshot.setSnapshot(JSON.toJSONString(productProxy));
+
+                    orderProductSnapshots.add(orderProductSnapshot);
+                } catch (ServiceException e) {
+                    throw new RuntimeException(e);
+                }
             });
+        });
 
-            ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+        Long startTime = System.currentTimeMillis();
+        //创建订单快照；
 
-            LogPermUtil.end("CustomerShoppingCartApi/checkout", start);
-            return readableCustomerOrderConfirmation;
+        Long endTime = System.currentTimeMillis();
+        System.out.println("orderProductSnapshot create time" + (endTime-startTime)+ "ms");
+
+        Long startTime1 = System.currentTimeMillis();
+
+        orderProductSnapshotService.saveOrderProductList(orderProductSnapshots);
+
+        Long endTime1 = System.currentTimeMillis();
+        System.out.println("orderProductSnapshot build time" + (endTime1-startTime1)+ "ms");
+
+
+        ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+
+        LogPermUtil.end("CustomerShoppingCartApi/checkout", start);
+        return readableCustomerOrderConfirmation;
 
 
     }

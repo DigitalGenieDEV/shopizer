@@ -76,6 +76,9 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
     @Inject
     private PricingService pricingService;
 
+    @Autowired
+    private OrderProductPopulatorUtil orderProductPopulatorUtil;
+
     @Inject
     @Qualifier("img")
     private ImageFilePath imageUtils;
@@ -129,22 +132,10 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
                 return returnList;
             }
 
-            ReadableOrderProductPopulator readableOrderProductPopulator = new ReadableOrderProductPopulator();
-            readableOrderProductPopulator.setProductService(productService);
-            readableOrderProductPopulator.setimageUtils(imageUtils);
-            readableOrderProductPopulator.setPricingService(pricingService);
-            readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-            readableOrderProductPopulator.setProductVariantService(productVariantService);
-            readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-            readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-            readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-            readableOrderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
-            readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
             List<ReadableOrderProduct> readableOrderProducts = new ArrayList<>();
             for (OrderProduct orderProduct : orderProducts) {
                 ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
-                readableOrderProductPopulator.populate(orderProduct, readableOrderProduct, store, language);
+                orderProductPopulatorUtil.buildReadableOrderProduct(orderProduct, readableOrderProduct, orderProduct.getOrder().getMerchant(), language);
                 readableOrderProducts.add(readableOrderProduct);
             }
 
@@ -167,23 +158,9 @@ public class OrderProductFacadeImpl implements OrderProductFacade {
         if (modelOrderProduct == null) {
             throw new ResourceNotFoundException("OrderProduct not found with id " + id);
         }
-
-        ReadableOrderProductPopulator readableOrderProductPopulator = new ReadableOrderProductPopulator();
-        readableOrderProductPopulator.setProductService(productService);
-        readableOrderProductPopulator.setimageUtils(imageUtils);
-        readableOrderProductPopulator.setPricingService(pricingService);
-        readableOrderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-        readableOrderProductPopulator.setProductVariantService(productVariantService);
-        readableOrderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-        readableOrderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-        readableOrderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
-        readableOrderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-        readableOrderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
         ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
-
         try {
-            readableOrderProductPopulator.populate(modelOrderProduct, readableOrderProduct, merchantStore, language);
+            orderProductPopulatorUtil.buildReadableOrderProduct(modelOrderProduct, readableOrderProduct, modelOrderProduct.getOrder().getMerchant(), language);
         } catch (Exception e) {
             throw new ServiceRuntimeException("Error while getting order product [" + id + "]");
         }

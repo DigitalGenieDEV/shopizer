@@ -577,6 +577,7 @@ public class ReadableProductPopulator extends
 						target.setProductPrice(readableProductPrice);
 
 						if(pr.isPresent()) {
+							readableProductPrice.setCurrency(pr.get().getCurrency());
 							readableProductPrice.setId(pr.get().getId());
 							Optional<ProductPriceDescription> d = pr.get().getDescriptions().stream().filter(desc -> desc.getLanguage().getCode().equals(lang.getCode())).findFirst();
 							if(d.isPresent()) {

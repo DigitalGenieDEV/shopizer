@@ -22,6 +22,8 @@ public interface FulfillmentHistoryService extends SalesManagerEntityService<Lon
     List<FulfillmentHistory> queryFulfillmentHistoryByOrderIdAndProductId(Long orderId, Long orderProductId);
 
 
+    void updateOrderIdByOrderProductId(Long orderId, Long orderProductId);
+
     List< FulfillmentHistory> queryFulfillmentHistoryByOrderProductId(Long orderProductId);
 }
 

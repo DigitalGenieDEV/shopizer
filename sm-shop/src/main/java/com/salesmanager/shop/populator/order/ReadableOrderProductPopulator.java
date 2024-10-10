@@ -1,5 +1,6 @@
 package com.salesmanager.shop.populator.order;
 
+import com.alibaba.fastjson.JSON;
 import com.google.api.client.util.Lists;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
@@ -9,10 +10,12 @@ import com.salesmanager.core.business.fulfillment.service.impl.ShippingOrderServ
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductSnapshotService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.business.utils.ObjectConvert;
 import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.fulfillment.FulfillmentSubOrder;
@@ -20,6 +23,7 @@ import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.OrderProductSnapshot;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.order.orderproduct.OrderProductAttribute;
 import com.salesmanager.core.model.reference.language.Language;
@@ -27,6 +31,7 @@ import com.salesmanager.core.model.shipping.ShippingOption;
 import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.ReadableProductSnapshot;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
@@ -41,6 +46,7 @@ import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.ImageFilePath;
+import com.salesmanager.shop.utils.UrlGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -65,6 +71,8 @@ public class ReadableOrderProductPopulator extends
 	private AdditionalServicesConvert additionalServicesConvert;
 	private ProductVariantService productVariantService;
 	private ReadableProductVariantMapper readableProductVariantMapper;
+
+	private OrderProductSnapshotService orderProductSnapshotService;
 	private FulfillmentFacade fulfillmentFacade;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadableOrderProductPopulator.class);
 
@@ -112,7 +120,6 @@ public class ReadableOrderProductPopulator extends
 		target.setPlayThroughOption(source.getPlayThroughOption() == null? null : source.getPlayThroughOption().name());
 		target.setTruckModel(source.getTruckModel() == null? null : source.getTruckModel().name());
 		target.setTruckType(source.getTruckType() == null? null : source.getTruckType().name());
-
 		target.setTruckTransportationCompany(source.getTruckTransportationCompany() == null? null : source.getTruckTransportationCompany().name());
 		if(source.getQcInfo() != null){
 			target.setQcInfoId(source.getQcInfo().getId());
@@ -247,18 +254,28 @@ public class ReadableOrderProductPopulator extends
 		target.setReadableProductAdditionalServices(
 				additionalServicesConvert.convertToReadableAdditionalServicesByShoppingItem(source.getAdditionalServicesMap(), language, null));
 
-
-		String productSku = source.getSku();
+		//优先查询快照
+		OrderProductSnapshot snapshotByOrderProductId = orderProductSnapshotService.findSnapshotByOrderProductId(source.getId());
+		if (snapshotByOrderProductId !=null){
+			String snapshot = snapshotByOrderProductId.getSnapshot();
+			ReadableProduct readableProductSnapshot = JSON.parseObject(snapshot, ReadableProduct.class);
+			target.setProduct(readableProductSnapshot);
+			if (PublishWayEnums.IMPORT_BY_1688.name().equals(readableProductSnapshot.getPublishWay())){
+				target.setProductLinkBy1688(UrlGenerator.generateUrl(readableProductSnapshot.getOutProductId()));
+			}
+		}else {
+			String productSku = source.getSku();
 			if(!StringUtils.isBlank(productSku)) {
 				Product product = null;
 				try {
 					product = productService.getBySku(productSku);
-//					product = productService.getBySku(productSku, store, language);
 				} catch (ServiceException e) {
 					throw new ServiceRuntimeException(e);
 				}
 				if(product!=null) {
-
+					if (PublishWayEnums.IMPORT_BY_1688 == product.getPublishWay()){
+						target.setProductLinkBy1688(UrlGenerator.generateUrl(product.getOutProductId()));
+					}
 					ReadableProductSimplePopulator populator = new ReadableProductSimplePopulator();
 					populator.setPricingService(pricingService);
 					populator.setimageUtils(imageUtils);
@@ -290,8 +307,7 @@ public class ReadableOrderProductPopulator extends
 					}
 				}
 			}
-		
-		
+		}
 		return target;
 	}
 
@@ -392,4 +408,11 @@ public class ReadableOrderProductPopulator extends
 	}
 
 
+	public OrderProductSnapshotService getOrderProductSnapshotService() {
+		return orderProductSnapshotService;
+	}
+
+	public void setOrderProductSnapshotService(OrderProductSnapshotService orderProductSnapshotService) {
+		this.orderProductSnapshotService = orderProductSnapshotService;
+	}
 }

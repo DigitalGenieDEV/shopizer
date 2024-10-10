@@ -11,6 +11,7 @@ import com.salesmanager.core.business.services.payments.combine.CombineTransacti
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
+import com.salesmanager.core.constants.ProductType;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
@@ -163,12 +164,17 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
             // check whether sample type
             boolean isSampleType = checkedCartItems.stream().allMatch(p -> CartItemType.SAMPLE.equals(p.getCartItemType()));
+            boolean isOEMProducts = checkedCartItems.stream()
+                    .map(CustomerShoppingCartItem::getProduct)
+                    .allMatch(product -> Objects.equals(product.getType().getCode(), ProductType.OEM.name()));
             // check whether 1688 order type
             boolean allAre1688Products = checkedCartItems.stream()
                     .map(CustomerShoppingCartItem::getProduct)
                     .allMatch(product -> product.getPublishWay() != null && product.getPublishWay().equals(PublishWayEnums.IMPORT_BY_1688));
             if (isSampleType) {
                 customerOrder.setOrderType(OrderType.SAMPLE.name());
+            } else if (isOEMProducts) {
+                customerOrder.setOrderType(OrderType.OEM.name());
             } else if (allAre1688Products){
                 customerOrder.setStatus(OrderStatus.PENDING_REVIEW.getValue());
                 customerOrder.setOrderType(OrderType.PRODUCT_1688.name());

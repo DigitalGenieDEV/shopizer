@@ -1,6 +1,7 @@
 package com.salesmanager.core.business.services.order;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import com.salesmanager.core.model.payments.Transaction;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
-
+import org.springframework.data.repository.query.Param;
 
 
 public interface OrderService extends SalesManagerEntityService<Long, Order> {
@@ -26,6 +27,9 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 			throws ServiceException;
 
 	void updateOrderStatus(Long orderId, OrderStatus status);
+
+
+	void updateOrderTotalPriceByOrderId(Long orderId, BigDecimal totalPrice);
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in checkout page
@@ -121,6 +125,8 @@ public interface OrderService extends SalesManagerEntityService<Long, Order> {
 			throws ServiceException;
 
 
+
+	Long findCustomerOrderIdByOrderId(Long orderId);
 
 
 	/**

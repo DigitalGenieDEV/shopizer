@@ -54,6 +54,10 @@ public class FulfillmentHistoryServiceImpl extends SalesManagerEntityServiceImpl
         return fulfillmentHistoryRepository.queryFulfillmentHistoryByOrderIdAndProductId(orderId, productId);
     }
 
+    @Override
+    public void updateOrderIdByOrderProductId(Long orderId, Long orderProductId) {
+        fulfillmentHistoryRepository.updateOrderIdByOrderProductId(orderId, orderProductId);
+    }
 
     @Override
     public List<FulfillmentHistory> queryFulfillmentHistoryByOrderProductId(Long orderProductId) {

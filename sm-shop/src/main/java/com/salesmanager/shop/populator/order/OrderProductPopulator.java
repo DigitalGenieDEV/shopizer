@@ -1,15 +1,25 @@
 package com.salesmanager.shop.populator.order;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductSnapshotService;
 import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.price.ProductPriceDO;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.order.OrderProductSnapshot;
 import com.salesmanager.core.utils.LogPermUtil;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductMapper;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
+import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacadeImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -36,6 +46,7 @@ import com.salesmanager.shop.constants.ApplicationConstants;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -159,9 +170,6 @@ public class OrderProductPopulator {
 //				throw new ConversionException("Cannot get product with sku " + source.getSku());
 			}
 
-			if(modelProduct.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-				throw new ConversionException("Invalid product with sku " + source.getSku());
-			}
 
 			DigitalProduct digitalProduct = digitalProductService.getByProduct(store, modelProduct);
 
@@ -176,9 +184,9 @@ public class OrderProductPopulator {
 
 			
 		} catch (Exception e) {
+			LOGGER.error("order product populate error",e);
 			throw new ConversionException(e);
 		}
-		
 		LogPermUtil.end("OrderProductPopulator/populate", start);
 		return target;
 	}

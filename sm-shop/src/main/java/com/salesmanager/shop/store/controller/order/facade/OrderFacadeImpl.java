@@ -1,6 +1,7 @@
 package com.salesmanager.shop.store.controller.order.facade;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -10,19 +11,31 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import com.salesmanager.core.business.fulfillment.service.FulfillmentHistoryService;
-import com.salesmanager.core.business.fulfillment.service.InvoicePackingFormService;
-import com.salesmanager.core.business.fulfillment.service.QcInfoService;
-import com.salesmanager.core.business.fulfillment.service.ShippingOrderService;
+import com.alibaba.fastjson.JSON;
+import com.google.api.client.util.Lists;
+import com.salesmanager.core.business.fulfillment.service.*;
 import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentOrderRepository;
+import com.salesmanager.core.business.repositories.order.OrderRelationRepository;
 import com.salesmanager.core.business.repositories.order.orderproduct.OrderProductRepository;
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
+import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductSnapshotService;
+import com.salesmanager.core.business.services.order.ordertotal.OrderTotalService;
 import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
+import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.utils.*;
+import com.salesmanager.core.enmus.TruckModelEnums;
+import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.catalog.category.Category;
+import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.fulfillment.*;
+import com.salesmanager.core.model.fulfillment.AdditionalServices;
+import com.salesmanager.core.model.fulfillment.FulfillmentHistory;
+import com.salesmanager.core.model.fulfillment.FulfillmentMainOrder;
 import com.salesmanager.core.model.fulfillment.GeneralDocument;
 import com.salesmanager.core.model.fulfillment.InvoicePackingForm;
 import com.salesmanager.core.model.fulfillment.InvoicePackingFormDetail;
@@ -30,10 +43,16 @@ import com.salesmanager.core.model.fulfillment.QcInfo;
 import com.salesmanager.core.model.fulfillment.ShippingDocumentOrder;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProductList;
+import com.salesmanager.core.model.order.orderproduct.OrderProductPrice;
 import com.salesmanager.core.model.payments.*;
+import com.salesmanager.core.model.shipping.*;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.catalog.ReadableCategoryMapper;
+import com.salesmanager.shop.mapper.catalog.product.ReadableProductMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
+import com.salesmanager.shop.model.catalog.category.ReadableCategory;
+import com.salesmanager.shop.model.catalog.product.ReadableProduct;
+import com.salesmanager.shop.model.catalog.product.ReadableProductSnapshot;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
@@ -46,6 +65,7 @@ import com.salesmanager.shop.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,9 +105,6 @@ import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.order.payment.CreditCard;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.core.model.shipping.ShippingProduct;
-import com.salesmanager.core.model.shipping.ShippingQuote;
-import com.salesmanager.core.model.shipping.ShippingSummary;
 import com.salesmanager.core.model.shoppingcart.ShoppingCart;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.shop.model.customer.PersistableCustomer;
@@ -123,6 +140,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Autowired
 	private OrderProductService orderProductService;
 
+	@Autowired
+	private AdditionalServicesService additionalServicesService;
 
 	@Inject
 	private OrderService orderService;
@@ -162,9 +181,26 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Inject
 	private ZoneService zoneService;
 
+	@Autowired
+	private CustomerOrderService customerOrderService;
+
+	@Autowired
+	private OrderTotalService orderTotalService;
 
 	@Autowired
 	private PersistableOrderApiPopulator persistableOrderApiPopulator;
+
+	@Autowired
+	private ReadableProductMapper readableProductMapper;
+
+	@Autowired
+	private ProductVariantService productVariantService;
+
+	@Autowired
+	private ReadableProductVariantMapper readableProductVariantMapper;
+
+	@Autowired
+	private OrderProductSnapshotService orderProductSnapshotService;
 
 	@Autowired
 	private ReadableOrderPopulator readableOrderPopulator;
@@ -187,6 +223,9 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Autowired
 	private FulfillmentHistoryService fulfillmentHistoryService;
 
+	@Autowired
+	private OrderRelationRepository orderRelationRepository;
+
 	@Inject
 	@Qualifier("img")
 	private ImageFilePath imageUtils;
@@ -194,15 +233,14 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Autowired
 	private ShippingOrderService shippingOrderService;
 
-
-	@Autowired
-	private ProductVariantService productVariantService;
-	@Autowired
-	private ReadableProductVariantMapper readableProductVariantMapper;
 	@Inject
 	private InvoicePackingFormService invoicePackingFormService;
 	@Autowired
 	private FulfillmentFacade fulfillmentFacade;
+	@Autowired
+	private FulfillmentSubOrderService fulfillmentSubOrderService;
+	@Autowired
+	private FulfillmentMainOrderService fulfillmentMainOrderService;
 	@Autowired
 	private AdditionalServicesConvert additionalServicesConvert;
 	@Autowired
@@ -211,6 +249,12 @@ public class OrderFacadeImpl implements OrderFacade {
 	private ReadableCategoryMapper  readableCategoryMapper;
 	@Autowired
 	private QcInfoService qcInfoService;
+	@Autowired
+	private CustomerService customerService;
+	@Autowired
+	private LanguageService languageService;
+	@Autowired
+	private OrderProductPopulatorUtil orderProductPopulatorUtil;
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStore store, Customer customer, ShoppingCart shoppingCart,
@@ -1106,26 +1150,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			throws ConversionException {
 		List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
 		for (OrderProduct p : order.getOrderProducts()) {
-			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-			orderProductPopulator.setLocale(locale);
-			orderProductPopulator.setProductService(productService);
-			orderProductPopulator.setPricingService(pricingService);
-			orderProductPopulator.setimageUtils(imageUtils);
-			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-			orderProductPopulator.setProductVariantService(productVariantService);
-			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
-			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-			orderProductPopulator.populate(p, orderProduct, store, language);
-
-			// image
-
-			// attributes
+			orderProductPopulatorUtil.buildReadableOrderProduct(p, orderProduct, store, language);
 
 			orderProducts.add(orderProduct);
 		}
@@ -1232,20 +1258,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			// order products
 			List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
 			for (OrderProduct p : modelOrder.getOrderProducts()) {
-				ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-				orderProductPopulator.setProductService(productService);
-				orderProductPopulator.setPricingService(pricingService);
-				orderProductPopulator.setimageUtils(imageUtils);
-				orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-				orderProductPopulator.setProductVariantService(productVariantService);
-				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
-				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-				orderProductPopulator.populate(p, orderProduct, store, language);
+				orderProductPopulatorUtil.buildReadableOrderProduct(p, orderProduct, store, language);
 				orderProducts.add(orderProduct);
 			}
 
@@ -1273,20 +1287,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			// order products
 			List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
 			for (OrderProduct p : modelOrder.getOrderProducts()) {
-				ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-				orderProductPopulator.setProductService(productService);
-				orderProductPopulator.setPricingService(pricingService);
-				orderProductPopulator.setimageUtils(imageUtils);
-				orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-				orderProductPopulator.setProductVariantService(productVariantService);
-				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
-				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-				orderProductPopulator.populate(p, orderProduct, modelOrder.getMerchant(), language);
+				orderProductPopulatorUtil.buildReadableOrderProduct(p, orderProduct, modelOrder.getMerchant(), language);
 				orderProducts.add(orderProduct);
 			}
 
@@ -1376,7 +1378,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderProductPopulator.setDigitalProductService(digitalProductService);
 			orderProductPopulator.setProductAttributeService(productAttributeService);
 			orderProductPopulator.setProductService(productService);
-
 			for (ShoppingCartItem item : shoppingCartItems) {
 				OrderProduct orderProduct = new OrderProduct();
 				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language, true);
@@ -1514,159 +1515,153 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 
-//	/**
-//	 * 订单拆分
-//	 * @param order
-//	 * @param customer
-//	 * @param store
-//	 * @param language
-//	 * @param locale
-//	 * @return
-//	 * @throws ServiceException
-//	 */
-//	public Order processOrderSplit(Long orderId, List<Long> orderProductIdList, com.salesmanager.shop.model.order.v1.PersistableOrder order, Customer customer,
-//							  MerchantStore store, Language language, Locale locale) throws ServiceException {
-//
-//		Validate.notNull(order, "Order cannot be null");
-//		Validate.notNull(customer, "Customer cannot be null");
-//		Validate.notNull(store, "MerchantStore cannot be null");
-//		Validate.notNull(language, "Language cannot be null");
-//		Validate.notNull(locale, "Locale cannot be null");
-//
-//		long start = LogPermUtil.start("processOrder");
-//		try {
-//			Order modelOrder = new Order();
-//
-//			modelOrder =  orderService.getById(orderId);
-//			modelOrder.setId(null);
-//
-//			Set<OrderProduct> orderProducts = new LinkedHashSet<OrderProduct>();
-//
-//			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
-//			orderProductPopulator.setDigitalProductService(digitalProductService);
-//			orderProductPopulator.setProductAttributeService(productAttributeService);
-//			orderProductPopulator.setProductService(productService);
-//
-//			for (Long orderProductId : orderProductIdList) {
-//				OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
-//				orderProducts.add(orderProduct);
-//			}
-//
-//			modelOrder.setOrderProducts(orderProducts);
-//
-//
-//			//开始计算新创建的订单金额；
-//			LOGGER.debug("[processOrder] process order shopping cart calculate order total");
-//			OrderTotalSummary orderTotalSummary = null;
-//
-//			//这个地方是计算订单商品金额
-//			OrderSummary orderSummary = new OrderSummary();
-//			List<ShoppingCartItem> itemsSet = new ArrayList<ShoppingCartItem>(cart.getLineItems());
-//			orderSummary.setProducts(itemsSet);
-//
-//			orderTotalSummary = orderService.caculateOrderTotal(orderSummary, customer, store, language);
-//
-//			if (order.getPayment().getAmount() == null) {
-//				throw new ConversionException("Requires Payment.amount");
-//			}
-//
-//			String submitedAmount = order.getPayment().getAmount();
-//
-//			BigDecimal formattedSubmittedAmount = productPriceUtils.getAmount(submitedAmount);
-//
-//
-//			BigDecimal calculatedAmount = orderTotalSummary.getTotal();
-//			String strCalculatedTotal = calculatedAmount.toPlainString();
-//
-//			// compare both prices
-//			if (calculatedAmount.compareTo(formattedSubmittedAmount) != 0) {
-//
-//
-//				throw new ConversionException("Payment.amount does not match what the system has calculated "
-//						+ strCalculatedTotal + " (received " + submitedAmount + ") please recalculate the order and submit again");
-//			}
-//
-//			modelOrder.setTotal(calculatedAmount);
-//			List<com.salesmanager.core.model.order.OrderTotal> totals = orderTotalSummary.getTotals();
-//			Set<com.salesmanager.core.model.order.OrderTotal> set = new HashSet<com.salesmanager.core.model.order.OrderTotal>();
-//
-//			if (!CollectionUtils.isEmpty(totals)) {
-//				for (com.salesmanager.core.model.order.OrderTotal total : totals) {
-//					total.setOrder(modelOrder);
-//					set.add(total);
-//				}
-//			}
-//			modelOrder.setOrderTotal(set);
-//
-//			LOGGER.debug("[processOrder] process order shopping cart payment");
-//			PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
-//			paymentPopulator.setPricingService(pricingService);
-//			Payment paymentModel = new Payment();
-//			paymentPopulator.populate(order.getPayment(), paymentModel, store, language);
-//
-//			modelOrder.setShoppingCartCode(cart.getShoppingCartCode());
-//
-//			//lookup existing customer
-//			//if customer exist then do not set authentication for this customer and send an instructions email
-//			/** **/
-//			if(!StringUtils.isBlank(customer.getNick()) && !customer.isAnonymous()) {
-//				if(order.getCustomerId() == null && (customerFacade.checkIfUserExists(customer.getNick(), store))) {
-//					customer.setAnonymous(true);
-//					customer.setNick(null);
-//					//send email instructions
-//				}
-//			}
-//
-//
-//			LOGGER.debug("[processOrder] process order shopping cart process order");
-//			//order service
-//			modelOrder = orderService.processOrder(modelOrder, customer, items, orderTotalSummary, paymentModel, store);
-//
-//			// update cart
-//			try {
-//				LOGGER.info("[processOrder] process order shopping cart save update");
-//				cart.setOrderId(modelOrder.getId());
-//				shoppingCartFacade.saveOrUpdateShoppingCart(cart);
-//			} catch (Exception e) {
-//				LOGGER.error("Cannot delete cart " + cart.getId(), e);
-//			}
-//
-//			//email management
-//			if ("true".equals(coreConfiguration.getProperty("ORDER_EMAIL_API"))) {
-//				// send email
-//				try {
-//
-//					notify(modelOrder, customer, store, language, locale);
-//
-//
-//				} catch (Exception e) {
-//					LOGGER.error("Cannot send order confirmation email", e);
-//				}
-//			}
-//
-//
-//			//删除订单商品id
-//			orderProductRepository.deleteById(orderProductId);
-//			//更新qc
-//
-//			qcInfoService.updateQcStatusById();
-//			//更新履约子单 orderId
-//
-//
-//			LogPermUtil.end("processOrderSplit", start);
-//
-//			return modelOrder;
-//
-//		} catch (Exception e) {
-//			LOGGER.error("processOrder error", e);
-//			throw new ServiceException(e);
-//
-//		}
-//
-//	}
+	/**
+	 * 订单拆分
+	 * @param oldOrderId  拆单的订单id
+	 * @param orderProductIdList 需要拆单的订单商品id
+	 * @return
+	 * @throws ServiceException
+	 */
+	@Override
+	public Order processOrderSplit(Long oldOrderId, List<Long> orderProductIdList) throws ServiceException {
+
+		long start = LogPermUtil.start("processOrder");
+		try {
+			Order oldOrder =  orderService.getById(oldOrderId);
+
+			Long customerOrderId = orderService.findCustomerOrderIdByOrderId(oldOrderId);
+
+
+			Order newOrderFromOld = createNewOrderFromOld(oldOrder);
+
+			if (orderProductIdList.size()>=oldOrder.getOrderProducts().size()){
+				throw new ServiceRuntimeException("Need to reserve an order product");
+			}
+
+			Set<OrderProduct> orderProducts = new LinkedHashSet<OrderProduct>();
+
+			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
+			orderProductPopulator.setDigitalProductService(digitalProductService);
+			orderProductPopulator.setProductAttributeService(productAttributeService);
+			orderProductPopulator.setProductService(productService);
+
+			for (Long orderProductId : orderProductIdList) {
+				OrderProduct orderProduct = orderProductService.getOrderProduct(orderProductId);
+				orderProducts.add(orderProduct);
+			}
+
+			newOrderFromOld.setOrderProducts(orderProducts);
+
+			Long customerId = oldOrder.getCustomerId();
+
+			Customer customer = customerService.getById(customerId);
+
+			//开始计算新创建的订单金额；
+			LOGGER.debug("[processOrder] process order shopping cart calculate order total");
+
+			String languageString = oldOrder.getLocale().getLanguage();
+			Language language = languageService.getByCode(languageString);
+
+			//这个地方是计算订单商品金额
+			OrderTotalSummary orderTotalSummary = caculateOrderBySplitOrder(newOrderFromOld, Lists.newArrayList(orderProducts), customer, oldOrder.getMerchant(), language);
+
+			BigDecimal calculatedAmount = orderTotalSummary.getTotal();
+
+			newOrderFromOld.setTotal(calculatedAmount);
+			List<com.salesmanager.core.model.order.OrderTotal> totals = orderTotalSummary.getTotals();
+			Set<com.salesmanager.core.model.order.OrderTotal> set = new HashSet<com.salesmanager.core.model.order.OrderTotal>();
+
+			if (!CollectionUtils.isEmpty(totals)) {
+				for (com.salesmanager.core.model.order.OrderTotal total : totals) {
+					total.setOrder(newOrderFromOld);
+					set.add(total);
+				}
+			}
+			newOrderFromOld.setOrderTotal(set);
+
+			//查询关联关系
+			List<OrderRelation> orderRelationBySourceOrderId = orderRelationRepository.findOrderRelationBySourceOrderId(oldOrderId);
+
+			//根据关联关系创建订单号
+			if (CollectionUtils.isEmpty(orderRelationBySourceOrderId)){
+				newOrderFromOld.setOrderNo(oldOrder.getOrderNo()+"-1");
+			}else {
+				newOrderFromOld.setOrderNo(oldOrder.getOrderNo()+"-"+orderRelationBySourceOrderId.size());
+			}
+
+			//创建订单
+			orderService.create(newOrderFromOld);
+
+			FulfillmentMainOrder fulfillmentMainOrder = fulfillmentMainOrderService.onlyCreateFulfillmentMainOrder(newOrderFromOld, true);
+
+			CustomerOrder customerOrder = customerOrderService.getCustomerOrder(customerOrderId);
+			List<Order> orders = customerOrder.getOrders();
+			orders.add(newOrderFromOld);
+			customerOrderService.save(customerOrder);
+
+			//保存关联关系
+			OrderRelation orderRelation = new OrderRelation();
+			if (CollectionUtils.isEmpty(orderRelationBySourceOrderId)){
+				orderRelation.setRootOrderId(oldOrder.getId());
+			}else {
+				orderRelation.setRootOrderId(orderRelationBySourceOrderId.get(0).getRootOrderId());
+			}
+
+			orderRelation.setSourceOrderId(oldOrder.getId());
+			orderRelation.setOrderId(newOrderFromOld.getId());
+			orderRelationRepository.save(orderRelation);
+
+			Order finalModelOrder = newOrderFromOld;
+
+			//删除订单商品id
+			orderProductIdList.forEach(id->{
+				orderProductService.updateOrderIdById(newOrderFromOld.getId(), id);
+
+				QcInfo qcInfo = qcInfoService.queryQcInfoByOrderProductId(id);
+				//更新qc 替换订单id
+				qcInfoService.updateQcOrderIdById(finalModelOrder.getId(), qcInfo.getId());
+				//更新履约子单 orderId 和履约主单id
+				fulfillmentSubOrderService.updateFulfillmentSubOrderIdAndFulfillmentMainIdByOrderProductId(finalModelOrder.getId(), fulfillmentMainOrder.getId(), id);
+				//更新履约单历史记录id
+				fulfillmentHistoryService.updateOrderIdByOrderProductId(finalModelOrder.getId(), id);
+			});
+
+			//这个地方是计算订单商品金额
+			List<OrderProduct> oldOrderProducts = removeOrderProducts(oldOrder, orderProductIdList);
+
+			OrderTotalSummary oldOrderTotalSummary = caculateOrderBySplitOrder(oldOrder, oldOrderProducts, customer, oldOrder.getMerchant(), language);
+
+			BigDecimal oldCalculatedAmount = oldOrderTotalSummary.getTotal();
+
+			newOrderFromOld.setTotal(oldCalculatedAmount);
+			List<com.salesmanager.core.model.order.OrderTotal> oldTotals = oldOrderTotalSummary.getTotals();
+			Set<com.salesmanager.core.model.order.OrderTotal> oldSet = new HashSet<com.salesmanager.core.model.order.OrderTotal>();
+
+			if (!CollectionUtils.isEmpty(oldTotals)) {
+				for (com.salesmanager.core.model.order.OrderTotal total : oldTotals) {
+					orderTotalService.updateValueByOrderIdAndModule(total.getValue(), oldOrder.getId(), total.getModule());
+
+					total.setOrder(newOrderFromOld);
+					oldSet.add(total);
+				}
+			}
+			//最后在更新一下order里面的金额
+			orderService.updateOrderTotalPriceByOrderId(oldOrder.getId(), oldCalculatedAmount);
+
+			LogPermUtil.end("processOrderSplit", start);
+			return newOrderFromOld;
+		}catch (ServiceRuntimeException e) {
+			LOGGER.error("processOrder error", e);
+			throw e;
+		} catch (Exception e) {
+			LOGGER.error("processOrder error", e);
+			throw new ServiceException(e);
+		}
+
+	}
 
 	@Async
-	private void notify(Order order, Customer customer, MerchantStore store, Language language, Locale locale) throws Exception {
+	protected void notify(Order order, Customer customer, MerchantStore store, Language language, Locale locale) throws Exception {
 
 		// send order confirmation email to customer
 		emailTemplatesUtils.sendOrderEmail(customer.getEmailAddress(), customer, order, locale,
@@ -1967,21 +1962,9 @@ public class OrderFacadeImpl implements OrderFacade {
 
 
 		return orderProducts.stream().map(orderProduct -> {
-			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-			orderProductPopulator.setProductService(productService);
-			orderProductPopulator.setPricingService(pricingService);
-			orderProductPopulator.setimageUtils(imageUtils);
-			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-			orderProductPopulator.setProductVariantService(productVariantService);
-			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
-			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
 			ReadableOrderProduct readableOrderProduct = new ReadableOrderProduct();
 			try {
-				orderProductPopulator.populate(orderProduct, readableOrderProduct, null, language);
+				orderProductPopulatorUtil.buildReadableOrderProduct(orderProduct, readableOrderProduct, orderProduct.getOrder().getMerchant(), language);
 			} catch (ConversionException e) {
 				return null;
 			}
@@ -2005,21 +1988,8 @@ public class OrderFacadeImpl implements OrderFacade {
 		List<ReadableOrderProduct> returnList = new ArrayList<>();
 
 		for (OrderProduct product : orderProducts) {
-			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-			orderProductPopulator.setLocale(locale);
-			orderProductPopulator.setProductService(productService);
-			orderProductPopulator.setPricingService(pricingService);
-			orderProductPopulator.setimageUtils(imageUtils);
-			orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-			orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-			orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
-			orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-			orderProductPopulator.setProductVariantService(productVariantService);
-			orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-			orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 			ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-			orderProductPopulator.populate(product, orderProduct, null, language);
+			orderProductPopulatorUtil.buildReadableOrderProduct(product, orderProduct, product.getOrder().getMerchant(), language);
 			returnList.add(orderProduct);
 		}
 		return returnList;
@@ -2047,21 +2017,8 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 			for (OrderProduct product : content) {
-				ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-				orderProductPopulator.setLocale(locale);
-				orderProductPopulator.setProductService(productService);
-				orderProductPopulator.setPricingService(pricingService);
-				orderProductPopulator.setimageUtils(imageUtils);
-				orderProductPopulator.setAdditionalServicesConvert(additionalServicesConvert);
-				orderProductPopulator.setReadableMerchantStorePopulator(readableMerchantStorePopulator);
-				orderProductPopulator.setReadableCategoryMapper(readableCategoryMapper);
-
-				orderProductPopulator.setInvoicePackingFormService(invoicePackingFormService);
-				orderProductPopulator.setProductVariantService(productVariantService);
-				orderProductPopulator.setFulfillmentFacade(fulfillmentFacade);
-				orderProductPopulator.setReadableProductVariantMapper(readableProductVariantMapper);
 				ReadableOrderProduct orderProduct = new ReadableOrderProduct();
-				orderProductPopulator.populate(product, orderProduct, null, language);
+				orderProductPopulatorUtil.buildReadableOrderProduct(product, orderProduct, product.getOrder().getMerchant(), language);
 				returnList.add(orderProduct);
 			}
 
@@ -2231,5 +2188,391 @@ public class OrderFacadeImpl implements OrderFacade {
 		populator.setPricingService(pricingService);
 		populator.populate(capturableCombineTransaction, readableCombineTransaction, merchantStore, language);
 		return readableCombineTransaction;
+	}
+
+
+	/**
+	 * 计算拆单后的价格
+	 * @param orderProducts
+	 * @param customer
+	 * @param store
+	 * @param language
+	 * @return
+	 * @throws Exception
+	 */
+	public OrderTotalSummary caculateOrderBySplitOrder(Order modelOrder, List<OrderProduct> orderProducts, Customer customer, final MerchantStore store, final Language language) throws Exception {
+		long start = LogPermUtil.start("OrderService/caculateOrder");
+		OrderTotalSummary totalSummary = new OrderTotalSummary();
+		List<com.salesmanager.core.model.order.OrderTotal> orderTotals = new ArrayList<com.salesmanager.core.model.order.OrderTotal>();
+
+		BigDecimal grandTotal = new BigDecimal(0);
+		grandTotal.setScale(0, RoundingMode.HALF_UP);
+
+		LOGGER.debug("[caculateOrder] calculate order qty price");
+		//price by item
+		/**
+		 * qty * price
+		 * subtotal
+		 */
+		BigDecimal subTotal = new BigDecimal(0);
+
+		//手续费
+		BigDecimal totalProductHandlingFeePrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+
+		//运费
+		BigDecimal totalShippingPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+
+		//增值服务费
+		BigDecimal totalAdditionalServicesPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+
+		//erp费用
+		BigDecimal erpPrice = BigDecimal.ZERO.setScale(0, RoundingMode.UP);
+
+
+		subTotal.setScale(0, RoundingMode.UP);
+		for(OrderProduct item : orderProducts) {
+
+			//查询快照；
+			OrderProductSnapshot snapshotByOrderProduct = orderProductSnapshotService.findSnapshotByOrderProductId(item.getId());
+
+			String snapshot = snapshotByOrderProduct.getSnapshot();
+
+			ReadableProductSnapshot readableProductSnapshot = JSON.parseObject(snapshot, ReadableProductSnapshot.class);
+
+			if (item.getPrices() == null) {
+				throw new ServiceException("shopping cart item sku = [" +item.getSku()+"] price is null");
+			}
+			//创单时候价格
+			Set<OrderProductPrice> prices = item.getPrices();
+			OrderProductPrice price = prices.iterator().next();
+
+			BigDecimal st = price.getProductPrice().multiply(new BigDecimal(item.getProductQuantity()));
+			subTotal = subTotal.add(st);
+
+			List<ReadableCategory> sortedCategories = readableProductSnapshot.getCategories();
+			sortedCategories.sort((c1, c2) -> Integer.compare(c2.getDepth(), c1.getDepth()));
+
+			for (ReadableCategory category : sortedCategories) {
+				if (category != null ) {
+					if (StringUtils.isNotEmpty(category.getHandlingFeeFor1688())
+							&& readableProductSnapshot.getPublishWay() != null
+							&& PublishWayEnums.IMPORT_BY_1688.name().equals(readableProductSnapshot.getPublishWay())){
+						BigDecimal handlingFee = new BigDecimal(category.getHandlingFeeFor1688()).setScale(3, RoundingMode.UP);
+						BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
+						BigDecimal itemPrice = price.getProductPrice();
+						BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+						finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getProductQuantity()));
+						totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+						break;
+					}
+					if (StringUtils.isNotEmpty(category.getHandlingFee())){
+						BigDecimal handlingFee = new BigDecimal(category.getHandlingFee()).setScale(3, RoundingMode.UP);
+						BigDecimal handlingFeeDecimal = handlingFee.divide(new BigDecimal("100"));
+						BigDecimal itemPrice = price.getProductPrice();
+						BigDecimal finalHandlingFeePrice = itemPrice.multiply(handlingFeeDecimal).setScale(0, RoundingMode.UP);
+						finalHandlingFeePrice = finalHandlingFeePrice.multiply(new BigDecimal(item.getProductQuantity()));
+						totalProductHandlingFeePrice = totalProductHandlingFeePrice.add(finalHandlingFeePrice);
+						break;
+					}
+				}
+			}
+
+
+			//运费
+			ShippingType shippingType = item.getShippingType();
+			//跨境运费处理
+			if (shippingType != null && shippingType == shippingType.INTERNATIONAL){
+				switch(item.getNationalTransportationMethod()){
+					case SHIPPING:
+						//todo 计算价格
+						break;
+					case AIR_TRANSPORTATION:
+						//todo 计算价格
+						break;
+				}
+
+			}
+
+			//国内运费处理逻辑
+			if (shippingType != null && shippingType == shippingType.NATIONAL){
+				//委托配送价格
+				if (ShippingTransportationType.COMMISSIONED_DELIVERY == item.getShippingTransportationType()
+						&& item.getNationalTransportationMethod() !=null){
+					switch(item.getNationalTransportationMethod()){
+						case TRUCK:
+							TruckModelEnums truckModel = item.getTruckModel();
+							TruckTypeEnums truckType = item.getTruckType();
+							//todo计算金额
+							break;
+						case SHIPPING:
+							break;
+
+						case LOGISTICS:
+							break;
+
+						case URGENT_DELIVERY:
+							break;
+
+						case DIRECT_DELIVERY:
+							break;
+					}
+					//todo 计算费用
+				}
+			}
+
+			//additionalServicePrice
+			String additionalServicesMap = item.getAdditionalServicesMap();
+			if (StringUtils.isNotEmpty(additionalServicesMap)){
+				Map<String, String> additionalServiceMapFromJson = (Map<String, String>) JSON.parse(additionalServicesMap);
+
+				Set<String> keySet = additionalServiceMapFromJson.keySet();
+
+				for(String id : keySet){
+					AdditionalServices additionalServices = additionalServicesService.queryAdditionalServicesById(Long.valueOf(id));
+
+					String additionalServicesPrice = AdditionalServicesUtils.getPrice(additionalServices, additionalServiceMapFromJson.get(id) == null ? 0 :Integer.valueOf(additionalServiceMapFromJson.get(id)), item.getProductQuantity());
+
+					totalAdditionalServicesPrice = totalAdditionalServicesPrice.add(new BigDecimal(additionalServicesPrice).setScale(0, RoundingMode.UP));
+				}
+			}
+
+
+//            //erp
+//            List<ProductMaterial> productMaterials = productMaterialService.queryByProductId(item.getProductId());
+//            if (CollectionUtils.isNotEmpty(productMaterials)){
+//                for (ProductMaterial productMaterial : productMaterials ){
+//                    Long materialId = productMaterial.getMaterialId();
+//                    Material material  = erpService.getById(materialId);
+//                    BigDecimal price = material.getPrice();
+//                    Long weight = productMaterial.getWeight();
+//                    BigDecimal productErpPrice = price.multiply(BigDecimal.valueOf(weight)).setScale(2, RoundingMode.HALF_UP);
+//                    erpPrice = erpPrice.add(productErpPrice);
+//                }
+//            }
+
+
+		}
+
+		LOGGER.debug("[caculateOrder] calculate order total");
+
+		//查询之前的折扣
+		Set<com.salesmanager.core.model.order.OrderTotal> oldOrderTotalSet = modelOrder.getOrderTotal();
+
+		com.salesmanager.core.model.order.OrderTotal oldDiscountOrderTotal = oldOrderTotalSet.stream().filter(oldOrderTotal -> {
+			return Constants.OT_DISCOUNT_TITLE.equals(oldOrderTotal.getOrderTotalCode());
+		}).findFirst().orElse(null);
+
+		if (oldDiscountOrderTotal !=null){
+			OrderSummary orderSummary = new OrderSummary();
+			orderSummary.setPromoCode(oldDiscountOrderTotal.getText());
+			//计算折扣
+			OrderTotalVariation orderTotalVariation = orderTotalService.findOrderTotalVariation(orderSummary, customer, store, language);
+			int currentCount = 10;
+			if(CollectionUtils.isNotEmpty(orderTotalVariation.getVariations())) {
+				for(com.salesmanager.core.model.order.OrderTotal variation : orderTotalVariation.getVariations()) {
+					variation.setSortOrder(currentCount++);
+					orderTotals.add(variation);
+					subTotal = subTotal.subtract(variation.getValue());
+				}
+			}
+		}
+		totalSummary.setSubTotal(subTotal);
+
+
+		//商品费用
+		com.salesmanager.core.model.order.OrderTotal orderTotalSubTotal = new com.salesmanager.core.model.order.OrderTotal();
+		orderTotalSubTotal.setModule(Constants.OT_SUBTOTAL_MODULE_CODE);
+		orderTotalSubTotal.setOrderTotalType(OrderTotalType.SUBTOTAL);
+		orderTotalSubTotal.setOrderTotalCode("order.total.subtotal");
+		orderTotalSubTotal.setTitle(Constants.OT_SUBTOTAL_MODULE_CODE);
+		orderTotalSubTotal.setSortOrder(5);
+		orderTotalSubTotal.setValue(subTotal);
+		orderTotals.add(orderTotalSubTotal);
+
+
+		//加价费用
+		com.salesmanager.core.model.order.OrderTotal handlingubTotal = new com.salesmanager.core.model.order.OrderTotal();
+		handlingubTotal.setModule(Constants.OT_HANDLING_MODULE_CODE);
+		handlingubTotal.setOrderTotalType(OrderTotalType.HANDLING);
+		handlingubTotal.setOrderTotalCode("order.total.handling");
+		handlingubTotal.setTitle(Constants.OT_HANDLING_MODULE_CODE);
+		handlingubTotal.setText("order.total.handling");
+		handlingubTotal.setSortOrder(100);
+		handlingubTotal.setValue(totalProductHandlingFeePrice);
+		orderTotals.add(handlingubTotal);
+
+
+		//运费
+		com.salesmanager.core.model.order.OrderTotal shippingSubTotal = new com.salesmanager.core.model.order.OrderTotal();
+		shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
+		shippingSubTotal.setOrderTotalType(OrderTotalType.SHIPPING);
+		shippingSubTotal.setOrderTotalCode("order.total.shipping");
+		shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
+		shippingSubTotal.setSortOrder(103);
+		shippingSubTotal.setText("order.total.shipping");
+		shippingSubTotal.setValue(totalShippingPrice);
+		orderTotals.add(shippingSubTotal);
+
+
+		//增值服务费用
+		com.salesmanager.core.model.order.OrderTotal additionalServicesSubTotal = new com.salesmanager.core.model.order.OrderTotal();
+		additionalServicesSubTotal.setModule(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+		additionalServicesSubTotal.setOrderTotalType(OrderTotalType.ADDITIONAL_SERVICE);
+		additionalServicesSubTotal.setOrderTotalCode("order.total.additionalServices");
+		additionalServicesSubTotal.setSortOrder(102);
+		additionalServicesSubTotal.setText("order.total.additionalServices");
+		additionalServicesSubTotal.setValue(totalAdditionalServicesPrice);
+		additionalServicesSubTotal.setTitle(Constants.OT_ADDITIONAL_SERVICE_PRICE_MODULE_CODE);
+		orderTotals.add(additionalServicesSubTotal);
+
+
+		//erp费用
+//        OrderTotal erpSubTotal = new OrderTotal();
+//        erpSubTotal.setModule(Constants.OT_ERP_MODULE_CODE);
+//        erpSubTotal.setOrderTotalType(OrderTotalType.ERP);
+//        erpSubTotal.setOrderTotalCode("order.total.erp");
+//        erpSubTotal.setSortOrder(102);
+//        erpSubTotal.setText("order.total.erp");
+//        erpSubTotal.setValue(erpPrice);
+//        erpSubTotal.setTitle(Constants.OT_ERP_MODULE_CODE);
+//        grandTotal=grandTotal.add(erpPrice);
+
+		LOGGER.debug("[caculateOrder] calculate order shipping");
+		//shipping
+//        if(summary.getShippingSummary()!=null) {
+//            //check handling fees
+//            shippingConfiguration = shippingService.getShippingConfiguration(store);
+//            if(summary.getShippingSummary().getHandling()!=null && summary.getShippingSummary().getHandling().doubleValue()>0) {
+//                if(shippingConfiguration.getHandlingFees()!=null && shippingConfiguration.getHandlingFees().doubleValue()>0) {
+//
+//                }
+//            }
+//        }
+
+		LOGGER.info("[caculateOrder] calculate order tax");
+
+//        //tax
+//        List<TaxItem> taxes = taxService.calculateTax(summary, customer, store, language);
+//        if(taxes!=null && taxes.size()>0) {
+//            BigDecimal totalTaxes = new BigDecimal(0);
+//            totalTaxes.setScale(0, RoundingMode.UP);
+//            int taxCount = 200;
+//            for(TaxItem tax : taxes) {
+//
+//                OrderTotal taxLine = new OrderTotal();
+//                taxLine.setModule(Constants.OT_TAX_MODULE_CODE);
+//                taxLine.setOrderTotalType(OrderTotalType.TAX);
+//                taxLine.setOrderTotalCode(tax.getLabel());
+//                taxLine.setSortOrder(taxCount);
+//                taxLine.setTitle(Constants.OT_TAX_MODULE_CODE);
+//                taxLine.setText(tax.getLabel());
+//                taxLine.setValue(tax.getItemPrice());
+//
+//                totalTaxes = totalTaxes.add(tax.getItemPrice());
+//                orderTotals.add(taxLine);
+//                //grandTotal=grandTotal.add(tax.getItemPrice());
+//
+//                taxCount ++;
+//
+//            }
+//            totalSummary.setTaxTotal(totalTaxes);
+//        }
+
+		grandTotal = grandTotal.add(totalProductHandlingFeePrice)
+				.add(erpPrice).add(subTotal)
+				.add(totalShippingPrice)
+				.add(totalAdditionalServicesPrice);
+
+		// grand total
+		com.salesmanager.core.model.order.OrderTotal orderTotal = new com.salesmanager.core.model.order.OrderTotal();
+		orderTotal.setModule(Constants.OT_TOTAL_MODULE_CODE);
+		orderTotal.setOrderTotalType(OrderTotalType.TOTAL);
+		orderTotal.setOrderTotalCode("order.total.total");
+		orderTotal.setTitle(Constants.OT_TOTAL_MODULE_CODE);
+		//orderTotal.setText("order.total.total");
+		orderTotal.setSortOrder(500);
+		orderTotal.setValue(grandTotal);
+
+		orderTotals.add(orderTotal);
+
+		totalSummary.setProductHandlingFeePriceTotal(totalProductHandlingFeePrice);
+		totalSummary.setErpPriceTotal(erpPrice);
+		totalSummary.setShippingPriceTotal(totalShippingPrice);
+		totalSummary.setAdditionalServicesPriceTotal(totalAdditionalServicesPrice);
+		totalSummary.setTotal(grandTotal);
+		totalSummary.setTotals(orderTotals);
+
+		LogPermUtil.end("OrderService/caculateOrder", start);
+		return totalSummary;
+	}
+
+
+
+	public Order createNewOrderFromOld(Order oldOrder) {
+		Order modelOrder = new Order();
+
+		// 复制需要的属性
+		modelOrder.setStatus(oldOrder.getStatus());
+		modelOrder.setLastModified(oldOrder.getLastModified());
+		modelOrder.setCustomerId(oldOrder.getCustomerId());
+		modelOrder.setDatePurchased(oldOrder.getDatePurchased());
+		modelOrder.setOrderDateFinished(oldOrder.getOrderDateFinished());
+		modelOrder.setCurrencyValue(oldOrder.getCurrencyValue());
+		modelOrder.setTotal(oldOrder.getTotal());
+		modelOrder.setIpAddress(oldOrder.getIpAddress());
+		modelOrder.setPaymentModuleCode(oldOrder.getPaymentModuleCode());
+		modelOrder.setShippingModuleCode(oldOrder.getShippingModuleCode());
+		modelOrder.setCurrency(oldOrder.getCurrency());
+		modelOrder.setConfirmedAddress(oldOrder.getConfirmedAddress());
+		modelOrder.setCustomerEmailAddress(oldOrder.getCustomerEmailAddress());
+		modelOrder.setShoppingCartCode(oldOrder.getShoppingCartCode());
+		modelOrder.setChannel(oldOrder.getChannel());
+		modelOrder.setOrderType(oldOrder.getOrderType());
+		modelOrder.setImportMain(oldOrder.getImportMain());
+		modelOrder.setCustomsClearanceNumber(oldOrder.getCustomsClearanceNumber());
+//		modelOrder.setOrderNo(oldOrder.getOrderNo());
+		modelOrder.setLocale(oldOrder.getLocale());
+		modelOrder.setPaymentType(oldOrder.getPaymentType());
+		modelOrder.setShippingType(oldOrder.getShippingType());
+		modelOrder.setInternationalTransportationMethod(oldOrder.getInternationalTransportationMethod());
+		modelOrder.setNationalTransportationMethod(oldOrder.getNationalTransportationMethod());
+		modelOrder.setShippingTransportationType(oldOrder.getShippingTransportationType());
+		modelOrder.setTruckModel(oldOrder.getTruckModel());
+		modelOrder.setPlayThroughOption(oldOrder.getPlayThroughOption());
+		modelOrder.setTruckType(oldOrder.getTruckType());
+		modelOrder.setTruckTransportationCompany(oldOrder.getTruckTransportationCompany());
+		modelOrder.setBilling(oldOrder.getBilling());
+		modelOrder.setDelivery(oldOrder.getDelivery());
+		modelOrder.setMerchant(oldOrder.getMerchant());
+		Set<OrderStatusHistory> oldOrderHistorySet = oldOrder.getOrderHistory();
+
+		Set<OrderStatusHistory> orderStatusHistorySet = oldOrderHistorySet.stream().map(oldOrderHistory -> {
+			OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+			orderStatusHistory.setStatus(oldOrderHistory.getStatus());
+			orderStatusHistory.setComments(oldOrderHistory.getComments());
+			orderStatusHistory.setCustomerNotified(oldOrderHistory.getCustomerNotified());
+			orderStatusHistory.setOrder(modelOrder);
+			orderStatusHistory.setDateAdded(oldOrderHistory.getDateAdded());
+			return orderStatusHistory;
+		}).collect(Collectors.toSet());
+
+		modelOrder.setOrderHistory(orderStatusHistorySet);
+		// 这里可以设置为 null
+		modelOrder.setId(null);
+
+		return modelOrder;
+	}
+
+
+
+	public List<OrderProduct> removeOrderProducts(Order oldOrder, List<Long> orderProductIdsToRemove) {
+		Set<OrderProduct> oldOrderProducts = oldOrder.getOrderProducts();
+
+		// 过滤掉要移除的 OrderProduct
+		return oldOrderProducts.stream()
+				.filter(orderProduct -> !orderProductIdsToRemove.contains(orderProduct.getId())).map(orderProduct -> {
+					return ObjectConvert.convert(orderProduct, OrderProduct.class);
+				})
+				.collect(Collectors.toList());
 	}
 }

@@ -17,4 +17,6 @@ public interface OrderProductService {
     OrderProduct getOrderProduct(final Long id);
 
     List<OrderProduct> getOrderProducts(Long orderId);
+
+    void updateOrderIdById(Long orderId, Long id);
 }
