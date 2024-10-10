@@ -40,6 +40,7 @@ import com.salesmanager.core.model.catalog.product.price.FinalPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.feature.ProductFeatureType;
+import com.salesmanager.core.model.merchant.ApproveStatus;
 import com.salesmanager.core.model.reference.country.Country;
 import com.salesmanager.core.model.shipping.ShippingType;
 import com.salesmanager.shop.model.catalog.PersistableMaterial;
@@ -62,6 +63,7 @@ import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,6 +251,8 @@ public class ProductApiV2 {
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody Entity createBySeller(@Valid @RequestBody PersistableProduct product,
 										 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
+
+		Validate.isTrue(ApproveStatus.APPROVE == merchantStore.getStatus(),"store is not approve");
 
 		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
 		persistableProductDefinition.setIdentifier(product.getIdentifier());
