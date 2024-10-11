@@ -11,6 +11,7 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderChannel;
+import com.salesmanager.core.model.order.OrderSource;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.payment.CreditCard;
@@ -215,6 +216,14 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Column(name = "TRUCK_TYPE")
     @Enumerated(EnumType.STRING)
     private TruckTypeEnums truckType;
+
+    /**
+     * 订单来源
+     * @see OrderSource
+     */
+    @Column(name = "SOURCE")
+    @Enumerated(EnumType.STRING)
+    private OrderSource source;
 
 
     public static long getSerialVersionUID() {
@@ -496,5 +505,13 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
         this.truckTransportationCompany = truckTransportationCompany;
+    }
+
+    public OrderSource getSource() {
+        return source;
+    }
+
+    public void setSource(OrderSource source) {
+        this.source = source;
     }
 }

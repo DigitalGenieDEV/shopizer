@@ -265,6 +265,14 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 	@Enumerated(EnumType.STRING)
 	private TruckTypeEnums truckType;
 
+	/**
+	 * 订单来源
+	 * @see OrderSource
+	 */
+	@Column(name = "SOURCE")
+	@Enumerated(EnumType.STRING)
+	private OrderSource source;
+
 	@Override
 	public Long getId() {
 		return id;
@@ -628,5 +636,13 @@ public class Order extends SalesManagerEntity<Long, Order> implements Auditable 
 
 	public void setTruckTransportationCompany(TruckTransportationCompanyEnums truckTransportationCompany) {
 		this.truckTransportationCompany = truckTransportationCompany;
+	}
+
+	public OrderSource getSource() {
+		return source;
+	}
+
+	public void setSource(OrderSource source) {
+		this.source = source;
 	}
 }

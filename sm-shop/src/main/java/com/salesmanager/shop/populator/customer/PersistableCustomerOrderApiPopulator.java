@@ -15,6 +15,7 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.OrderChannel;
+import com.salesmanager.core.model.order.OrderSource;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.ImportMainEnums;
@@ -162,6 +163,7 @@ public class PersistableCustomerOrderApiPopulator extends AbstractDataPopulator<
             target.setInternationalTransportationMethod(StringUtils.isEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
             target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
                     PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
+            target.setSource(StringUtils.isBlank(source.getSource()) ? null : OrderSource.valueOf(source.getSource()));
 
             return target;
         } catch (Exception e) {

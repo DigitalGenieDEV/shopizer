@@ -10,6 +10,7 @@ import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
 import com.salesmanager.core.enmus.TruckModelEnums;
 import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
+import com.salesmanager.core.model.order.OrderSource;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.payments.ImportMainEnums;
 import com.salesmanager.core.model.shipping.ShippingTransportationType;
@@ -198,7 +199,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setInternationalTransportationMethod(StringUtils.isEmpty(source.getInternationalTransportationMethod())? null : TransportationMethod.valueOf(source.getInternationalTransportationMethod()));
 			target.setPlayThroughOption(StringUtils.isNotEmpty(source.getPlayThroughOption())?
 					PlayThroughOptionsEnums.valueOf(source.getPlayThroughOption()) : null);
-
+			target.setSource(StringUtils.isBlank(source.getSource()) ? null : OrderSource.valueOf(source.getSource()));
 
 			if(!StringUtils.isBlank(source.getComments())) {
 				OrderStatusHistory statusHistory = new OrderStatusHistory();

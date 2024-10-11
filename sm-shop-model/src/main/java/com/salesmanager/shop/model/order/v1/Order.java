@@ -113,6 +113,13 @@ public class Order extends Entity {
 
 	private OrderInvoice orderInvoice;
 
+	/**
+	 * order source:WEB APP OTHER
+	 */
+	@Getter
+	@Setter
+	private String source;
+
 	public boolean isCustomerAgreement() {
 		return customerAgreement;
 	}

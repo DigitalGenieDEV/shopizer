@@ -1,5 +1,6 @@
 package com.salesmanager.shop.store.controller.fulfillment.faced;
 
+import com.alibaba.fastjson.JSONObject;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.fulfillment.service.*;
 import com.salesmanager.core.business.repositories.fulfillment.ShippingDocumentOrderRepository;
@@ -12,6 +13,7 @@ import com.salesmanager.core.model.common.Delivery;
 import com.salesmanager.core.model.fulfillment.InternationalLogisticsCompany;
 import com.salesmanager.core.model.fulfillment.outer.LogisticsTrackInformation;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.ReadableBilling;
 import com.salesmanager.shop.model.customer.ReadableDelivery;
 import com.salesmanager.shop.model.fulfillment.*;
@@ -503,5 +505,24 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
         readableLogisticsTrackInformation.setStatus(logisticsTrackInformation.getStatus());
         readableLogisticsTrackInformation.setStatusCode(logisticsTrackInformation.getStatusCode());
         return readableLogisticsTrackInformation;
+    }
+
+    @Override
+    public List<ReadableLogisticsCompany> getInternationalShippingCompany(Language language) {
+        String text = "{\"zh\":{\"SF\":\"顺丰\",\"ZT\":\"中通\",\"YT\":\"圆通\",\"HT\":\"百世汇通\",\"ST\":\"申通\",\"YD\":\"韵达\",\"EM\":\"EMS\",\"JD\":\"京东快递\",\"ZJ\":\"宅急送\",\"DB\":\"德邦快递\",\"SS\":\"闪送\",\"KF\":\"快服务\"},\"en\":{\"SF\":\"SF Express\",\"ZT\":\"ZTO Express\",\"YT\":\"YTO Express\",\"HT\":\"Huitong Express\",\"ST\":\"Shentong Express\",\"YD\":\"Yunda Express\",\"EM\":\"EMS\",\"JD\":\"JD Logistics\",\"ZJ\":\"ZJS Express\",\"DB\":\"Deppon Express\",\"SS\":\"Shansong\",\"KF\":\"Kuai Fuwu\"},\"ko\":{\"SF\":\"순풍익일송달\",\"ZT\":\"중통익일송달\",\"YT\":\"원통익일송달\",\"HT\":\"회통익일송달\",\"ST\":\"신통익일송달\",\"YD\":\"운달익일송달\",\"EM\":\"EMS\",\"JD\":\"징동익일송달\",\"ZJ\":\"자급송\",\"DB\":\"더본익일송달\",\"SS\":\"플래시디리버리\",\"KF\":\"빠른서비스\"}}";
+        JSONObject multilanguageShippingCompanyConfig = JSONObject.parseObject(text);
+        String code = language == null ? "zh" :language.getCode();
+        JSONObject jsonObject = multilanguageShippingCompanyConfig.getJSONObject(code);
+        List<ReadableLogisticsCompany> result = new ArrayList<>();
+        InternationalLogisticsCompany[] values = InternationalLogisticsCompany.values();
+        for (InternationalLogisticsCompany value : values) {
+            String name = jsonObject.getString(value.name());
+            ReadableLogisticsCompany readableLogisticsCompany = new ReadableLogisticsCompany();
+            readableLogisticsCompany.setCode(value.name());
+            readableLogisticsCompany.setName(name);
+            result.add(readableLogisticsCompany);
+        }
+
+        return result;
     }
 }
