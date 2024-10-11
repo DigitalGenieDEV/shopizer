@@ -50,7 +50,7 @@ public class PaymentAuthorizeApi {
     @Inject
     private CustomerService customerService;
 
-    private final String CLIENT_ID = "S2_af4543a0be4d49a98122e01ec2059a56";
+//    private final String CLIENT_ID = "S2_af4543a0be4d49a98122e01ec2059a56";
     private final String SECRET_KEY = "9eb85607103646da9f9c02b128f2e5ee";
     private final String BASE_PAYMENT_URL = "https://sandbox-api.nicepay.co.kr/v1/payments/";
     private final String REDIRECT_CHECK_IN = "http://www.sourcingroot.com/checkin";
@@ -109,11 +109,12 @@ public class PaymentAuthorizeApi {
     public ReadableCombineTransaction paymentModules2(
             @RequestParam(required = false) String tid,
             @RequestParam(required = false) String amount,
+            @RequestParam String clientId,
             @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language,
             HttpServletResponse response) throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((CLIENT_ID + ":" + SECRET_KEY).getBytes()));
+        headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + SECRET_KEY).getBytes()));
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> AuthenticationMap = new HashMap<>();
