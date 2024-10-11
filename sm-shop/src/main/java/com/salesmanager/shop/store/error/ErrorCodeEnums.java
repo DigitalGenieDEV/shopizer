@@ -11,6 +11,7 @@ public enum ErrorCodeEnums {
 
     USER_ERROR("00003","user is null"),
 
+    MERCHANT_STORE_ERROR("00004","store is not approve"),
 
     ;
 

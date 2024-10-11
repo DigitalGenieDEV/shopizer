@@ -249,32 +249,37 @@ public class ProductApiV2 {
 	@PostMapping(value = { "/auth/product"})
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public @ResponseBody Entity createBySeller(@Valid @RequestBody PersistableProduct product, @RequestParam("store") String store,
+	public @ResponseBody CommonResultDTO<Long> createBySeller(@Valid @RequestBody PersistableProduct product, @RequestParam("store") String store,
 										 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
-		Validate.isTrue(ApproveStatus.APPROVE == merchantStore.getStatus(),"store is not approve");
+		try {
+			if (ApproveStatus.APPROVE != merchantStore.getStatus()){
+				return CommonResultDTO.ofFailed(ErrorCodeEnums.MERCHANT_STORE_ERROR.getErrorCode(), ErrorCodeEnums.MERCHANT_STORE_ERROR.getErrorMessage());
+			}
 
-		PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
-		persistableProductDefinition.setIdentifier(product.getIdentifier());
-		// make sure product id is null
-		Product productByMySql = null;
-		if(StringUtils.isNotBlank(product.getIdentifier())){
-			productByMySql = productService.getBySku(product.getIdentifier(), merchantStore);
+			PersistableProductDefinition persistableProductDefinition = new PersistableProductDefinition();
+			persistableProductDefinition.setIdentifier(product.getIdentifier());
+			// make sure product id is null
+			Product productByMySql = null;
+			if(StringUtils.isNotBlank(product.getIdentifier())){
+				productByMySql = productService.getBySku(product.getIdentifier(), merchantStore);
+			}
+			if (productByMySql == null && (product.getId() !=null && product.getId().longValue() >0)){
+				productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
+			}
+			Long productId = null;
+			if (productByMySql == null){
+				productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
+			}else{
+				productId = productByMySql.getId();
+			}
+			product.setId(productId);
+			productCommonFacade.saveProduct(merchantStore, product, language);
+			return CommonResultDTO.ofSuccess(productId);
+		}catch(Exception e){
+			LOGGER.error("createBySeller error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
 		}
-		if (productByMySql == null && (product.getId() !=null && product.getId().longValue() >0)){
-			productByMySql = productService.getProductWithOnlyMerchantStoreById(product.getId());
-		}
-		Long productId = null;
-		if (productByMySql == null){
-			productId = productDefinitionFacade.saveProductDefinition(merchantStore, persistableProductDefinition, language);
-		}else{
-			productId = productByMySql.getId();
-		}
-		product.setId(productId);
-		productCommonFacade.saveProduct(merchantStore, product, language);
-		Entity returnEntity = new Entity();
-		returnEntity.setId(productId);
-		return returnEntity;
 	}
 
 
