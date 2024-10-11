@@ -247,9 +247,9 @@ public class ProductApiV2 {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = { "/auth/product"})
-	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public @ResponseBody Entity createBySeller(@Valid @RequestBody PersistableProduct product,
+	public @ResponseBody Entity createBySeller(@Valid @RequestBody PersistableProduct product, @RequestParam("store") String store,
 										 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
 		Validate.isTrue(ApproveStatus.APPROVE == merchantStore.getStatus(),"store is not approve");
