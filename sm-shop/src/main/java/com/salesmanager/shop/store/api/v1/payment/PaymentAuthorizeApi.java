@@ -2,32 +2,33 @@ package com.salesmanager.shop.store.api.v1.payment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.core.model.system.IntegrationConfiguration;
-import com.salesmanager.core.model.system.IntegrationModule;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
-import com.salesmanager.shop.model.system.IntegrationModuleSummaryEntity;
-import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
-import com.salesmanager.shop.store.controller.payment.facade.NicepayAuthorizeResponse;
 import com.salesmanager.shop.store.controller.payment.facade.PaymentAuthorizeFacade;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1")
@@ -157,8 +158,9 @@ public class PaymentAuthorizeApi {
         if (resultCode.equalsIgnoreCase("0000")) {
             ReadableCombineTransaction readableCombineTransaction = null;
             try {
-                readableCombineTransaction = paymentAuthorizeFacade.processNicepayAuthorizeResponse(getAuthorizeResponseMap(responseNode), merchantStore, language);
-                response.sendRedirect(REDIRECT_CHECK_IN);
+                Map<String, String> authorizeResponseMap = getAuthorizeResponseMap(responseNode);
+                readableCombineTransaction = paymentAuthorizeFacade.processNicepayAuthorizeResponse(authorizeResponseMap, merchantStore, language);
+                response.sendRedirect(String.format("%s?tid=%s", REDIRECT_CHECK_IN, authorizeResponseMap.get("tid")));
                 return readableCombineTransaction;
             } catch (Exception e) {
                 LOG.error("unexpected exception:{}", e.getMessage(), e);
