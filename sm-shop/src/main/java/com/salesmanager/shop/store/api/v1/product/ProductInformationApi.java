@@ -45,8 +45,7 @@ public class ProductInformationApi {
 	      @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 	      @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")})
 	@ApiOperation(httpMethod = "GET", value = "Get Product Information by list", notes = "")
-	public ReadableProductInformation list(@RequestParam("store") String store,
-										   @RequestParam("lang") String lang,
+	public ReadableProductInformation list(
 					@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language,
 					@RequestParam(value = "division", required = false, defaultValue = "0") String division,
 					@RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
@@ -55,15 +54,14 @@ public class ProductInformationApi {
 			throws Exception {
 		return productInformationFacade.getList(merchantStore, language, page,count,division);
 	}
-	
-	
+
+
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = {"/private/product/information", "/auth/product/information"}, produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 	@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en") })
-	public PersistableProductInformation  create(@RequestParam("store") String store,
-												 @RequestParam("lang") String lang,@Valid @RequestBody PersistableProductInformation data,@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request)
+	public PersistableProductInformation  create(@Valid @RequestBody PersistableProductInformation data,@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request)
 			throws Exception {
 		
 		

@@ -74,24 +74,22 @@ public class BoardApi {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "sdate", required = false) String sdate,
 			@RequestParam(value = "edate", required = false) String edate,
-									  @RequestParam("store") String store,
-									  @RequestParam("lang") String lang,
 			HttpServletRequest request,  HttpServletResponse response) throws Exception {
-		
+
 		Principal principal = request.getUserPrincipal();
         String userName = principal.getName();
 
         Customer customer = customerService.getByNick(userName);
-        
+
         if (customer == null) {
             response.sendError(401, "Error while listing orders, customer not authorized");
-          
+
         }
 
 		return boardFacade.getBoardList(gbn, keyword, bbsId, type, sdate, edate, page, count, customer.getEmailAddress());
 	}
 
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = { "/private/board", "board" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get list of board", notes = "", response = ReadableBoardList.class)
@@ -107,8 +105,8 @@ public class BoardApi {
 
 		return boardFacade.getBoardList(gbn, keyword, bbsId, type, sdate, edate, page, count, "");
 	}
-	
-	
+
+
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/private/board", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
@@ -123,17 +121,15 @@ public class BoardApi {
 		managerFacade.authorizedMenu(authenticatedManager, multiRequest.getRequestURI().toString());
 		board.setUserId(authenticatedManager);
 		board.setUserIp(CommonUtils.getRemoteIp(multiRequest));
-		
+
 		return boardFacade.saveBoard(board, files, merchantStore);
 	}
-	
+
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/auth/board", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public PersistableBoard createUser(@RequestParam("store") String store,
-									   @RequestParam("lang") String lang,
-									   PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,  HttpServletResponse response)
+	public PersistableBoard createUser(PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,  HttpServletResponse response)
 			throws Exception {
 		
 		Principal principal = multiRequest.getUserPrincipal();

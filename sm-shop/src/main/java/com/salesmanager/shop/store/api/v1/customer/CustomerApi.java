@@ -248,8 +248,7 @@ public class CustomerApi {
 		{ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
 				@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") }
 	)
-	public ReadableCustomer getAuthUser(@RequestParam("store") String store,
-										@RequestParam("lang") String lang,
+	public ReadableCustomer getAuthUser(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			HttpServletRequest request
@@ -269,8 +268,7 @@ public class CustomerApi {
 			httpMethod = "PATCH", value = "Updates a loged in customer address", notes = "Requires authentication", produces = "application/json", response = Void.class
 	)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
-	public void updateAuthUserAddress(@RequestParam("store") String store,
-									  @RequestParam("lang") String lang,
+	public void updateAuthUserAddress(
 			@ApiIgnore MerchantStore merchantStore,
 			@RequestBody PersistableCustomer customer,
 			HttpServletRequest request
@@ -287,8 +285,7 @@ public class CustomerApi {
 			httpMethod = "PATCH", value = "Updates a loged in customer profile", notes = "Requires authentication", produces = "application/json", response = PersistableCustomer.class
 	)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
-	public PersistableCustomer update(@RequestParam("store") String store,
-									  @RequestParam("lang") String lang,
+	public PersistableCustomer update(
 			@ApiIgnore MerchantStore merchantStore,
 			@Valid @RequestBody PersistableCustomer customer,
 			HttpServletRequest request
@@ -305,12 +302,11 @@ public class CustomerApi {
 			httpMethod = "DELETE", value = "Deletes a loged in customer profile", notes = "Requires authentication", produces = "application/json", response = Void.class
 	)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
-	public void delete(@RequestParam("store") String store,
-					   @RequestParam("lang") String lang,
+	public void delete(
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			@RequestParam(value="withdrawalReason") List<String> withdrawalReason,
-			@RequestParam(defaultValue = "") String withdrawalReasonDetail,			
+			@RequestParam(defaultValue = "") String withdrawalReasonDetail,
 			HttpServletRequest request
 	) {
 
@@ -326,18 +322,17 @@ public class CustomerApi {
 			customer.setWithdrawalReason(new HashSet<>(withdrawalReason));
 			customer.setWithdrawalResonDetail(withdrawalReasonDetail);
 			customer.setWithdrawalAt(LocalDateTime.now());
-			
+
 			customerFacade.delete(customer);
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("An error occured while deleting customer [" + userName + "]");
 		}
 	}
-	
+
 	@GetMapping(value = { "/auth/customer/{id}/terms", "/customer/{id}/terms" }, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(httpMethod = "GET", value = "Get Customer Terms", notes = "", response = ReadableCustomerTerms.class, responseContainer = "List")
 	public List<ReadableCustomerTerms> customerTerms(
-			@PathVariable Long id,@RequestParam("store") String store,
-			@RequestParam("lang") String lang,
+			@PathVariable Long id,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language
 			) {
