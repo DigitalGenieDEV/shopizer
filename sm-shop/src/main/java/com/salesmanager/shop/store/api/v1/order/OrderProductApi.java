@@ -63,6 +63,8 @@ public class OrderProductApi {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ReadableOrderProductList list(
+            @RequestParam("store") String store,
+            @RequestParam("lang") String lang,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
             @RequestParam(value = "statuses", required = false) String statuses,
@@ -98,6 +100,8 @@ public class OrderProductApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public ReadableOrderProduct getOrderProduct(
+            @RequestParam("store") String store,
+            @RequestParam("lang") String lang,
             @PathVariable final Long id,
             @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language,
@@ -132,6 +136,8 @@ public class OrderProductApi {
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public CommonResultDTO<Boolean> updateDesign(
             @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+            @RequestParam("store") String store,
+            @RequestParam("lang") String lang,
             @Valid @RequestBody PersistableOrderProductDesign persistableOrderProductDesign,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Principal principal = request.getUserPrincipal();
@@ -169,6 +175,8 @@ public class OrderProductApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
     public CommonResultDTO<ReadableOrderProductDesign> getDesign(
+            @RequestParam("store") String store,
+            @RequestParam("lang") String lang,
             @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Principal principal = request.getUserPrincipal();

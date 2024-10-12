@@ -350,7 +350,8 @@ public class ContentApi {
 	@ApiImplicitParams(
 			{ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") }
 	)
-	public ContentFolder getSellerImagesByPath(@ApiIgnore MerchantStore merchantStore, @PathVariable("path") String path) {
+	public ContentFolder getSellerImagesByPath(@RequestParam("store") String store,
+											   @RequestParam("lang") String lang,@ApiIgnore MerchantStore merchantStore, @PathVariable("path") String path) {
 		return getImagesByPathInternal(merchantStore, decodePathVariable(path));
 	}
 
@@ -434,7 +435,8 @@ public class ContentApi {
 	MerchantStore merchantStore,
 			@ApiIgnore
 			Language language,
-			HttpServletRequest request,
+			HttpServletRequest request,@RequestParam("store") String store,
+											  @RequestParam("lang") String lang,
 			@RequestParam(value = "fileContentType", required = true)
 			String fileContentType,
 			@RequestParam(value = "contentListQueryRequest", required = true)
@@ -505,7 +507,8 @@ public class ContentApi {
 	public String uploadForSeller(@RequestParam("file")
 	MultipartFile file,
 			@ApiIgnore
-			MerchantStore merchantStore,
+			MerchantStore merchantStore,@RequestParam("store") String store,
+								  @RequestParam("lang") String lang,
 			@ApiIgnore
 			Language language,
 			@RequestParam(value = "fileContentType", required = true)
@@ -538,7 +541,8 @@ public class ContentApi {
 	@ApiOperation(httpMethod = "GET", value = "Get store content images", notes = "", response = ContentFolder.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT") })
 	public Integer getContentFilesCount(@ApiIgnore
-	MerchantStore merchantStore,
+	MerchantStore merchantStore,@RequestParam("store") String store,
+										@RequestParam("lang") String lang,
 			@RequestParam(value = "fileContentType", required = true)
 			String fileContentType
 	) {
@@ -638,7 +642,8 @@ public class ContentApi {
 				@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") }
 	)
 	public void deleteFileForSeller(@Valid
-	ContentName name,
+	ContentName name,@RequestParam("store") String store,
+									@RequestParam("lang") String lang,
 			@ApiIgnore
 			MerchantStore merchantStore,
 			@ApiIgnore

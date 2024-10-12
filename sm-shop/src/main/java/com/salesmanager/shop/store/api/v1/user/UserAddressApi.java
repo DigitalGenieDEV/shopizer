@@ -64,7 +64,8 @@ public class UserAddressApi {
 	@GetMapping({ "/auth/user/default/address" })
 	@ApiOperation(httpMethod = "GET", value = "Get default address", notes = "", produces = MediaType.APPLICATION_JSON_VALUE, response = ReadableUser.class)
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public CommonResultDTO<ReadableAddress> getDefaultUserAddress( @ApiIgnore Language language,
+	public CommonResultDTO<ReadableAddress> getDefaultUserAddress(
+			@RequestParam("lang") String lang,@ApiIgnore Language language,
 			HttpServletRequest request) throws Exception {
 		try {
 			Principal userPrincipal = request.getUserPrincipal();
@@ -84,7 +85,8 @@ public class UserAddressApi {
 	@GetMapping({ "/auth/user/addresses" })
 	@ApiOperation(httpMethod = "GET", value = "Get user addresses", notes = "", produces = MediaType.APPLICATION_JSON_VALUE, response = ReadableUser.class)
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-	public CommonResultDTO<List<ReadableAddress>> getUserAddresses(@ApiIgnore Language language,
+	public CommonResultDTO<List<ReadableAddress>> getUserAddresses(
+			@RequestParam("lang") String lang,@ApiIgnore Language language,
 													  HttpServletRequest request) throws Exception {
 		try {
 			Principal userPrincipal = request.getUserPrincipal();

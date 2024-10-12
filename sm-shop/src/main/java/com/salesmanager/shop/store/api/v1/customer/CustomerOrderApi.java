@@ -77,7 +77,8 @@ public class CustomerOrderApi {
     @ResponseBody
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-    public ReadableCustomerOrderList list(
+    public ReadableCustomerOrderList list(@RequestParam("store") String store,
+                                          @RequestParam("lang") String lang,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "count", required = false) Integer count,
             @ApiIgnore MerchantStore merchantStore,
@@ -126,7 +127,8 @@ public class CustomerOrderApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
-    public ReadableCustomerOrder getCustomerOrder(
+    public ReadableCustomerOrder getCustomerOrder(@RequestParam("store") String store,
+                                                  @RequestParam("lang") String lang,
             @PathVariable Long id, @ApiIgnore MerchantStore merchantStore,
             @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
     ) throws Exception {

@@ -96,7 +96,8 @@ public class CustomerReviewApi {
 	@GetMapping("/auth/customers/{id}/product-reviews")
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")})
 	public ReadableProductReviewList getAllProductReviews(
-			@PathVariable final Long id,
+			@PathVariable final Long id,@RequestParam("store") String store,
+			@RequestParam("lang") String lang,
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size,
 			@ApiIgnore MerchantStore merchantStore,
