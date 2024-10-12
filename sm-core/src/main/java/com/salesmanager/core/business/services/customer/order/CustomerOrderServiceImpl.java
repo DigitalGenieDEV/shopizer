@@ -110,7 +110,11 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
 
     @Override
     public void saveOrUpdate(CustomerOrder customerOrder) throws ServiceException {
-
+        if(customerOrder.getId() != null && customerOrder.getId() > 0) {
+            super.update(customerOrder);
+        } else {
+            super.create(customerOrder);
+        }
     }
 
     @Override
