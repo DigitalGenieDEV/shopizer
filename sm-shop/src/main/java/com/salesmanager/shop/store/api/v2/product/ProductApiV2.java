@@ -250,7 +250,7 @@ public class ProductApiV2 {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public @ResponseBody CommonResultDTO<Long> createBySeller(@Valid @RequestBody PersistableProduct product, @RequestParam("store") String store,
-										 @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
+			@RequestParam("lang") String lang, @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language) throws ServiceException {
 
 		try {
 			if (ApproveStatus.APPROVE != merchantStore.getStatus()){

@@ -74,6 +74,8 @@ public class BoardApi {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "sdate", required = false) String sdate,
 			@RequestParam(value = "edate", required = false) String edate,
+									  @RequestParam("store") String store,
+									  @RequestParam("lang") String lang,
 			HttpServletRequest request,  HttpServletResponse response) throws Exception {
 		
 		Principal principal = request.getUserPrincipal();
@@ -129,7 +131,9 @@ public class BoardApi {
 	@PostMapping(value = "/auth/board", produces = { APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
-	public PersistableBoard createUser(PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,  HttpServletResponse response)
+	public PersistableBoard createUser(@RequestParam("store") String store,
+									   @RequestParam("lang") String lang,
+									   PersistableBoard board, final MultipartHttpServletRequest multiRequest, @ApiIgnore MerchantStore merchantStore,  HttpServletResponse response)
 			throws Exception {
 		
 		Principal principal = multiRequest.getUserPrincipal();
