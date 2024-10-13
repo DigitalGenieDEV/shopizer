@@ -1,9 +1,11 @@
 package com.salesmanager.shop.store.api.v1.order;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -668,7 +670,7 @@ public class OrderApi {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
 			OrderStatus statusEnum = OrderStatus.fromValue(status);
-			orderFacade.updateOrderStatus(order, statusEnum, merchantStore);
+			orderFacade.updateOrderStatus(order, statusEnum, merchantStore, null);
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("updateAdminOrderStatus error", e);
@@ -719,7 +721,7 @@ public class OrderApi {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), "Order not found [" + id + "]");
 			}
 			OrderStatus statusEnum = OrderStatus.fromValue(status);
-			orderFacade.updateOrderStatus(order, statusEnum, customer.getMerchantStore());
+			orderFacade.updateOrderStatus(order, statusEnum, customer.getMerchantStore(), null);
 			return CommonResultDTO.ofSuccess();
 		}catch (Exception e){
 			LOGGER.error("updateSellerOrderStatus error", e);
@@ -842,5 +844,66 @@ public class OrderApi {
 		}
 	}
 
+	/**
+	 * cancel order, if order is payment_complete, then will refund
+	 *
+	 * @param id
+	 */
+	@RequestMapping(value = {"/private/orders/{id}/cancel"}, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> cancelOrderByAdmin(@PathVariable final Long id,
+													@RequestBody Map<String, Object> map,
+													@ApiIgnore Language language, @ApiIgnore MerchantStore store,
+													HttpServletRequest request, HttpServletResponse response) {
+		String reason  = (String) map.get("reason");
+		ReadableOrder readableOrder = orderFacade.getReadableOrder(id, store, language);
+		if (readableOrder == null) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), "Error while cancel orders, order[" + id + "] was not found");
+		}
+
+		try {
+			Boolean success = orderFacade.cancelOrder(readableOrder, reason);
+			return CommonResultDTO.ofSuccess();
+		} catch (Exception e) {
+			LOGGER.error("cancelOrderByAdmin error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+	/**
+	 * cancel order, if order is payment_complete, then will refund
+	 *
+	 * @param id
+	 */
+	@RequestMapping(value = {"/auth/orders/{id}/cancel"}, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> cancelOrderByCustomer(@PathVariable final Long id,
+													   @RequestBody Map<String, Object> map,
+													   @ApiIgnore Language language, @ApiIgnore MerchantStore store,
+													   HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String reason  = (String) map.get("reason");
+		Principal principal = request.getUserPrincipal();
+		String userName = principal.getName();
+
+		Customer customer = customerService.getByNick(userName);
+		if (customer == null) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.USER_ERROR.getErrorCode(), "Error while cancel orders, customer not authorized");
+		}
+
+		ReadableOrder readableOrder = orderFacade.getCustomerReadableOrder(id, customer, language);
+		if (readableOrder == null) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), "Error while cancel orders, order[" + id + "] was not found");
+		}
+
+		try {
+			Boolean success = orderFacade.cancelOrder(readableOrder, reason);
+			return CommonResultDTO.ofSuccess();
+		} catch (Exception e) {
+			LOGGER.error("cancelOrderByCustomer error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
 
 }

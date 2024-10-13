@@ -15,6 +15,8 @@ public interface CombineTransactionService extends SalesManagerEntityService<Lon
 
     CombineTransaction getRefundableCombineTransaction(CustomerOrder customerOrder) throws ServiceException;
 
+    List<CombineTransaction> listCombineTransactionsByCustomerOrderId(Long customerOrderId) throws ServiceException;
+
     List<CombineTransaction> listCombineTransactions(CustomerOrder customerOrder) throws ServiceException;
 
     List<CombineTransaction> listCombineTransactions(Date startDate, Date endDate) throws ServiceException;

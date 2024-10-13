@@ -4,18 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.payments.combine.CombineTransactionRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.payments.CombineTransaction;
-import com.salesmanager.core.model.payments.Transaction;
 import com.salesmanager.core.model.payments.TransactionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
 
 @Service("combineTransactionService")
 public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl<Long, CombineTransaction> implements CombineTransactionService {
@@ -120,8 +116,8 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
     }
 
     @Override
-    public List<CombineTransaction> listCombineTransactions(CustomerOrder customerOrder) throws ServiceException {
-        List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrder.getId());
+    public List<CombineTransaction> listCombineTransactionsByCustomerOrderId(Long customerOrderId) throws ServiceException {
+        List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrderId);
         ObjectMapper mapper = new ObjectMapper();
         for(CombineTransaction combineTransaction : combineTransactions) {
             if(!StringUtils.isBlank(combineTransaction.getDetails())) {
@@ -136,6 +132,11 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
         }
 
         return combineTransactions;
+    }
+
+    @Override
+    public List<CombineTransaction> listCombineTransactions(CustomerOrder customerOrder) throws ServiceException {
+        return listCombineTransactionsByCustomerOrderId(customerOrder.getId());
     }
 
     @Override
