@@ -99,9 +99,10 @@ public class CustomerReviewApi {
 			@PathVariable final Long id,
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size,
+			@RequestParam(value = "tabIndex", required = false) Integer tabIndex,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language) throws Exception {
-		return reviewCommonFacade.getReviewByCustomer(id, language, PageRequest.of(page==null?0:page, size==null?Integer.MAX_VALUE:size));
+		return reviewCommonFacade.getReviewByCustomer(id, language, tabIndex, PageRequest.of(page==null?0:page, size==null?Integer.MAX_VALUE:size));
 	}
 
   @PutMapping("/private/customers/{id}/reviews/{reviewid}")

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.Validate;
 import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.business.utils.AbstractDataPopulator;
 import com.salesmanager.core.model.catalog.product.Product;
@@ -16,6 +17,7 @@ import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.catalog.product.review.ProductReviewDescription;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.utils.DateUtil;
@@ -25,35 +27,18 @@ import com.salesmanager.shop.utils.DateUtil;
 public class PersistableProductReviewPopulator extends
 		AbstractDataPopulator<PersistableProductReview, ProductReview> {
 	
-	
-	
-
 	private CustomerService customerService;
-	
-
 	private ProductService productService;
-	
-
+	private OrderProductService orderProductService;
 	private LanguageService languageService;
-	
-
-
-	public LanguageService getLanguageService() {
-		return languageService;
-	}
-
-	public void setLanguageService(LanguageService languageService) {
-		this.languageService = languageService;
-	}
 
 	@Override
 	public ProductReview populate(PersistableProductReview source,
 			ProductReview target, MerchantStore store, Language language)
 			throws ConversionException {
 		
-		
 		Validate.notNull(customerService,"customerService cannot be null");
-		Validate.notNull(productService,"productService cannot be null");
+		Validate.notNull(orderProductService,"orderProductService cannot be null");
 		Validate.notNull(languageService,"languageService cannot be null");
 		Validate.notNull(source.getRating(),"Rating cannot bot be null");
 		
@@ -80,15 +65,17 @@ public class PersistableProductReviewPopulator extends
 			target.setCustomer(customer);
 			target.setReviewRating(source.getRating());
 			
-			Product product = productService.getById(source.getProductId());
+			OrderProduct orderProduct = orderProductService.getOrderProduct(source.getOrderProductId());
+			Product product = productService.getById(orderProduct.getProductId());
 			
 			if(!store.getCode().equalsIgnoreCase("DEFAULT")) {
 				//check if product belongs to store
-				if(product == null || product.getMerchantStore().getId().intValue() == store.getId().intValue()) {
-					throw new ConversionException("Invalid product id for the given store");
-				}
+//				if(orderProduct == null || orderProduct.getMerchantStore().getId().intValue() == store.getId().intValue()) {
+//					throw new ConversionException("Invalid product id for the given store");
+//				}
 			}
 			
+			target.setOrderProduct(orderProduct);
 			target.setProduct(product);
 			
 			Language lang = languageService.getByCode(language.getCode());
@@ -127,7 +114,7 @@ public class PersistableProductReviewPopulator extends
 	protected ProductReview createTarget() {
 		return null;
 	}
-	
+
 	public CustomerService getCustomerService() {
 		return customerService;
 	}
@@ -135,7 +122,7 @@ public class PersistableProductReviewPopulator extends
 	public void setCustomerService(CustomerService customerService) {
 		this.customerService = customerService;
 	}
-	
+
 	public ProductService getProductService() {
 		return productService;
 	}
@@ -144,5 +131,21 @@ public class PersistableProductReviewPopulator extends
 		this.productService = productService;
 	}
 
+	public OrderProductService getOrderProductService() {
+		return orderProductService;
+	}
 
+	public void setOrderProductService(OrderProductService orderProductService) {
+		this.orderProductService = orderProductService;
+	}
+
+	public LanguageService getLanguageService() {
+		return languageService;
+	}
+
+	public void setLanguageService(LanguageService languageService) {
+		this.languageService = languageService;
+	}
+	
+	
 }

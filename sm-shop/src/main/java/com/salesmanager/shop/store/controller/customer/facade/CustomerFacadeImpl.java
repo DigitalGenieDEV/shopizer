@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +54,7 @@ import com.salesmanager.core.business.services.user.PermissionService;
 import com.salesmanager.core.business.utils.CoreConfiguration;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.CustomerCriteria;
+import com.salesmanager.core.model.customer.CustomerDTO;
 import com.salesmanager.core.model.customer.CustomerList;
 import com.salesmanager.core.model.customer.review.CustomerReview;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -920,6 +923,25 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	public ReadableCustomerList getListByStore(MerchantStore store, CustomerCriteria criteria, Language language) {
 		CustomerList customerList = customerService.getListByStore(store, criteria);
 		return convertCustomerListToReadableCustomerList(customerList, store, language);
+	}
+	
+	@Override
+	public ReadableCustomerList getList(String queryType, String queryValue, String startDate, String endDate, Pageable pageRequest) {
+		// TODO Auto-generated method stub
+		Page<CustomerDTO> dtoList = customerService.getList(queryType, queryValue, startDate, endDate, pageRequest);
+		List<ReadableCustomer> readableList = new ArrayList<ReadableCustomer>();
+		ReadableCustomerList result = new ReadableCustomerList();
+		if(!CollectionUtils.isEmpty(dtoList.getContent())) {
+			for(CustomerDTO dto : dtoList) {
+				readableList.add(new ReadableCustomer(dto));
+			}
+		}
+		result.setCustomers(readableList);
+		result.setRecordsTotal(dtoList.getTotalElements());
+		result.setTotalPages(dtoList.getTotalPages());
+		result.setNumber(dtoList.getSize());
+		result.setRecordsFiltered(dtoList.getSize());
+		return result;
 	}
 
 	private ReadableCustomerList convertCustomerListToReadableCustomerList(CustomerList customerList,

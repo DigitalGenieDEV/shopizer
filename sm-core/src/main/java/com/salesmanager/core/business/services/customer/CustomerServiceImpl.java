@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -16,6 +18,7 @@ import com.salesmanager.core.business.services.customer.attribute.CustomerAttrib
 import com.salesmanager.core.model.common.Address;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.CustomerCriteria;
+import com.salesmanager.core.model.customer.CustomerDTO;
 import com.salesmanager.core.model.customer.CustomerList;
 import com.salesmanager.core.model.customer.attribute.CustomerAttribute;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -76,6 +79,12 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 	@Override
 	public CustomerList getListByStore(MerchantStore store, CustomerCriteria criteria) {
 		return customerRepository.listByStore(store,criteria);
+	}
+	
+	@Override
+	public Page<CustomerDTO> getList(String queryType, String queryValue, String startDate, String endDate, Pageable pageRequest) {
+		// TODO Auto-generated method stub
+		return customerRepository.list(queryType, queryValue, startDate, endDate, pageRequest);
 	}
 	
 	@Override

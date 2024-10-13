@@ -17,11 +17,13 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.review.ProductReviewRepository;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
 import com.salesmanager.core.model.catalog.product.review.ProductReviewDTO;
 import com.salesmanager.core.model.catalog.product.review.ReadProductReview;
 import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 import com.salesmanager.core.model.reference.language.Language;
 
 @Service("productReviewService")
@@ -31,6 +33,9 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	
 	@Inject
 	private ProductService productService;
+	
+	@Inject
+	private OrderProductService orderProductService;
 	
 	@Inject
 	public ProductReviewServiceImpl(ProductReviewRepository productReviewRepository) {
@@ -54,6 +59,12 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	}
 	
 	@Override
+	public ProductReview getByOrderProductAndCustomer(Long orderProductId, Long customerId) {
+		// TODO Auto-generated method stub
+		return productReviewRepository.findByOrderProductAndCustomer(orderProductId, customerId);
+	}
+	
+	@Override
 	public List<ProductReview> getByProduct(Product product, Language language) {
 		return productReviewRepository.findByProduct(product.getId(), language.getId());
 	}
@@ -62,12 +73,13 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 		
 
 		Validate.notNull(review,"ProductReview cannot be null");
-		Validate.notNull(review.getProduct(),"ProductReview.product cannot be null");
+		Validate.notNull(review.getOrderProduct(),"ProductReview.product cannot be null");
 		Validate.notNull(review.getCustomer(),"ProductReview.customer cannot be null");
 		
+		OrderProduct orderProduct = orderProductService.getOrderProduct(review.getOrderProduct().getId());
 		
 		//refresh product
-		Product product = productService.getById(review.getProduct().getId());
+		Product product = productService.getById(orderProduct.getProductId());
 		
 		//ajust product rating
 		Integer count = 0;
@@ -94,8 +106,7 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 		
 		productService.update(product);
 		
-		review.setProduct(product);
-		
+		review.setOrderProduct(orderProduct);
 	}
 	
 	public void update(ProductReview review) throws ServiceException {
@@ -121,9 +132,9 @@ public class ProductReviewServiceImpl extends SalesManagerEntityServiceImpl<Long
 	}
 	
 	@Override
-	public Page<ReadProductReview> listByCustomerId(Long customerId, Language lang, Pageable pageRequest) {
+	public Page<ReadProductReview> listByCustomerId(Long customerId, Language lang, Integer tabIndex, Pageable pageRequest) {
 		// TODO Auto-generated method stub
-		return productReviewRepository.listByCustomerId(customerId, lang.getId(), pageRequest);
+		return productReviewRepository.listByCustomerId(customerId, lang.getId(), tabIndex, pageRequest);
 	}
 	
 	@Override

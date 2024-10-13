@@ -22,6 +22,7 @@ import com.salesmanager.core.business.services.catalog.product.review.ProductRev
 import com.salesmanager.core.business.services.catalog.product.review.ProductReviewService;
 import com.salesmanager.core.business.services.catalog.product.review.ProductReviewStatService;
 import com.salesmanager.core.business.services.customer.CustomerService;
+import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.review.ProductReview;
@@ -66,6 +67,9 @@ public class ReviewCommonFacadeImpl implements ReviewCommonFacade {
 	
 	@Inject
 	private ProductService productService;
+	
+	@Inject
+	private OrderProductService orderProductService;
 	
 	@Inject
 	private ProductReviewService productReviewService;
@@ -114,11 +118,11 @@ public class ReviewCommonFacadeImpl implements ReviewCommonFacade {
 	}
 	
 	@Override
-	public ReadableProductReviewList getReviewByCustomer(Long customerId, Language language, Pageable pageRequest)
+	public ReadableProductReviewList getReviewByCustomer(Long customerId, Language language, Integer tabIndex, Pageable pageRequest)
 			throws Exception {
 		
 		ReadableProductReviewList readableProductReviews = new ReadableProductReviewList();
-		Page<ReadProductReview> reviews = productReviewService.listByCustomerId(customerId, language, pageRequest);
+		Page<ReadProductReview> reviews = productReviewService.listByCustomerId(customerId, language, tabIndex, pageRequest);
 		List<ProductReviewDTO> resultList = new ArrayList<ProductReviewDTO>();
 		
 		if(!CollectionUtils.isEmpty(reviews.getContent())) {
@@ -166,6 +170,7 @@ public class ReviewCommonFacadeImpl implements ReviewCommonFacade {
 		PersistableProductReviewPopulator populator = new PersistableProductReviewPopulator();
 		populator.setLanguageService(languageService);
 		populator.setCustomerService(customerService);
+		populator.setOrderProductService(orderProductService);
 		populator.setProductService(productService);
 		
 		com.salesmanager.core.model.catalog.product.review.ProductReview rev = new com.salesmanager.core.model.catalog.product.review.ProductReview();

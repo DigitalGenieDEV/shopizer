@@ -91,33 +91,36 @@ public class ProductReviewApi {
       HttpServletRequest request,
       HttpServletResponse response) {
 
-	try {
-		// rating already exist
-		ProductReview prodReview = productReviewService.getByProductAndCustomer(review.getProductId(), review.getCustomerId());
-		if (prodReview != null) {
-			response.sendError(500, "A review already exist for this customer and product");
-			return null;
-		}
-		// rating maximum 5
-		if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
-			response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-			return null;
-		}
-		
-		review.setProductId(id);
+//	try {
+//		// rating already exist
+//		ProductReview prodReview = productReviewService.getByProductAndCustomer(review.getProductId(), review.getCustomerId());
+//		if (prodReview != null) {
+//			response.sendError(500, "A review already exist for this customer and product");
+//			return null;
+//		}
+//		// rating maximum 5
+//		if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
+//			response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
+//			return null;
+//		}
+//		
+//		productCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
+//		
+//		review.setProductId(id);
 //		productCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
-
-      return review;
-
-    } catch (Exception e) {
-      LOGGER.error("Error while saving product review", e);
-      try {
-        response.sendError(503, "Error while saving product review" + e.getMessage());
-      } catch (Exception ignore) {
-      }
-
-      return null;
-    }
+//
+//      return review;
+//
+//    } catch (Exception e) {
+//      LOGGER.error("Error while saving product review", e);
+//      try {
+//        response.sendError(503, "Error while saving product review" + e.getMessage());
+//      } catch (Exception ignore) {
+//      }
+//
+//      return null;
+//    }
+	  return null;
   }
 
 	@RequestMapping(value = "/product/{id}/reviews", method = RequestMethod.GET)
@@ -142,41 +145,42 @@ public class ProductReviewApi {
 			HttpServletResponse response,
 			HttpServletRequest request) {
 		
-		try {
-			// product exist
-			Product product = productService.getById(id);
-			
-			if (product == null) {
-				response.sendError(404, "Product id " + id + " does not exists");
-				return null;
-			}
-			
-			if(page == null) {
-				page = 0;
-			}
-			if(count == null) {
-				count = Integer.MAX_VALUE;
-			}
-			
-			Pageable pageRequest = null;
-			if(checkMedia) {
-				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("MEDIA_FLAG"), Sort.Order.desc(sortType))); 
-			} else {
-				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
-			}
-			
+//		try {
+//			// product exist
+//			Product product = productService.getById(id);
+//			
+//			if (product == null) {
+//				response.sendError(404, "Product id " + id + " does not exists");
+//				return null;
+//			}
+//			
+//			if(page == null) {
+//				page = 0;
+//			}
+//			if(count == null) {
+//				count = Integer.MAX_VALUE;
+//			}
+//			
+//			Pageable pageRequest = null;
+//			if(checkMedia) {
+//				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("MEDIA_FLAG"), Sort.Order.desc(sortType))); 
+//			} else {
+//				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
+//			}
+//			
 //			ReadableProductReviewList reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
 //			return reviews;
-			return null;
-		} catch (Exception e) {
-			LOGGER.error("Error while getting product reviews", e);
-			try {
-				response.sendError(503, "Error while getting product reviews" + e.getMessage());
-			} catch (Exception ignore) {
-				
-			}
-			return null;
-		}
+//		} catch (Exception e) {
+//			LOGGER.error("Error while getting product reviews", e);
+//			try {
+//				response.sendError(503, "Error while getting product reviews" + e.getMessage());
+//			} catch (Exception ignore) {
+//				
+//			}
+//			return null;
+//		}
+		
+		return null;
 	}
   
 	@RequestMapping(value = {"/auth/products/{id}/reviews/{reviewId}/recommend"}, method = RequestMethod.PUT)
@@ -214,48 +218,49 @@ public class ProductReviewApi {
 //				e1.printStackTrace();
 //			}
 //		}
-		
-		try {
-			// product exist
-			Product product = productService.getById(id);
-			
-			if (product == null) {
-				response.sendError(404, "Product id " + id + " does not exists");
-				return null;
-			}
-			
-			if (product == null) {
-				response.sendError(404, "Product id " + id + " does not exists");
-				return null;
-			}
-			
-			if(page == null) {
-				page = 0;
-			}
-			if(count == null) {
-				count = Integer.MAX_VALUE;
-			}
-			
-			Pageable pageRequest = null;
-			if(checkMedia) {
-				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("MEDIA_FLAG"), Sort.Order.desc(sortType))); 
-			} else {
-				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
-			}
-			
+//		
+//		try {
+//			// product exist
+//			Product product = productService.getById(id);
+//			
+//			if (product == null) {
+//				response.sendError(404, "Product id " + id + " does not exists");
+//				return null;
+//			}
+//			
+//			if (product == null) {
+//				response.sendError(404, "Product id " + id + " does not exists");
+//				return null;
+//			}
+//			
+//			if(page == null) {
+//				page = 0;
+//			}
+//			if(count == null) {
+//				count = Integer.MAX_VALUE;
+//			}
+//			
+//			Pageable pageRequest = null;
+//			if(checkMedia) {
+//				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc("MEDIA_FLAG"), Sort.Order.desc(sortType))); 
+//			} else {
+//				pageRequest = PageRequest.of(page, count, Sort.by(Sort.Order.desc(sortType)));
+//			}
+//			
 //			ReadableProductReviewList reviews = productCommonFacade.getProductReviews(product, merchantStore, language, keyword, pageRequest);
 //			return reviews;
-			return null;
-		} catch (Exception e) {
-			LOGGER.error("Error while getting product reviews", e);
-			try {
-				response.sendError(503, "Error while getting product reviews" + e.getMessage());
-			} catch (Exception ignore) {
-				
-			}
-			
-			return null;
-		}
+////			return null;
+//		} catch (Exception e) {
+//			LOGGER.error("Error while getting product reviews", e);
+//			try {
+//				response.sendError(503, "Error while getting product reviews" + e.getMessage());
+//			} catch (Exception ignore) {
+//				
+//			}
+//			
+//			return null;
+//		}
+		return null;
 	}
   
   @RequestMapping(
@@ -279,38 +284,39 @@ public class ProductReviewApi {
       HttpServletRequest request,
       HttpServletResponse response) {
 
-    try {
-      ProductReview prodReview = productReviewService.getById(reviewId);
-      if (prodReview == null) {
-        response.sendError(404, "Product review with id " + reviewId + " does not exist");
-        return null;
-      }
-
-      if (prodReview.getCustomer().getId().longValue() != review.getCustomerId().longValue()) {
-        response.sendError(404, "Product review with id " + reviewId + " does not exist");
-        return null;
-      }
-
-      // rating maximum 5
-      if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
-        response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-        return null;
-      }
-
-      review.setProductId(id);
-//      productCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
-
-      return review;
-
-    } catch (Exception e) {
-      LOGGER.error("Error while saving product review", e);
-      try {
-        response.sendError(503, "Error while saving product review" + e.getMessage());
-      } catch (Exception ignore) {
-      }
-
-      return null;
-    }
+//    try {
+//      ProductReview prodReview = productReviewService.getById(reviewId);
+//      if (prodReview == null) {
+//        response.sendError(404, "Product review with id " + reviewId + " does not exist");
+//        return null;
+//      }
+//
+//      if (prodReview.getCustomer().getId().longValue() != review.getCustomerId().longValue()) {
+//        response.sendError(404, "Product review with id " + reviewId + " does not exist");
+//        return null;
+//      }
+//
+//      // rating maximum 5
+//      if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
+//        response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
+//        return null;
+//      }
+//
+//      review.setProductId(id);
+////      productCommonFacade.saveOrUpdateReview(review, merchantStore, language, null);
+//
+//      return review;
+//
+//    } catch (Exception e) {
+//      LOGGER.error("Error while saving product review", e);
+//      try {
+//        response.sendError(503, "Error while saving product review" + e.getMessage());
+//      } catch (Exception ignore) {
+//      }
+//
+//      return null;
+//    }
+	  return null;
   }
 
   @RequestMapping(
@@ -332,28 +338,28 @@ public class ProductReviewApi {
       @ApiIgnore Language language,
       HttpServletResponse response) {
 
-    try {
-      ProductReview prodReview = productReviewService.getById(reviewId);
-      if (prodReview == null) {
-        response.sendError(404, "Product review with id " + reviewId + " does not exist");
-        return;
-      }
-
-      if (prodReview.getProduct().getId().longValue() != id.longValue()) {
-        response.sendError(404, "Product review with id " + reviewId + " does not exist");
-        return;
-      }
-
-//      productCommonFacade.deleteReview(prodReview, merchantStore, language);
-
-    } catch (Exception e) {
-      LOGGER.error("Error while deleting product review", e);
-      try {
-        response.sendError(503, "Error while deleting product review" + e.getMessage());
-      } catch (Exception ignore) {
-      }
-
-      return;
-    }
+//    try {
+//      ProductReview prodReview = productReviewService.getById(reviewId);
+//      if (prodReview == null) {
+//        response.sendError(404, "Product review with id " + reviewId + " does not exist");
+//        return;
+//      }
+//
+//      if (prodReview.getProduct().getId().longValue() != id.longValue()) {
+//        response.sendError(404, "Product review with id " + reviewId + " does not exist");
+//        return;
+//      }
+//
+////      productCommonFacade.deleteReview(prodReview, merchantStore, language);
+//
+//    } catch (Exception e) {
+//      LOGGER.error("Error while deleting product review", e);
+//      try {
+//        response.sendError(503, "Error while deleting product review" + e.getMessage());
+//      } catch (Exception ignore) {
+//      }
+//
+//      return;
+//    }
   }
 }

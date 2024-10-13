@@ -119,7 +119,7 @@ public class ProductManagementAPIIntegrationTest extends ServicesTestSupport {
 		final PersistableProductReview review = new PersistableProductReview();
 		review.setCustomerId(1L);
 
-		review.setProductId(1L);
+		review.setOrderProductId(1L);
 		review.setLanguage("en");
 		review.setRating(2D);// rating is on 5
 		review.setDescription(

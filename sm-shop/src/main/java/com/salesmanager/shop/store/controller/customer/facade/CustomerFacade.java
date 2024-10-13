@@ -4,6 +4,9 @@
 package com.salesmanager.shop.store.controller.customer.facade;
 
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.CustomerCriteria;
@@ -190,4 +193,6 @@ public interface CustomerFacade
 	boolean passwordMatch(String rawPassword, Customer customer);
 	
 	void changePassword(Customer customer, String newPassword);
+
+	public ReadableCustomerList getList(String queryType, String queryValue, String startDate, String endDate, Pageable pageRequest);
 }

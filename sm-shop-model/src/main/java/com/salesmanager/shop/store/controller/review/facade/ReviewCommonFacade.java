@@ -22,5 +22,5 @@ public interface ReviewCommonFacade {
 	public void deleteReview(ProductReview review, MerchantStore store, Language language) throws Exception;
 	public void updateReviewRecommend(Long reviewId, PersistableProductReviewRecommend persistableRecommend) throws Exception;
 	public ReadableProductReviewList getReviewsByStore(MerchantStore merchantStore, Language language, String keyword, Pageable pageRequest);
-	public ReadableProductReviewList getReviewByCustomer(Long customerId, Language language, Pageable pageRequest) throws Exception;
+	public ReadableProductReviewList getReviewByCustomer(Long customerId, Language language, Integer tabIndex, Pageable pageRequest) throws Exception;
 }

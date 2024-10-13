@@ -33,13 +33,14 @@ import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
 @Table(name = "PRODUCT_REVIEW", uniqueConstraints={
 		@UniqueConstraint(columnNames={
 				"CUSTOMERS_ID",
-				"PRODUCT_ID"
+				"ORDER_PRODUCT_ID"
 			})
 		}
 )
@@ -77,6 +78,10 @@ public class ProductReview extends SalesManagerEntity<Long, ProductReview> imple
 	@OneToOne
 	@JoinColumn(name="PRODUCT_ID")
 	private Product product;
+	
+	@OneToOne
+	@JoinColumn(name="ORDER_PRODUCT_ID")
+	private OrderProduct orderProduct;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productReview")
 	private Set<ProductReviewDescription> descriptions = new HashSet<ProductReviewDescription>();
@@ -136,6 +141,14 @@ public class ProductReview extends SalesManagerEntity<Long, ProductReview> imple
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public OrderProduct getOrderProduct() {
+		return orderProduct;
+	}
+
+	public void setOrderProduct(OrderProduct orderProduct) {
+		this.orderProduct = orderProduct;
 	}
 
 	public Set<ProductReviewDescription> getDescriptions() {

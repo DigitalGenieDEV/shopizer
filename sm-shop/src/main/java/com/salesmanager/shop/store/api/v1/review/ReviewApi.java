@@ -40,6 +40,7 @@ import com.salesmanager.shop.model.catalog.product.PersistableProductReview;
 import com.salesmanager.shop.model.catalog.product.PersistableProductReviewRecommend;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReview;
 import com.salesmanager.shop.model.catalog.product.ReadableProductReviewList;
+import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.store.api.v1.product.ProductReviewApi;
 import com.salesmanager.shop.store.controller.review.facade.ReviewCommonFacade;
 
@@ -161,14 +162,14 @@ public class ReviewApi {
 		}
 	}
 	
-	@PostMapping(value = {"/auth/review/product/{id}", "/private/review/product/{id}"})
+	@PostMapping(value = {"/auth/reviews/order-product/{id}", "/private/reviews/order-product/{id}"})
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public PersistableProductReview create(
+	public CommonResultDTO<?> create(
 			@PathVariable final Long id,
 			@Valid @RequestPart(name = "param") PersistableProductReview review,
 			@RequestPart(name = "reviewImages", required = false) List<MultipartFile> reviewImages,
@@ -178,44 +179,39 @@ public class ReviewApi {
 			HttpServletResponse response) {
 
 		try {
-			// rating already exist
-			ProductReview prodReview = productReviewService.getByProductAndCustomer(review.getProductId(), review.getCustomerId());
+			
+			ProductReview prodReview = productReviewService.getByOrderProductAndCustomer(id, review.getCustomerId());
 			if (prodReview != null) {
-				response.sendError(500, "A review already exist for this customer and product");
-				return null;
+//				response.sendError(500, "A review already exist for this customer and product");
+				return CommonResultDTO.ofFailed("500", "A review already exist for this customer and product");
 			}
+			
 			// rating maximum 5
 			if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
-				response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-				return null;
+//				response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
+				return CommonResultDTO.ofFailed("503", "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
 			}
 			
-			review.setProductId(id);
+			review.setOrderProductId(id);
 			reviewCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
+			return CommonResultDTO.ofSuccess();
 			
-			return review;
 		} catch (Exception e) {
 			LOGGER.error("Error while saving product review", e);
-			try {
-				response.sendError(503, "Error while saving product review" + e.getMessage());
-			} catch (Exception ignore) {
-			
-			}
-		
-			return null;
+			return CommonResultDTO.ofFailed("500", "Error while saving product review" + e.getMessage());
 		}
 	}
 	
-	@PutMapping(value = {"/auth/review/{reviewId}/product/{id}", "/private/review/{reviewId}/product/{id}"})
+	@PutMapping(value = {"/auth/reviews/{id}", "/private/reviews/{id}"})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public PersistableProductReview update(
+	public CommonResultDTO<?> update(
 			@PathVariable final Long id,
-			@PathVariable final Long reviewId,
+//			@PathVariable final Long reviewId,
 			@Valid @RequestPart(name = "param") PersistableProductReview review,
 			@RequestPart(name = "reviewImages", required = false) List<MultipartFile> reviewImages,
 			@ApiIgnore MerchantStore merchantStore,
@@ -224,38 +220,32 @@ public class ReviewApi {
 			HttpServletResponse response) {
 		
 		try {
-			ProductReview prodReview = productReviewService.getById(reviewId);
+			ProductReview prodReview = productReviewService.getById(id);
 			if (prodReview == null) {
-				response.sendError(404, "Product review with id " + reviewId + " does not exist");
-				return null;
+//				response.sendError(404, "Product review with id " + id + " does not exist");
+				return CommonResultDTO.ofFailed("404", "Product review with id " + id + " does not exist");
 			}
 			
 			if (prodReview.getCustomer().getId().longValue() != review.getCustomerId().longValue()) {
-				response.sendError(404, "Product review with id " + reviewId + " does not exist");
-				return null;
+//				response.sendError(404, "Product review with id " + id + " does not exist");
+				return CommonResultDTO.ofFailed("404", "Product review with id " + id + " does not exist");
 			}
 			
 			// rating maximum 5
 			if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
 				response.sendError(503, "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-				return null;
+				return CommonResultDTO.ofFailed("503", "Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
 			}
 			
-			review.setId(reviewId);
-			review.setProductId(id);
+			review.setId(id);
+			review.setOrderProductId(prodReview.getOrderProduct().getId());
 			reviewCommonFacade.saveOrUpdateReview(review, merchantStore, language, reviewImages);
 			
-			return review;
+			return CommonResultDTO.ofSuccess();
 			
 		} catch (Exception e) {
 			LOGGER.error("Error while saving product review", e);
-			try {
-				response.sendError(503, "Error while saving product review" + e.getMessage());
-			} catch (Exception ignore) {
-			
-			}
-			
-			return null;
+			return CommonResultDTO.ofFailed("500", "Error while saving product review" + e.getMessage());
 		}
 	}
 	
@@ -338,45 +328,36 @@ public class ReviewApi {
 		}
 	}
 	
-	@DeleteMapping(value = {"/auth/review/{reviewId}/product/{id}", "/private/review/{reviewId}/product/{id}"})
+	@DeleteMapping(value = {"/auth/reviews/{id}", "/private/reviews/{id}"})
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
 	})
-	public void delete(
+	public CommonResultDTO<?> delete(
 			@PathVariable final Long id,
-			@PathVariable final Long reviewId,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language,
 			HttpServletResponse response) {
 		
 		try {
-			ProductReview prodReview = productReviewService.getById(reviewId);
+			ProductReview prodReview = productReviewService.getById(id);
 			if (prodReview == null) {
-				response.sendError(404, "Product review with id " + reviewId + " does not exist");
-				return;
+//				response.sendError(404, "Product review with id " + reviewId + " does not exist");
+				return CommonResultDTO.ofFailed("404", "Product review with id " + id + " does not exist");
 			}
-			
-			if (prodReview.getProduct().getId().longValue() != id.longValue()) {
-				response.sendError(404, "Product review with id " + reviewId + " does not exist");
-				return;
-			}
-			
 			reviewCommonFacade.deleteReview(prodReview, merchantStore, language);
-			
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting product review", e);
 			try {
-				response.sendError(503, "Error while deleting product review" + e.getMessage());
+//				response.sendError(503, "Error while deleting product review" + e.getMessage());
+				return CommonResultDTO.ofFailed("503", "Error while deleting product review" + e.getMessage());
 			} catch (Exception ignore) {
 				
 			}
-			
-			return;
-			
 		}
+		return CommonResultDTO.ofSuccess();
 	}
 	
 	@GetMapping(value = {"/auth/review/store", "/private/review/store"})

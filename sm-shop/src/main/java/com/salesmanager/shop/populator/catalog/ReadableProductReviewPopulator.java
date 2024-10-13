@@ -40,10 +40,8 @@ public class ReadableProductReviewPopulator extends
 			target.setLastName(source.getCustomer().getBilling().getLastName());
 			
 			target.setReviewsRating(source.getReviewRating().intValue());
-			target.setProductId(source.getProduct().getId());
+			target.setProductId(source.getOrderProduct().getProductId());
 			target.setRecommendCount(source.getRecommends().size());
-			
-			
 			
 			Set<ProductReviewDescription> descriptions = source.getDescriptions();
 			if(descriptions!=null) {
