@@ -113,14 +113,6 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 			
 		}**/
 		
-		if(productOption.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-			throw new ConversionRuntimeException("Invalid product option id ");
-		}
-		
-		if(productOptionValue!=null && productOptionValue.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
-			throw new ConversionRuntimeException("Invalid product option value id ");
-		}
-		
 		if(source.getProductId() != null && source.getProductId().longValue() >0 ) {
 			Product p = productService.getById(source.getProductId());
 			if(p == null) {

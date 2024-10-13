@@ -72,7 +72,7 @@ public class MyScheduledTask {
         int currentPage = 0;
         boolean hasMorePages = true;
 
-        MerchantStore merchantStore = merchantService.getByCode("DEFAULT");
+        MerchantStore merchantStore = merchantService.getByCode("ccs005URL");
 
         while (hasMorePages) {
             productSearchKeywordQueryParamOfferQueryParam.setBeginPage(currentPage);
@@ -83,7 +83,7 @@ public class MyScheduledTask {
             for (int i = 0; i < result.length; i++) {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
-                offerId = 795861001688L;
+                offerId = 805505318975L;
                 try {
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore,
                             Collections.singletonList(1L), PublishWayEnums.IMPORT_BY_1688);

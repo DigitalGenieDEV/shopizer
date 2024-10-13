@@ -473,7 +473,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                         String attributeName = attr.getAttributeName();
                         String value = attr.getValue();
 
-                        Long productOptionId  = productOptionService.getByCode(attributeName);
+                        Long productOptionId  = productOptionService.getIdByCode(attributeName);
 
                         if (productOptionId == null) {
                             ProductOption option = new ProductOption();
@@ -506,7 +506,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             } catch (ServiceException e) {
                                 throw new RuntimeException(e);
                             }
-                            productOptionId = productOptionService.getByCode(attributeName);
+                            productOptionId = productOptionService.getIdByCode(attributeName);
                         }
 
                         PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
@@ -629,7 +629,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     String value = skuAttribute.getValue();
 
                     // 处理产品选项
-                    Long productOptionId = productOptionService.getByCode(attributeName);
+                    Long productOptionId = productOptionService.getIdByCode(attributeName);
                     if (productOptionId == null) {
                         ProductOption option = new ProductOption();
                         option.setMerchantStore(store);
@@ -650,7 +650,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             System.out.println("Unique constraint violation occurred, ignoring");
                         }
 
-                        productOptionId = productOptionService.getByCode(attributeName);
+                        productOptionId = productOptionService.getIdByCode(attributeName);
                     }
                     productVariant.setOption(productOptionId);
 
