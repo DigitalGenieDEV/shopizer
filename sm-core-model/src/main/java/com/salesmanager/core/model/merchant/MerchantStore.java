@@ -181,7 +181,7 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	@Column(name="HEADCOUNT", nullable=true)
 	private Integer headcount;
 	
-	@Column(name="DESCRIPTION", length = 255, nullable=true)
+	@Column(name="DESCRIPTION", columnDefinition = "LONGTEXT", nullable=true)
 	private String description;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "merchantStore", cascade = CascadeType.ALL)
