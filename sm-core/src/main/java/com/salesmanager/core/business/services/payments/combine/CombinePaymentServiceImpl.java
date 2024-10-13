@@ -13,14 +13,12 @@ import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.*;
 import com.salesmanager.core.model.system.IntegrationConfiguration;
 import com.salesmanager.core.model.system.IntegrationModule;
 import com.salesmanager.core.model.system.MerchantConfiguration;
 import com.salesmanager.core.modules.integration.IntegrationException;
 import com.salesmanager.core.modules.integration.payment.model.CombinePaymentModule;
-import com.salesmanager.core.modules.integration.payment.model.PaymentModule;
 import com.salesmanager.core.modules.utils.Encryption;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -384,7 +382,7 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
             throw new ServiceException("No capturable transaction for order id " + customerOrder.getId());
         }
 
-        CombineTransaction combineTransaction = module.capture(store, customer, customerOrder, trx, configuration, integrationModule);
+        CombineTransaction combineTransaction = module.capture(store, customer, customerOrder, customerOrder.getTotal(), trx, configuration, integrationModule);
 
 
         combineTransactionService.create(combineTransaction);
@@ -484,7 +482,7 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
             transaction = module.authorizeAndCapture(store, customer, customerOrder, customerOrder.getTotal(), payment, configuration, integrationModule);
         } else if(transactionType == TransactionType.CAPTURE)  {
             CombineTransaction lastCombineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
-            transaction = module.capture(store, customer, customerOrder, lastCombineTransaction, configuration, integrationModule);
+            transaction = module.capture(store, customer, customerOrder, customerOrder.getTotal(), lastCombineTransaction, configuration, integrationModule);
         }
 
         combineTransactionService.create(transaction);
@@ -605,7 +603,7 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
     }
 
     @Override
-    public CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException {
+    public CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Order order, Customer customer, MerchantStore store, Payment payment) throws ServiceException {
         Validate.notNull(customer);
         Validate.notNull(store);
         Validate.notNull(customerOrder);
@@ -644,13 +642,18 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
         }
 
         CombineTransaction transaction = null;
+        BigDecimal amount = customerOrder.getTotal();
+        if (order != null) {
+            amount = order.getTotal();
+        }
+
         if(transactionType == TransactionType.AUTHORIZE)  {
-            transaction = module.authorize(store, customer, customerOrder, customerOrder.getTotal(), payment, configuration, integrationModule);
+            transaction = module.authorize(store, customer, customerOrder, amount, payment, configuration, integrationModule);
         } else if(transactionType == TransactionType.AUTHORIZECAPTURE)  {
-            transaction = module.authorizeAndCapture(store, customer, customerOrder, customerOrder.getTotal(), payment, configuration, integrationModule);
+            transaction = module.authorizeAndCapture(store, customer, customerOrder, amount, payment, configuration, integrationModule);
         } else if(transactionType == TransactionType.CAPTURE)  {
             CombineTransaction lastCombineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
-            transaction = module.capture(store, customer, customerOrder, lastCombineTransaction, configuration, integrationModule);
+            transaction = module.capture(store, customer, customerOrder, amount, lastCombineTransaction, configuration, integrationModule);
         }
 
         combineTransactionService.create(transaction);

@@ -5,6 +5,7 @@ import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.PaymentMethod;
@@ -49,7 +50,7 @@ public interface CombinePaymentService {
 
     List<PaymentMethod> getAcceptedPaymentMethods(MerchantStore merchantStore) throws ServiceException;
 
-    CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException;
+    CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Order order, Customer customer, MerchantStore store, Payment payment) throws ServiceException;
 
     CombinePaymentModule getPaymentModule(String paymentModuleCode) throws ServiceException;
 

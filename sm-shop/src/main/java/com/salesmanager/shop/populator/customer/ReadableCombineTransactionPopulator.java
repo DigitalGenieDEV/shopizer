@@ -8,9 +8,14 @@ import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.utils.DateUtil;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
+
+@Component
 public class ReadableCombineTransactionPopulator extends AbstractDataPopulator<CombineTransaction, ReadableCombineTransaction> {
 
+    @Inject
     private PricingService pricingService;
 
     @Override
