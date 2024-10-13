@@ -295,9 +295,9 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 							throw new ConversionException("Category id " + categ.getId() + " does not exist");
 						}
 					}
-					if(c.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
+					/*if(c.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
 						throw new ConversionException("Invalid category id");
-					}
+					}*/
 					destination.getCategories().add(c);
 				}
 			}
@@ -358,6 +358,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			return destination;
 		
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ConversionRuntimeException("Error converting product mapper",e);
 		}
 		
