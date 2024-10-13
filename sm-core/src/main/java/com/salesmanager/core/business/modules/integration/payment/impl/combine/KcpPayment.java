@@ -49,7 +49,7 @@ public class KcpPayment implements CombinePaymentModule {
     }
 
     @Override
-    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
+    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, BigDecimal amount, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
 
         return null;
     }

@@ -60,7 +60,7 @@ public class NicepayPayment implements CombinePaymentModule {
     }
 
     @Override
-    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
+    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, BigDecimal amount, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
         return null;
     }
 
@@ -84,6 +84,8 @@ public class NicepayPayment implements CombinePaymentModule {
         combineTransaction.getTransactionDetails().put("channel", metaData.get("channel"));
         combineTransaction.getTransactionDetails().put("currency", metaData.get("currency"));
         combineTransaction.getTransactionDetails().put("amount", metaData.get("amount"));
+        combineTransaction.getTransactionDetails().put("orderId", metaData.get("orderId"));
+        combineTransaction.getTransactionDetails().put("paymentMode", metaData.get("paymentMode"));
 
         return combineTransaction;
     }

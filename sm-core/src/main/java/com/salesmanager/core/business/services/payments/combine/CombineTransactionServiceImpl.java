@@ -4,14 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.payments.combine.CombineTransactionRepository;
 import com.salesmanager.core.business.services.common.generic.SalesManagerEntityServiceImpl;
+import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Transaction;
 import com.salesmanager.core.model.payments.TransactionType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Service("combineTransactionService")
@@ -144,24 +147,12 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
     public CombineTransaction lastCombineTransaction(CustomerOrder customerOrder) throws ServiceException {
         List<CombineTransaction> combineTransactions = combineTransactionRepository.findByCusOrder(customerOrder.getId());
 
-        //TODO order by date
-        TreeMap<String, CombineTransaction> map = combineTransactions.stream()
-                .collect(
+        List<CombineTransaction> newList = new ArrayList<>(combineTransactions);
+        newList.sort(Comparator.comparing(CombineTransaction::getTransactionDate));
+        CombineTransaction lastTransaction =  CollectionUtils.lastElement(newList);
 
-                        Collectors.toMap(
-                                CombineTransaction::getTransactionTypeName, transaction -> transaction,(o1, o2) -> o1, TreeMap::new)
+        System.out.println("Current step " + lastTransaction.getTransactionTypeName());
 
-
-                );
-
-        //get last transaction
-        Map.Entry<String, CombineTransaction> last = map.lastEntry();
-
-        String currentStep = last.getKey();
-
-        System.out.println("Current step " + currentStep);
-
-        CombineTransaction lastTransaction = last.getValue();
         ObjectMapper mapper = new ObjectMapper();
         if(!StringUtils.isBlank(lastTransaction.getDetails())) {
             try {

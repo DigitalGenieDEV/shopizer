@@ -103,7 +103,7 @@ public class PayPalCheckoutPayment implements CombinePaymentModule {
     }
 
     @Override
-    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
+    public CombineTransaction capture(MerchantStore store, Customer customer, CustomerOrder order, BigDecimal amount, CombineTransaction capturableTransaction, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
         try {
             Validate.notNull(capturableTransaction,"CombineTransaction cannot be null");
             Validate.notNull(capturableTransaction.getTransactionDetails().get("TRANSACTIONID"), "Transaction details must contain a TRANSACTIONID");
@@ -121,7 +121,7 @@ public class PayPalCheckoutPayment implements CombinePaymentModule {
             }
 
             CombineTransaction combineTransaction = new CombineTransaction();
-            combineTransaction.setAmount(order.getTotal());
+            combineTransaction.setAmount(amount);
             combineTransaction.setCustomerOrder(order);
             combineTransaction.setTransactionType(TransactionType.CAPTURE);
             combineTransaction.setPaymentType(PaymentType.PAYPAL);
