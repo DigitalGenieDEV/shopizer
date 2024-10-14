@@ -57,7 +57,7 @@ public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
 	private List<ProductOptionDescription> descriptionsList = new ArrayList<ProductOptionDescription>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="MERCHANT_ID", nullable=false)
+	@JoinColumn(name="MERCHANT_ID", updatable = false,  nullable=false)
 	private MerchantStore merchantStore;
 
 	@Column(name="PRODUCT_OPTION_READ")
