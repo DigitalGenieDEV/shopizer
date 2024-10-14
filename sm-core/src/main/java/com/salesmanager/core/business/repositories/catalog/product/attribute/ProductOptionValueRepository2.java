@@ -73,13 +73,13 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ "ON A.PRODUCT_OPTION_ID = B.PRODUCT_OPTION_ID \r\n"
 			+ "INNER JOIN PRODUCT_OPTION_DESC C\r\n"
 			+ "ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID\r\n"
-			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?4 \r\n"
-			+ "AND A.CATEGORY_ID = ?3 \r\n"
-			+ "AND C.LANGUAGE_ID = ?2 \r\n"
-			+ "AND ( B.MERCHANT_ID = ?1 OR  B.MERCHANT_ID = 1) \r\n"
+			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?3 \r\n"
+			+ "AND A.CATEGORY_ID = ?2 \r\n"
+			+ "AND C.LANGUAGE_ID = ?1 \r\n"
+			+ "AND  A.MERCHANT_ID = 1 \r\n"
 			+ "ORDER BY B.PRODUCT_OPTION_ID ASC\r\n"
 			+ " ", nativeQuery=true)
-	public List<ReadProductOption2> getProductListOption(int code, int lagnageId, int categoryId, String division);
+	public List<ReadProductOption2> getProductListOption(int lagnageId, int categoryId, String division);
 	
 	@Query( value ="SELECT  \r\n"
 			+ "	A.PRODUCT_OPTION_SET_ID AS ID, A.PRODUCT_OPTION_ID AS OPTIONID, C.PRODUCT_OPTION_VALUE_ID AS VALUEID, C.PRODUCT_OPTION_VAL_CODE AS CODE, D.DESCRIPTION_ID AS DESCID, D.DESCRIPTION  \r\n"
@@ -89,12 +89,12 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ "ON B.values_PRODUCT_OPTION_VALUE_ID = C.PRODUCT_OPTION_VALUE_ID\r\n"
 			+ "INNER JOIN PRODUCT_OPTION_VALUE_DESCRIPTION D ON \r\n"
 			+ "C.PRODUCT_OPTION_VALUE_ID = D.PRODUCT_OPTION_VALUE_ID\r\n"
-			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?4 \r\n"
-			+ "AND A.CATEGORY_ID = ?3 \r\n"
-			+ "AND D.LANGUAGE_ID = ?2 \r\n"
-			+ "AND ( C.MERCHANT_ID = ?1 OR  C.MERCHANT_ID = 1) \r\n"
+			+ "WHERE A.OPTION_SET_FOR_SALE_TYPE = ?3 \r\n"
+			+ "AND A.CATEGORY_ID = ?2 \r\n"
+			+ "AND D.LANGUAGE_ID = ?1 \r\n"
+			+ "AND  A.MERCHANT_ID = 1 \r\n"
 			+ "ORDER BY A.PRODUCT_OPTION_ID ASC \r\n"
 			+ " ", nativeQuery=true)
-	public List<ReadProductOptionValue2> getProductListOptionValue(int code, int lagnageId, int categoryId, String division);
+	public List<ReadProductOptionValue2> getProductListOptionValue(int lagnageId, int categoryId, String division);
 
 }
