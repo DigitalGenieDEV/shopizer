@@ -30,4 +30,7 @@ public class OrderAdditionalPayment extends SalesManagerEntity<String, OrderAddi
 	@Enumerated(EnumType.STRING)
 	@Column (name = "STATUS")
 	private OrderAdditionalPaymentStatus status = OrderAdditionalPaymentStatus.WAITING;
+
+
+
 }

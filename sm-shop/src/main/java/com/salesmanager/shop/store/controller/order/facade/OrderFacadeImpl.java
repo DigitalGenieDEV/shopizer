@@ -20,6 +20,7 @@ import com.salesmanager.core.business.repositories.order.orderproduct.OrderProdu
 import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
+import com.salesmanager.core.business.services.order.OrderAdditionalPaymentService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductService;
 import com.salesmanager.core.business.services.order.orderproduct.OrderProductSnapshotService;
 import com.salesmanager.core.business.services.order.ordertotal.OrderTotalService;
@@ -54,11 +55,14 @@ import com.salesmanager.shop.model.catalog.category.ReadableCategory;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductSnapshot;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransactionList;
 import com.salesmanager.shop.model.fulfillment.*;
 import com.salesmanager.shop.model.fulfillment.facade.FulfillmentFacade;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
+import com.salesmanager.shop.model.order.v1.ReadableOrderAdditionalPayment;
 import com.salesmanager.shop.populator.customer.ReadableCombineTransactionPopulator;
+import com.salesmanager.shop.populator.order.*;
 import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.controller.fulfillment.faced.convert.AdditionalServicesConvert;
 import com.salesmanager.shop.utils.*;
@@ -120,11 +124,6 @@ import com.salesmanager.shop.model.order.total.OrderTotal;
 import com.salesmanager.shop.model.order.transaction.ReadableTransaction;
 import com.salesmanager.shop.populator.customer.CustomerPopulator;
 import com.salesmanager.shop.populator.customer.PersistableCustomerPopulator;
-import com.salesmanager.shop.populator.order.OrderProductPopulator;
-import com.salesmanager.shop.populator.order.PersistableOrderApiPopulator;
-import com.salesmanager.shop.populator.order.ReadableOrderPopulator;
-import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
-import com.salesmanager.shop.populator.order.ShoppingCartItemPopulator;
 import com.salesmanager.shop.populator.order.transaction.PersistablePaymentPopulator;
 import com.salesmanager.shop.populator.order.transaction.ReadableTransactionPopulator;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
@@ -136,6 +135,9 @@ import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFa
 public class OrderFacadeImpl implements OrderFacade {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderFacadeImpl.class);
+
+	@Autowired
+	private ReadableOrderAdditionalPaymentPopulator readableOrderAdditionalPaymentPopulator;
 
 	@Autowired
 	private OrderProductService orderProductService;
@@ -213,6 +215,9 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Inject
 	private EmailTemplatesUtils emailTemplatesUtils;
+
+	@Autowired
+	private OrderAdditionalPaymentService orderAdditionalPaymentService;
 
 	@Inject
 	private LabelUtils messages;
@@ -2174,20 +2179,94 @@ public class OrderFacadeImpl implements OrderFacade {
 		orderProductRepository.updateIsInShippingOrderById(false, orderProductId);
 	}
 
+
 	@Override
-	public ReadableCombineTransaction getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
-																						   MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
+	public List<ReadableCombineTransactionList> getCapturableCombineTransactionInfoByOrderId(Long orderId, MerchantStore merchantStore, Language language) throws ServiceException, ConversionException{
+
+
+		ReadableCombineTransactionList readableCombineTransactionList= new ReadableCombineTransactionList();
+
+		Long customerOrderIdByOrderId = orderService.findCustomerOrderIdByOrderId(orderId);
+		CustomerOrder customerOrder = new CustomerOrder();
+		customerOrder.setId(customerOrderIdByOrderId);
+
+		List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactions(customerOrder);
+
+		List<ReadableCombineTransaction> readableCombineTransactions = new ArrayList<>();
+
+		for(CombineTransaction combineTransaction : combineTransactions){
+			try {
+				if (combineTransaction.getTransactionDetails().get("orderId") != null &&
+						combineTransaction.getTransactionDetails().get("orderId").equals(String.valueOf(orderId))) {
+					ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
+					ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
+					populator.setPricingService(pricingService);
+					populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
+					readableCombineTransactions.add(readableCombineTransaction) ;
+				} else {
+					continue;
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		readableCombineTransactionList.setCombineTransactionList(readableCombineTransactions);
+
+		ReadableOrderAdditionalPayment orderAdditionalPayment = readableOrderAdditionalPaymentPopulator.populate(orderAdditionalPaymentService.findById(String.valueOf(orderId)).orElse(null), new ReadableOrderAdditionalPayment(), null, null);
+		if (orderAdditionalPayment !=null){
+			readableCombineTransactionList.setReadableOrderAdditionalPaymentList(com.google.common.collect.Lists.newArrayList(orderAdditionalPayment));
+
+		}
+		return com.google.common.collect.Lists.newArrayList(readableCombineTransactionList);
+	}
+
+
+	@Override
+	public List<ReadableCombineTransactionList> getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
+																							   MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
+
+		ReadableCombineTransactionList readableCombineTransactionList = new ReadableCombineTransactionList();
+
 		CustomerOrder customerOrder = new CustomerOrder();
 		customerOrder.setId(customerOrderId);
-		ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
-		CombineTransaction capturableCombineTransaction = combineTransactionService.getCapturableCombineTransaction(customerOrder, TransactionType.INIT);
-		if (capturableCombineTransaction == null){
-			return readableCombineTransaction;
+		List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactions(customerOrder);
+
+		CustomerOrder customerOrderById = customerOrderService.getById(customerOrderId);
+		List<Order> orders = customerOrderById.getOrders();
+		if (orders != null){
+			List<ReadableOrderAdditionalPayment> orderAdditionalPaymentList = orders.stream().map(order -> {
+				try {
+					OrderAdditionalPayment orderAdditionalPayment = orderAdditionalPaymentService.findById(String.valueOf(order.getId())).orElse(null);
+					if (orderAdditionalPayment !=null ){
+						ReadableOrderAdditionalPayment populate = readableOrderAdditionalPaymentPopulator.populate(orderAdditionalPayment, new ReadableOrderAdditionalPayment(), null, null);
+						return populate;
+					}
+					return null;
+				} catch (ConversionException e) {
+					throw new RuntimeException(e);
+				}
+			}).filter(Objects::nonNull).collect(Collectors.toList());
+
+			readableCombineTransactionList.setReadableOrderAdditionalPaymentList(orderAdditionalPaymentList);
 		}
-		ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
-		populator.setPricingService(pricingService);
-		populator.populate(capturableCombineTransaction, readableCombineTransaction, merchantStore, language);
-		return readableCombineTransaction;
+
+		List<ReadableCombineTransaction> readableCombineTransactions = new ArrayList<>();
+		for(CombineTransaction combineTransaction : combineTransactions){
+			try {
+				ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
+				ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
+				populator.setPricingService(pricingService);
+				populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
+				readableCombineTransactions.add(readableCombineTransaction) ;
+
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		readableCombineTransactionList.setCombineTransactionList(readableCombineTransactions);
+
+		return com.google.common.collect.Lists.newArrayList(readableCombineTransactionList);
 	}
 
 

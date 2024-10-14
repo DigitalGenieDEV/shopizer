@@ -16,8 +16,11 @@ import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransactionList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
@@ -799,20 +802,28 @@ public class OrderApi {
 	}
 
 
-	@RequestMapping(value = { "/private/order/capturable_combine_transaction_info/{customerOrderId}",
-			"/auth/order/capturable_combine_transaction_info/{customerOrderId}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/private/order/capturable_combine_transaction_info/{orderId}",
+			"/auth/order/capturable_combine_transaction_info/{orderId}" }, method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") ,
 			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT")})
-	public CommonResultDTO<ReadableCombineTransaction> getCapturableCombineTransactionInfo(
-			@PathVariable final Long customerOrderId,
+	public CommonResultDTO<List<ReadableCombineTransactionList>> getCapturableCombineTransactionInfo(
+			@PathVariable final Long orderId,
+			@Valid @RequestParam String type,
 			@ApiIgnore Language language,
 			@ApiIgnore MerchantStore store,
 			HttpServletResponse response) {
 		try {
-			ReadableCombineTransaction readableCombineTransaction = orderFacade.getCapturableCombineTransactionInfoByCustomerOrderId(customerOrderId, store, language);
-			return CommonResultDTO.ofSuccess(readableCombineTransaction);
+			if ("CUSTOMER_ORDER".equals(type)){
+				List<ReadableCombineTransactionList> readableCombineTransaction = orderFacade.getCapturableCombineTransactionInfoByCustomerOrderId(orderId, store, language);
+				return CommonResultDTO.ofSuccess(readableCombineTransaction);
+			}
+			if ("ORDER".equals(type)){
+				List<ReadableCombineTransactionList> readableCombineTransaction = orderFacade.getCapturableCombineTransactionInfoByOrderId(orderId, store, language);
+				return CommonResultDTO.ofSuccess(readableCombineTransaction);
+			}
+			return null;
 		}catch (Exception e){
 			LOGGER.error("updateSellerOrderStatus error", e);
 			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
