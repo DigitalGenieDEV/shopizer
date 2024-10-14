@@ -115,7 +115,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, Custo
 			+ "      AND CASE WHEN 'BUSINESS_TYPE' = ?1 THEN '비지니스 유형컬럼' = ?2 ELSE TRUE END \r\n"
 			+ "      AND CASE WHEN 'COUNTRY' = ?1 THEN c2.COUNTRY_ISOCODE = ?2 ELSE TRUE END \r\n"
 			+ "      AND CASE WHEN ?3 != '' THEN DATE_FORMAT(c.DATE_MODIFIED, '%Y-%m-%d') >= ?3 ELSE TRUE END \r\n"
-			+ "      AND CASE WHEN ?4 != '' THEN DATE_FORMAT(c.DATE_MODIFIED, '%Y-%m-%d') <= ?3 ELSE TRUE END \r\n"
+			+ "      AND CASE WHEN ?4 != '' THEN DATE_FORMAT(c.DATE_MODIFIED, '%Y-%m-%d') <= ?4 ELSE TRUE END \r\n"
 		 , countQuery = "SELECT COUNT(*) \r\n"
 		 		+ "FROM CUSTOMER c LEFT JOIN COUNTRY c2 ON c.DELIVERY_COUNTRY_ID = c2.COUNTRY_ID \r\n"
 		 		+ "WHERE 1 = 1 \r\n"

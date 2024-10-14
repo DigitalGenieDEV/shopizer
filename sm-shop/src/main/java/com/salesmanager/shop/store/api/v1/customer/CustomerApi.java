@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -204,11 +205,14 @@ public class CustomerApi {
 	public ReadableCustomerList list(
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "count", required = false) Integer count,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "queryType", required = false) String queryType,
+			@RequestParam(value = "queryValue", required = false) String queryValue,
 			@ApiIgnore MerchantStore merchantStore,
 			@ApiIgnore Language language
 	) {
-		CustomerCriteria customerCriteria = createCustomerCriteria(page, count);
-		return customerFacade.getListByStore(merchantStore, customerCriteria, language);
+		return customerFacade.getList(queryType, queryValue, startDate, endDate, PageRequest.of(page==null?0:page, count==null?Integer.MAX_VALUE:count));
 	}
 
 	private CustomerCriteria createCustomerCriteria(
