@@ -77,6 +77,7 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 			for (ReadProductOptionValue data : valueList) {
 				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 				ReadableProductOptionValue2 targetData = objectMapper.convertValue(data, ReadableProductOptionValue2.class);
+			
 				dataList.add(targetData);
 			}
 		}

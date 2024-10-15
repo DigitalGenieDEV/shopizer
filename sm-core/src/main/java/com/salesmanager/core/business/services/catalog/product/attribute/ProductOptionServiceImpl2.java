@@ -52,17 +52,17 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 	}
 	
 	@Transactional
-	public void deleteValues(int setId, int valueId)throws ServiceException{
+	public void deleteValues(Long setId, Long valueId)throws ServiceException{
 		productOptionValueRepository2.deleteProductOptSet0ptValue(setId, valueId);
 		productOptionValueRepository2.deleteProductOptionValueDescription(valueId);
 		productOptionValueRepository2.deleteProductOptionValue(valueId);
 	}
 	
 	@Transactional
-	public void deleteOption(int setId, int optionId)  throws ServiceException {
-		List<Integer> valueList = productOptionValueRepository2.getOptSet0ptValueList(setId);
+	public void deleteOption(Long setId, Long optionId)  throws ServiceException {
+		List<Long> valueList = productOptionValueRepository2.getOptSetOptValueList(setId);
 		if(valueList.size() > 0 ) {
-			for(Integer valueId : valueList) {
+			for(Long valueId : valueList) {
 				productOptionValueRepository2.deleteProductOptSet0ptValue(setId, valueId);
 				productOptionValueRepository2.deleteProductOptionValueDescription(valueId);
 				productOptionValueRepository2.deleteProductOptionValue(valueId);

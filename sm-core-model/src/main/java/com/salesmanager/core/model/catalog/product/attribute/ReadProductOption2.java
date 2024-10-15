@@ -1,10 +1,10 @@
 package com.salesmanager.core.model.catalog.product.attribute;
 
 public interface ReadProductOption2 {
-	Integer getId();
-	Integer getOptionId();
+	Long getId();
+	Long getOptionId();
 	Integer getCategoryId();
-	Integer getDescId();
+	Long getDescId();
 	String getDescription();
 	String getCode();
 }

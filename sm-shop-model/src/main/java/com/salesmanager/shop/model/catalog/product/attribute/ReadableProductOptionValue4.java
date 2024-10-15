@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 @JsonInclude(Include.NON_NULL)
 public class ReadableProductOptionValue4 {
-	private int valueId=0;
+	private Long valueId=0L;
 	private String code="";
-	private int descId=0;
+	private Long descId=0L;
 	private String description= "";
 }

@@ -33,38 +33,38 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPT_SET_OPT_VALUE WHERE ProductOptionSet_PRODUCT_OPTION_SET_ID = ?1 AND values_PRODUCT_OPTION_VALUE_ID = ?2"
 				, nativeQuery = true)
-	public void deleteProductOptSet0ptValue(int setId, int valueId);
+	public void deleteProductOptSet0ptValue(Long setId, Long valueId);
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPTION_VALUE_DESCRIPTION WHERE PRODUCT_OPTION_VALUE_ID = ?1"
 				, nativeQuery = true)
-	public void deleteProductOptionValueDescription(int valueId);
+	public void deleteProductOptionValueDescription(Long valueId);
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPTION_VALUE WHERE PRODUCT_OPTION_VALUE_ID = ?1"
 				, nativeQuery = true)
-	public void deleteProductOptionValue(int valueId);
+	public void deleteProductOptionValue(Long valueId);
 	
 	
 	@Query( value ="SELECT  values_PRODUCT_OPTION_VALUE_ID \r\n"
 			+ " FROM PRODUCT_OPT_SET_OPT_VALUE A"
 			+ " WHERE  A.ProductOptionSet_PRODUCT_OPTION_SET_ID = ?1 ", nativeQuery=true)
-	public List<Integer> getOptSet0ptValueList(int setId);
+	public List<Long> getOptSetOptValueList(Long setId);
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPTION_DESC WHERE PRODUCT_OPTION_ID = ?1"
 				, nativeQuery = true)
-	public void deleteProductOptionDescription(int optionId);
+	public void deleteProductOptionDescription(Long optionId);
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPTION WHERE PRODUCT_OPTION_ID = ?1"
 				, nativeQuery = true)
-	public void deleteProductOption(int optionId);
+	public void deleteProductOption(Long optionId);
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPTION_SET WHERE PRODUCT_OPTION_SET_ID = ?1 AND PRODUCT_OPTION_ID = ?2"
 				, nativeQuery = true)
-	public void deleteProductOptSet(int setId, int optionId);
+	public void deleteProductOptSet(Long setId, Long optionId);
 
 	
 	@Query( value ="SELECT  \r\n"

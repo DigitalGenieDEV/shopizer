@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteProductValue {
-	private int valueId=0;
-	private int setId=0;
-	private int optionId=0;
+	private Long valueId=0L;
+	private Long setId=0L;
+	private Long optionId=0L;
 }
