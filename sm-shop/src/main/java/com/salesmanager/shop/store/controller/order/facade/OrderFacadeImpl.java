@@ -2208,8 +2208,6 @@ public class OrderFacadeImpl implements OrderFacade {
 					populator.setPricingService(pricingService);
 					populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
 					readableCombineTransactions.add(readableCombineTransaction) ;
-				} else {
-					continue;
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -2228,21 +2226,50 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public List<ReadableCombineTransactionList> getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
-																							   MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
+																									 MerchantStore merchantStore, Language language) throws ConversionException, ServiceException {
 
 		ReadableCombineTransactionList readableCombineTransactionList = new ReadableCombineTransactionList();
 
 		CustomerOrder customerOrder = new CustomerOrder();
 		customerOrder.setId(customerOrderId);
-		ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
-		CombineTransaction capturableCombineTransaction = combineTransactionService.getCapturableCombineTransaction(customerOrder, TransactionType.INIT);
-		if (capturableCombineTransaction == null){
-			return readableCombineTransaction;
+		List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactions(customerOrder);
+
+		CustomerOrder customerOrderById = customerOrderService.getById(customerOrderId);
+		List<Order> orders = customerOrderById.getOrders();
+		if (orders != null){
+			List<ReadableOrderAdditionalPayment> orderAdditionalPaymentList = orders.stream().map(order -> {
+				try {
+					OrderAdditionalPayment orderAdditionalPayment = orderAdditionalPaymentService.findById(String.valueOf(order.getId())).orElse(null);
+					if (orderAdditionalPayment !=null ){
+						ReadableOrderAdditionalPayment populate = readableOrderAdditionalPaymentPopulator.populate(orderAdditionalPayment, new ReadableOrderAdditionalPayment(), null, null);
+						return populate;
+					}
+					return null;
+				} catch (ConversionException e) {
+					throw new RuntimeException(e);
+				}
+			}).filter(Objects::nonNull).collect(Collectors.toList());
+
+			readableCombineTransactionList.setReadableOrderAdditionalPaymentList(orderAdditionalPaymentList);
 		}
-		ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
-		populator.setPricingService(pricingService);
-		populator.populate(capturableCombineTransaction, readableCombineTransaction, merchantStore, language);
-		return readableCombineTransaction;
+
+		List<ReadableCombineTransaction> readableCombineTransactions = new ArrayList<>();
+		for(CombineTransaction combineTransaction : combineTransactions){
+			try {
+				ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
+				ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
+				populator.setPricingService(pricingService);
+				populator.populate(combineTransaction, readableCombineTransaction, merchantStore, language);
+				readableCombineTransactions.add(readableCombineTransaction) ;
+
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		readableCombineTransactionList.setCombineTransactionList(readableCombineTransactions);
+
+		return com.google.common.collect.Lists.newArrayList(readableCombineTransactionList);
 	}
 
 
