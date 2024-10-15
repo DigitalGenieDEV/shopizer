@@ -590,7 +590,7 @@ public class ProductApiV2 {
 			@RequestParam(value = "slug", required = false) String slug, // category slug
 			@RequestParam(value = "available", required = false) Boolean available,
 			@RequestParam(value = "sellerCountryCode", required = false) String sellerCountryCode,
-			@ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language, HttpServletRequest request,
+			@ApiIgnore Language language, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		ProductCriteria criteria = new ProductCriteria();
@@ -610,18 +610,7 @@ public class ProductApiV2 {
 			Country country = countryService.getByCode(sellerCountryCode);
 			criteria.setSellerCountryCode(country.getId());
 		}
-		// Start Category handling
-		List<Long> categoryIds = new ArrayList<Long>();
-		if (slug != null) {
-			Category categoryBySlug = categoryService.getBySeUrl(merchantStore, slug, language);
-			categoryIds.add(categoryBySlug.getId());
-		}
-		if (category != null) {
-			categoryIds.add(category);
-		}
-		if (categoryIds.size() > 0) {
-			criteria.setCategoryIds(categoryIds);
-		}
+
 		// End Category handling
 
 		if (available != null && available) {

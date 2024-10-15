@@ -530,7 +530,6 @@ public class CustomerShoppingCartApi {
                     orderProductSnapshot.setSku(orderProduct.getSku());
                     orderProductSnapshot.setOrderProductId(orderProduct.getId());
                     orderProductSnapshot.setOrderId(order.getId());
-
                     ReadableProductSnapshot productProxy = readableOrderProductSnapshotMapper.convert(modelProduct, order.getMerchant(), language);
                     ProductVariant productVariant = productVariantService.queryBySku(orderProduct.getSku());
                     if (productVariant != null) {

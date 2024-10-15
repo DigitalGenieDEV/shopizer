@@ -1,5 +1,6 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
+import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
@@ -39,6 +40,8 @@ import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProdu
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.references.DimensionUnitOfMeasure;
 import com.salesmanager.shop.model.references.WeightUnitOfMeasure;
+import com.salesmanager.shop.model.store.ReadableMerchantStore;
+import com.salesmanager.shop.populator.store.ReadableMerchantStorePopulator;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import com.salesmanager.shop.utils.DateUtil;
@@ -80,6 +83,9 @@ public class ReadableOrderProductSnapshotMapper implements Mapper<Product, Reada
 	private ReadableManufacturerMapper readableManufacturerMapper;
 
 	@Autowired
+	private ReadableMerchantStorePopulator readableMerchantStorePopulator;
+
+	@Autowired
 	private PricingService pricingService;
 
 	@Autowired
@@ -108,6 +114,7 @@ public class ReadableOrderProductSnapshotMapper implements Mapper<Product, Reada
 		destination.setId(source.getId());
 		destination.setHsCode(source.getHsCode());
 		destination.setSellerOpenId(source.getSellerOpenId());
+		destination.setMerchantStore(store(source.getMerchantStore(), language));
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
 		destination.setMinOrderQuantity(source.getMinOrderQuantity());
@@ -387,6 +394,23 @@ public class ReadableOrderProductSnapshotMapper implements Mapper<Product, Reada
 		return tragetDescription;
 	}
 
+
+	private ReadableMerchantStore store(MerchantStore store, Language language) {
+		if (language == null) {
+			language = store.getDefaultLanguage();
+		}
+		/*
+		 * ReadableMerchantStorePopulator populator = new
+		 * ReadableMerchantStorePopulator();
+		 * populator.setCountryService(countryService);
+		 * populator.setZoneService(zoneService);
+		 */
+		try {
+			return readableMerchantStorePopulator.populate(store, new ReadableMerchantStore(), store, language);
+		} catch (ConversionException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 
 
