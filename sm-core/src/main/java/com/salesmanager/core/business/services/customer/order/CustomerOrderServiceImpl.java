@@ -34,6 +34,8 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service("customerOrderService")
 public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long, CustomerOrder> implements CustomerOrderService {
@@ -118,22 +120,25 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
     }
 
     @Override
-    public void updateCustomerOrderStatus(CustomerOrder customerOrder, OrderStatus orderStatus) throws ServiceException {
+    public void updateCustomerOrderStatus(CustomerOrder customerOrder, Order order, OrderStatus orderStatus) throws ServiceException {
         customerOrder.setStatus(orderStatus);
         saveOrUpdate(customerOrder);
 
         List<Order> orders = customerOrder.getOrders();
+        if (order != null) {
+            orders = orders.stream().filter(each -> Objects.equals(each.getId(), order.getId())).collect(Collectors.toList());
+        }
 
-        for (Order order : orders) {
+        for (Order each : orders) {
             OrderStatusHistory orderHistory = new OrderStatusHistory();
-            orderHistory.setOrder(order);
+            orderHistory.setOrder(each);
             orderHistory.setStatus(OrderStatus.PAYMENT_COMPLETED);
             orderHistory.setDateAdded(new Date());
 
-            orderService.addOrderStatusHistory(order, orderHistory);
+            orderService.addOrderStatusHistory(each, orderHistory);
 
-            order.setStatus(OrderStatus.PAYMENT_COMPLETED);
-            orderService.saveOrUpdate(order);
+            each.setStatus(OrderStatus.PAYMENT_COMPLETED);
+            orderService.saveOrUpdate(each);
         }
     }
 

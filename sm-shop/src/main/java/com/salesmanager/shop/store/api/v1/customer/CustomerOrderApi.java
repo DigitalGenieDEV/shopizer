@@ -12,12 +12,14 @@ import com.salesmanager.shop.model.board.ReadableBoard;
 import com.salesmanager.shop.model.catalog.catalog.ReadableCatalog;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
+import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.customer.ReadableCustomerPopulator;
+import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacade;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -382,5 +385,37 @@ public class CustomerOrderApi {
 
         return orderFacade.getCustomerReadableOrder(id, customer, language);
 
+    }
+
+    @PostMapping(value = "/auth/customer/orders/{id}/partial_pay")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")})
+    public ReadableCustomerOrderConfirmation partialPay(@PathVariable Long id,
+                                                        @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response, Locale locale) throws Exception {
+
+        Principal principal = request.getUserPrincipal();
+        String userName = principal.getName();
+
+        Customer customer = customerService.getByNick(userName);
+
+        if (customer == null) {
+            throw new ResourceNotFoundException("Error while partial pay, customer not authorized");
+        }
+
+        ReadableOrder readableOrder = orderFacade.getReadableOrder(id, merchantStore, language);
+        if (readableOrder == null) {
+            throw new ResourceNotFoundException("Error while partial pay, order not found");
+        }
+
+        Long customerOrderId = readableOrder.getCustomerOrderId();
+        CustomerOrder customerOrder = customerOrderService.getCustomerOrder(customerOrderId);
+
+        ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(customerOrder, customer, language, id);
+
+        return readableCustomerOrderConfirmation;
     }
 }

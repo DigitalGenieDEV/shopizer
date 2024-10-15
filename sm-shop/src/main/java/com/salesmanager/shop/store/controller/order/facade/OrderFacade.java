@@ -10,9 +10,11 @@ import com.salesmanager.core.model.fulfillment.ShippingOrderProductQuery;
 import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransactionList;
 import com.salesmanager.shop.model.fulfillment.ReadableOrderProductShippingList;
 import com.salesmanager.shop.model.fulfillment.ReadableShippingDocumentOrderList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
+import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import org.springframework.validation.BindingResult;
 
 import com.salesmanager.core.business.exception.ServiceException;
@@ -239,7 +241,7 @@ public interface OrderFacade {
 	/**
 	 * Update Order status and create order_status_history record
 	 */
-	void updateOrderStatus(Order order, OrderStatus newStatus, MerchantStore store);
+	void updateOrderStatus(Order order, OrderStatus newStatus, MerchantStore store, String reason);
 
 
 	List<ReadableOrderProduct> queryOrderProductsByOrderId (Long orderId, Language language);
@@ -264,7 +266,10 @@ public interface OrderFacade {
 
 	void removeShippingProductByOrderProductId(Long id,Long orderProductId);
 
-	ReadableCombineTransaction getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId,
-																					MerchantStore merchantStore, Language language) throws ServiceException, ConversionException;
+	List<ReadableCombineTransactionList> getCapturableCombineTransactionInfoByCustomerOrderId(Long customerOrderId, MerchantStore merchantStore, Language language) throws ServiceException, ConversionException;
 
+
+	List<ReadableCombineTransactionList> getCapturableCombineTransactionInfoByOrderId(Long orderId, MerchantStore merchantStore, Language language) throws ServiceException, ConversionException;
+
+	Boolean cancelOrder(ReadableOrder readableOrder, String reason) throws Exception;
 }

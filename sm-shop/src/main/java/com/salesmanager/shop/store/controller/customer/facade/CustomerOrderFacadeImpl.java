@@ -12,10 +12,6 @@ import com.salesmanager.core.business.services.reference.language.LanguageServic
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.constants.ProductType;
-import com.salesmanager.core.enmus.PlayThroughOptionsEnums;
-import com.salesmanager.core.enmus.TruckModelEnums;
-import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
-import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrderCriteria;
@@ -60,7 +56,6 @@ import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.LabelUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +66,8 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.salesmanager.core.model.merchant.MerchantStore.DEFAULT_STORE;
 
 @Service("customerOrderFacade")
 public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
@@ -333,7 +330,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     }
 
     @Override
-    public ReadableCustomerOrderConfirmation orderConfirmation(CustomerOrder customerOrder, Customer customer, Language language) throws Exception {
+    public ReadableCustomerOrderConfirmation orderConfirmation(CustomerOrder customerOrder, Customer customer, Language language, Long orderId) throws Exception {
         Validate.notNull(customerOrder, "CustomerOrder cannot be null");
         Validate.notNull(customer, "Customer cannot be null");
 
@@ -348,6 +345,11 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
         ReadableTotal readableTotal = new ReadableTotal();
 
         List<Order> orders = customerOrder.getOrders();
+        if (orderId != null) {
+            // if order id is not null, means partial confirm
+            orders = orders.stream().filter(o -> Objects.equals(o.getId(), orderId)).collect(Collectors.toList());
+        }
+
         Set<OrderTotal> orderTotals = new HashSet<>();
         Set<OrderProduct> orderProducts = new HashSet<>();
         for (Order order : orders) {
@@ -355,7 +357,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             orderProducts.addAll(order.getOrderProducts());
         }
 
-        MerchantStore merchantStore = merchantStoreService.getById(1);
+        MerchantStore merchantStore = merchantStoreService.getByCode(DEFAULT_STORE);
 
         List<ReadableOrderTotal> readableTotals = orderTotals.stream()
                 .sorted(Comparator.comparingInt(OrderTotal::getSortOrder))
@@ -378,6 +380,11 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         LOGGER.debug("[CustomerOrderFacade/orderConfirmation] set order transaction");
         CombineTransaction combineTransaction = combineTransactionService.lastCombineTransaction(customerOrder);
+        if (orderId != null) {
+            // return partial pay amount
+            combineTransaction.setAmount(orders.get(0).getTotal());
+        }
+
         ReadableCombineTransaction readableCombineTransaction = new ReadableCombineTransaction();
         ReadableCombineTransactionPopulator populator = new ReadableCombineTransactionPopulator();
         populator.setPricingService(pricingService);
@@ -472,7 +479,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -487,7 +494,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }

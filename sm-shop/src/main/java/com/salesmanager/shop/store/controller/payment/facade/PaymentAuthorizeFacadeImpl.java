@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service("paymentCallbackFacade")
 public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
@@ -41,6 +41,9 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
     @Inject
     private CombinePaymentService combinePaymentService;
+
+    @Inject
+    private ReadableCombineTransactionPopulator trxPopulator;
 
     @Inject
     private CombineTransactionService combineTransactionService;
@@ -68,19 +71,27 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
             MerchantStore store,
             Language language
     ) throws Exception {
-        CustomerOrder customerOrder = customerOrderService.getCustomerOrder(Long.valueOf(responseMap.get("orderId")));
-        if (customerOrder == null) {
-            throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
+        Long orderId = Long.valueOf(responseMap.get("orderId"));
+        CustomerOrder customerOrder = null;
+        Order order = null;
+        BigDecimal orderAmount = null;
+        if (responseMap.get("paymentMode") == null) {
+            customerOrder = customerOrderService.getCustomerOrder(orderId);
+            if (customerOrder == null) {
+                throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
+            }
+            orderAmount = customerOrder.getTotal();
+        } else {
+            // partial payment
+            Long customerOrderId = orderService.findCustomerOrderIdByOrderId(orderId);
+            customerOrder = customerOrderService.getCustomerOrder(customerOrderId);
+            if (customerOrder == null) {
+                throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
+            }
+            order = orderService.getOrder(orderId, (MerchantStore) null);
+            orderAmount = order.getTotal();
         }
-
-        // check pay amount and order amount
-        String payAmount = responseMap.get("amount");
-        BigDecimal pay = new BigDecimal(payAmount);
-        BigDecimal orderAmount = customerOrder.getTotal();
-        if (pay.compareTo(orderAmount) != 0) {
-            LOG.error("pay amount is not equals to order amount. pay amount:{}, order amount:{}, response detail:{}", pay.toPlainString(), orderAmount.toPlainString(), responseMap);
-            throw new ServiceException("pay amount is not equals to order amount. pay amount:" + pay.toPlainString() + ", order amount:" + orderAmount.toPlainString());
-        }
+        checkPayAmount(responseMap, orderAmount);
 
         Customer customer = customerService.getById(customerOrder.getCustomerId());
 
@@ -88,21 +99,51 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
         payment.setPaymentType(PaymentType.NICEPAY);
         payment.setTransactionType(TransactionType.AUTHORIZECAPTURE);
         payment.setModuleName("Nicepay");
-        payment.setAmount(customerOrder.getTotal());
-
+        payment.setAmount(orderAmount);
         payment.setPaymentMetaData(responseMap);
-        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, customer, store, payment);
+
+        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, order, customer, store, payment);
 
         ReadableCombineTransaction transaction = new ReadableCombineTransaction();
-        ReadableCombineTransactionPopulator trxPopulator = new ReadableCombineTransactionPopulator();
-        trxPopulator.setPricingService(pricingService);
-
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
-
+        // if pay amount is equals total customer order amount, then order status is PAYMENT_COMPLETED, else if PARTIAL_PAYMENT
+        OrderStatus nextOrderStatus = processNextCustomerOrderStatus(order, customerOrder);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, order, nextOrderStatus);
 
         return transaction;
+    }
+
+    /**
+     * if pay amount not equals order amount, then throw exception
+     */
+    private void checkPayAmount(Map<String, String> responseMap, BigDecimal orderAmount) throws ServiceException {
+        // check pay amount and order amount
+        String payAmount = responseMap.get("amount");
+        BigDecimal pay = new BigDecimal(payAmount);
+        if (pay.compareTo(orderAmount) != 0) {
+            LOG.error("pay amount is not equals to order amount. pay amount:{}, order amount:{}, response detail:{}", pay.toPlainString(), orderAmount.toPlainString(), responseMap);
+            throw new ServiceException("pay amount is not equals to order amount. pay amount:" + pay.toPlainString() + ", order amount:" + orderAmount.toPlainString());
+        }
+    }
+
+    private OrderStatus processNextCustomerOrderStatus(Order order, CustomerOrder customerOrder) throws ServiceException {
+        // check is completed or partial_payment
+        OrderStatus nextOrderStatus = OrderStatus.PARTIAL_PAYMENT;
+        if (order != null) {
+            List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactions(customerOrder);
+            List<CombineTransaction> paymentCombineTransactions = combineTransactions.stream()
+                    .filter(each -> TransactionType.AUTHORIZECAPTURE.equals(each.getTransactionType()) || TransactionType.CAPTURE.equals(each.getTransactionType()))
+                    .collect(Collectors.toList());
+            BigDecimal totalPayAmount = BigDecimal.ZERO;
+            for (CombineTransaction paymentCombineTransaction : paymentCombineTransactions) {
+                totalPayAmount = totalPayAmount.add(paymentCombineTransaction.getAmount());
+            }
+            if (totalPayAmount.compareTo(customerOrder.getTotal()) == 0) {
+                nextOrderStatus = OrderStatus.PAYMENT_COMPLETED;
+            }
+        }
+        return nextOrderStatus;
     }
 
     @Override
@@ -117,11 +158,9 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
         payment.setPaymentMetaData(paymentMetadata);
 
-        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, customer, store, payment);
+        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, null, customer, store, payment);
 
         ReadableCombineTransaction transaction = new ReadableCombineTransaction();
-        ReadableCombineTransactionPopulator trxPopulator = new ReadableCombineTransactionPopulator();
-        trxPopulator.setPricingService(pricingService);
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 

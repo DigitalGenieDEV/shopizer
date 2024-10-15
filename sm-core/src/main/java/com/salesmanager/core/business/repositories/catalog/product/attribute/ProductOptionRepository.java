@@ -38,5 +38,7 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
 	@Query("select p.id from ProductOption p where p.code = ?1")
 	Long findIdByCode(String optionCode);
 
+	@Query("select p from ProductOption p where p.code = ?1")
+	ProductOption findByCode(String optionCode);
 
 }

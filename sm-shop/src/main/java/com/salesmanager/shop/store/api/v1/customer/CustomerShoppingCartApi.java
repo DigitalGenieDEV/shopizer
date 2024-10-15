@@ -13,27 +13,20 @@ import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
-import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCartItem;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderProductSnapshot;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
-import com.salesmanager.core.model.payments.PaymentType;
-import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.utils.LogPermUtil;
 import com.salesmanager.shop.mapper.catalog.product.ReadableOrderProductSnapshotMapper;
-import com.salesmanager.shop.mapper.catalog.product.ReadableProductMapper;
 import com.salesmanager.shop.mapper.catalog.product.ReadableProductVariantMapper;
-import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductSnapshot;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.customer.order.PersistableCustomerOrder;
-import com.salesmanager.shop.model.customer.order.PersistableDirectCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.shoppingcart.PersistableCustomerShoppingCartItem;
 import com.salesmanager.shop.model.customer.shoppingcart.ReadableCustomerShoppingCart;
-import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 import com.salesmanager.shop.model.shoppingcart.ReadableShoppingCart;
 import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
@@ -567,7 +560,7 @@ public class CustomerShoppingCartApi {
         System.out.println("orderProductSnapshot build time" + (endTime1-startTime1)+ "ms");
 
 
-        ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language);
+        ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(modelCustomerOrder, customer, language, null);
 
         LogPermUtil.end("CustomerShoppingCartApi/checkout", start);
         return readableCustomerOrderConfirmation;

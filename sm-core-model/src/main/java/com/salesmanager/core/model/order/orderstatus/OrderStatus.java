@@ -14,6 +14,11 @@ public enum OrderStatus {
 	ORDERED("ORDERED"),
 
 	/**
+	 * 部分支付
+	 */
+	PARTIAL_PAYMENT("PARTIAL_PAYMENT"),
+
+	/**
 	 * 完成支付
 	 */
 	PAYMENT_COMPLETED("PAYMENT_COMPLETED"),
