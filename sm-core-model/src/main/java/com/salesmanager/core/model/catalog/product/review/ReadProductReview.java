@@ -4,6 +4,7 @@ import java.util.Date;
 
 public interface ReadProductReview {
 	String getProduct_type();
+	Long getOrder_product_id();
 	Long getProduct_id();
 	Long getProduct_review_id();
 	Date getReview_date();
@@ -17,4 +18,6 @@ public interface ReadProductReview {
 	int getImage_count();
 	int getProduct_quantity();
 	int getProduct_price();
+	String getDelivery_date();
+	
 }

@@ -13,6 +13,7 @@ import lombok.Setter;
 public class ProductReviewDTO {
 	private Long productId;
 	private Long productReviewId;
+	private Long orederProductId;
 	private Date reviewDate;
 	private int reviewsRating;
 	private String reviewDescription;
@@ -25,6 +26,8 @@ public class ProductReviewDTO {
 	private int productQuantity;
 	private int productPrice;
 	private List<ProductReviewImage> images;
+	private String productType;
+	private String deliveryDate;
 	public ProductReviewDTO() {
 
 	}
@@ -49,6 +52,7 @@ public class ProductReviewDTO {
 		// TODO Auto-generated constructor stub
 		this.productId = review.getProduct_id();
 		this.productReviewId = review.getProduct_review_id();
+		this.orederProductId = review.getOrder_product_id();
 		this.reviewDate = review.getReview_date();
 		this.reviewsRating = review.getReviews_rating();
 		this.reviewDescription = review.getDescription();
@@ -60,5 +64,7 @@ public class ProductReviewDTO {
 		this.imageCount = review.getImage_count();
 		this.productQuantity = review.getProduct_quantity();
 		this.productPrice = review.getProduct_price();
+		this.productType = review.getProduct_type();
+		this.deliveryDate = review.getDelivery_date();
 	}
 }
