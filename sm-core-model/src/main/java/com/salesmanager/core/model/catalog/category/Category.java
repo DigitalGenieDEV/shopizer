@@ -98,6 +98,10 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
     @Column(name="HANDLING_FEE")
     private String handlingFee;
 
+
+    @Column(name="LOCAL_HANDLING_FEE")
+    private String localHandlingFee;
+
     public String getHandlingFee() {
         return handlingFee;
     }
@@ -285,5 +289,13 @@ public class Category extends SalesManagerEntity<Long, Category> implements Audi
 
     public void setAdminCategoryId(Long adminCategoryId) {
         this.adminCategoryId = adminCategoryId;
+    }
+
+    public String getLocalHandlingFee() {
+        return localHandlingFee;
+    }
+
+    public void setLocalHandlingFee(String localHandlingFee) {
+        this.localHandlingFee = localHandlingFee;
     }
 }

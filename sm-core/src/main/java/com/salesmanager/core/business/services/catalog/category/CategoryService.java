@@ -102,7 +102,7 @@ public interface CategoryService extends SalesManagerEntityService<Long, Categor
 	
 	List<Category> getByProductId(Long productId, MerchantStore store);
 
-	void updateHandlingFeeById(String handlingFee, String handlingFeeFor1688, Long categoryId);
+	void updateHandlingFeeById(String localHandlingFee, String handlingFee, String handlingFeeFor1688, Long categoryId);
 
 	/**
 	 * Returns a list of Category by category code for a given language

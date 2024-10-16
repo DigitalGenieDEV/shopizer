@@ -118,4 +118,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 	@Query("UPDATE Category c SET c.handlingFeeFor1688 = :handlingFeeFor1688 WHERE c.id = :id")
 	void updateHandlingFeeFor1688ById(@Param("handlingFeeFor1688") String handlingFeeFor1688, @Param("id") Long id);
 
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE Category c SET c.localHandlingFee = :localHandlingFee WHERE c.id = :id")
+	void updateLocalHandlingFeeById(@Param("localHandlingFee") String localHandlingFee, @Param("id") Long id);
+
 }

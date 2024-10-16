@@ -23,6 +23,7 @@ import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerFacade;
 import com.salesmanager.shop.store.controller.customer.facade.CustomerOrderFacade;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
+import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -364,6 +365,17 @@ public class CustomerOrderApi {
         return CommonResultDTO.ofSuccess(countedMap);
     }
 
+    /**
+     * 废弃 不要使用
+     * @param id
+     * @param merchantStore
+     * @param language
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @Deprecated
     @RequestMapping(value = { "/auth/customer/orders/{id}" }, method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -386,6 +398,34 @@ public class CustomerOrderApi {
         return orderFacade.getCustomerReadableOrder(id, customer, language);
 
     }
+
+    @RequestMapping(value = { "/auth/customer/order/{id}" }, method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko") })
+    public CommonResultDTO<ReadableOrder> getOrderById(
+            @PathVariable final Long id, @ApiIgnore MerchantStore merchantStore,
+            @ApiIgnore Language language, HttpServletRequest request, HttpServletResponse response
+    ) throws IOException {
+        try {
+            Principal principal = request.getUserPrincipal();
+            String userName = principal.getName();
+
+            Customer customer = customerService.getByNick(userName);
+
+            if (customer == null) {
+                response.sendError(401, "Error while listing orders, customer not authorized");
+                return null;
+            }
+            ReadableOrder customerReadableOrder = orderFacade.getCustomerReadableOrder(id, customer, language);
+            return CommonResultDTO.ofSuccess(customerReadableOrder);
+        }catch(Exception e){
+            LOGGER.error("updateHandlingFeeById error", e);
+            return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+        }
+    }
+
 
     @PostMapping(value = "/auth/customer/orders/{id}/partial_pay")
     @ResponseStatus(HttpStatus.OK)

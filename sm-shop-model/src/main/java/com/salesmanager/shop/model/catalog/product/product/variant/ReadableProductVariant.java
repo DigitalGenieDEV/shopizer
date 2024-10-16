@@ -17,7 +17,7 @@ public class ReadableProductVariant extends ProductVariant {
 //	private List<ReadableImage> images = new ArrayList<ReadableImage>();
 	private List<ReadableInventory> inventory = new ArrayList<ReadableInventory>();
 
-	public List<ReadableProductVariation> getVariation() {
+	public List<ReadableProductVariation> getVariations() {
 		return variations;
 	}
 

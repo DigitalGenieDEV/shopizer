@@ -451,11 +451,11 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 	}
 
 	@Override
-	public void updateHandlingFeeById(String handlingFee, String handlingFeeFor1688, Long categoryId) {
-		updateHandlingFeeRecursively(handlingFee, handlingFeeFor1688, categoryId);
+	public void updateHandlingFeeById(String localHandlingFee, String handlingFee, String handlingFeeFor1688, Long categoryId) {
+		updateHandlingFeeRecursively(localHandlingFee, handlingFee, handlingFeeFor1688, categoryId);
 	}
 
-	private void updateHandlingFeeRecursively(String handlingFee, String handlingFeeFor1688, Long categoryId) {
+	private void updateHandlingFeeRecursively(String localHandlingFee,String handlingFee, String handlingFeeFor1688, Long categoryId) {
 		// 更新当前类目的手续费
 		if (!StringUtils.isEmpty(handlingFee)) {
 			categoryRepository.updateHandlingFeeById(handlingFee, categoryId);
@@ -463,11 +463,14 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<Long, Cat
 		if (!StringUtils.isEmpty(handlingFeeFor1688)) {
 			categoryRepository.updateHandlingFeeFor1688ById(handlingFeeFor1688, categoryId);
 		}
+		if (!StringUtils.isEmpty(localHandlingFee)) {
+			categoryRepository.updateLocalHandlingFeeById(localHandlingFee, categoryId);
+		}
 
 		// 查找子类目
 		List<Category> subCategories = categoryRepository.findByParent(categoryId);
 		for (Category subCategory : subCategories) {
-			updateHandlingFeeRecursively(handlingFee, handlingFeeFor1688, subCategory.getId());
+			updateHandlingFeeRecursively(localHandlingFee, handlingFee, handlingFeeFor1688, subCategory.getId());
 		}
 	}
 

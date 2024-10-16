@@ -395,9 +395,10 @@ public class CategoryApi {
 	public CommonResultDTO<Void> updateHandlingFeeById(
 			@PathVariable Long id,
 			@RequestParam(value = "handlingFee", required = false) String handlingFee,
+			@RequestParam(value = "localHandlingFee", required = false) String localHandlingFee,
 			@RequestParam(value = "handlingFeeFor1688", required = false) String handlingFeeFor1688) {
 		try {
-			categoryService.updateHandlingFeeById(handlingFee, handlingFeeFor1688, id);
+			categoryService.updateHandlingFeeById(localHandlingFee, handlingFee, handlingFeeFor1688, id);
 			return CommonResultDTO.ofSuccess();
 		}catch(Exception e){
 			LOGGER.error("updateHandlingFeeById error", e);
