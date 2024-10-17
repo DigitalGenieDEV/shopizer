@@ -297,7 +297,10 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 			
 			if(source.getWithdrawalResonDetail()!= null)
 				target.setWithdrawalResonDetail(source.getWithdrawalResonDetail());
-
+			
+			target.setPersonalClearance(source.getPersonalClearance());
+			target.setCompanyClearance(source.getCompanyClearance());
+			
 		} catch (Exception e) {
 			throw new ConversionException(e);
 		}

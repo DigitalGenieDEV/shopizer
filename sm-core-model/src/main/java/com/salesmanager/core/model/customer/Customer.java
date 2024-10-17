@@ -126,6 +126,12 @@ public class Customer extends SalesManagerEntity<Long, Customer> implements Audi
 	@Column(name="WITHDRAWAL_REASON_DETAIL", length = 255, nullable=true)
 	private String withdrawalResonDetail;
 	
+	@Column(name="COMPANY_CLEARANCE", length = 255, nullable=true)
+	private String companyClearance;
+	
+	@Column(name="PERSONAL_CLEARANCE", length = 255, nullable=true)
+	private String personalClearance;
+	
 	@Column(name="WTIHDRAWAL_AT")
 	private LocalDateTime withdrawalAt = null;
 	

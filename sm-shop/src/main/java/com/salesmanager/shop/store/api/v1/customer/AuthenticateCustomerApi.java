@@ -126,7 +126,6 @@ public class AuthenticateCustomerApi {
 			@RequestPart MultipartFile businessRegistrationFile
 			) throws Exception {
 
-
 		customer.setUserName(customer.getEmailAddress());
 
 		if(customerFacade.checkIfUserExists(customer.getUserName(),  merchantStore)) {

@@ -37,10 +37,15 @@ public class CloudFilePathUtils extends AbstractimageFilePath {
 	 */
 	@Override
 	public String buildStaticImageUtils(MerchantStore store, String imageName) {
-		StringBuilder imgName = new StringBuilder().append(getBasePath(store)).append(Constants.FILES_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH);
-				if(!StringUtils.isBlank(imageName)) {
-					imgName.append(imageName);
-				}
+		StringBuilder imgName = new StringBuilder()
+				.append(getBasePath(store))
+				.append(Constants.FILES_URI)
+				.append(Constants.SLASH)
+				.append(store.getCode())
+				.append(Constants.SLASH);
+		if(!StringUtils.isBlank(imageName)) {
+			imgName.append(imageName);
+		}
 		return imgName.toString();
 				
 	}
