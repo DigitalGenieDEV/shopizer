@@ -439,10 +439,15 @@ public class FulfillmentFacadeImpl implements FulfillmentFacade {
             readableFulfillmentSubOrder.setNationalShippingTime(fulfillmentSubOrder.getNationalShippingTime());
             readableFulfillmentSubOrder.setNationalDriverName(fulfillmentSubOrder.getNationalDriverName());
             readableFulfillmentSubOrder.setNationalDriverPhone(fulfillmentSubOrder.getNationalDriverPhone());
-
+            readableFulfillmentSubOrder.setInternationalLogisticsNumber(fulfillmentSubOrder.getInternationalLogisticsNumber());
+            readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsCompany(fulfillmentSubOrder.getCrossBorderTransportationLogisticsCompany());
+            readableFulfillmentSubOrder.setCrossBorderTransportationLogisticsNumber(fulfillmentSubOrder.getCrossBorderTransportationLogisticsNumber());
             // 枚举字段处理（需要考虑枚举的转换）
             if (fulfillmentSubOrder.getFulfillmentMainType() != null) {
                 readableFulfillmentSubOrder.setFulfillmentMainType(fulfillmentSubOrder.getFulfillmentMainType().name());
+            }
+            if (fulfillmentSubOrder.getInternationalLogisticsCompany() != null) {
+                readableFulfillmentSubOrder.setInternationalLogisticsCompany(fulfillmentSubOrder.getInternationalLogisticsCompany().name());
             }
             if (fulfillmentSubOrder.getFulfillmentSubTypeEnums() != null) {
                 readableFulfillmentSubOrder.setFulfillmentSubTypeEnums(fulfillmentSubOrder.getFulfillmentSubTypeEnums().name());

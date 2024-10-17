@@ -1,6 +1,7 @@
 package com.salesmanager.shop.model.fulfillment;
 
 import com.salesmanager.core.enmus.*;
+import com.salesmanager.core.model.fulfillment.InternationalLogisticsCompany;
 import com.salesmanager.core.model.shipping.TransportationMethod;
 import lombok.Data;
 
@@ -132,6 +133,17 @@ public class FulfillmentSubOrder {
      * 履约子单子状态
      */
     private String fulfillmentSubTypeEnums;
+
+    /**
+     * 国际物流单号
+     */
+    private String internationalLogisticsNumber;
+
+
+    /**
+     * 国际物流公司
+     */
+    private String internationalLogisticsCompany;
 
 
 
