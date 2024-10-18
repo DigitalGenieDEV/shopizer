@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -59,6 +60,7 @@ import com.salesmanager.shop.model.shop.CommonResultDTO;
 import com.salesmanager.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.salesmanager.shop.store.controller.erp.facade.ErpFacade;
 import com.salesmanager.shop.store.controller.product.facade.*;
+import com.salesmanager.shop.store.controller.store.facade.StoreFacade;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -126,6 +128,9 @@ public class ProductApiV2 {
 	
 	@Autowired
 	private ProductFacade productFacadeV2;
+
+	@Inject
+	private StoreFacade storeFacade;
 	
 	@Autowired
 	private ProductCommonFacade productCommonFacade;
@@ -576,6 +581,7 @@ public class ProductApiV2 {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
 			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
 	public ReadableProductList list(
+			@RequestParam(value = "store", required = false) String store,
 			@RequestParam(value = "lang", required = false) String lang,
 			@RequestParam(value = "category", required = false) Long category,
 			@RequestParam(value = "name", required = false) String name,
@@ -652,9 +658,14 @@ public class ProductApiV2 {
 			criteria.setCode(sku);
 		}
 
+		MerchantStore merchantStore = null;
+		if (StringUtils.isNotEmpty(store)){
+			 merchantStore = storeFacade.get(store);
+		}
+
 		try {
 			long start = System.currentTimeMillis();
-			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getProductSimpleListsByCriterias(null, language, criteria);
+			ReadableProductList productSimpleListsByCriterias = productFacadeV2.getProductSimpleListsByCriterias(merchantStore, language, criteria);
 			long end = System.currentTimeMillis();
 			System.out.println("执行时间："+(end - start));
 			return productSimpleListsByCriterias;
