@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
+import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOption2;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue;
 import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionValue2;
@@ -29,6 +30,11 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ " AND B.LANGUAGE_ID= ?3 \r\n", nativeQuery=true)
 	public List<ReadProductOptionValue> getListOptionValues(int setId, int categoryId, Integer laguaageId);
 	
+	@Query(value = "SELECT CONCAT('CODE00000_' , IFNULL(MAX(PRODUCT_OPTION_ID) + 1,1)) FROM PRODUCT_OPTION A" , nativeQuery=true)
+	public String getOptionCode();
+	
+	@Query(value = "SELECT CONCAT('CODE00000_1_' , IFNULL(MAX(PRODUCT_OPTION_VALUE_ID) + 1,1)) FROM PRODUCT_OPTION_VALUE A" , nativeQuery=true)
+	public String getOptionValueCode();
 	
 	@Modifying
 	@Query(value ="DELETE FROM PRODUCT_OPT_SET_OPT_VALUE WHERE ProductOptionSet_PRODUCT_OPTION_SET_ID = ?1 AND values_PRODUCT_OPTION_VALUE_ID = ?2"
@@ -96,5 +102,47 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ "ORDER BY A.PRODUCT_OPTION_ID ASC \r\n"
 			+ " ", nativeQuery=true)
 	public List<ReadProductOptionValue2> getProductListOptionValue(int lagnageId, int categoryId, String division);
+	
+	@Query( value ="SELECT COUNT(*) AS CNT FROM PRODUCT_OPTION_SET WHERE PRODUCT_OPTION_ID = ?1  ", nativeQuery=true)
+	public int getOptionSet(Long optionId);
+	
+	@Query( value ="SELECT COUNT(*) AS CNT FROM PRODUCT_OPT_SET_OPT_VALUE WHERE values_PRODUCT_OPTION_VALUE_ID = ?1  ", nativeQuery=true)
+	public int getOptionSetValue(Long valueId);
+
+	
+	@Query( value ="SELECT COUNT(*) AS CNT FROM PRODUCT_OPTION_DESC WHERE NAME = ?1  ", nativeQuery=true)
+	public int getOptionNameCount(String name);
+	
+	@Query( value ="SELECT COUNT(*) AS CNT FROM PRODUCT_OPTION_VALUE_DESCRIPTION WHERE NAME = ?1  ", nativeQuery=true)
+	public int getOptionValueNameCount(String name);
+
+	
+	@Query( value ="SELECT A.PRODUCT_OPTION_ID AS ID, B.NAME, A.PRODUCT_OPTION_CODE AS CODE,  A.PRODUCT_OPTION_TYPE AS TYPE "
+			+ "FROM PRODUCT_OPTION A INNER JOIN  PRODUCT_OPTION_DESC B  ON A.PRODUCT_OPTION_ID = B.PRODUCT_OPTION_ID " 
+			+ " WHERE 1=1 "
+			+ " AND  A.PRODUCT_OPTION_ID NOT IN ( " 
+			+ " SELECT  A.PRODUCT_OPTION_ID FROM PRODUCT_OPTION A INNER JOIN PRODUCT_OPTION_DESC B  ON A.PRODUCT_OPTION_ID = B.PRODUCT_OPTION_ID "
+			+ " INNER JOIN PRODUCT_OPTION_SET C ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID "
+			+ " AND C.CATEGORY_ID = ?3 "
+			+ " AND B.LANGUAGE_ID = ?1 ) "
+			+ " AND B.NAME LIKE %?2% " , nativeQuery=true)
+	public List<ReadProductOption> getListOptionKeyword(int lagnageId, String keyword, int categoryId);
+	
+	@Query( value ="SELECT A.PRODUCT_OPTION_VALUE_ID AS ID, B.NAME AS VALUENAME, A.PRODUCT_OPTION_VAL_CODE AS CODE,  A.PRODUCT_OPT_VAL_IMAGE AS IMAGE, '' AS TYPE "
+			+ "FROM PRODUCT_OPTION_VALUE A INNER JOIN  PRODUCT_OPTION_VALUE_DESCRIPTION B  ON A.PRODUCT_OPTION_VALUE_ID = B.PRODUCT_OPTION_VALUE_ID " 
+			+ " WHERE 1=1 "
+			+ " AND  A.PRODUCT_OPTION_VALUE_ID NOT IN ( " 
+			+ " SELECT   A.PRODUCT_OPTION_VALUE_ID FROM PRODUCT_OPTION_VALUE A INNER JOIN PRODUCT_OPTION_VALUE_DESCRIPTION B  ON A.PRODUCT_OPTION_VALUE_ID = B.PRODUCT_OPTION_VALUE_ID "
+			+ " INNER JOIN PRODUCT_OPT_SET_OPT_VALUE C ON  A.PRODUCT_OPTION_VALUE_ID = C.VALUES_PRODUCT_OPTION_VALUE_ID INNER JOIN PRODUCT_OPTION_SET D ON C.PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID = D.PRODUCT_OPTION_SET_ID "
+			+ " AND D.CATEGORY_ID = ?3 "
+			+ " AND B.LANGUAGE_ID = ?1 "
+			+ " AND C.PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID = ?2) "
+			+ " AND B.NAME LIKE %?4% " , nativeQuery=true)
+	public List<ReadProductOptionValue> getListOptionKeywordValues(int lagnageId, int setId, int categoryId, String keyword);
+	
+	@Modifying
+	@Query(value = "INSERT INTO PRODUCT_OPT_SET_OPT_VALUE(PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID, VALUES_PRODUCT_OPTION_VALUE_ID) VALUES (?1, ?2)", nativeQuery = true)
+	void insertOptionSetValue(Long setID, Long valueId);
+
 
 }
