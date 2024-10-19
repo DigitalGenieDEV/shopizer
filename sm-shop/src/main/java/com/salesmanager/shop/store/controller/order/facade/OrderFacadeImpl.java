@@ -66,6 +66,7 @@ import com.salesmanager.shop.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,6 @@ import com.salesmanager.shop.populator.customer.PersistableCustomerPopulator;
 import com.salesmanager.shop.populator.order.OrderProductPopulator;
 import com.salesmanager.shop.populator.order.PersistableOrderApiPopulator;
 import com.salesmanager.shop.populator.order.ReadableOrderPopulator;
-import com.salesmanager.shop.populator.order.ReadableOrderProductPopulator;
 import com.salesmanager.shop.populator.order.ShoppingCartItemPopulator;
 import com.salesmanager.shop.populator.order.transaction.PersistablePaymentPopulator;
 import com.salesmanager.shop.populator.order.transaction.ReadableTransactionPopulator;
@@ -2672,54 +2672,34 @@ public class OrderFacadeImpl implements OrderFacade {
 			throw new ResourceNotFoundException("Order id [" + readableOrder.getId() + "] not found");
 		}
 		OrderStatus orderStatus = order.getStatus();
-		if (orderStatus != OrderStatus.ORDERED && orderStatus != OrderStatus.PAYMENT_COMPLETED) {
+		if (orderStatus != OrderStatus.PENDING_REVIEW && orderStatus != OrderStatus.ORDERED && orderStatus != OrderStatus.PAYMENT_COMPLETED) {
 			throw new ServiceException("Order can not be canceled, current status:" + orderStatus.name());
 		}
 		// OEM or GQ
 		if (order.getOrderType() == OrderType.OEM && orderStatus == OrderStatus.PAYMENT_COMPLETED) {
-			// only canceled limit in after payment 24Hour
-			Long customerOrderId = orderService.findCustomerOrderIdByOrderId(order.getId());
-			List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactionsByCustomerOrderId(customerOrderId);
-			CombineTransaction combineTransaction = findOrderRelationPaymentCombineTransaction(combineTransactions, order);
-			if (combineTransaction == null) {
-				throw new ServiceException("Order id [" + order.getId() + "] don't find relation payment information");
-			}
-			Date transactionDate = combineTransaction.getTransactionDate();
-			Date yesterday = DateUtil.addDaysToCurrentDate(-1);
+			// Orders can only be cancelled within 24 hours of payment completion
+			Transaction transaction = transactionService.getRefundableTransaction(order);
+			Date transactionDate = transaction.getTransactionDate();
 
-			// after yesterday means in 24Hour，otherwise not whth in 24Hour
-            if (!transactionDate.after(yesterday)) {
-				throw new ServiceException("Orders can only be cancelled within 24 hours after payment is completed");
+			Date theDayAfterTransaction = DateUtils.addDays(transactionDate, 1);
+
+			// if now is before the day after transaction, it means within 24 hours, otherwise not
+            if (new Date().after(theDayAfterTransaction)) {
+				throw new ServiceException("Orders can only be cancelled within 24 hours after payment completion");
             }
 		}
 
-		updateOrderStatus(order, OrderStatus.CANCELED, order.getMerchant(), reason);
 		if (orderStatus == OrderStatus.PAYMENT_COMPLETED) {
-			// TODO canceled first and then refund
-			refund(order);
+			refund(order, reason);
+		} else {
+			updateOrderStatus(order, OrderStatus.CANCELED, order.getMerchant(), reason);
 		}
 
 		return true;
 	}
 
-	private CombineTransaction findOrderRelationPaymentCombineTransaction(List<CombineTransaction> combineTransactions, Order order) {
-		for (CombineTransaction combineTransaction : combineTransactions) {
-			if (combineTransaction.getTransactionType() != TransactionType.CAPTURE
-					&& combineTransaction.getTransactionType() != TransactionType.AUTHORIZECAPTURE) {
-				continue;
-			}
-			if (combineTransaction.getTransactionDetails().get("paymentMode") == null) {
-				return combineTransaction;
-			} else {
-				if (combineTransaction.getTransactionDetails().get("orderId").equals(order.getId().toString())) {
-					return combineTransaction;
-				}
-			}
-		}
-		return null;
-	}
-
-	private void refund(Order order) {
-		// TODO(yuxunhui): first get paymentType to refund , second update status to refunded
+	private Transaction refund(Order order, String reason) throws ServiceException {
+		Customer customer = customerService.getById(order.getCustomerId());
+		return paymentService.processRefund(order, customer, order.getMerchant(), order.getTotal(), reason);
 	}
 }

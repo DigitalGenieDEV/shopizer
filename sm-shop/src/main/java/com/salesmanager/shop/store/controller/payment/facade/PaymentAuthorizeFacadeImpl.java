@@ -8,6 +8,7 @@ import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
 import com.salesmanager.core.business.services.order.OrderService;
+import com.salesmanager.core.business.services.payments.PaymentService;
 import com.salesmanager.core.business.services.payments.combine.CombinePaymentService;
 import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
 import com.salesmanager.core.model.customer.Customer;
@@ -41,6 +42,9 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
     @Inject
     private CombinePaymentService combinePaymentService;
+
+    @Inject
+    private PaymentService paymentService;
 
     @Inject
     private ReadableCombineTransactionPopulator trxPopulator;

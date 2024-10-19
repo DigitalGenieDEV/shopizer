@@ -211,7 +211,7 @@ public class PayPalRestPayment implements PaymentModule {
 
 	@Override
 	public Transaction authorizeAndCapture(MerchantStore store,
-			Customer customer, List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
+			Customer customer, Order order, List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
 			IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException {
 		// TODO Auto-generated method stub
@@ -221,7 +221,7 @@ public class PayPalRestPayment implements PaymentModule {
 	@Override
 	public Transaction refund(boolean partial, MerchantStore store,
 			Transaction transaction, Order order, BigDecimal amount,
-			IntegrationConfiguration configuration, IntegrationModule module)
+			IntegrationConfiguration configuration, IntegrationModule module, String reason)
 			throws IntegrationException {
 		// TODO Auto-generated method stub
 		return null;

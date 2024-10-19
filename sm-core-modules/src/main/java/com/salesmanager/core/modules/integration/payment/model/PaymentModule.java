@@ -44,11 +44,11 @@ public interface PaymentModule {
 			throws IntegrationException;
 	
 	public Transaction authorizeAndCapture(
-			MerchantStore store, Customer customer, List<ShoppingCartItem> items, BigDecimal amount, Payment payment, IntegrationConfiguration configuration, IntegrationModule module)
+			MerchantStore store, Customer customer, Order order, List<ShoppingCartItem> items, BigDecimal amount, Payment payment, IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException;
 	
 	public Transaction refund(
-			boolean partial, MerchantStore store, Transaction transaction, Order order, BigDecimal amount, IntegrationConfiguration configuration, IntegrationModule module)
+			boolean partial, MerchantStore store, Transaction transaction, Order order, BigDecimal amount, IntegrationConfiguration configuration, IntegrationModule module, String reason)
 			throws IntegrationException;
 
 }

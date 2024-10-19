@@ -163,7 +163,7 @@ public class TransactionServiceImpl  extends SalesManagerEntityServiceImpl<Long,
 			if(transaction.getTransactionType().name().equals(TransactionType.REFUND.name())) {
 				//check transaction id
 				Transaction previousRefund = finalTransactions.get(TransactionType.REFUND.name());
-				if(previousRefund!=null) {
+				if(previousRefund != null) {
 					Date previousDate = previousRefund.getTransactionDate();
 					Date currentDate = transaction.getTransactionDate();
 					if(previousDate.before(currentDate)) {
