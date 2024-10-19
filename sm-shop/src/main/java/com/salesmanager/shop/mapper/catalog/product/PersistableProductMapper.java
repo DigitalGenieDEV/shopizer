@@ -13,6 +13,7 @@ import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.model.catalog.product.*;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
+import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -146,15 +147,17 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 
 			// SAMPLE
 			if (Boolean.TRUE.equals(source.getSupportSample())) {
+				Currency storeCurrency = store.getCurrency();
+
 				destination.setSupportSample(source.getSupportSample());
 				// Check sample price
-				BigDecimal rate = exchangeRateConfig.getRate(ExchangeRateEnums.KRW_USD);
+				BigDecimal rate = exchangeRateConfig.getRate(storeCurrency.getCode(), "USD");
 				BigDecimal usdPrice = rate.multiply(source.getSamplePrice());
 				if (usdPrice.compareTo(new BigDecimal("150")) > 0) {
 					throw new ConversionRuntimeException("Sample price can not be greater than 150 USD");
 				}
 				destination.setSamplePrice(source.getSamplePrice());
-				destination.setSamplePriceCurrency("KRW");
+				destination.setSamplePriceCurrency(storeCurrency.getCode());
 			}
 
 			//MANUFACTURER
@@ -165,18 +168,6 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 				}
 				destination.setManufacturer(manufacturer);
 			}
-
-			//PRODUCT TYPE
-			// FIXME: two fragment duplicate code
-			if(!StringUtils.isBlank(source.getType())) {
-				ProductType type = productTypeService.getByCode(source.getType(), store, language);
-				if(type == null) {
-					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
-				}
-
-				destination.setType(type);
-			}
-
 
 			//attributes
 			if(source.getProperties()!=null) {
