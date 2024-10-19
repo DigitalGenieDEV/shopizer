@@ -32,9 +32,9 @@ public class NicepayPayment implements CombinePaymentModule {
 
     private static final String NP_SUCCESS_RESULT_CODE = "0000";
 
-    private static final String CLIENT_ID = "S2_287d1c8fcf9a4598b28d4360d5758275";
+    public static final String CLIENT_ID = "S2_287d1c8fcf9a4598b28d4360d5758275";
 
-    private static final String CLIENT_SECRET = "13bc186c457445cd816e8494a236429c";
+    public static final String CLIENT_SECRET = "13bc186c457445cd816e8494a236429c";
 
     @Override
     public void validateModuleConfiguration(IntegrationConfiguration integrationConfiguration, MerchantStore store) throws IntegrationException {

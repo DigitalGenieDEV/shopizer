@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.payments.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -33,13 +34,6 @@ import com.salesmanager.core.model.order.OrderTotal;
 import com.salesmanager.core.model.order.OrderTotalType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
-import com.salesmanager.core.model.payments.CreditCardPayment;
-import com.salesmanager.core.model.payments.CreditCardType;
-import com.salesmanager.core.model.payments.Payment;
-import com.salesmanager.core.model.payments.PaymentMethod;
-import com.salesmanager.core.model.payments.PaymentType;
-import com.salesmanager.core.model.payments.Transaction;
-import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.core.model.system.IntegrationConfiguration;
 import com.salesmanager.core.model.system.IntegrationModule;
@@ -298,7 +292,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public Transaction processPayment(Customer customer,
-			MerchantStore store, Payment payment, List<ShoppingCartItem> items, Order order)
+			MerchantStore store, Payment payment, List<ShoppingCartItem> items, Order order, CombineTransaction combineTransaction)
 			throws ServiceException {
 
 
@@ -373,7 +367,7 @@ public class PaymentServiceImpl implements PaymentService {
 		if(transactionType == TransactionType.AUTHORIZE)  {
 			transaction = module.authorize(store, customer, items, amount, payment, configuration, integrationModule);
 		} else if(transactionType == TransactionType.AUTHORIZECAPTURE)  {
-			transaction = module.authorizeAndCapture(store, customer, items, amount, payment, configuration, integrationModule);
+			transaction = module.authorizeAndCapture(store, customer, order, items, amount, payment, configuration, integrationModule);
 		} else if(transactionType == TransactionType.INIT)  {
 			transaction = module.initTransaction(store, customer, amount, payment, configuration, integrationModule);
 		}
@@ -391,9 +385,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		return transaction;
-
-		
-
 	}
 	
 	@Override
@@ -471,8 +462,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public Transaction processRefund(Order order, Customer customer,
-			MerchantStore store, BigDecimal amount)
+	public Transaction processRefund(Order order, Customer customer, MerchantStore store, BigDecimal amount, String reason)
 			throws ServiceException {
 		
 		
@@ -522,7 +512,7 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new ServiceException("No refundable transaction for this order");
 		}
 		
-		Transaction transaction = paymentModule.refund(partial, store, refundable, order, amount, configuration, integrationModule);
+		Transaction transaction = paymentModule.refund(partial, store, refundable, order, amount, configuration, integrationModule, reason);
 		transaction.setOrder(order);
 		transactionService.create(transaction);
 		
@@ -549,12 +539,8 @@ public class PaymentServiceImpl implements PaymentService {
         	}
         }
 
-		
-
 		order.setTotal(orderTotal);
 		order.setStatus(OrderStatus.REFUNDED);
-		
-		
 		
 		OrderStatusHistory orderHistory = new OrderStatusHistory();
 		orderHistory.setOrder(order);

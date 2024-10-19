@@ -8,10 +8,7 @@ import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.model.payments.CreditCardType;
-import com.salesmanager.core.model.payments.Payment;
-import com.salesmanager.core.model.payments.PaymentMethod;
-import com.salesmanager.core.model.payments.Transaction;
+import com.salesmanager.core.model.payments.*;
 import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 import com.salesmanager.core.model.system.IntegrationConfiguration;
 import com.salesmanager.core.model.system.IntegrationModule;
@@ -25,8 +22,9 @@ public interface PaymentService {
 	Map<String, IntegrationConfiguration> getPaymentModulesConfigured(
 			MerchantStore store) throws ServiceException;
 	
-	Transaction processPayment(Customer customer, MerchantStore store, Payment payment, List<ShoppingCartItem> items, Order order) throws ServiceException;
-	Transaction processRefund(Order order, Customer customer, MerchantStore store, BigDecimal amount) throws ServiceException;
+	Transaction processPayment(Customer customer, MerchantStore store, Payment payment, List<ShoppingCartItem> items, Order order, CombineTransaction combineTransaction) throws ServiceException;
+
+	Transaction processRefund(Order order, Customer customer, MerchantStore store, BigDecimal amount, String reason) throws ServiceException;
 
 	/**
 	 * Get a specific Payment module by payment type CREDITCART, MONEYORDER ...
@@ -82,8 +80,7 @@ public interface PaymentService {
 	void removePaymentModuleConfiguration(String moduleCode, MerchantStore store)
 			throws ServiceException;
 
-	Transaction processCapturePayment(Order order, Customer customer,
-			MerchantStore store)
+	Transaction processCapturePayment(Order order, Customer customer, MerchantStore store)
 			throws ServiceException;
 	
 	/**

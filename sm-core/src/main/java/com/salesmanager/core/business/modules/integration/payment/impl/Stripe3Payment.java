@@ -275,8 +275,8 @@ public class Stripe3Payment implements PaymentModule {
 	}
 
 	@Override
-	public Transaction authorizeAndCapture(MerchantStore store, Customer customer,
-			List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
+	public Transaction authorizeAndCapture(MerchantStore store, Customer customer,Order order,
+										   List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
 			IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException {
 		
@@ -375,7 +375,7 @@ public class Stripe3Payment implements PaymentModule {
 	@Override
 	public Transaction refund(boolean partial, MerchantStore store, Transaction transaction,
 			Order order, BigDecimal amount,
-			IntegrationConfiguration configuration, IntegrationModule module)
+			IntegrationConfiguration configuration, IntegrationModule module, String reason)
 			throws IntegrationException {
 		
 		

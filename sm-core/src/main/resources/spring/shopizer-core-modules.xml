@@ -51,6 +51,7 @@
 		<beans:entry key="stripe" value-ref="stripe" />
 		<beans:entry key="stripe3" value-ref="stripe3" />
 		<beans:entry key="braintree" value-ref="braintree" />
+		<beans:entry key="nicepay" value-ref="nicepay" />
 	</util:map>
 
 	<!-- Combine Payment integration modules -->
@@ -60,7 +61,7 @@
 			  value-type="com.salesmanager.core.business.modules.integration.payment.model.CombinePaymentModule">
 		<beans:entry key="PayPal" value-ref="paypal-ck" />
 		<beans:entry key="Kcp" value-ref="kcp" />
-		<beans:entry key="Nicepay" value-ref="nicepay" />
+		<beans:entry key="Nicepay" value-ref="nicepay-combine" />
 	</util:map>
 
 
@@ -103,7 +104,7 @@
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.PayPalCheckoutPayment" />
 	<beans:bean id="kcp"
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.KcpPayment" />
-	<beans:bean id="nicepay"
+	<beans:bean id="nicepay-combine"
 				class="com.salesmanager.core.business.modules.integration.payment.impl.combine.NicepayPayment" />
 
 	<!--Encryption -->

@@ -1,8 +1,10 @@
 package com.salesmanager.core.business.services.payments.combine;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.constants.Constants;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.order.OrderService;
+import com.salesmanager.core.business.services.payments.PaymentService;
 import com.salesmanager.core.business.services.payments.TransactionService;
 import com.salesmanager.core.business.services.reference.loader.ConfigurationModulesLoader;
 import com.salesmanager.core.business.services.system.MerchantConfigurationService;
@@ -44,6 +46,9 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
 
     @Inject
     private TransactionService transactionService;
+
+    @Inject
+    private PaymentService paymentService;
 
     @Inject
     private CombineTransactionService combineTransactionService;
@@ -657,6 +662,12 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
         }
 
         combineTransactionService.create(transaction);
+
+        List<Order> orders = order == null ? customerOrder.getOrders() : Lists.newArrayList(order);
+        for (Order each : orders) {
+            paymentService.processPayment(customer, store, payment, null, each, transaction);
+        }
+
 
         return transaction;
     }

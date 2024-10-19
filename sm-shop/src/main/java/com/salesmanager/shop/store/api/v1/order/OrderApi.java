@@ -917,4 +917,32 @@ public class OrderApi {
 		}
 	}
 
+	/**
+	 * cancel order, if order is payment_complete, then will refund
+	 *
+	 * @param id
+	 */
+	@RequestMapping(value = {"/auth/store/orders/{id}/cancel"}, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public CommonResultDTO<Void> cancelOrderBySeller(@PathVariable final Long id,
+													   @RequestBody Map<String, Object> map,
+													   @ApiIgnore Language language, @ApiIgnore MerchantStore store,
+													   HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String reason  = (String) map.get("reason");
+
+		ReadableOrder readableOrder = orderFacade.getReadableOrder(id, store, language);
+		if (readableOrder == null) {
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), "Error while cancel orders, order[" + id + "] was not found");
+		}
+
+		try {
+			Boolean success = orderFacade.cancelOrder(readableOrder, reason);
+			return CommonResultDTO.ofSuccess();
+		} catch (Exception e) {
+			LOGGER.error("cancelOrderByCustomer error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
 }
