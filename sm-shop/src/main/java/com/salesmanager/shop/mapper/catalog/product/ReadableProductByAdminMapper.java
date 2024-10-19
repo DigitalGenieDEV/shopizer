@@ -111,6 +111,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setHsCode(source.getHsCode());
 		destination.setQuoteType(source.getQuoteType());
 		destination.setOrderQuantityType(source.getOrderQuantityType());
+		
 
 		destination.setProductStatus(source.getProductStatus() == null? null : source.getProductStatus().name());
 		destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
@@ -233,6 +234,7 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 								.getDescriptions();
 						readableOptionValue.setId(attribute.getProductOptionValue().getId());
 						readableOptionValue.setCode(optionValue.getCode());
+						readableOptionValue.setOptionCode(attribute.getProductOption().getCode());
 						if (povdescriptions != null && povdescriptions.size() > 0) {
 							for (ProductOptionValueDescription optionValueDescription : povdescriptions) {
 								if (optionValueDescription.getLanguage().getCode().equals(language.getCode())) {
