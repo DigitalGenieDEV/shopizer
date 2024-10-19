@@ -25,7 +25,8 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 uniqueConstraints={
 		@UniqueConstraint(columnNames={
 				"MERCHANT_ID",
-				"PRODUCT_OPTION_SET_CODE"
+				"PRODUCT_OPTION_SET_CODE", 
+				"CATEGORY_ID"
 			})
 	}
 )

@@ -34,5 +34,7 @@ public class PersistableCustomer extends CustomerEntity {
 	private List<PersistableCustomerAttribute> attributes;
 	private List<PersistableGroup> groups;
 	private List<PersistableCustomerTerms> customerTerms;
+	private String companyClearance;
+	private String personalClearance;
 
 }

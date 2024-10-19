@@ -5,6 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.salesmanager.core.business.repositories.catalog.product.attribute.PageableProductOptionRepository2;
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService2;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
@@ -19,6 +22,9 @@ public class PersistableProductOptionMapper implements Mapper<PersistableProduct
 
   @Autowired
   private LanguageService languageService;
+  
+  @Autowired
+  private ProductOptionService2 productOptionService2;
 
 
 
@@ -76,7 +82,9 @@ public class PersistableProductOptionMapper implements Mapper<PersistableProduct
         }
       }
       
-      destination.setCode(source.getCode());
+      System.out.println("source.getCode()"+source.getCode());
+      System.out.println("source.getCode()"+productOptionService2.getOptionCode());
+      destination.setCode(source.getCode().equals("") ? productOptionService2.getOptionCode() :  source.getCode());
       destination.setMerchantStore(store);
       destination.setProductOptionSortOrder(source.getOrder());
       destination.setProductOptionType(source.getType());

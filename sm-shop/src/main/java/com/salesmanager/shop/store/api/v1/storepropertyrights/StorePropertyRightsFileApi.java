@@ -194,7 +194,7 @@ public class StorePropertyRightsFileApi {
 				String fileName = contentFacade.addLibraryFile(f
 															 , merchantStore.getCode()
 															 , FileContentType.valueOf(fileContentType));
-				
+				entity.setStoragePath(fileName);
 				entity.setFileUrl(certificationFilePathUtils.buildCertificationFileUtils(merchantStore, fileName));
 				fileFacade.registerFiles(entity);
 			

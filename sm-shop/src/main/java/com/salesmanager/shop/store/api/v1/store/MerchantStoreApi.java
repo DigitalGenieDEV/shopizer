@@ -322,6 +322,9 @@ public class MerchantStoreApi {
 			System.out.println(fileUrl);
 			
 			store.setBusinessRegistration(fileUrl);
+			
+			store.setId(merchantStore.getId());
+			storeFacade.update(store);
 		}
 				
 		// 첨부된 스토어 이미지 처리
@@ -362,10 +365,6 @@ public class MerchantStoreApi {
 			persistableMerchantStoreImage.setMerchantStore(merchantStore);
 			storeImageFacade.save(persistableMerchantStoreImage);	
 		}
-		
-		// 사업자등록증 때문에 업데이트 필요.
-		store.setCode(merchantStore.getCode());
-		storeFacade.update(store);
 		
 		return ResponseEntity.ok(Void.class);
 	}

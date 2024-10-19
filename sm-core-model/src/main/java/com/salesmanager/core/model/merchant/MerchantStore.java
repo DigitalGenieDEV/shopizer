@@ -168,8 +168,9 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> im
 	@ElementCollection(fetch = FetchType.LAZY)
 	private List<BusinessType> types;
 	
+	@ElementCollection
+	@CollectionTable(name = "MerchantStore_categories", joinColumns = @JoinColumn(name = "MerchantStore_MERCHANT_ID"))
 	@Column(name="CATEGORIES", length = 255, nullable=true)
-	@ElementCollection(fetch = FetchType.LAZY)
 	private List<String> categories;
 	
 	@Column(name="BUSINESS_NUMBER")

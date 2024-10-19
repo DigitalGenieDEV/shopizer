@@ -21,6 +21,7 @@ import com.salesmanager.core.model.catalog.product.attribute.ReadProductOptionVa
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.attribute.DeleteProductValue;
+import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductOptionSetValueEntity;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption2;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption3;
 import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOptionValue2;
@@ -89,12 +90,12 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 	}
 	
 	
-	public void deleteValues(DeleteProductValue delValue)  throws Exception{
-		productOptionService2.deleteValues(delValue.getSetId(), delValue.getValueId());
+	public void deleteSetValues(DeleteProductValue delValue)  throws Exception{
+		productOptionService2.deleteSetValues(delValue.getSetId(), delValue.getValueId());
 	}
 	
-	public void deleteOption(DeleteProductValue delOption)  throws Exception{
-		productOptionService2.deleteOption(delOption.getSetId(), delOption.getOptionId());
+	public void deleteSetOption(DeleteProductValue delOption)  throws Exception{
+		productOptionService2.deleteSetOption(delOption.getSetId(), delOption.getOptionId());
 	}
 	
 	public ReadableProductOptionList3 getProductListOption(MerchantStore store, Language language,  int categoryId, String division) throws Exception{
@@ -134,6 +135,62 @@ public class ProductOptionFacadeImpl2 implements ProductOptionFacade2 {
 		return reiciveData;
 	}
 	
+	
+	public int getOptionSet(MerchantStore store, Language language,  Long optionId) throws Exception {
+		return productOptionService2.getOptionSet(store,language, optionId );
+	}
+	
+	public int getOptionSetValue(MerchantStore store, Language language,  Long valueId) throws Exception{
+		return productOptionService2.getOptionSet(store,language, valueId );
+	}
+	
+	public int getOptionNameCount(MerchantStore store, Language language,  String name) throws Exception {
+		return productOptionService2.getOptionNameCount(store,language, name );
+	}
+	
+	public int getOptionValueNameCount(MerchantStore store, Language language,  String name) throws Exception{
+		return productOptionService2.getOptionValueNameCount(store,language, name );
+	}
+	
+	public ReadableProductOptionList2 getListOptionKeyword(MerchantStore store, Language language, String keyword, int categoryId) throws Exception{
+		ReadableProductOptionList2 targetList =  new ReadableProductOptionList2();
+		List<ReadableProductOption2> dataList = new ArrayList<ReadableProductOption2>();
+		List<ReadProductOption> optionList = productOptionService2.getListOptionKeyword(store, language, keyword, categoryId);
+		if (optionList.size() > 0) {
+			for (ReadProductOption data : optionList) {
+				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+				ReadableProductOption2 targetData = objectMapper.convertValue(data, ReadableProductOption2.class);
+				dataList.add(targetData);
+			}
+		}
+		
+		targetList.setOptions(dataList);
+		
+		return targetList;
+	}
+	
+	public ReadableProductOptionValueList2 getListOptionKeywordValues(MerchantStore store, Language language, String keyword, int categoryId, Integer setId) throws Exception{
+		ReadableProductOptionValueList2 targetList = new ReadableProductOptionValueList2();
+		List<ReadableProductOptionValue2>  dataList =  new ArrayList<ReadableProductOptionValue2> ();
+		List<ReadProductOptionValue> valueList = productOptionService2.getListOptionKeywordValues(store, language, setId, categoryId, keyword);
+		if (valueList.size() > 0) {
+			for (ReadProductOptionValue data : valueList) {
+				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+				ReadableProductOptionValue2 targetData = objectMapper.convertValue(data, ReadableProductOptionValue2.class);
+			
+				dataList.add(targetData);
+			}
+		}
+		targetList.setData(dataList);
+		
+		
+		return targetList;
+	}
+	
+	
+	public void insertOptionSetValue(PersistableProductOptionSetValueEntity data)  throws Exception{
+		productOptionService2.insertOptionSetValue(data.getSetId(), data.getValueId());
+	}
 	
 
 }

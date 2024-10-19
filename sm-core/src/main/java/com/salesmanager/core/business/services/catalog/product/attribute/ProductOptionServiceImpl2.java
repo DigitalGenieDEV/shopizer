@@ -33,12 +33,22 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 	
 	private ProductOptionValueRepository2 productOptionValueRepository2;
 	
+	
 	@Inject
 	public ProductOptionServiceImpl2(
 			ProductOptionValueRepository2 productOptionValueRepository2) {
 			super(productOptionValueRepository2);
 			this.productOptionValueRepository2 = productOptionValueRepository2;
 	}
+	
+	public String getOptionCode() throws ServiceException{
+		return productOptionValueRepository2.getOptionCode();
+	}
+	
+	public String getOptionValueCode() throws ServiceException{
+		return productOptionValueRepository2.getOptionValueCode();
+	}
+	
 	
 	public Page<ReadProductOption> getListOption(MerchantStore store, Language language, String name, int categoryId,
 			int page, int count) throws ServiceException {
@@ -52,26 +62,23 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 	}
 	
 	@Transactional
-	public void deleteValues(Long setId, Long valueId)throws ServiceException{
+	public void deleteSetValues(Long setId, Long valueId)throws ServiceException{
 		productOptionValueRepository2.deleteProductOptSet0ptValue(setId, valueId);
-		productOptionValueRepository2.deleteProductOptionValueDescription(valueId);
-		productOptionValueRepository2.deleteProductOptionValue(valueId);
+		
 	}
 	
 	@Transactional
-	public void deleteOption(Long setId, Long optionId)  throws ServiceException {
+	public void deleteSetOption(Long setId, Long optionId)  throws ServiceException {
 		List<Long> valueList = productOptionValueRepository2.getOptSetOptValueList(setId);
 		if(valueList.size() > 0 ) {
 			for(Long valueId : valueList) {
 				productOptionValueRepository2.deleteProductOptSet0ptValue(setId, valueId);
-				productOptionValueRepository2.deleteProductOptionValueDescription(valueId);
-				productOptionValueRepository2.deleteProductOptionValue(valueId);
+				
 			}
 		}
 		
 		productOptionValueRepository2.deleteProductOptSet(setId, optionId);
-		productOptionValueRepository2.deleteProductOptionDescription(optionId);
-		productOptionValueRepository2.deleteProductOption(optionId);
+		
 	
 		
 	}
@@ -84,5 +91,33 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 		return productOptionValueRepository2.getProductListOptionValue(languageId, categoryId,division);
 	}
 	
+	public int getOptionSet(MerchantStore store, Language language,  Long optionId) throws ServiceException{
+		return productOptionValueRepository2.getOptionSet(optionId);
+	}
+	
+	public int getOptionSetValue(MerchantStore store, Language language,  Long valueId) throws ServiceException{
+		return productOptionValueRepository2.getOptionSetValue(valueId);
+	}
+	
+	
+	public int getOptionNameCount(MerchantStore store, Language language,  String name) throws ServiceException{
+		return productOptionValueRepository2.getOptionNameCount(name);
+	}
+	
+	public int getOptionValueNameCount(MerchantStore store, Language language,  String name) throws ServiceException{
+		return productOptionValueRepository2.getOptionValueNameCount(name);
+	}
+	
+	public List<ReadProductOption> getListOptionKeyword(MerchantStore store, Language language, String keyword, int categoryId) throws ServiceException{
+		return productOptionValueRepository2.getListOptionKeyword(language.getId(), keyword, categoryId);
+	}
+	
+	public List<ReadProductOptionValue>  getListOptionKeywordValues(MerchantStore store, Language language,  int setId, int categoryId, String keyword) throws ServiceException{
+		return productOptionValueRepository2.getListOptionKeywordValues(language.getId(),setId, categoryId, keyword);
+	}
+	
+	public void insertOptionSetValue(Long setID, Long valueId)  throws ServiceException{
+		productOptionValueRepository2.insertOptionSetValue(setID, valueId);
+	}
 	
 }

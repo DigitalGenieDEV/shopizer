@@ -88,7 +88,7 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 		Validate.notNull(language, "Language cannot be null");
 		Validate.notNull(optionSet, "PersistableProductOptionSet cannot be null");
 
-		if (this.exists(optionSet.getCode(), store)) {
+		if (this.exists2(optionSet.getCode(), store, optionSet.getCategoryId())) {
 			throw new OperationNotAllowedException("Option set with code [" + optionSet.getCode() + "] already exist");
 		}
 
@@ -163,6 +163,17 @@ public class ProductOptionSetFacadeImpl implements ProductOptionSetFacade {
 		Validate.notNull(store, "MerchantStore cannot be null");
 		Validate.notNull(code, "code cannot be null");
 		ProductOptionSet optionSet = productOptionSetService.getCode(store, code);
+		if (optionSet != null) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	public boolean exists2(String code, MerchantStore store, Long cagetyId) {
+		Validate.notNull(store, "MerchantStore cannot be null");
+		Validate.notNull(code, "code cannot be null");
+		ProductOptionSet optionSet = productOptionSetService.getCode2(store, code,cagetyId);
 		if (optionSet != null) {
 			return true;
 		}

@@ -57,7 +57,7 @@ public class ReadableProductOptionValueMapper implements Mapper<ProductOptionVal
     	readableProductOptionValue.setOrder(source.getProductOptionValueSortOrder().intValue());
     }
     if(!StringUtils.isBlank(source.getProductOptionValueImage())) {
-    	readableProductOptionValue.setImage(imageUtils.buildProductPropertyImageUtils(store, source.getProductOptionValueImage()));
+    	readableProductOptionValue.setImage(source.getProductOptionValueImage());
     }
     
     return readableProductOptionValue;

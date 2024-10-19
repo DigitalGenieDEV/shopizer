@@ -6,6 +6,7 @@ import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService2;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValueDescription;
@@ -13,7 +14,6 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.Mapper;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductOptionValue;
-import com.salesmanager.shop.model.catalog.product.attribute.api.PersistableProductOptionValueEntity;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 
 @Component
@@ -22,6 +22,9 @@ public class PersistableProductOptionValueMapper
 
 	@Autowired
 	private LanguageService languageService;
+	
+	@Autowired
+	private ProductOptionService2 productOptionService2;
 
 	ProductOptionValueDescription description(
 			com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription description)
@@ -89,8 +92,8 @@ public class PersistableProductOptionValueMapper
 					//destination.getDescriptions().add(description);
 				}
 			}
-
-			destination.setCode(source.getCode());
+			destination.setProductOptionValueImage(source.getImage());
+			destination.setCode(source.getCode().equals("") ? productOptionService2.getOptionValueCode() :  source.getCode() );
 			destination.setMerchantStore(store);
 			destination.setProductOptionValueSortOrder(source.getSortOrder());
 

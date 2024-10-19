@@ -80,6 +80,7 @@ public class ProductOptionServiceImpl extends
 		if(entity.getId()!=null && entity.getId()>0) {
 			super.update(entity);
 		} else {
+			System.out.println(entity.getId());
 			super.save(entity);
 		}
 		

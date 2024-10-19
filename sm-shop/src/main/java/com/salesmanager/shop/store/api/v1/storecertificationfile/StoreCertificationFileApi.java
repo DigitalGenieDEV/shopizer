@@ -203,7 +203,7 @@ public class StoreCertificationFileApi {
 				String fileName = contentFacade.addLibraryFile(f
 															 , merchantStore.getCode()
 															 , FileContentType.valueOf(fileContentType));
-				
+				entity.setStoragePath(fileName);
 				entity.setFileUrl(certificationFilePathUtils.buildCertificationFileUtils(merchantStore, fileName));
 				cetificationFileFacade.registerFiles(entity);
 			
