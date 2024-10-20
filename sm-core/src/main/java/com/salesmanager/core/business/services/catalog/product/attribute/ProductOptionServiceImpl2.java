@@ -120,4 +120,9 @@ public class ProductOptionServiceImpl2 extends SalesManagerEntityServiceImpl<Lon
 		productOptionValueRepository2.insertOptionSetValue(setID, valueId);
 	}
 	
+	
+	public void deleteProductAttribute(Long productId)  throws ServiceException{
+		productOptionValueRepository2.deleteProductAttribute(productId);
+	}
+	
 }

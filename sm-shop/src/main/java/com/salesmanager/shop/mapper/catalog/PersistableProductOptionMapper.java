@@ -82,8 +82,7 @@ public class PersistableProductOptionMapper implements Mapper<PersistableProduct
         }
       }
       
-      System.out.println("source.getCode()"+source.getCode());
-      System.out.println("source.getCode()"+productOptionService2.getOptionCode());
+
       destination.setCode(source.getCode().equals("") ? productOptionService2.getOptionCode() :  source.getCode());
       destination.setMerchantStore(store);
       destination.setProductOptionSortOrder(source.getOrder());

@@ -143,6 +143,10 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 	@Modifying
 	@Query(value = "INSERT INTO PRODUCT_OPT_SET_OPT_VALUE(PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID, VALUES_PRODUCT_OPTION_VALUE_ID) VALUES (?1, ?2)", nativeQuery = true)
 	void insertOptionSetValue(Long setID, Long valueId);
+	
+	@Modifying
+	@Query(value = "DELETE FROM PRODUCT_ATTRIBUTE WHERE PRODUCT_ID = ?1", nativeQuery = true)
+	void deleteProductAttribute(Long productId);
 
 
 }

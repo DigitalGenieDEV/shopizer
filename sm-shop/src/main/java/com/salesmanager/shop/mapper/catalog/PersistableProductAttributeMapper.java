@@ -1,8 +1,6 @@
 package com.salesmanager.shop.mapper.catalog;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService;
+import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionService2;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductOptionValueService;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
@@ -23,8 +22,6 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.Mapper;
 import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductAttribute;
-import com.salesmanager.shop.model.catalog.product.attribute.PersistableProductOptionValue;
-import com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 
 @Component
@@ -41,6 +38,9 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 	@Inject
 	private PersistableProductOptionValueMapper persistableProductOptionValueMapper;
 	
+	@Inject
+	ProductOptionService2 productOptionService2;
+	
 	@Override
 	public ProductAttribute convert(PersistableProductAttribute source, MerchantStore store, Language language) {
 		ProductAttribute attribute = new ProductAttribute();
@@ -52,6 +52,7 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 								  MerchantStore store, Language language) {
 
 		
+	
 		ProductOption productOption = null;
 		
 		if(!StringUtils.isBlank(source.getOption().getCode())) {
@@ -62,15 +63,31 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 		}else {
 			productOption = new ProductOption();
 		}
+		
+		
 
 		if(!CollectionUtils.isEmpty((source.getOption().getDescriptions()))) {
 			productOption =  persistableProductOptionMapper.merge(source.getOption(),productOption, store, language);
 			try {
-				productOption.setCode(!StringUtils.isBlank(source.getOption().getCode()) ? source.getOption().getCode() : UUID.randomUUID().toString());
+				productOptionService2.deleteProductAttribute(source.getProductId());
+				
+				String optionCode = "";
+				if(!StringUtils.isBlank(source.getOption().getCode())) {
+					if(source.getOption().getCode().indexOf("ETC")  != -1 || source.getOption().getCode().indexOf("BIGO") != -1) {
+						
+						optionCode = productOptionService2.getOptionCode();
+					}else {
+						optionCode = source.getOption().getCode();
+					}
+				}else {
+					 optionCode = UUID.randomUUID().toString();
+				}
+
+				productOption.setCode(optionCode);
 				productOption.setMerchantStore(store);
 				productOptionService.saveOrUpdate(productOption);
 			} catch (ServiceException e) {
-				throw new ConversionRuntimeException("Error converting ProductOptionValue",e);
+				throw new ConversionRuntimeException("Error converting ProductOption",e);
 			}
 		}
 
@@ -83,12 +100,15 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 		} else if(source.getProductId() != null && source.getOptionValue().getId().longValue()>0) {
 			productOptionValue = productOptionValueService.getById(source.getOptionValue().getId());
 		} else {
+			
+			
 			//ProductOption value is text
 			productOptionValue = new ProductOptionValue();
 			productOptionValue.setProductOptionDisplayOnly(true);
 			productOptionValue.setCode(!StringUtils.isBlank(source.getOptionValue().getCode()) ? source.getOptionValue().getCode() : UUID.randomUUID().toString());
 			productOptionValue.setCode(UUID.randomUUID().toString());
 			productOptionValue.setMerchantStore(store);
+			
 		}
 		
 		if(!CollectionUtils.isEmpty((source.getOptionValue().getDescriptions()))) {
