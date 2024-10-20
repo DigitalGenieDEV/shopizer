@@ -141,7 +141,7 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
     public CustomerOrder processCustomerOrder(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment) throws ServiceException {
         Validate.notNull(customerOrder, "CustomerOrder cannot be null");
         Validate.notNull(customer, "Customer cannot be null (even if anonymous order)");
-        Validate.notEmpty(items, "CustomerShoppingCart items cannot be null");
+//        Validate.notEmpty(items, "CustomerShoppingCart items cannot be null");
         Validate.notNull(payment, "Payment cannot be null");
 
         // 合并支付处理

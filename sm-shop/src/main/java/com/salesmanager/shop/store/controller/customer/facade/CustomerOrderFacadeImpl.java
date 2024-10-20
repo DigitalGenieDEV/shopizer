@@ -55,6 +55,8 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.LabelUtils;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -63,6 +65,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -541,21 +544,25 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     @Override
     public CustomerOrder replicateCustomerOrder(CustomerOrder customerOrder, PersistablePayment persistablePayment, Customer customer, Language language) {
 
+        CustomerOrder newCustomerOrder = new CustomerOrder();
         try {
-            customerOrder.setId(null);
-            customerOrder.getAuditSection().setDateCreated(null);
-            customerOrder.getAuditSection().setDateModified(null);
+            BeanUtils.copyProperties(newCustomerOrder, customerOrder);
+            newCustomerOrder.setId(null);
+            newCustomerOrder.getAuditSection().setDateCreated(null);
+            newCustomerOrder.getAuditSection().setDateModified(null);
+            newCustomerOrder.setOrderNo(UniqueIdGenerator.generateOrderNumber());
 
-            persistablePayment.setAmount(customerOrder.getTotal().toString());
+
+            persistablePayment.setAmount(newCustomerOrder.getTotal().toString());
 
             Payment payment = paymentPopulator.populate(persistablePayment, new Payment(), null, language);
 
-            customerOrder = customerOrderService.processCustomerOrder(customerOrder, customer, null, payment);
-        } catch (ConversionException | ServiceException e) {
+            newCustomerOrder = customerOrderService.processCustomerOrder(newCustomerOrder, customer, null, payment);
+        } catch (ConversionException | ServiceException | IllegalAccessException | InvocationTargetException e) {
             LOGGER.error("Error while replicate pay order", e);
             throw new ServiceRuntimeException("Error while replicate pay order", e);
         }
 
-        return customerOrder;
+        return newCustomerOrder;
     }
 }
