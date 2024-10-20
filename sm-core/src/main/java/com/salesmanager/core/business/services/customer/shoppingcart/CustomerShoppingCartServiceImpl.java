@@ -63,6 +63,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CustomerShoppingCart getCustomerShoppingCart(Customer customer) throws ServiceException {
         LOGGER.info("get customer shopping cart [customer:" + customer.getId() +"]");
         CustomerShoppingCart cartModel = this.customerShoppingCartRepository.findByCustomer(customer.getId());
@@ -95,7 +96,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         // for loop to delete cart item and remove line items
         lineItems.stream().filter(CustomerShoppingCartItem::isObsolete)
                 .map(CustomerShoppingCartItem::getId)
-                .forEach(this::deleteCustomerShoppingCartItem);
+                .forEach(customerShoppingCartItemRepository::deleteById);
         lineItems.removeIf(CustomerShoppingCartItem::isObsolete);
         cartModel.setLineItems(lineItems);
     }
