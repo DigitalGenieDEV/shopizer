@@ -62,8 +62,6 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "left join fetch pvpo.descriptions pvpod "
 			+ "left join fetch pvpov.descriptions pvpovd "
 			+ "left join fetch p.productVariantGroup pig "
-			+ "left join fetch pig.images pigi "
-			+ "left join fetch pigi.descriptions pigid "
 			+ "left join fetch pv.merchantStore pvm "
 			+ "where pr.id = ?2 and pvm.id = ?1")
 	List<ProductVariant> findByProductId(Integer storeId, Long productId);

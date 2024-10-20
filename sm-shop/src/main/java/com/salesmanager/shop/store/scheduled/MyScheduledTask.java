@@ -12,9 +12,11 @@ import com.salesmanager.core.business.services.alibaba.product.AlibabaProductSer
 import com.salesmanager.core.business.services.catalog.product.ProductService;
 import com.salesmanager.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.salesmanager.core.business.services.merchant.MerchantStoreService;
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
+import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.shop.store.controller.product.facade.AlibabaProductFacade;
 import org.slf4j.Logger;
@@ -83,7 +85,7 @@ public class MyScheduledTask {
             for (int i = 0; i < result.length; i++) {
                 ProductSearchKeywordQueryModelProductInfoModelV productSearchKeywordQueryModelProductInfoModelV = result[i];
                 Long offerId = productSearchKeywordQueryModelProductInfoModelV.getOfferId();
-                offerId = 805505318975L;
+                offerId = 824391568171L;
                 try {
                     alibabaProductFacade.importProduct(Collections.singletonList(offerId), "ko", merchantStore,
                             Collections.singletonList(1L), PublishWayEnums.IMPORT_BY_1688);
@@ -130,6 +132,47 @@ public class MyScheduledTask {
                 productFeatureRepository.deleteByProductId(product.getId());
 
                 productService.delete(product);
+            }
+        }
+    }
+
+
+
+
+//    @Scheduled(fixedDelay = 5000)
+    public void update1688Product() throws ServiceException {
+        List<Long> listByOutId = productRepository.findListByOutId();
+        MerchantStore merchantStore = merchantService.getByCode("DEFAULT");
+
+        for (Long id : listByOutId) {
+            try {
+                Optional<Product> byId = productRepository.findById(id);
+                if (byId.isPresent()) {
+                    LOGGER.info(id + " begin import");
+
+                    Product product = byId.get();
+
+                    boolean isNeedBreak = false;
+                    List<ProductDescription> productDescriptionByProductId = productRepository.findProductDescriptionByProductId(id);
+                    if (productDescriptionByProductId !=null){
+                        for (ProductDescription pr : productDescriptionByProductId){
+                            if (pr.getLanguage().getCode().equals("cn")){
+                                isNeedBreak = true;
+                            }
+                        }
+                    }
+                    if (isNeedBreak){
+                        continue;
+                    }
+
+                    List<Category> categoryByProductId = productRepository.findCategoryByProductId(id);
+                    List<Long> collect = categoryByProductId.stream().map(Category::getId).collect(Collectors.toList());
+                    alibabaProductFacade.importProduct(Collections.singletonList(product.getOutProductId()), "ko", merchantStore,
+                            collect, PublishWayEnums.IMPORT_BY_1688);
+                    LOGGER.info(id + " import success");
+                }
+            }catch(Exception e){
+                LOGGER.error("++++++++++++"+ id + "++++++++++++++++import product error+++++++++++++++++++++++++++++++++", e);
             }
         }
     }

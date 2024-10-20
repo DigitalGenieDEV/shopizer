@@ -163,8 +163,6 @@ public class ProductVariantGroupFacadeImpl implements ProductVariantGroupFacade 
 			
 			String path = new StringBuilder().append("group").append(Constants.SLASH).append(instanceGroupId).toString();
 			
-			
-			
 			instanceImage.setProductImage(image.getOriginalFilename());
 			instanceImage.setProductVariantGroup(group);
 			String imageName = image.getOriginalFilename();
@@ -178,8 +176,7 @@ public class ProductVariantGroupFacadeImpl implements ProductVariantGroupFacade 
 
 			contentService.addContentFile(store.getCode(), cmsContentImage);
 
-			group.getImages().add(instanceImage);
-			
+
 			productVariantGroupService.saveOrUpdate(group);
 		} catch (Exception e) {
 			throw new ServiceRuntimeException("Exception while adding instance group image", e);
@@ -205,8 +202,6 @@ public class ProductVariantGroupFacadeImpl implements ProductVariantGroupFacade 
 
 		
 		try {
-			contentService.removeFile(Constants.SLASH + store.getCode() + Constants.SLASH + productVariantGroupId, FileContentType.VARIANT, image.getProductImage());
-			group.getImages().removeIf(i -> (i.getId() == image.getId()));
 			//update productVariantroup
 			productVariantGroupService.update(group);
 		} catch (ServiceException e) {

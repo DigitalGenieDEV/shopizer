@@ -33,14 +33,14 @@ public class ProductVariantGroupServiceImpl extends SalesManagerEntityServiceImp
 
 	@Override
 	public Optional<ProductVariantGroup> getById(Long id, MerchantStore store) {
-		return  productVariantGroupRepository.findOne(id, store.getCode());
+		return  productVariantGroupRepository.findOne(id);
 
 	}
 
 	@Override
 	public Optional<ProductVariantGroup> getByProductVariant(Long productVariantId, MerchantStore store,
 			Language language) {
-		return productVariantGroupRepository.finByProductVariant(productVariantId, store.getCode());
+		return productVariantGroupRepository.finByProductVariant(productVariantId);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ProductVariantGroupServiceImpl extends SalesManagerEntityServiceImp
 			int count) {
 		
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableProductVariantGroupRepository.findByProductId(store.getId(), productId, pageRequest);
+		return pageableProductVariantGroupRepository.findByProductId( productId, pageRequest);
 	}
 
 

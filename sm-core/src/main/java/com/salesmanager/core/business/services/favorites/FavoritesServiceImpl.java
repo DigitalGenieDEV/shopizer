@@ -33,6 +33,9 @@ public class FavoritesServiceImpl  extends SalesManagerEntityServiceImpl<Long, F
     @Override
     public Page<Favorites> getListFavoriteProducts(Long userId, int page, int count) {
         Pageable pageRequest = PageRequest.of(page, count);
+        if (userId == null){
+            return pageableFavoritesRepository.findPage(pageRequest);
+        }
         return pageableFavoritesRepository.findByUserId(userId, pageRequest);
     }
 

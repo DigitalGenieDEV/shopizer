@@ -3,7 +3,9 @@ package com.salesmanager.core.business.repositories.catalog.product;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.ProductAuditStatus;
+import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -169,4 +171,21 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
 	@Query(value ="SELECT pc.PRODUCT_ID from  PRODUCT_CATEGORY pc WHERE   pc.CATEGORY_ID = :categoryId", nativeQuery = true)
 	List<Long> findProductIdsByCategoryId(@Param("categoryId") Long categoryId);
+
+
+	@Query(value="SELECT " +
+			"p.descriptions " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.id = ?1")
+	List<ProductDescription> findProductDescriptionByProductId(Long id);
+
+
+
+	@Query(value="SELECT " +
+			"p.categories " +
+			"FROM " +
+			"Product p " +
+			"WHERE  p.id = ?1")
+	List<Category> findCategoryByProductId(Long id);
 }

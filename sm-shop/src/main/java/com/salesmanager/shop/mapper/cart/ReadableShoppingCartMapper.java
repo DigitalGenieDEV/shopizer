@@ -164,18 +164,11 @@ public class ReadableShoppingCartMapper implements Mapper<ShoppingCart, Readable
 
 						
 						if(productVariant.get().getProductVariantGroup() != null) {
-							Set<String> nameSet = new HashSet<>();
-							List<ReadableImage> instanceImages = productVariant.get().getProductVariantGroup().getImages()
-									.stream().map(i -> this.image(i, store, language))
-									.filter(e -> nameSet.add(e.getImageUrl()))
-									.collect(Collectors.toList());
-							shoppingCartItem.setImages(instanceImages);
+							ReadableImage readableImage  = new ReadableImage();
+							readableImage.setImageType(1);
+							readableImage.setImageUrl(productVariant.get().getImageUrl());
+							shoppingCartItem.setImage(readableImage);
 						}
-					}
-					
-
-					if (shoppingCartItem.getImage() == null && shoppingCartItem.getImages() != null && shoppingCartItem.getImages().size() > 0) {
-						shoppingCartItem.setImage(shoppingCartItem.getImages().get(0));
 					}
 
 

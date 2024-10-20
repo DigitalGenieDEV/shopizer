@@ -11,7 +11,9 @@ public class ReadableProductOption extends ProductPropertyOption {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private String imageUrl;
+
 	private String name;
 	private String lang;
 	private boolean variant;
@@ -51,5 +53,11 @@ public class ReadableProductOption extends ProductPropertyOption {
 	}
 
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
 
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

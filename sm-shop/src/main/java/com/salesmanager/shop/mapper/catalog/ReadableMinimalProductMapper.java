@@ -144,8 +144,7 @@ public class ReadableMinimalProductMapper implements Mapper<Product, ReadableMin
 				
 				imageList.add(prdImage);
 			}
-			destination
-			.setImages(imageList);
+
 		}
 		
 

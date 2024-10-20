@@ -5,23 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 
+import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.reference.zone.Zone;
 
 /**
  * Extra properties on a group of variants
@@ -45,16 +35,20 @@ public class ProductVariantGroup extends SalesManagerEntity<Long, ProductVariant
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
 
+
+	@Column(name = "IMAGE_URL", length = 1024)
+	private String imageUrl;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="productVariantGroup")
-	private List<ProductVariantImage> images = new ArrayList<ProductVariantImage>();
+//	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="productVariantGroup")
+//	private List<ProductVariantImage> images = new ArrayList<ProductVariantImage>();
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH }, mappedBy = "productVariantGroup")
 	private Set<ProductVariant> productVariants = new HashSet<ProductVariant>();
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="MERCHANT_ID", nullable=false)
-	private MerchantStore merchantStore;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="PRODUCT_VARIATION_ID", nullable=true, updatable=true)
+	private ProductVariation productVariation;
+
 	
 	@Override
 	public Long getId() {
@@ -67,22 +61,15 @@ public class ProductVariantGroup extends SalesManagerEntity<Long, ProductVariant
 		
 	}
 
-	public List<ProductVariantImage> getImages() {
-		return images;
-	}
+//	public List<ProductVariantImage> getImages() {
+//		return images;
+//	}
+//
+//	public void setImages(List<ProductVariantImage> images) {
+//		this.images = images;
+//	}
 
-	public void setImages(List<ProductVariantImage> images) {
-		this.images = images;
-	}
 
-
-	public MerchantStore getMerchantStore() {
-		return merchantStore;
-	}
-
-	public void setMerchantStore(MerchantStore merchantStore) {
-		this.merchantStore = merchantStore;
-	}
 
 	public Set<ProductVariant> getProductVariants() {
 		return productVariants;
@@ -93,4 +80,19 @@ public class ProductVariantGroup extends SalesManagerEntity<Long, ProductVariant
 	}
 
 
+	public ProductVariation getProductVariation() {
+		return productVariation;
+	}
+
+	public void setProductVariation(ProductVariation productVariation) {
+		this.productVariation = productVariation;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }

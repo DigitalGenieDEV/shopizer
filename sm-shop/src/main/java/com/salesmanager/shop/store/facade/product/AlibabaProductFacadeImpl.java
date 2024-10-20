@@ -33,6 +33,8 @@ import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import com.salesmanager.shop.mapper.catalog.PersistableProductOptionMapper;
+import com.salesmanager.shop.mapper.catalog.PersistableProductOptionValueMapper;
 import com.salesmanager.shop.model.catalog.ProductMaterial;
 import com.salesmanager.shop.model.catalog.category.CategoryDescription;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
@@ -96,6 +98,12 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     private ProductOptionService productOptionService;
 
     @Autowired
+    private PersistableProductOptionMapper persistableProductOptionMapper;
+
+    @Autowired
+    private PersistableProductOptionValueMapper persistableProductOptionValueMapper;
+
+    @Autowired
     private AlibabaProductService alibabaProductService;
 
     @Autowired
@@ -115,6 +123,8 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    protected MerchantStoreService merchantService;
 
     @Autowired
     private ProductService productService;
@@ -140,7 +150,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
     @Override
     public List<Long> importProduct(List<Long> productIds, String language,
-                              MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws ServiceException {
+                                    MerchantStore merchantStore, List<Long> categoryIds, PublishWayEnums importType) throws ServiceException {
         if (CollectionUtils.isEmpty(productIds)){
             throw new ServiceException(ServiceException.EXCEPTION_VALIDATION,
                     "Invalid date format","validaion.param.error");
@@ -396,6 +406,13 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         descriptionForEn.setDescription(productSearchQueryProductDetailModelProductDetailModelForEn.getDescription());
         persistableProduct.getDescriptions().add(descriptionForEn);
 
+        com.salesmanager.shop.model.catalog.product.ProductDescription descriptionForCn = new ProductDescription();
+        descriptionForCn.setLanguage("cn");
+        descriptionForCn.setName(productSearchQueryProductDetailModelProductDetailModelForEn.getSubject());
+        descriptionForCn.setTitle(productSearchQueryProductDetailModelProductDetailModelForEn.getSubject());
+        descriptionForCn.setDescription(productSearchQueryProductDetailModelProductDetailModelForEn.getDescription());
+        persistableProduct.getDescriptions().add(descriptionForCn);
+
         persistableProduct.getDescriptions().add(description);
 
         persistableProduct.setOutProductId(productDetailModel.getOfferId());
@@ -465,97 +482,133 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
         // 并行处理每个属性
         List<CompletableFuture<Void>> futures = Arrays.stream(productAttribute)
                 .map(attr -> CompletableFuture.runAsync(() -> {
-                        if ("2176".equals(attr.getAttributeId())) {
-                            return; // 跳过ID为2176的属性
+                    if ("2176".equals(attr.getAttributeId())) {
+                        return; // 跳过ID为2176的属性
+                    }
+
+                    PersistableProductAttribute persistableProductAttribute = new PersistableProductAttribute();
+                    String attributeName = attr.getAttributeName();
+                    String value = attr.getValue();
+
+                    Long productOptionId  = productOptionService.getIdByCode(attributeName);
+
+                    if (productOptionId == null) {
+                        ProductOption option = new ProductOption();
+                        option.setMerchantStore(store);
+                        option.setCode(attributeName);
+                        option.setProductOptionType(ProductOptionType.Select.name());
+
+                        ProductOptionDescription sizeDescription = new ProductOptionDescription();
+                        sizeDescription.setLanguage(language);
+                        sizeDescription.setName(attr.getValueTrans());
+                        sizeDescription.setDescription(attr.getValueTrans());
+                        sizeDescription.setProductOption(option);
+
+                        ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
+                        if (attrEn != null) {
+                            ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
+                            sizeDescriptionForEn.setLanguage(en);
+                            sizeDescriptionForEn.setName(attrEn.getValueTrans());
+                            sizeDescriptionForEn.setDescription(attrEn.getValueTrans());
+                            sizeDescriptionForEn.setProductOption(option);
+                            option.getDescriptions().add(sizeDescriptionForEn);
                         }
 
-                        PersistableProductAttribute persistableProductAttribute = new PersistableProductAttribute();
-                        String attributeName = attr.getAttributeName();
-                        String value = attr.getValue();
+                        option.getDescriptions().add(sizeDescription);
+                        try {
+                            productOptionService.saveOrUpdate(option);
+                        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                            // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
+                            System.out.println("Unique constraint violation occurred, ignoring");
+                        } catch (ServiceException e) {
+                            throw new RuntimeException(e);
+                        }
+                        productOptionId = productOptionService.getIdByCode(attributeName);
+                    }else {
+                        ProductOption byCode = productOptionService.getByCode(attributeName);
+                        PersistableProductOptionEntity persistableProductOptionEntity = new PersistableProductOptionEntity();
+                        persistableProductOptionEntity.setCode(byCode.getCode());
+                        persistableProductOptionEntity.setId(byCode.getId());
+                        persistableProductOptionEntity.setType(byCode.getProductOptionType());
+//                        persistableProductOptionEntity.setOrder(byCode.getProductOptionSortOrder() == null? null : byCode.getProductOptionSortOrder());
+                        com.salesmanager.shop.model.catalog.product.attribute.ProductOptionDescription propertyDescription =  new com.salesmanager.shop.model.catalog.product.attribute.ProductOptionDescription();
+                        propertyDescription.setLanguage("cn");
+                        propertyDescription.setName(attributeName);
+                        propertyDescription.setTitle(attributeName);
+                        persistableProductOptionEntity.getDescriptions().add(propertyDescription);
+                        byCode = persistableProductOptionMapper.merge(persistableProductOptionEntity, byCode, store, language);
+                        try {
+                            productOptionService.saveOrUpdate(byCode);
+                        } catch (ServiceException e) {
+                            LOGGER.error("productOptionService saveOrUpdate error", e);
+                            throw new RuntimeException(e);
+                        }
+                    }
 
-                        Long productOptionId  = productOptionService.getIdByCode(attributeName);
+                    PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
+                    propertyOption.setCode(attributeName);
+                    propertyOption.setId(productOptionId);
+                    persistableProductAttribute.setOption(propertyOption);
 
-                        if (productOptionId == null) {
-                            ProductOption option = new ProductOption();
-                            option.setMerchantStore(store);
-                            option.setCode(attributeName);
-                            option.setProductOptionType(ProductOptionType.Select.name());
+                    Long optionValueId = productOptionValueService.getIdByCode(value);
 
-                            ProductOptionDescription sizeDescription = new ProductOptionDescription();
-                            sizeDescription.setLanguage(language);
-                            sizeDescription.setName(attr.getValueTrans());
-                            sizeDescription.setDescription(attr.getValueTrans());
-                            sizeDescription.setProductOption(option);
+                    if (optionValueId == null) {
+                        ProductOptionValue productOptionValue = new ProductOptionValue();
+                        productOptionValue.setMerchantStore(store);
+                        productOptionValue.setCode(value);
 
-                            ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
-                            if (attrEn != null) {
-                                ProductOptionDescription sizeDescriptionForEn = new ProductOptionDescription();
-                                sizeDescriptionForEn.setLanguage(en);
-                                sizeDescriptionForEn.setName(attrEn.getValueTrans());
-                                sizeDescriptionForEn.setDescription(attrEn.getValueTrans());
-                                sizeDescriptionForEn.setProductOption(option);
-                                option.getDescriptions().add(sizeDescriptionForEn);
-                            }
+                        ProductOptionValueDescription valueDescription = new ProductOptionValueDescription();
+                        valueDescription.setLanguage(language);
+                        valueDescription.setName(attr.getValueTrans());
+                        valueDescription.setDescription(attr.getValueTrans());
+                        valueDescription.setProductOptionValue(productOptionValue);
 
-                            option.getDescriptions().add(sizeDescription);
-                            try {
-                                productOptionService.saveOrUpdate(option);
-                            } catch (org.springframework.dao.DataIntegrityViolationException e) {
-                                // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
-                                System.out.println("Unique constraint violation occurred, ignoring");
-                            } catch (ServiceException e) {
-                                throw new RuntimeException(e);
-                            }
-                            productOptionId = productOptionService.getIdByCode(attributeName);
+                        ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
+                        if (attrEn != null) {
+                            ProductOptionValueDescription valueDescriptionForEn = new ProductOptionValueDescription();
+                            valueDescriptionForEn.setLanguage(en);
+                            valueDescriptionForEn.setName(attrEn.getValueTrans());
+                            valueDescriptionForEn.setDescription(attrEn.getValueTrans());
+                            valueDescriptionForEn.setProductOptionValue(productOptionValue);
+                            productOptionValue.getDescriptions().add(valueDescriptionForEn);
                         }
 
-                        PersistableProductOptionEntity propertyOption = new PersistableProductOptionEntity();
-                        propertyOption.setCode(attributeName);
-                        propertyOption.setId(productOptionId);
-                        persistableProductAttribute.setOption(propertyOption);
-
-                        Long optionValueId = productOptionValueService.getByCode(value);
-
-                        if (optionValueId == null) {
-                            ProductOptionValue productOptionValue = new ProductOptionValue();
-                            productOptionValue.setMerchantStore(store);
-                            productOptionValue.setCode(value);
-
-                            ProductOptionValueDescription valueDescription = new ProductOptionValueDescription();
-                            valueDescription.setLanguage(language);
-                            valueDescription.setName(attr.getValueTrans());
-                            valueDescription.setDescription(attr.getValueTrans());
-                            valueDescription.setProductOptionValue(productOptionValue);
-
-                            ProductSearchQueryProductDetailModelProductAttribute attrEn = attributeEnMap.get(attr.getAttributeId() + attr.getValue());
-                            if (attrEn != null) {
-                                ProductOptionValueDescription valueDescriptionForEn = new ProductOptionValueDescription();
-                                valueDescriptionForEn.setLanguage(en);
-                                valueDescriptionForEn.setName(attrEn.getValueTrans());
-                                valueDescriptionForEn.setDescription(attrEn.getValueTrans());
-                                valueDescriptionForEn.setProductOptionValue(productOptionValue);
-                                productOptionValue.getDescriptions().add(valueDescriptionForEn);
-                            }
-
-                            productOptionValue.getDescriptions().add(valueDescription);
-                            try {
-                                productOptionValueService.saveOrUpdate(productOptionValue);
-                            } catch (org.springframework.dao.DataIntegrityViolationException e) {
-                                // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
-                                System.out.println("Unique constraint violation occurred, ignoring");
-                            } catch (ServiceException e) {
-                                throw new RuntimeException(e);
-                            }
-                            optionValueId = productOptionValueService.getByCode(value);
+                        productOptionValue.getDescriptions().add(valueDescription);
+                        try {
+                            productOptionValueService.saveOrUpdate(productOptionValue);
+                        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                            // 如果捕获到唯一性约束异常，可以不处理，继续执行后续逻辑
+                            System.out.println("Unique constraint violation occurred, ignoring");
+                        } catch (ServiceException e) {
+                            throw new RuntimeException(e);
                         }
+                        optionValueId = productOptionValueService.getIdByCode(value);
+                    }else{
+                        ProductOptionValue byCode = productOptionValueService.getByCode(value);
+                        PersistableProductOptionValue persistableProductOptionEntity = new PersistableProductOptionValue();
+                        persistableProductOptionEntity.setCode(byCode.getCode());
+                        persistableProductOptionEntity.setId(byCode.getId());
+                        com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription propertyDescription =  new com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription();
+                        propertyDescription.setLanguage("cn");
+                        propertyDescription.setDescription(value);
+                        propertyDescription.setName(value);
+                        propertyDescription.setTitle(value);
+                        persistableProductOptionEntity.getDescriptions().add(propertyDescription);
+                        byCode =  persistableProductOptionValueMapper.merge(persistableProductOptionEntity,byCode, store, language);
+                        try {
+                            productOptionValueService.saveOrUpdate(byCode);
+                        } catch (ServiceException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
 
-                        PersistableProductOptionValue persistentOptionValue = new PersistableProductOptionValue();
-                        persistentOptionValue.setCode(value);
-                        persistentOptionValue.setId(optionValueId);
-                        persistableProductAttribute.setOptionValue(persistentOptionValue);
-                        persistableProductAttribute.setSortOrder(Arrays.asList(productAttribute).indexOf(attr));
-                        persistableProductAttribute.setAttributeDisplayOnly(true);
-                        attributes.add(persistableProductAttribute);
+                    PersistableProductOptionValue persistentOptionValue = new PersistableProductOptionValue();
+                    persistentOptionValue.setCode(value);
+                    persistentOptionValue.setId(optionValueId);
+                    persistableProductAttribute.setOptionValue(persistentOptionValue);
+                    persistableProductAttribute.setSortOrder(Arrays.asList(productAttribute).indexOf(attr));
+                    persistableProductAttribute.setAttributeDisplayOnly(true);
+                    attributes.add(persistableProductAttribute);
                 }, executor)).collect(Collectors.toList());
 
         // 等待所有任务完成
@@ -651,11 +704,25 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                         }
 
                         productOptionId = productOptionService.getIdByCode(attributeName);
+                    }else {
+                        ProductOption byCode = productOptionService.getByCode(attributeName);
+                        PersistableProductOptionEntity persistableProductOptionEntity = new PersistableProductOptionEntity();
+                        persistableProductOptionEntity.setCode(byCode.getCode());
+                        persistableProductOptionEntity.setId(byCode.getId());
+                        persistableProductOptionEntity.setType(byCode.getProductOptionType());
+                        persistableProductOptionEntity.setOrder(byCode.getProductOptionSortOrder());
+                        com.salesmanager.shop.model.catalog.product.attribute.ProductOptionDescription propertyDescription =  new com.salesmanager.shop.model.catalog.product.attribute.ProductOptionDescription();
+                        propertyDescription.setLanguage("cn");
+                        propertyDescription.setName(attributeName);
+                        propertyDescription.setTitle(attributeName);
+                        persistableProductOptionEntity.getDescriptions().add(propertyDescription);
+                        byCode = persistableProductOptionMapper.merge(persistableProductOptionEntity, byCode, store, language);
+                        productOptionService.saveOrUpdate(byCode);
                     }
                     productVariant.setOption(productOptionId);
 
                     // 处理产品选项值
-                    Long optionValueId = productOptionValueService.getByCode(value);
+                    Long optionValueId = productOptionValueService.getIdByCode(value);
                     if (optionValueId == null) {
                         ProductOptionValue productOptionValue = new ProductOptionValue();
                         productOptionValue.setMerchantStore(store);
@@ -675,7 +742,20 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                             System.out.println("Unique constraint violation occurred, ignoring");
                         }
 
-                        optionValueId = productOptionValueService.getByCode(value);
+                        optionValueId = productOptionValueService.getIdByCode(value);
+                    }else{
+                        ProductOptionValue byCode = productOptionValueService.getByCode(value);
+                        PersistableProductOptionValue persistableProductOptionEntity = new PersistableProductOptionValue();
+                        persistableProductOptionEntity.setCode(byCode.getCode());
+                        persistableProductOptionEntity.setId(byCode.getId());
+                        com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription propertyDescription =  new com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription();
+                        propertyDescription.setLanguage("cn");
+                        propertyDescription.setDescription(value);
+                        propertyDescription.setName(value);
+                        propertyDescription.setTitle(value);
+                        persistableProductOptionEntity.getDescriptions().add(propertyDescription);
+                        byCode =  persistableProductOptionValueMapper.merge(persistableProductOptionEntity,byCode, store, language);
+                        productOptionValueService.saveOrUpdate(byCode);
                     }
                     productVariant.setOptionValue(optionValueId);
                     productVariant.setCode(attributeName + ":" + value);
@@ -695,6 +775,7 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
                     PersistableVariation persistableVariation = new PersistableVariation();
                     persistableVariation.setVariationId(productVariationId);
                     persistableVariation.setOptionId(productOptionId);
+                    persistableVariation.setImageUrl(skuAttribute.getSkuImageUrl());
                     persistableVariation.setOptionValueId(optionValueId);
                     persistableVariationList.add(persistableVariation);
                 }
@@ -810,6 +891,45 @@ public class AlibabaProductFacadeImpl implements AlibabaProductFacade {
 
         // Perform the conversion
         return gramsBigDecimal.divide(conversionFactor);
+    }
+
+
+    @Override
+    public void update1688Product() throws ServiceException {
+        List<Long> listByOutId = productRepository.findListByOutId();
+        MerchantStore merchantStore = merchantService.getByCode("DEFAULT");
+
+        for (Long id : listByOutId) {
+            try {
+                Optional<Product> byId = productRepository.findById(id);
+                if (byId.isPresent()) {
+                    LOGGER.info(id + " begin import");
+
+                    Product product = byId.get();
+
+                    boolean isNeedBreak = false;
+                    List<com.salesmanager.core.model.catalog.product.description.ProductDescription> productDescriptionByProductId = productRepository.findProductDescriptionByProductId(id);
+                    if (productDescriptionByProductId !=null){
+                        for (com.salesmanager.core.model.catalog.product.description.ProductDescription pr : productDescriptionByProductId){
+                            if (pr.getLanguage().getCode().equals("cn")){
+                                isNeedBreak = true;
+                            }
+                        }
+                    }
+                    if (isNeedBreak){
+                        continue;
+                    }
+
+                    List<Category> categoryByProductId = productRepository.findCategoryByProductId(id);
+                    List<Long> collect = categoryByProductId.stream().map(Category::getId).collect(Collectors.toList());
+                    importProduct(Collections.singletonList(product.getOutProductId()), "ko", merchantStore,
+                            collect, PublishWayEnums.IMPORT_BY_1688);
+                    LOGGER.info(id + " import success");
+                }
+            }catch(Exception e){
+                LOGGER.error("++++++++++++"+ id + "++++++++++++++++import product error+++++++++++++++++++++++++++++++++", e);
+            }
+        }
     }
 
 }

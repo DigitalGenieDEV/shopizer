@@ -2,14 +2,18 @@ package com.salesmanager.shop.mapper.catalog.product;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionRepository;
 import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionValueRepository;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantGroupService;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
 import com.salesmanager.core.model.catalog.product.price.ProductPrice;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariantGroup;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,9 +28,7 @@ import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.mapper.Mapper;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
-import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
 
@@ -41,6 +43,9 @@ public class PersistableProductVariantMapper  {
 	
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ProductVariantGroupService productVariantGroupService;
 
 
 	@Autowired
@@ -64,42 +69,54 @@ public class PersistableProductVariantMapper  {
 		}
 
 		Set<ProductVariation> variations = new HashSet<>();
+		AtomicReference<ProductVariantGroup> productVariantGroupAtomicReference = new AtomicReference<>(new ProductVariantGroup());
 
-
-		if (CollectionUtils.isNotEmpty(persistableVariations)){
+		if (CollectionUtils.isNotEmpty(persistableVariations)) {
 			List<PersistableVariation> persistableVariationList = source.getProductVariations();
-			persistableVariationList.forEach(persistableVariation->{
-				if (persistableVariation.getVariationId() != null && persistableVariation.getVariationId() != 0){
-					Optional<ProductVariation> productVariationOptional = productVariationService.findOneById(persistableVariation.getVariationId());
-					if (productVariationOptional.isPresent()){
-						variations.add(productVariationOptional.get());
-					}else {
-						throw new ServiceRuntimeException("Cant find  ProductVariation id [" + persistableVariation.getVariationId() + "]");
-					}
-				}else if(persistableVariation.getOptionId() != null && persistableVariation.getOptionValueId() != null){
-					ProductVariation byOptionAndValue = productVariationService.findByOptionAndValue(store.getId(),
+
+			persistableVariationList.forEach(persistableVariation -> {
+				ProductVariation productVariation = null;
+
+				// 根据 variationId 查找
+				if (persistableVariation.getVariationId() != null && persistableVariation.getVariationId() != 0) {
+					productVariation = productVariationService.findOneById(persistableVariation.getVariationId())
+							.orElseThrow(() -> new ServiceRuntimeException("Can't find ProductVariation id [" + persistableVariation.getVariationId() + "]"));
+
+					// 根据 optionId 和 optionValueId 查找
+				} else if (persistableVariation.getOptionId() != null && persistableVariation.getOptionValueId() != null) {
+					productVariation = productVariationService.findByOptionAndValue(store.getId(),
 							persistableVariation.getOptionId(), persistableVariation.getOptionValueId());
-					if (byOptionAndValue != null){
-						variations.add(byOptionAndValue);
-					}else {
+
+					if (productVariation == null) {
 						try {
-							ProductVariation productVariation = createProductVariationIds(persistableVariation, store);
-							variations.add(productVariation);
+							productVariation = createProductVariationIds(persistableVariation, store);
 						} catch (ServiceException e) {
 							throw new RuntimeException(e);
 						}
 					}
-				}else {
+
+					// 创建新的 ProductVariation
+				} else {
 					try {
-						ProductVariation productVariation = createProductVariationIds(persistableVariation, store);
-						variations.add(productVariation);
+						productVariation = createProductVariationIds(persistableVariation, store);
 					} catch (ServiceException e) {
 						throw new ServiceRuntimeException("createProductVariationIds error [" + JSON.toJSONString(persistableVariation) + "]");
 					}
 				}
 
+				// 设置图片 URL 并添加到集合
+				if (productVariation != null) {
+					if (persistableVariation.getImageUrl() != null) {
+						ProductVariantGroup productVariantGroup = new ProductVariantGroup();
+						productVariantGroup.setProductVariation(productVariation);
+						productVariantGroup.setImageUrl(persistableVariation.getImageUrl());
+						productVariantGroupAtomicReference.set(productVariantGroup); // 更新带图片的变体
+					}
+					variations.add(productVariation);
+				}
 			});
 		}
+
 
 		destination.setVariations(variations);
 
@@ -150,6 +167,26 @@ public class PersistableProductVariantMapper  {
 		}
 
 		destination.setProduct(product);
+
+		if (source.getId() != null && source.getId() !=0){
+			ProductVariantGroup productVariantGroup = destination.getProductVariantGroup();
+			productVariantGroup.setImageUrl(productVariantGroupAtomicReference.get() ==null? null: productVariantGroupAtomicReference.get().getImageUrl());
+			try {
+				productVariantGroupService.saveOrUpdate(productVariantGroup);
+			} catch (ServiceException e) {
+				throw new RuntimeException(e);
+			}
+
+		}else {
+			try {
+				ProductVariantGroup productVariantGroup = productVariantGroupAtomicReference.get();
+				productVariantGroupService.saveOrUpdate(productVariantGroup);
+				destination.setProductVariantGroup(productVariantGroup);
+			} catch (ServiceException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
 		return destination;
 
 	}

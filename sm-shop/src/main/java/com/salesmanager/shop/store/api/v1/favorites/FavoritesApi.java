@@ -70,6 +70,30 @@ public class FavoritesApi {
         return listFavoriteProducts;
     }
 
+
+    @GetMapping(value = "/private/favorite/list")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(httpMethod = "GET", value = "get favorite products by userId", notes = "",
+            response = ReadableEntityList.class)
+    @ApiImplicitParams({@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")})
+    public ReadableEntityList<ReadableFavorites> getListFavoriteProductsByAdmin(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
+            @RequestParam(value = "nickName") String nickName,
+            @ApiIgnore Language language) {
+
+        Customer customer = customerService.getByNick(nickName);
+
+        // Fetch favorite products
+        ReadableEntityList<ReadableFavorites> listFavoriteProducts;
+        try {
+            listFavoriteProducts = favoritesFacade.getListFavoriteProducts(customer ==null? null : customer.getId(), page, count, language);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching favorite products", e);
+        }
+        return listFavoriteProducts;
+    }
+
     @GetMapping(value = "/auth/favorite/user/is_favorited/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(httpMethod = "GET", value = "product favorites count by user and productId", notes = "")

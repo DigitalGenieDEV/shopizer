@@ -18,4 +18,8 @@ public interface PageableFavoritesRepository extends PagingAndSortingRepository<
 	Page<Favorites> findByUserId(Long userId, Pageable pageable);
 
 
+
+	@Query("select f from Favorites f ")
+	Page<Favorites> findPage( Pageable pageable);
+
 }

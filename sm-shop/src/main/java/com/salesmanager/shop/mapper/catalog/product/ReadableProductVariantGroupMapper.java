@@ -61,13 +61,14 @@ public class ReadableProductVariantGroupMapper  {
 		//image id should be unique in the list
 		
 		Map<Long,ReadableImage> finalList = new HashMap<Long, ReadableImage>();
-		
-		List<ReadableImage> originalList = source.getImages().stream()
-				.map(i -> this.image(finalList, i, store, language))
-				.collect(Collectors.toList());
-		
 
-		destination.setImages(new ArrayList<ReadableImage>(finalList.values()));
+		destination.setImageUrl(source.getImageUrl());
+//		List<ReadableImage> originalList = source.getImages().stream()
+//				.map(i -> this.image(finalList, i, store, language))
+//				.collect(Collectors.toList());
+//
+
+//		destination.setImages(new ArrayList<ReadableImage>(finalList.values()));
 		
 		return destination;
 	}

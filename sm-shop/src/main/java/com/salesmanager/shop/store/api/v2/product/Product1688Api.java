@@ -237,4 +237,13 @@ public class Product1688Api {
 	}
 
 
+
+	@RequestMapping(value = {"/private/update1688Product"}, method = RequestMethod.GET)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+			@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko") })
+	@ResponseBody
+	void update1688Product() throws ServiceException {
+		alibabaProductFacade.update1688Product();
+	}
+
 }

@@ -106,7 +106,6 @@ public class PersistableProductOptionValueMapper
 			}
 			
 			
-			System.out.println("optionValueCode"+optionValueCode);
 			destination.setCode(optionValueCode );
 			destination.setMerchantStore(store);
 			destination.setProductOptionValueSortOrder(source.getSortOrder());

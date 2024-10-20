@@ -13,29 +13,23 @@ public interface ProductVariantGroupRepository extends JpaRepository<ProductVari
 	
 	@Query("select distinct p from ProductVariantGroup p"
 			+ " left join fetch p.productVariants pp"
-			+ " left join fetch p.images ppi"
-			+ " left join fetch ppi.descriptions ppid "
-			+ " where p.id = ?1 and p.merchantStore.code = ?2")
-	Optional<ProductVariantGroup> findOne(Long id, String storeCode);
+			+ " where p.id = ?1 ")
+	Optional<ProductVariantGroup> findOne(Long id);
 	
 	
 	@Query("select distinct p from ProductVariantGroup p "
 			+ "left join fetch p.productVariants pp "
-			+ "left join fetch p.images ppi "
-			+ "left join fetch ppi.descriptions ppid "
 			+ "join fetch pp.product ppp "
 			+ "join fetch ppp.merchantStore pppm "
-			+ "where pp.id = ?1 and p.merchantStore.code = ?2")
-	Optional<ProductVariantGroup> finByProductVariant(Long productVariantId, String storeCode);
+			+ "where pp.id = ?1")
+	Optional<ProductVariantGroup> finByProductVariant(Long productVariantId);
 	
 	@Query("select distinct p from ProductVariantGroup p "
 			+ "left join fetch p.productVariants pp "
-			+ "left join fetch p.images ppi "
-			+ "left join fetch ppi.descriptions ppid "
 			+ "join fetch pp.product ppp "
 			+ "join fetch ppp.merchantStore pppm "
-			+ "where ppp.id = ?1 and p.merchantStore.code = ?2")
-	List<ProductVariantGroup> finByProduct(Long productId, String storeCode);
+			+ "where ppp.id = ?1 ")
+	List<ProductVariantGroup> finByProduct(Long productId);
 	
 
 }

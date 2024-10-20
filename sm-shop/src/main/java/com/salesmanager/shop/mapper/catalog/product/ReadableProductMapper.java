@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariantGroup;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import org.apache.commons.collections4.CollectionUtils;
@@ -616,7 +617,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 	}
 
 	private Optional<ReadableProductOptionValue> optionValue(ProductOptionValue optionValue, MerchantStore store,
-			Language language) {
+			Language language, ProductVariantGroup productVariantGroup) {
 
 		if (optionValue == null) {
 			return Optional.empty();
@@ -627,10 +628,12 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription valueDescription = new com.salesmanager.shop.model.catalog.product.attribute.ProductOptionValueDescription();
 		valueDescription.setLanguage(language.getCode());
 
-		if (!StringUtils.isBlank(optionValue.getProductOptionValueImage())) {
-			optValue.setImage(
-					imageUtils.buildProductPropertyImageUtils(store, optionValue.getProductOptionValueImage()));
-		}
+//		if (!StringUtils.isBlank(optionValue.getProductOptionValueImage())) {
+//			optValue.setImage(
+//					imageUtils.buildProductPropertyImageUtils(store, optionValue.getProductOptionValueImage()));
+//		}
+
+		optValue.setImage(productVariantGroup ==null? null : productVariantGroup.getImageUrl());
 		optValue.setSortOrder(0);
 
 		if (optionValue.getProductOptionValueSortOrder() != null) {
@@ -668,12 +671,15 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 			return;
 		}
 
+		ProductVariantGroup productVariantGroup = instance.getProductVariantGroup();
+
 		for (ProductVariation variation : instance.getVariations()) {
 			ReadableProductOption option = this.option(selectableOptions, variation.getProductOption(), language);
 			if (option != null) {
 				option.setVariant(true);
 			}
-			Optional<ReadableProductOptionValue> optionValueOpt = this.optionValue(variation.getProductOptionValue(), store, language);
+
+			Optional<ReadableProductOptionValue> optionValueOpt = this.optionValue(variation.getProductOptionValue(), store, language, productVariantGroup);
 			if (optionValueOpt.isPresent()) {
 				ReadableProductOptionValue optionValue = optionValueOpt.get();
 				optionValue.setId(instance.getId());

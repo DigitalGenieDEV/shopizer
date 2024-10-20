@@ -20,4 +20,7 @@ public interface AlibabaProductFacade {
 
 
     ReadableProductPageInfo searchProductByKeywords(AlibabaProductSearchKeywordQueryParam queryParam) throws ServiceException;
+
+    void update1688Product() throws ServiceException;
+
 }

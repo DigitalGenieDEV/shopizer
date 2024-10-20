@@ -17,8 +17,6 @@ public interface PageableProductVariantRepositoty extends PagingAndSortingReposi
 			+ "left join fetch pvpo.descriptions pvpod "
 			+ "left join fetch pvpov.descriptions pvpovd "
 			+ "left join fetch p.productVariantGroup pig "
-			+ "left join fetch pig.images pigi "
-			+ "left join fetch pigi.descriptions pigid "
 			+ "left join fetch pr.merchantStore prm "
 			+ "where pr.id = ?2 and prm.id = ?1",
 			countQuery = "select count(p) from ProductVariant p "

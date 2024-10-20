@@ -9,8 +9,9 @@ import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProdu
 public class ReadableProductVariantGroup extends ProductVariantGroup {
 
 	private static final long serialVersionUID = 1L;
-	
-	List<ReadableImage> images = new ArrayList<ReadableImage>();
+
+
+//	List<ReadableImage> images = new ArrayList<ReadableImage>();
 	
 	private List<ReadableProductVariant> productVariants = new ArrayList<ReadableProductVariant>();
 	public List<ReadableProductVariant> getproductVariants() {
@@ -19,11 +20,12 @@ public class ReadableProductVariantGroup extends ProductVariantGroup {
 	public void setproductVariants(List<ReadableProductVariant> productVariants) {
 		this.productVariants = productVariants;
 	}
-	public List<ReadableImage> getImages() {
-		return images;
-	}
-	public void setImages(List<ReadableImage> images) {
-		this.images = images;
-	}
+//	public List<ReadableImage> getImages() {
+//		return images;
+//	}
+//	public void setImages(List<ReadableImage> images) {
+//		this.images = images;
+//	}
+
 
 }

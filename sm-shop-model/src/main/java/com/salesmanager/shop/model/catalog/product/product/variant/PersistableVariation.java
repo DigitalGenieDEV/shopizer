@@ -8,6 +8,8 @@ public class PersistableVariation {
 
     private Long variationId;
 
+    private String imageUrl;
+
     private Long optionId;
 
     private Long optionValueId;
@@ -34,5 +36,13 @@ public class PersistableVariation {
 
     public void setVariationId(Long variationId) {
         this.variationId = variationId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

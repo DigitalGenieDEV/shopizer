@@ -16,6 +16,7 @@ import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("productOptionService")
 public class ProductOptionServiceImpl extends
@@ -113,6 +114,8 @@ public class ProductOptionServiceImpl extends
 	}
 
 
+	@Override
+	@Transactional
 	public ProductOption getByCode(String optionCode) {
 		return productOptionRepository.findByCode(optionCode);
 	}
