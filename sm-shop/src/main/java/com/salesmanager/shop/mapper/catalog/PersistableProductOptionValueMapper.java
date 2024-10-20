@@ -93,7 +93,21 @@ public class PersistableProductOptionValueMapper
 				}
 			}
 			destination.setProductOptionValueImage(source.getImage());
-			destination.setCode(source.getCode().equals("") ? productOptionService2.getOptionValueCode() :  source.getCode() );
+			String optionValueCode = "";
+
+			if(source.getCode().equals("")) {
+				optionValueCode =  productOptionService2.getOptionValueCode();
+			}else {
+				if(source.getCode().indexOf("ETC")  != -1 || source.getCode().indexOf("BIGO") != -1) {
+					optionValueCode =  productOptionService2.getOptionValueCode();
+				}else {
+					optionValueCode = source.getCode();
+				}
+			}
+			
+			
+			System.out.println("optionValueCode"+optionValueCode);
+			destination.setCode(optionValueCode );
 			destination.setMerchantStore(store);
 			destination.setProductOptionValueSortOrder(source.getSortOrder());
 

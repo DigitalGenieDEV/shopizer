@@ -45,4 +45,7 @@ public interface ProductOptionService2  extends SalesManagerEntityService<Long, 
 	List<ReadProductOptionValue>  getListOptionKeywordValues(MerchantStore store, Language language,  int setId, int categoryId, String keyword) throws ServiceException;
 
 	void insertOptionSetValue(Long setID, Long valueId)  throws ServiceException;
+	
+	void deleteProductAttribute(Long productId)  throws ServiceException;
 }
+
