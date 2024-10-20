@@ -37,7 +37,8 @@ public class ReadableCombineTransactionPopulator extends AbstractDataPopulator<C
             target.setTransactionType(source.getTransactionType());
             target.setTransactionDate(DateUtil.formatDate(source.getTransactionDate()));
             target.setId(source.getId());
-
+            target.setPayOrderNo(source.getPayOrderNo());
+            target.setRelationOrderIdList(source.getRelationOrderIdList());
             if (source.getCustomerOrder() != null) {
                 target.setCustomerOrderId(source.getCustomerOrder().getId());
             }

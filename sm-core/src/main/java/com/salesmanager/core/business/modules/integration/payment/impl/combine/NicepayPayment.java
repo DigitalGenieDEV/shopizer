@@ -6,6 +6,7 @@ import com.salesmanager.core.business.modules.integration.payment.impl.combine.n
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.PaymentType;
@@ -24,7 +25,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class NicepayPayment implements CombinePaymentModule {
 
@@ -49,6 +52,9 @@ public class NicepayPayment implements CombinePaymentModule {
         combineTransaction.setTransactionDate(new Date());
         combineTransaction.setTransactionType(TransactionType.INIT);
         combineTransaction.setPaymentType(PaymentType.NICEPAY);
+        combineTransaction.setPayOrderNo(customerOrder.getOrderNo());
+        List<Long> orderList = customerOrder.getOrders().stream().map(Order::getId).collect(Collectors.toList());
+        combineTransaction.setRelationOrderIdList(orderList);
 
         combineTransaction.getTransactionDetails().put("CLIENT_ID", CLIENT_ID);
         return combineTransaction;
@@ -65,8 +71,7 @@ public class NicepayPayment implements CombinePaymentModule {
     }
 
     @Override
-    public CombineTransaction
-    authorizeAndCapture(MerchantStore store, Customer customer, CustomerOrder order, BigDecimal amount, Payment payment, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
+    public CombineTransaction authorizeAndCapture(MerchantStore store, Customer customer, CustomerOrder order, BigDecimal amount, Payment payment, IntegrationConfiguration configuration, IntegrationModule module) throws IntegrationException {
         CombineTransaction combineTransaction = new CombineTransaction();
         combineTransaction.setAmount(amount);
         combineTransaction.setCustomerOrder(order);
@@ -85,7 +90,8 @@ public class NicepayPayment implements CombinePaymentModule {
         combineTransaction.getTransactionDetails().put("currency", metaData.get("currency"));
         combineTransaction.getTransactionDetails().put("amount", metaData.get("amount"));
         combineTransaction.getTransactionDetails().put("orderId", metaData.get("orderId"));
-        combineTransaction.getTransactionDetails().put("paymentMode", metaData.get("paymentMode"));
+        combineTransaction.getTransactionDetails().put("raw", metaData.get("raw"));
+
 
         return combineTransaction;
     }

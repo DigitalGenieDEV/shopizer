@@ -333,7 +333,6 @@ public class PaymentServiceImpl implements PaymentService {
 			LOGGER.warn("Transaction type " + sTransactionType + " does noe exist, using default AUTHORIZECAPTURE");
 			sTransactionType = "AUTHORIZECAPTURE";
 		}
-
 		
 
 		if(sTransactionType.equals(TransactionType.AUTHORIZE.name())) {

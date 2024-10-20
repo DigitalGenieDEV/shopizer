@@ -44,9 +44,6 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
     private CombinePaymentService combinePaymentService;
 
     @Inject
-    private PaymentService paymentService;
-
-    @Inject
     private ReadableCombineTransactionPopulator trxPopulator;
 
     @Inject
@@ -58,44 +55,25 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
     @Inject
     private CustomerService customerService;
 
-    @Inject
-    private PricingService pricingService;
-
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private FulfillmentSubOrderService fulfillmentSubOrderService;
-
-    @Autowired
-    private FulfillmentMainOrderService fulfillmentMainOrderService;
     @Override
     public ReadableCombineTransaction processNicepayAuthorizeResponse(
             Map<String, String> responseMap,
             MerchantStore store,
             Language language
     ) throws Exception {
-        Long orderId = Long.valueOf(responseMap.get("orderId"));
-        CustomerOrder customerOrder = null;
-        Order order = null;
-        BigDecimal orderAmount = null;
-        if (responseMap.get("paymentMode") == null) {
-            customerOrder = customerOrderService.getCustomerOrder(orderId);
-            if (customerOrder == null) {
-                throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
-            }
-            orderAmount = customerOrder.getTotal();
-        } else {
-            // partial payment
-            Long customerOrderId = orderService.findCustomerOrderIdByOrderId(orderId);
-            customerOrder = customerOrderService.getCustomerOrder(customerOrderId);
-            if (customerOrder == null) {
-                throw new ServiceException("customer order [" + responseMap.get("orderId") + "] not found");
-            }
-            order = orderService.getOrder(orderId, (MerchantStore) null);
-            orderAmount = order.getTotal();
+        // there orderId means payOrderNo is relation with CombineTransaction payOrderNo.
+        String payOrderNo = responseMap.get("orderId");
+        CombineTransaction combineTransaction = combineTransactionService.getCombineTransactionByPayOrderNo(payOrderNo);
+
+        if (combineTransaction == null) {
+            throw new ServiceException(String.format("payOrderId:[%s] can not find relation pay order information", payOrderNo));
         }
-        checkPayAmount(responseMap, orderAmount);
+
+        CustomerOrder customerOrder = combineTransaction.getCustomerOrder();
+        checkPayAmount(responseMap, customerOrder.getTotal());
 
         Customer customer = customerService.getById(customerOrder.getCustomerId());
 
@@ -103,17 +81,15 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
         payment.setPaymentType(PaymentType.NICEPAY);
         payment.setTransactionType(TransactionType.AUTHORIZECAPTURE);
         payment.setModuleName("Nicepay");
-        payment.setAmount(orderAmount);
+        payment.setAmount(customerOrder.getTotal());
         payment.setPaymentMetaData(responseMap);
 
-        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, order, customer, store, payment);
+        combinePaymentService.processPaymentNextTransaction(customerOrder, customer, store, payment);
 
         ReadableCombineTransaction transaction = new ReadableCombineTransaction();
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        // if pay amount is equals total customer order amount, then order status is PAYMENT_COMPLETED, else if PARTIAL_PAYMENT
-        OrderStatus nextOrderStatus = processNextCustomerOrderStatus(order, customerOrder);
-        customerOrderService.updateCustomerOrderStatus(customerOrder, order, nextOrderStatus);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -131,25 +107,6 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
         }
     }
 
-    private OrderStatus processNextCustomerOrderStatus(Order order, CustomerOrder customerOrder) throws ServiceException {
-        // check is completed or partial_payment
-        OrderStatus nextOrderStatus = OrderStatus.PARTIAL_PAYMENT;
-        if (order != null) {
-            List<CombineTransaction> combineTransactions = combineTransactionService.listCombineTransactions(customerOrder);
-            List<CombineTransaction> paymentCombineTransactions = combineTransactions.stream()
-                    .filter(each -> TransactionType.AUTHORIZECAPTURE.equals(each.getTransactionType()) || TransactionType.CAPTURE.equals(each.getTransactionType()))
-                    .collect(Collectors.toList());
-            BigDecimal totalPayAmount = BigDecimal.ZERO;
-            for (CombineTransaction paymentCombineTransaction : paymentCombineTransactions) {
-                totalPayAmount = totalPayAmount.add(paymentCombineTransaction.getAmount());
-            }
-            if (totalPayAmount.compareTo(customerOrder.getTotal()) == 0) {
-                nextOrderStatus = OrderStatus.PAYMENT_COMPLETED;
-            }
-        }
-        return nextOrderStatus;
-    }
-
     @Override
     public ReadableCombineTransaction saveNicepayToken(Customer customer, CustomerOrder customerOrder, String ncToken, MerchantStore store, Language language) throws ServiceException, ConversionException {
         Payment payment = new Payment();
@@ -162,7 +119,7 @@ public class PaymentAuthorizeFacadeImpl implements PaymentAuthorizeFacade {
 
         payment.setPaymentMetaData(paymentMetadata);
 
-        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, null, customer, store, payment);
+        CombineTransaction combineTransaction = combinePaymentService.processPaymentNextTransaction(customerOrder, customer, store, payment);
 
         ReadableCombineTransaction transaction = new ReadableCombineTransaction();
 

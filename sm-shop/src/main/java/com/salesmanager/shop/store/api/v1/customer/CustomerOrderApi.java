@@ -1,20 +1,22 @@
 package com.salesmanager.shop.store.api.v1.customer;
 
+import com.google.common.collect.Lists;
 import com.salesmanager.core.business.services.customer.CustomerService;
 import com.salesmanager.core.business.services.customer.order.CustomerOrderService;
+import com.salesmanager.core.business.services.order.OrderServiceImpl;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.CustomerOrder;
 import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.Order;
 import com.salesmanager.core.model.order.OrderCustomerCriteria;
 import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
-import com.salesmanager.shop.model.board.ReadableBoard;
-import com.salesmanager.shop.model.catalog.catalog.ReadableCatalog;
 import com.salesmanager.shop.model.customer.ReadableCustomer;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrder;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderConfirmation;
 import com.salesmanager.shop.model.customer.order.ReadableCustomerOrderList;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 import com.salesmanager.shop.model.order.v0.ReadableOrder;
 import com.salesmanager.shop.model.order.v0.ReadableOrderList;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
@@ -27,6 +29,7 @@ import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -34,14 +37,13 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -65,6 +67,8 @@ public class CustomerOrderApi {
 
     @Inject
     private OrderFacade orderFacade;
+    @Autowired
+    private OrderServiceImpl orderService;
 
     /**
      * List orders for authenticated customers
@@ -433,6 +437,7 @@ public class CustomerOrderApi {
     @ApiImplicitParams({@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT"),
             @ApiImplicitParam(name = "lang", dataType = "string", defaultValue = "ko")})
     public ReadableCustomerOrderConfirmation partialPay(@PathVariable Long id,
+                                                        @Valid @RequestBody PersistablePayment persistablePayment,
                                                         @ApiIgnore MerchantStore merchantStore, @ApiIgnore Language language,
                                                         HttpServletRequest request,
                                                         HttpServletResponse response, Locale locale) throws Exception {
@@ -446,16 +451,20 @@ public class CustomerOrderApi {
             throw new ResourceNotFoundException("Error while partial pay, customer not authorized");
         }
 
-        ReadableOrder readableOrder = orderFacade.getReadableOrder(id, merchantStore, language);
-        if (readableOrder == null) {
-            throw new ResourceNotFoundException("Error while partial pay, order not found");
+        Long customerOrderId = orderService.findCustomerOrderIdByOrderId(id);
+        if (customerOrderId == null) {
+            throw new ResourceNotFoundException("Error while partial pay, order relation pay order is not found");
         }
 
-        Long customerOrderId = readableOrder.getCustomerOrderId();
+        Order order = orderService.getOrder(id, customer);
+
+        // 这里重新创建一个CustomOrder并创建一个新的支付单
         CustomerOrder customerOrder = customerOrderService.getCustomerOrder(customerOrderId);
+        customerOrder.setOrders(Lists.newArrayList(order));
+        customerOrder.setTotal(order.getTotal());
 
-        ReadableCustomerOrderConfirmation readableCustomerOrderConfirmation = customerOrderFacade.orderConfirmation(customerOrder, customer, language, id);
+        customerOrder = customerOrderFacade.replicateCustomerOrder(customerOrder, persistablePayment, customer, language);
 
-        return readableCustomerOrderConfirmation;
+        return customerOrderFacade.orderConfirmation(customerOrder, customer, language, id);
     }
 }

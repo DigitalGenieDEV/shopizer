@@ -50,7 +50,7 @@ public interface CombinePaymentService {
 
     List<PaymentMethod> getAcceptedPaymentMethods(MerchantStore merchantStore) throws ServiceException;
 
-    CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Order order, Customer customer, MerchantStore store, Payment payment) throws ServiceException;
+    CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException;
 
     CombinePaymentModule getPaymentModule(String paymentModuleCode) throws ServiceException;
 

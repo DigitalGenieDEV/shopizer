@@ -78,7 +78,6 @@ public class NicepayPayment implements PaymentModule {
         transaction.getTransactionDetails().put("currency", metaData.get("currency"));
         transaction.getTransactionDetails().put("amount", metaData.get("amount"));
         transaction.getTransactionDetails().put("orderId", metaData.get("orderId"));
-        transaction.getTransactionDetails().put("paymentMode", metaData.get("paymentMode"));
 
         return transaction;
     }
@@ -87,7 +86,8 @@ public class NicepayPayment implements PaymentModule {
     public Transaction refund(boolean partial, MerchantStore store, Transaction lastTransaction, Order order, BigDecimal amount, IntegrationConfiguration configuration, IntegrationModule module, String reason) throws IntegrationException {
 
         String tid = lastTransaction.getTransactionDetails().get("tid");
-        String orderId = lastTransaction.getTransactionDetails().get("orderId");
+        // if partial refund, should provide unique order id.
+        String orderId = String.valueOf(order.getId());
 
         NicepayResponse nicepayResponse = cancelNicepayOrder(com.salesmanager.core.business.modules.integration.payment.impl.combine.NicepayPayment.CLIENT_ID,
                 com.salesmanager.core.business.modules.integration.payment.impl.combine.NicepayPayment.CLIENT_SECRET, tid, orderId, reason, String.valueOf(amount.intValue()));

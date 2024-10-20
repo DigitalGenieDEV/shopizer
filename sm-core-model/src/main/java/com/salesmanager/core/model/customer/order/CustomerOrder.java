@@ -7,6 +7,8 @@ import com.salesmanager.core.enmus.TruckTransportationCompanyEnums;
 import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.common.Billing;
 import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.Order;
@@ -32,7 +34,7 @@ import java.util.Locale;
 
 @Entity
 @Table(name="CUSTOMER_ORDERS")
-public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
+public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> implements Auditable {
 
     /**
      *
@@ -70,7 +72,11 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Column (name ="ORDER_TOTAL")
     private BigDecimal total;
 
+    /**
+     * @deprecated use {@link AuditSection#getOperatorIp()}
+     */
     @Column (name ="IP_ADDRESS")
+    @Deprecated
     private String ipAddress;
 
     @Embedded
@@ -224,6 +230,9 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
     @Column(name = "SOURCE")
     @Enumerated(EnumType.STRING)
     private OrderSource source;
+
+    @Embedded
+    private AuditSection auditSection = new AuditSection();
 
 
     public static long getSerialVersionUID() {
@@ -513,5 +522,15 @@ public class CustomerOrder extends SalesManagerEntity<Long, CustomerOrder> {
 
     public void setSource(OrderSource source) {
         this.source = source;
+    }
+
+    @Override
+    public AuditSection getAuditSection() {
+        return auditSection;
+    }
+
+    @Override
+    public void setAuditSection(AuditSection auditSection) {
+        this.auditSection = auditSection;
     }
 }

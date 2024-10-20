@@ -19,4 +19,7 @@ public interface CombineTransactionRepository extends JpaRepository<CombineTrans
     List<CombineTransaction> findByDates(
             @Param("from") @Temporal(javax.persistence.TemporalType.TIMESTAMP) Date startDate,
             @Param("to") @Temporal(javax.persistence.TemporalType.TIMESTAMP) Date endDate);
+
+    List<CombineTransaction> findCombineTransactionByPayOrderNo(String payOrderNo);
+
 }

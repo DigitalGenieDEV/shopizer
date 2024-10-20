@@ -19,21 +19,17 @@ import com.salesmanager.core.business.services.shipping.ShippingService;
 import com.salesmanager.core.business.services.shoppingcart.ShoppingCartService;
 import com.salesmanager.core.business.services.tax.TaxService;
 import com.salesmanager.core.business.utils.AdditionalServicesUtils;
-import com.salesmanager.core.enmus.TruckModelEnums;
-import com.salesmanager.core.enmus.TruckTypeEnums;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.PublishWayEnums;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.common.UserContext;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.fulfillment.AdditionalServices;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.order.orderproduct.OrderProduct;
-import com.salesmanager.core.model.order.orderproduct.OrderProductPrice;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.model.payments.Payment;
@@ -152,8 +148,8 @@ public class OrderServiceImpl  extends SalesManagerEntityServiceImpl<Long, Order
     }
 
     @Override
-    public Long findCustomerOrderIdByOrderId(Long orderProductId) {
-        return orderRepository.findCustomerOrderIdByOrderId(orderProductId);
+    public Long findCustomerOrderIdByOrderId(Long orderId) {
+        return orderRepository.findCustomerOrderIdByOrderId(orderId);
     }
 
     private Order process(Order order, Customer customer, List<ShoppingCartItem> items, OrderTotalSummary summary, Payment payment, Transaction transaction, MerchantStore store) throws ServiceException {

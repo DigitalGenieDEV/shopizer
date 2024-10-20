@@ -78,11 +78,26 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         else {
             LOGGER.info("get customer shopping cart populate [customer:" + customer.getId() +"]");
             getPopulatedCustomerShoppingCart(cartModel);
+
+            if (cartModel.isObsolete()) {
+                deleteObsoleteCartItem(cartModel);
+            }
+
         }
 
 //        cartModel = this.customerShoppingCartRepository.findByCode(cartModel.getCustomerShoppingCartCode());
 
         return cartModel;
+    }
+
+    private void deleteObsoleteCartItem(CustomerShoppingCart cartModel) {
+        Set<CustomerShoppingCartItem> lineItems = cartModel.getLineItems();
+        // for loop to delete cart item and remove line items
+        lineItems.stream().filter(CustomerShoppingCartItem::isObsolete)
+                .map(CustomerShoppingCartItem::getId)
+                .forEach(this::deleteCustomerShoppingCartItem);
+        lineItems.removeIf(CustomerShoppingCartItem::isObsolete);
+        cartModel.setLineItems(lineItems);
     }
 
     private String uniqueShoppingCartCode() {
@@ -132,7 +147,6 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         }
     }
 
-    @Transactional(noRollbackFor = { org.springframework.dao.EmptyResultDataAccessException.class })
     private CustomerShoppingCart getPopulatedCustomerShoppingCart(final CustomerShoppingCart customerShoppingCart) throws ServiceException {
         try {
             boolean cartIsObsolete = false;
@@ -196,10 +210,7 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         if (isSampleCartItemType) {
             // use sample price
             FinalPrice finalPrice = new FinalPrice();
-            BigDecimal samplePrice = product.getSamplePrice();;
-            if ("CNY".equals(product.getSamplePriceCurrency())) {
-                samplePrice = exchangeRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(product.getSamplePrice());
-            }
+            BigDecimal samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
             finalPrice.setOriginalPrice(samplePrice);
             finalPrice.setFinalPrice(samplePrice);
             finalPrice.setProductPrice(new ProductPriceDO());

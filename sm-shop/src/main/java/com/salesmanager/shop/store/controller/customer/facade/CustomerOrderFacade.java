@@ -8,6 +8,7 @@ import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.customer.order.*;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
+import com.salesmanager.shop.model.order.transaction.PersistablePayment;
 
 import java.util.Locale;
 
@@ -28,4 +29,16 @@ public interface CustomerOrderFacade {
     ReadableCombineTransaction authorizeCaptureCustomerOrder(MerchantStore store, CustomerOrder customerOrder, Customer customer, Language language) throws Exception;
 
     ReadableCombineTransaction processPostPayment(MerchantStore store, CustomerOrder customerOrder, Customer customer, Payment payment, Language language) throws Exception;
+
+    /**
+     * replicate a new customerOrder in order to create a new pay order and continue payment
+     *
+     * @param customerOrder
+     * @param customer
+     * @param language
+     * @param persistablePayment
+     * @return
+     */
+    CustomerOrder replicateCustomerOrder(CustomerOrder customerOrder, PersistablePayment persistablePayment, Customer customer, Language language);
+
 }

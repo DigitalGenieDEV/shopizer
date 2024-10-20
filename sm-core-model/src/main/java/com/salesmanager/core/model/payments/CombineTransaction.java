@@ -1,5 +1,7 @@
 package com.salesmanager.core.model.payments;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.model.common.audit.AuditListener;
 import com.salesmanager.core.model.common.audit.AuditSection;
@@ -16,6 +18,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -61,6 +64,12 @@ public class CombineTransaction extends SalesManagerEntity<Long, CombineTransact
     @Column(name="DETAILS")
     @Type(type = "org.hibernate.type.TextType")
     private String details;
+
+    @Column(name = "PAY_ORDER_NO")
+    private String payOrderNo;
+
+    @Column(name = "RELATION_ORDER_IDS", length = 4096)
+    private String relationOrderIds;
 
     @Transient
     private Map<String,String> transactionDetails= new HashMap<String,String>();
@@ -144,6 +153,51 @@ public class CombineTransaction extends SalesManagerEntity<Long, CombineTransact
     public void setTransactionDetails(Map<String, String> transactionDetails) {
         this.transactionDetails = transactionDetails;
     }
+
+    public String getPayOrderNo() {
+        return payOrderNo;
+    }
+
+    public void setPayOrderNo(String payOrderNo) {
+        this.payOrderNo = payOrderNo;
+    }
+
+    public String getRelationOrderIds() {
+        return relationOrderIds;
+    }
+
+    public void setRelationOrderIds(String relationOrderIds) {
+        this.relationOrderIds = relationOrderIds;
+    }
+
+    public List<Long> getRelationOrderIdList() {
+        if (relationOrderIds == null) {
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(relationOrderIds, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse relationOrderIds",e);
+        }
+        return null;
+    }
+
+    public void setRelationOrderIdList(List<Long> relationOrderIdList) {
+        if (relationOrderIdList == null) {
+            this.relationOrderIds = null;
+            return;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.relationOrderIds = mapper.writeValueAsString(relationOrderIdList);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse relationOrderIds",e);
+        }
+    }
+
+
 
     @Override
     public String toJSONString() {

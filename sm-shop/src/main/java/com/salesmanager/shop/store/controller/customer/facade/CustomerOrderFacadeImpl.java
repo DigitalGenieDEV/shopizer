@@ -126,6 +126,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
     private PricingService pricingService;
 
     @Inject
+    private PersistablePaymentPopulator paymentPopulator;
+
+    @Inject
     private CombinePaymentService combinePaymentService;
 
     @Inject
@@ -265,11 +268,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
 
             LOGGER.info("[processCustomerOrder] process customer order payment");
-            PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
-            paymentPopulator.setPricingService(pricingService);
-            Payment paymentModel = new Payment();
             customerOrder.getPayment().setAmount(String.valueOf(total));
-            paymentPopulator.populate(customerOrder.getPayment(), paymentModel, null, language);
+            Payment paymentModel = paymentPopulator.populate(customerOrder.getPayment(), null, language);
 
             modelCustomerOrder = customerOrderService.processCustomerOrder(modelCustomerOrder, customer, lineItems, paymentModel);
 
@@ -479,7 +479,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -494,7 +494,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -536,5 +536,26 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         return item;
 
+    }
+
+    @Override
+    public CustomerOrder replicateCustomerOrder(CustomerOrder customerOrder, PersistablePayment persistablePayment, Customer customer, Language language) {
+
+        try {
+            customerOrder.setId(null);
+            customerOrder.getAuditSection().setDateCreated(null);
+            customerOrder.getAuditSection().setDateModified(null);
+
+            persistablePayment.setAmount(customerOrder.getTotal().toString());
+
+            Payment payment = paymentPopulator.populate(persistablePayment, new Payment(), null, language);
+
+            customerOrder = customerOrderService.processCustomerOrder(customerOrder, customer, null, payment);
+        } catch (ConversionException | ServiceException e) {
+            LOGGER.error("Error while replicate pay order", e);
+            throw new ServiceRuntimeException("Error while replicate pay order", e);
+        }
+
+        return customerOrder;
     }
 }

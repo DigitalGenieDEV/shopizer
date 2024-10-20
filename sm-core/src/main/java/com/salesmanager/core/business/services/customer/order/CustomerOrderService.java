@@ -31,7 +31,7 @@ public interface CustomerOrderService extends SalesManagerEntityService<Long, Cu
 
     void saveOrUpdate(CustomerOrder customerOrder) throws ServiceException;
 
-    void updateCustomerOrderStatus(CustomerOrder customerOrder, Order order, OrderStatus orderStatus) throws ServiceException;
+    void updateCustomerOrderStatus(CustomerOrder customerOrder, OrderStatus orderStatus) throws ServiceException;
 
     CustomerOrder processCustomerOrder(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment) throws ServiceException;
 

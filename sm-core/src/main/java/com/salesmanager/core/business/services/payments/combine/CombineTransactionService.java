@@ -22,4 +22,6 @@ public interface CombineTransactionService extends SalesManagerEntityService<Lon
     List<CombineTransaction> listCombineTransactions(Date startDate, Date endDate) throws ServiceException;
 
     CombineTransaction lastCombineTransaction(CustomerOrder customerOrder) throws ServiceException;
+
+    CombineTransaction getCombineTransactionByPayOrderNo(String payOrderNo);
 }
