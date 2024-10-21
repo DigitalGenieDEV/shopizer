@@ -13,6 +13,7 @@ import com.salesmanager.shop.store.controller.customer.facade.v1.CustomerFacade;
 import com.salesmanager.shop.store.controller.favorites.facade.FavoritesFacade;
 import com.salesmanager.shop.store.error.ErrorCodeEnums;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,11 +80,17 @@ public class FavoritesApi {
     public ReadableEntityList<ReadableFavorites> getListFavoriteProductsByAdmin(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "count", required = false, defaultValue = "10") Integer count,
-            @RequestParam(value = "nickName") String nickName,
+            @RequestParam(value = "nickName", required = false) String nickName,
+            @RequestParam(value = "customerId", required = false) Long customerId,
             @ApiIgnore Language language) {
 
-        Customer customer = customerService.getByNick(nickName);
-
+        Customer customer = null;
+        if (customerId !=null){
+            customer  = customerService.getById(customerId);
+        }
+        if (StringUtils.isNotEmpty(nickName)){
+            customer  = customerService.getByNick(nickName);
+        }
         // Fetch favorite products
         ReadableEntityList<ReadableFavorites> listFavoriteProducts;
         try {

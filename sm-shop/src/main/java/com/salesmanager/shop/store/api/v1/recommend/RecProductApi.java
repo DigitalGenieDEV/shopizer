@@ -135,4 +135,20 @@ public class RecProductApi {
         return recProductFacade.getRecentView(request, language);
     }
 
+
+    @PostMapping("/private/recent_view")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+            @ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "ko")
+    })
+    public ReadableRecProductList getRecFootPrintByAdmin(
+            @RequestBody RecFootPrintRequest request,
+            @ApiIgnore Language language
+    ) throws Exception {
+        if (request.getUid() == null){
+            return new ReadableRecProductList();
+        }
+        return recProductFacade.getRecentView(request, language);
+    }
+
 }
