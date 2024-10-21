@@ -104,7 +104,7 @@ public class PersistableProductAttributeMapper implements Mapper<PersistableProd
 			
 			//ProductOption value is text
 			productOptionValue = new ProductOptionValue();
-			productOptionValue.setProductOptionDisplayOnly(true);
+			productOptionValue.setProductOptionDisplayOnly(source.getOptionValue().isDefaultValue());
 			productOptionValue.setCode(!StringUtils.isBlank(source.getOptionValue().getCode()) ? source.getOptionValue().getCode() : UUID.randomUUID().toString());
 			productOptionValue.setCode(UUID.randomUUID().toString());
 			productOptionValue.setMerchantStore(store);
