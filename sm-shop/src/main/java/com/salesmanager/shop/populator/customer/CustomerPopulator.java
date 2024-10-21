@@ -248,7 +248,11 @@ public class CustomerPopulator extends AbstractDataPopulator<PersistableCustomer
 				target.setCompany(source.getCompany());
 			}
 
-			if (StringUtils.isBlank(target.getBusinessNumber())) { // added by BE 2024.05.23
+//			수정 gunu 2024.10.21
+//			if (StringUtils.isBlank(target.getBusinessNumber())) { // added by BE 2024.05.23
+//				target.setBusinessNumber(source.getBusinessNumber());
+//			}
+			if (!StringUtils.isBlank(source.getBusinessNumber())) {
 				target.setBusinessNumber(source.getBusinessNumber());
 			}
 
