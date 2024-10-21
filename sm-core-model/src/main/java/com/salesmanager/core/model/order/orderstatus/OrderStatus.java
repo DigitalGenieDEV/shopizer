@@ -24,7 +24,7 @@ public enum OrderStatus {
 	PAYMENT_COMPLETED("PAYMENT_COMPLETED"),
 
 	/**
-	 * 买家确认
+	 * 卖家确认
 	 */
 	PROCESSED("PROCESSED"),
 

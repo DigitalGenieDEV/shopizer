@@ -368,10 +368,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 		if (isSampleCartItemType) {
 			// use sample price
 			FinalPrice finalPrice = new FinalPrice();
-			BigDecimal samplePrice = product.getSamplePrice();;
-			if ("CNY".equals(product.getSamplePriceCurrency())) {
-				samplePrice = exchangeRateConfig.getRate(ExchangeRateEnums.CNY_KRW).multiply(product.getSamplePrice());
-			}
+			BigDecimal samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
 			finalPrice.setOriginalPrice(samplePrice);
 			finalPrice.setFinalPrice(samplePrice);
 			finalPrice.setProductPrice(new ProductPriceDO());

@@ -189,9 +189,6 @@ public class PaymentAuthorizeApi {
         respMap.put("amount", responseNode.get("amount").asText());
         respMap.put("channel", responseNode.get("channel").asText());
         respMap.put("currency", responseNode.get("currency").asText());
-        // paymentMode if about total full payment or partial payment default is null
-        JsonNode paymentFrom = responseNode.get("paymentMode");
-        respMap.put("paymentMode", paymentFrom == null ? null : paymentFrom.asText());
         respMap.put("raw", responseNode.toString());
 
         return respMap;

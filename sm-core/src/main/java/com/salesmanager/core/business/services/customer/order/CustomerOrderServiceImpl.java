@@ -11,7 +11,6 @@ import com.salesmanager.core.business.services.payments.PaymentService;
 import com.salesmanager.core.business.services.payments.TransactionService;
 import com.salesmanager.core.business.services.payments.combine.CombinePaymentService;
 import com.salesmanager.core.business.services.payments.combine.CombineTransactionService;
-import com.salesmanager.core.model.common.UserContext;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.customer.order.*;
 import com.salesmanager.core.model.customer.shoppingcart.CustomerShoppingCart;
@@ -25,7 +24,6 @@ import com.salesmanager.core.model.payments.Payment;
 import com.salesmanager.core.model.payments.Transaction;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,66 +118,36 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
     }
 
     @Override
-    public void updateCustomerOrderStatus(CustomerOrder customerOrder, Order order, OrderStatus orderStatus) throws ServiceException {
+    public void updateCustomerOrderStatus(CustomerOrder customerOrder, OrderStatus orderStatus) throws ServiceException {
         customerOrder.setStatus(orderStatus);
         saveOrUpdate(customerOrder);
 
         List<Order> orders = customerOrder.getOrders();
-        if (order != null) {
-            orders = orders.stream().filter(each -> Objects.equals(each.getId(), order.getId())).collect(Collectors.toList());
-        }
 
-        for (Order each : orders) {
+        for (Order order : orders) {
             OrderStatusHistory orderHistory = new OrderStatusHistory();
-            orderHistory.setOrder(each);
-            orderHistory.setStatus(OrderStatus.PAYMENT_COMPLETED);
+            orderHistory.setOrder(order);
+            orderHistory.setStatus(orderStatus);
             orderHistory.setDateAdded(new Date());
 
-            orderService.addOrderStatusHistory(each, orderHistory);
+            orderService.addOrderStatusHistory(order, orderHistory);
 
-            each.setStatus(OrderStatus.PAYMENT_COMPLETED);
-            orderService.saveOrUpdate(each);
+            order.setStatus(orderStatus);
+            orderService.saveOrUpdate(order);
         }
     }
 
     @Override
     public CustomerOrder processCustomerOrder(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment) throws ServiceException {
-        return process(customerOrder, customer, items, payment, null);
-    }
-
-    private MerchantStore defaultStore() {
-        return merchantStoreService.getById(1);
-    }
-
-    private CustomerOrder process(CustomerOrder customerOrder, Customer customer, List<CustomerShoppingCartItem> items, Payment payment, CombineTransaction combineTransaction) throws ServiceException {
-
         Validate.notNull(customerOrder, "CustomerOrder cannot be null");
         Validate.notNull(customer, "Customer cannot be null (even if anonymous order)");
-        Validate.notEmpty(items, "CustomerShoppingCart items cannot be null");
+//        Validate.notEmpty(items, "CustomerShoppingCart items cannot be null");
         Validate.notNull(payment, "Payment cannot be null");
-
-        UserContext context = UserContext.getCurrentInstance();
-        if(context != null) {
-            String ipAddress = context.getIpAddress();
-            if(!StringUtils.isBlank(ipAddress)) {
-                customerOrder.setIpAddress(ipAddress);
-            }
-        }
-
 
         // 合并支付处理
         CombineTransaction processCombineTransaction = combinePaymentService.processPayment(defaultStore(), customer, items, payment, customerOrder);
 
         this.create(customerOrder);
-
-        if (combineTransaction != null) {
-            combineTransaction.setCustomerOrder(customerOrder);
-            if (combineTransaction.getId() == null || combineTransaction.getId() == 0) {
-                combineTransactionService.create(combineTransaction);
-            } else {
-                combineTransactionService.update(combineTransaction);
-            }
-        }
 
         if (processCombineTransaction != null) {
             processCombineTransaction.setCustomerOrder(customerOrder);
@@ -204,8 +172,11 @@ public class CustomerOrderServiceImpl extends SalesManagerEntityServiceImpl<Long
             transactionService.create(transaction);
         }
 
-
-
         return customerOrder;
     }
+
+    private MerchantStore defaultStore() {
+        return merchantStoreService.getById(1);
+    }
+
 }

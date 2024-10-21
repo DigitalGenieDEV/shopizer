@@ -14,13 +14,15 @@ import com.salesmanager.core.model.payments.PaymentType;
 import com.salesmanager.core.model.payments.TransactionType;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.order.transaction.PersistablePayment;
+import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
+
+@Component
 public class PersistablePaymentPopulator extends AbstractDataPopulator<PersistablePayment, Payment> {
-	
-	
-	PricingService pricingService;
 
-
+	@Inject
+	private PricingService pricingService;
 
 	@Override
 	public Payment populate(PersistablePayment source, Payment target, MerchantStore store, Language language)
@@ -28,7 +30,8 @@ public class PersistablePaymentPopulator extends AbstractDataPopulator<Persistab
 		
 		Validate.notNull(source,"PersistablePayment cannot be null");
 		Validate.notNull(pricingService,"pricingService must be set");
-		if(target == null) {
+
+		if (target == null) {
 			target = new Payment();
 		}
 		
@@ -52,16 +55,7 @@ public class PersistablePaymentPopulator extends AbstractDataPopulator<Persistab
 
 	@Override
 	protected Payment createTarget() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public PricingService getPricingService() {
-		return pricingService;
-	}
-
-	public void setPricingService(PricingService pricingService) {
-		this.pricingService = pricingService;
+		return new Payment();
 	}
 
 }

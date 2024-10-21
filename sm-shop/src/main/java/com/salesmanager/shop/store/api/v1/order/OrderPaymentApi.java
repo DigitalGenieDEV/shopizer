@@ -85,6 +85,9 @@ public class OrderPaymentApi {
 	@Inject
 	private AuthorizationUtils authorizationUtils;
 
+	@Inject
+	private PersistablePaymentPopulator persistablePaymentPopulator;
+
 	@RequestMapping(value = { "/cart/{code}/payment/init" }, method = RequestMethod.POST)
 	@ResponseBody
 	@ApiImplicitParams({ @ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
@@ -97,12 +100,8 @@ public class OrderPaymentApi {
 			throw new ResourceNotFoundException("Cart code " + code + " does not exist");
 		}
 
-		PersistablePaymentPopulator populator = new PersistablePaymentPopulator();
-		populator.setPricingService(pricingService);
-
 		Payment paymentModel = new Payment();
-
-		populator.populate(payment, paymentModel, merchantStore, language);
+		persistablePaymentPopulator.populate(payment, paymentModel, merchantStore, language);
 
 		Transaction transactionModel = paymentService.initTransaction(null, paymentModel, merchantStore);
 
@@ -152,12 +151,8 @@ public class OrderPaymentApi {
 				return null;
 			}
 
-			PersistablePaymentPopulator populator = new PersistablePaymentPopulator();
-			populator.setPricingService(pricingService);
-
 			Payment paymentModel = new Payment();
-
-			populator.populate(payment, paymentModel, merchantStore, language);
+			persistablePaymentPopulator.populate(payment, paymentModel, merchantStore, language);
 
 			Transaction transactionModel = paymentService.initTransaction(customer, paymentModel, merchantStore);
 

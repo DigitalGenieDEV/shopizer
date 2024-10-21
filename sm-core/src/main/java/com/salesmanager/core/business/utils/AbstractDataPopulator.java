@@ -14,11 +14,9 @@ import com.salesmanager.core.model.reference.language.Language;
  * @author Umesh A
  *
  */
-public abstract class AbstractDataPopulator<Source,Target> implements DataPopulator<Source, Target>
-{
+public abstract class AbstractDataPopulator<Source,Target> implements DataPopulator<Source, Target> {
 
 
-   
     private Locale locale;
 
 	public void setLocale(Locale locale) {
@@ -29,13 +27,11 @@ public abstract class AbstractDataPopulator<Source,Target> implements DataPopula
 	}
 
 
-
 	@Override
 	public Target populate(Source source, MerchantStore store, Language language) throws ConversionException{
-	   return populate(source,createTarget(), store, language);
+	   return populate(source, createTarget(), store, language);
 	}
+
 	protected abstract Target createTarget();
-
-
 
 }

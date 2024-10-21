@@ -55,6 +55,8 @@ import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.order.facade.OrderFacade;
 import com.salesmanager.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.salesmanager.shop.utils.LabelUtils;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -63,6 +65,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -124,6 +127,9 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
     @Inject
     private PricingService pricingService;
+
+    @Inject
+    private PersistablePaymentPopulator paymentPopulator;
 
     @Inject
     private CombinePaymentService combinePaymentService;
@@ -265,11 +271,8 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
 
             LOGGER.info("[processCustomerOrder] process customer order payment");
-            PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
-            paymentPopulator.setPricingService(pricingService);
-            Payment paymentModel = new Payment();
             customerOrder.getPayment().setAmount(String.valueOf(total));
-            paymentPopulator.populate(customerOrder.getPayment(), paymentModel, null, language);
+            Payment paymentModel = paymentPopulator.populate(customerOrder.getPayment(), null, language);
 
             modelCustomerOrder = customerOrderService.processCustomerOrder(modelCustomerOrder, customer, lineItems, paymentModel);
 
@@ -479,7 +482,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -494,7 +497,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         trxPopulator.populate(combineTransaction, transaction, store, language);
 
-        customerOrderService.updateCustomerOrderStatus(customerOrder, null, OrderStatus.PAYMENT_COMPLETED);
+        customerOrderService.updateCustomerOrderStatus(customerOrder, OrderStatus.PAYMENT_COMPLETED);
 
         return transaction;
     }
@@ -536,5 +539,30 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
 
         return item;
 
+    }
+
+    @Override
+    public CustomerOrder replicateCustomerOrder(CustomerOrder customerOrder, PersistablePayment persistablePayment, Customer customer, Language language) {
+
+        CustomerOrder newCustomerOrder = new CustomerOrder();
+        try {
+            BeanUtils.copyProperties(newCustomerOrder, customerOrder);
+            newCustomerOrder.setId(null);
+            newCustomerOrder.getAuditSection().setDateCreated(null);
+            newCustomerOrder.getAuditSection().setDateModified(null);
+            newCustomerOrder.setOrderNo(UniqueIdGenerator.generateOrderNumber());
+
+
+            persistablePayment.setAmount(newCustomerOrder.getTotal().toString());
+
+            Payment payment = paymentPopulator.populate(persistablePayment, new Payment(), null, language);
+
+            newCustomerOrder = customerOrderService.processCustomerOrder(newCustomerOrder, customer, null, payment);
+        } catch (ConversionException | ServiceException | IllegalAccessException | InvocationTargetException e) {
+            LOGGER.error("Error while replicate pay order", e);
+            throw new ServiceRuntimeException("Error while replicate pay order", e);
+        }
+
+        return newCustomerOrder;
     }
 }

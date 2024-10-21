@@ -183,6 +183,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private CountryService countryService;
 	@Inject
 	private ZoneService zoneService;
+	@Inject
+	private PersistablePaymentPopulator paymentPopulator;
 
 	@Autowired
 	private CustomerOrderService customerOrderService;
@@ -1465,8 +1467,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			modelOrder.setOrderTotal(set);
 
 			LOGGER.debug("[processOrder] process order shopping cart payment");
-			PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
-			paymentPopulator.setPricingService(pricingService);
 			Payment paymentModel = new Payment();
 			paymentPopulator.populate(order.getPayment(), paymentModel, store, language);
 

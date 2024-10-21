@@ -608,7 +608,7 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
     }
 
     @Override
-    public CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Order order, Customer customer, MerchantStore store, Payment payment) throws ServiceException {
+    public CombineTransaction processPaymentNextTransaction(CustomerOrder customerOrder, Customer customer, MerchantStore store, Payment payment) throws ServiceException {
         Validate.notNull(customer);
         Validate.notNull(store);
         Validate.notNull(customerOrder);
@@ -648,9 +648,6 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
 
         CombineTransaction transaction = null;
         BigDecimal amount = customerOrder.getTotal();
-        if (order != null) {
-            amount = order.getTotal();
-        }
 
         if(transactionType == TransactionType.AUTHORIZE)  {
             transaction = module.authorize(store, customer, customerOrder, amount, payment, configuration, integrationModule);
@@ -663,11 +660,9 @@ public class CombinePaymentServiceImpl implements CombinePaymentService {
 
         combineTransactionService.create(transaction);
 
-        List<Order> orders = order == null ? customerOrder.getOrders() : Lists.newArrayList(order);
-        for (Order each : orders) {
-            paymentService.processPayment(customer, store, payment, null, each, transaction);
+        for (Order order : customerOrder.getOrders()) {
+            paymentService.processPayment(customer, store, payment, null, order, transaction);
         }
-
 
         return transaction;
     }

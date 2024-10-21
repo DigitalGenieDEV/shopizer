@@ -167,4 +167,12 @@ public class CombineTransactionServiceImpl extends SalesManagerEntityServiceImpl
 
         return lastTransaction;
     }
+
+    @Override
+    public CombineTransaction getCombineTransactionByPayOrderNo(String payOrderNo) {
+        List<CombineTransaction> combineTransactionByPayOrderNo = combineTransactionRepository.findCombineTransactionByPayOrderNo(payOrderNo);
+        combineTransactionByPayOrderNo.sort(Comparator.comparing(CombineTransaction::getTransactionDate));
+
+        return CollectionUtils.lastElement(combineTransactionByPayOrderNo);
+    }
 }
