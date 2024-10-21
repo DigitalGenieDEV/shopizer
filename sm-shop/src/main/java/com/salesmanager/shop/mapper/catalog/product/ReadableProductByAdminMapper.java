@@ -235,6 +235,8 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 						readableOptionValue.setId(attribute.getProductOptionValue().getId());
 						readableOptionValue.setCode(optionValue.getCode());
 						readableOptionValue.setOptionCode(attribute.getProductOption().getCode());
+						readableOptionValue.setDefaultValue(attribute.getProductOptionValue().isProductOptionDisplayOnly());
+					
 						if (povdescriptions != null && povdescriptions.size() > 0) {
 							for (ProductOptionValueDescription optionValueDescription : povdescriptions) {
 								if (optionValueDescription.getLanguage().getCode().equals(language.getCode())) {

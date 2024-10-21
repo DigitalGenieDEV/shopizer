@@ -92,6 +92,7 @@ public class PersistableProductOptionValueMapper
 					//destination.getDescriptions().add(description);
 				}
 			}
+			destination.setProductOptionDisplayOnly(source.isDefaultValue());
 			destination.setProductOptionValueImage(source.getImage());
 			String optionValueCode = "";
 
@@ -105,7 +106,7 @@ public class PersistableProductOptionValueMapper
 				}
 			}
 			
-			
+
 			System.out.println("optionValueCode"+optionValueCode);
 			destination.setCode(optionValueCode );
 			destination.setMerchantStore(store);
