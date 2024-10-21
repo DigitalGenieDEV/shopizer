@@ -125,7 +125,8 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ " INNER JOIN PRODUCT_OPTION_SET C ON A.PRODUCT_OPTION_ID = C.PRODUCT_OPTION_ID "
 			+ " AND C.CATEGORY_ID = ?3 "
 			+ " AND B.LANGUAGE_ID = ?1 ) "
-			+ " AND B.NAME LIKE %?2% " , nativeQuery=true)
+			+ " AND B.NAME LIKE %?2% "
+			+ " AND A.PRODUCT_OPTION_CODE LIKE 'CODE00000_%'" , nativeQuery=true)
 	public List<ReadProductOption> getListOptionKeyword(int lagnageId, String keyword, int categoryId);
 	
 	@Query( value ="SELECT A.PRODUCT_OPTION_VALUE_ID AS ID, B.NAME AS VALUENAME, A.PRODUCT_OPTION_VAL_CODE AS CODE,  A.PRODUCT_OPT_VAL_IMAGE AS IMAGE, '' AS TYPE "
@@ -137,7 +138,9 @@ public interface ProductOptionValueRepository2 extends JpaRepository<ProductOpti
 			+ " AND D.CATEGORY_ID = ?3 "
 			+ " AND B.LANGUAGE_ID = ?1 "
 			+ " AND C.PRODUCTOPTIONSET_PRODUCT_OPTION_SET_ID = ?2) "
-			+ " AND B.NAME LIKE %?4% " , nativeQuery=true)
+			+ " AND B.NAME LIKE %?4% "
+			+ " AND A.PRODUCT_OPTION_VAL_CODE LIKE 'CODE00000_1_%'" , nativeQuery=true)
+	
 	public List<ReadProductOptionValue> getListOptionKeywordValues(int lagnageId, int setId, int categoryId, String keyword);
 	
 	@Modifying
