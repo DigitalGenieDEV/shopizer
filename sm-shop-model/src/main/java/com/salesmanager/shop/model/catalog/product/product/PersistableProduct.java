@@ -50,7 +50,7 @@ public class PersistableProduct extends ProductEntity implements Serializable {
 
 	private List<ProductMaterial> productMaterials;
 
-	private String productType;
+	private String type;
 
 	private Long outProductId;
 
