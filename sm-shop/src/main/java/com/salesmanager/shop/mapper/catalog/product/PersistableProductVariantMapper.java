@@ -1,36 +1,39 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import com.salesmanager.core.business.exception.ServiceException;
-import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionRepository;
-import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionValueRepository;
-import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantGroupService;
-import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
-import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
-import com.salesmanager.core.model.catalog.product.price.ProductPrice;
-import com.salesmanager.core.model.catalog.product.variant.ProductVariantGroup;
-import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
+import com.salesmanager.core.business.exception.ServiceException;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionRepository;
+import com.salesmanager.core.business.repositories.catalog.product.attribute.ProductOptionValueRepository;
 import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantGroupService;
 import com.salesmanager.core.business.services.catalog.product.variation.ProductVariationService;
 import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
+import com.salesmanager.core.model.catalog.product.price.ProductPrice;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import com.salesmanager.core.model.catalog.product.variant.ProductVariantGroup;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
+import com.salesmanager.shop.model.catalog.product.product.variant.PersistableVariation;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
+import com.salesmanager.shop.utils.UniqueIdGenerator;
 
 @Component
 public class PersistableProductVariantMapper  {
@@ -128,7 +131,12 @@ public class PersistableProductVariantMapper  {
 		destination.setImageUrl(source.getImageUrl());
 		destination.setAvailable(source.isAvailable());
 		destination.setDefaultSelection(source.isDefaultSelection());
-		destination.setSku(source.getSku());
+		if (StringUtils.isEmpty(source.getSku())){
+			destination.setSku(UniqueIdGenerator.generateUniqueId());
+		}else {
+			destination.setSku(source.getSku());
+		}
+
 		destination.setAlias(source.getAlias());
 		destination.setSpecId(source.getSpecId());
 		if (StringUtils.isBlank(source.getDateAvailable())) {
