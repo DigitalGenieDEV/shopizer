@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -211,7 +212,10 @@ public class CustomerShoppingCartServiceImpl extends SalesManagerEntityServiceIm
         if (isSampleCartItemType) {
             // use sample price
             FinalPrice finalPrice = new FinalPrice();
-            BigDecimal samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
+            BigDecimal samplePrice = product.getSamplePrice();
+            if (!Objects.equals(product.getSamplePriceCurrency(), "KRW")) {
+                samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
+            }
             finalPrice.setOriginalPrice(samplePrice);
             finalPrice.setFinalPrice(samplePrice);
             finalPrice.setProductPrice(new ProductPriceDO());

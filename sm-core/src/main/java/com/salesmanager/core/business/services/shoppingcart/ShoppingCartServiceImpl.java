@@ -33,10 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("shoppingCartService")
@@ -368,7 +365,10 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Long,
 		if (isSampleCartItemType) {
 			// use sample price
 			FinalPrice finalPrice = new FinalPrice();
-			BigDecimal samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
+			BigDecimal samplePrice = product.getSamplePrice();
+			if (!Objects.equals(product.getSamplePriceCurrency(), "KRW")) {
+				samplePrice = exchangeRateConfig.getRate(product.getSamplePriceCurrency(), "KRW").multiply(product.getSamplePrice());
+			}
 			finalPrice.setOriginalPrice(samplePrice);
 			finalPrice.setFinalPrice(samplePrice);
 			finalPrice.setProductPrice(new ProductPriceDO());
