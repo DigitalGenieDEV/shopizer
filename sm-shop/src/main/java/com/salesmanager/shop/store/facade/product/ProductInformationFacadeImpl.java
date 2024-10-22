@@ -41,8 +41,6 @@ public class ProductInformationFacadeImpl   implements ProductInformationFacade 
 			List<ReadProductInformation> dataList = null;
 			List<ProductInformationEntity> targetList = new ArrayList<ProductInformationEntity>();
 			ReadableProductInformation returnList = new ReadableProductInformation();
-			System.out.println("merchantStore.getId()"+merchantStore.getId());
-			System.out.println("merchantStore.getId()"+language.getId());
 			Page<ReadProductInformation> pageable = productInformationService.getList(merchantStore.getId(),language.getId(), page, count,division);
 			dataList = pageable.getContent();
 			returnList.setRecordsTotal(pageable.getTotalElements());
