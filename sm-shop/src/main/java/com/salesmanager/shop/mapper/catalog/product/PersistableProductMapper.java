@@ -6,13 +6,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
-import com.google.inject.Inject;
-import com.salesmanager.core.business.modules.enmus.ExchangeRateEnums;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.utils.ExchangeRateConfig;
 import com.salesmanager.core.model.catalog.product.*;
-import com.salesmanager.core.model.catalog.product.attribute.ProductAttributeType;
 import com.salesmanager.core.model.reference.currency.Currency;
 import com.salesmanager.shop.utils.UniqueIdGenerator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,7 +23,6 @@ import com.salesmanager.core.business.exception.ConversionException;
 import com.salesmanager.core.business.services.catalog.category.CategoryService;
 import com.salesmanager.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.salesmanager.core.business.services.catalog.product.type.ProductTypeService;
-import com.salesmanager.core.business.services.catalog.product.variant.ProductVariantService;
 import com.salesmanager.core.business.services.reference.language.LanguageService;
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
@@ -34,8 +30,6 @@ import com.salesmanager.core.model.catalog.product.availability.ProductAvailabil
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
 import com.salesmanager.core.model.catalog.product.manufacturer.Manufacturer;
-import com.salesmanager.core.model.catalog.product.price.ProductPrice;
-import com.salesmanager.core.model.catalog.product.price.ProductPriceDescription;
 import com.salesmanager.core.model.catalog.product.type.ProductType;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
 import com.salesmanager.core.model.merchant.MerchantStore;
@@ -43,9 +37,7 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.shop.mapper.Mapper;
 import com.salesmanager.shop.mapper.catalog.PersistableProductAttributeMapper;
 import com.salesmanager.shop.model.catalog.product.PersistableImage;
-import com.salesmanager.shop.model.catalog.product.ProductPriceEntity;
 import com.salesmanager.shop.model.catalog.product.product.PersistableProduct;
-import com.salesmanager.shop.model.catalog.product.product.PersistableProductInventory;
 import com.salesmanager.shop.model.catalog.product.product.variant.PersistableProductVariant;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.utils.DateUtil;
@@ -194,10 +186,10 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			
 			
 			//PRODUCT TYPE
-			if(!StringUtils.isBlank(source.getType())) {
-				ProductType type = productTypeService.getByCode(source.getType(), store, language);
+			if(!StringUtils.isBlank(source.getProductType())) {
+				ProductType type = productTypeService.getByCode(source.getProductType(), store, language);
 				if(type == null) {
-					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
+					throw new ConversionException("Product type [" + source.getProductType() + "] does not exist");
 				}
 				destination.setType(type);
 			}

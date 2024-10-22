@@ -178,6 +178,7 @@ public class CustomerOrderFacadeImpl implements CustomerOrderFacade {
             if (isSampleType) {
                 customerOrder.setOrderType(OrderType.SAMPLE.name());
             } else if (isOEMProducts) {
+                customerOrder.setStatus(OrderStatus.PENDING_REVIEW.getValue());
                 customerOrder.setOrderType(OrderType.OEM.name());
             } else if (allAre1688Products){
                 customerOrder.setStatus(OrderStatus.PENDING_REVIEW.getValue());
