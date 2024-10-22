@@ -32,6 +32,9 @@ public class ExchangeRateConfig {
         ExchangeRatePOJO cny2UsdExchangeRate = exchangeRateRepository.findExchangeRate("CNY", "USD");
         exchangeRates.put(ExchangeRateEnums.CNY_USD.name(), cny2UsdExchangeRate);
 
+        ExchangeRatePOJO krwToKrwExchangeRate = exchangeRateRepository.findExchangeRate("KRW", "KRW");
+        exchangeRates.put(ExchangeRateEnums.KRW_KRW.name(), krwToKrwExchangeRate);
+
     }
 
     public ExchangeRatePOJO getExchangeRate(ExchangeRateEnums exchangeRate) {
