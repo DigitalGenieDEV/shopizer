@@ -89,7 +89,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 	@Autowired
 	private ProductRepository productRepository;
 
-	@Inject
+	@Autowired
 	private ExchangeRateConfig exchangeRateConfig;
 
 	@Override
