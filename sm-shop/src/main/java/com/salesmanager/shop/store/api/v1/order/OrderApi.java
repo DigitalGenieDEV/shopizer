@@ -18,10 +18,7 @@ import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
-import com.salesmanager.core.model.payments.CombineTransaction;
 import com.salesmanager.core.model.payments.PaymentType;
-import com.salesmanager.core.model.payments.TransactionType;
-import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransaction;
 import com.salesmanager.shop.model.customer.order.transaction.ReadableCombineTransactionList;
 import com.salesmanager.shop.model.order.ReadableOrderProduct;
 import com.salesmanager.shop.model.shop.CommonResultDTO;
@@ -240,7 +237,7 @@ public class OrderApi {
 								  @RequestParam(value = "orderId", required = false) Long orderId,
 								  @RequestParam(value = "deliveryName", required = false) String deliveryName,
 								  @RequestParam(value = "buyerName", required = false) String buyerName,
-								  @RequestParam(value = "startTime", required = false) Long startTime,
+								  @RequestParam(value = "beginTime", required = false) Long beginTime,
 								  @RequestParam(value = "endTime", required = false) Long endTime,
 								  @RequestParam(value = "orderStatus", required = false) List<String> orderStatus,
 								  @RequestParam(value = "shippingStatus", required = false) List<String> shippingStatus,
@@ -264,7 +261,7 @@ public class OrderApi {
 		orderCriteria.setPaymentMethod(paymentType);
 		orderCriteria.setShippingType(shippingType);
 		orderCriteria.setTransportationMethod(transportationMethod);
-		orderCriteria.setStartTime(startTime);
+		orderCriteria.setBeginTime(beginTime);
 		orderCriteria.setEndTime(endTime);
 		if (CollectionUtils.isNotEmpty(orderStatus)) {
 			try {
@@ -393,7 +390,7 @@ public class OrderApi {
 				return CommonResultDTO.ofFailed(ErrorCodeEnums.PARAM_ERROR.getErrorCode(), ErrorCodeEnums.PARAM_ERROR.getErrorMessage(), e.getMessage());
 			}
 		}
-		orderCriteria.setStartTime(startTime);
+		orderCriteria.setBeginTime(startTime);
 		orderCriteria.setEndTime(endTime);
 
 		if (CollectionUtils.isNotEmpty(shippingStatus)) {

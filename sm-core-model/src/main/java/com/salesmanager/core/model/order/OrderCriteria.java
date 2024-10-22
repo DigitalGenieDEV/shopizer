@@ -15,7 +15,7 @@ public class OrderCriteria extends Criteria {
 
 	private List<FulfillmentTypeEnums> shippingStatus;
 
-	private Long startTime;
+	private Long beginTime;
 
 	private Long endTime;
 

@@ -296,7 +296,7 @@ public class CustomerOrderApi {
         criteria.setLegacyPagination(false);
         criteria.setStartPage(page);
         criteria.setPageSize(count);
-        criteria.setStartTime(startTime);
+        criteria.setBeginTime(startTime);
         criteria.setOrderType(orderType);
         criteria.setEndTime(endTime);
         criteria.setOrderStatus(orderStatus);
@@ -360,7 +360,7 @@ public class CustomerOrderApi {
         criteria.setLegacyPagination(false);
         criteria.setStartPage(page);
         criteria.setPageSize(count);
-        criteria.setStartTime(startTime);
+        criteria.setBeginTime(startTime);
         criteria.setEndTime(endTime);
         criteria.setOrderType(orderType);
 

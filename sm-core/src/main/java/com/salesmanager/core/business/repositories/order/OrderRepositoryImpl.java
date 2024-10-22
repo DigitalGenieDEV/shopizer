@@ -5,7 +5,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.google.common.collect.Lists;
-import com.salesmanager.core.enmus.FulfillmentTypeEnums;
 import com.salesmanager.core.model.customer.Customer;
 import com.salesmanager.core.model.order.*;
 import com.salesmanager.core.model.payments.PaymentType;
@@ -301,8 +300,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		String storeQuery = " where o.customerId =:cid";
 
 		// append sql
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			storeQuery += " AND o.auditSection.dateCreated >= :startTime";
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			storeQuery += " AND o.auditSection.dateCreated >= :beginTime";
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			storeQuery += " AND o.auditSection.dateCreated <= :endTime";
@@ -336,9 +335,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		objectQ.setParameter("cid", customer.getId());
 
 		// replace placeholder
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			countQ.setParameter("startTime", new Date(criteria.getStartTime()));
-			objectQ.setParameter("startTime", new Date(criteria.getStartTime()));
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			countQ.setParameter("beginTime", new Date(criteria.getBeginTime()));
+			objectQ.setParameter("beginTime", new Date(criteria.getBeginTime()));
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			countQ.setParameter("endTime", new Date(criteria.getEndTime()));
@@ -405,8 +404,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 		sqlBuilder.append("select o.status as orderStatus, count(o) as num from Order as o");
 		sqlBuilder.append(" where o.customerId =:cid");
 		// append sql
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			sqlBuilder.append(" AND o.auditSection.dateCreated >= :startTime");
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			sqlBuilder.append(" AND o.auditSection.dateCreated >= :beginTime");
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			sqlBuilder.append(" AND o.auditSection.dateCreated <= :endTime");
@@ -427,8 +426,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
 		countQ.setParameter("cid", customer.getId());
 		// replace placeholder
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			countQ.setParameter("startTime", new Date(criteria.getStartTime()));
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			countQ.setParameter("beginTime", new Date(criteria.getBeginTime()));
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			countQ.setParameter("endTime", new Date(criteria.getEndTime()));
@@ -570,8 +569,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			String nameQuery =  " and p.status in :status";
 			queryBuilder.append(nameQuery);
 		}
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			String nameQuery = " and p.auditSection.dateCreated >= :startTime";
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			String nameQuery = " and p.auditSection.dateCreated >= :beginTime";
 			queryBuilder.append(nameQuery);
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
@@ -682,8 +681,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 			query.setParameter("status", criteria.getStatus());
 		}
 
-		if (criteria.getStartTime() != null && criteria.getStartTime() > 0) {
-			query.setParameter("startTime", new Date(criteria.getStartTime()));
+		if (criteria.getBeginTime() != null && criteria.getBeginTime() > 0) {
+			query.setParameter("beginTime", new Date(criteria.getBeginTime()));
 		}
 		if (criteria.getEndTime() != null && criteria.getEndTime() > 0) {
 			query.setParameter("endTime", new Date(criteria.getEndTime()));

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderCustomerCriteria extends Criteria {
-    private Long startTime = null;
+    private Long beginTime = null;
     private Long endTime = null;
     private String orderStatus = null;
     private String orderType = null;
