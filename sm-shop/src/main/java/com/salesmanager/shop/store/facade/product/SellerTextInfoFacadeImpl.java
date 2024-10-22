@@ -61,16 +61,18 @@ public class SellerTextInfoFacadeImpl implements SellerTextInfoFacade {
 
 	@Override
 	public Long save(SellerProductShippingTextInfo sellerProductShippingTextInfo, MerchantStore store) {
-		if (sellerProductShippingTextInfo.getId()!= null && sellerProductShippingTextInfo.getId()>0){
-			update(sellerProductShippingTextInfo, store);
-			return sellerProductShippingTextInfo.getId();
-		}
+		
 		SellerTextInfo sellerTextInfo = new SellerTextInfo();
 		sellerTextInfo.setSellerId(Long.valueOf(store.getId()));
 		sellerTextInfo.setText(JSON.toJSONString(sellerProductShippingTextInfo));
 		sellerTextInfo.setType(SellerTextType.PRODUCT_SHIPPING);
 		try {
 			sellerTextInfoService.save(sellerTextInfo);
+			if (sellerTextInfo.getId()!= null && sellerTextInfo.getId()>0){
+				sellerProductShippingTextInfo.setId(sellerTextInfo.getId());
+				update(sellerProductShippingTextInfo, store);
+				return sellerProductShippingTextInfo.getId();
+			}
 		} catch (ServiceException e) {
 			throw new RuntimeException(e);
 		}
