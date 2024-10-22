@@ -88,7 +88,6 @@ public class BoardFacadeImpl implements BoardFacade {
 		try {
 
 			int boardId = board.getId();
-			System.out.println("boardId"+boardId);
 			Board target = Optional.ofNullable(boardId)
 					.filter(id -> id > 0)
 					.map(boardService::getById)

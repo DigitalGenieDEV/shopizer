@@ -39,7 +39,6 @@ public class BoardServiceImpl extends SalesManagerEntityServiceImpl<Integer, Boa
 	@Override
 	public void saveOrUpdate(Board board) throws ServiceException {
 		// save or update (persist and attach entities
-		System.out.println(" board.getId()"+ board.getId());
 		if (board.getId() != null && board.getId() > 0) {
 			super.update(board);
 		} else {
