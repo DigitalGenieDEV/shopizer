@@ -709,6 +709,34 @@ public class OrderApi {
 	}
 
 
+	@RequestMapping(value = { "/auth/orders/status" }, method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "store", dataType = "string", defaultValue = "DEFAULT") })
+	public CommonResultDTO<Integer> batchUpdateOrderStatusBySeller(
+			@Valid @RequestParam List<Long> ids,
+			@Valid @RequestParam String status,
+			@ApiIgnore MerchantStore merchantStore) {
+		try {
+			// check status is valid
+			OrderStatus statusEnum = OrderStatus.fromValue(status);
+
+			int affectRows = 0;
+			for (Long id : ids) {
+				CommonResultDTO<Void> voidCommonResultDTO = updateOrderStatus(id, status, merchantStore);
+				if (voidCommonResultDTO.getSuccess()) {
+					affectRows++;
+				}
+			}
+			return CommonResultDTO.ofSuccess(affectRows);
+		}catch (Exception e){
+			LOGGER.error("batchUpdateAdminOrderStatus error", e);
+			return CommonResultDTO.ofFailed(ErrorCodeEnums.SYSTEM_ERROR.getErrorCode(), ErrorCodeEnums.SYSTEM_ERROR.getErrorMessage(), e.getMessage());
+		}
+	}
+
+
 	@RequestMapping(value = { "/auth/orders/{id}/status" }, method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
