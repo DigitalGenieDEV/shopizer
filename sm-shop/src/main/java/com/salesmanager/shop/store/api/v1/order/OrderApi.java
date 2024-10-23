@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import com.salesmanager.core.business.services.order.OrderService;
 import com.salesmanager.core.enmus.FulfillmentTypeEnums;
+import com.salesmanager.core.model.merchant.MyStore;
 import com.salesmanager.core.model.order.OrderType;
 import com.salesmanager.core.model.order.orderstatus.OrderStatus;
 import com.salesmanager.core.model.payments.PaymentType;
@@ -247,7 +248,7 @@ public class OrderApi {
 								  @RequestParam(value = "transportationMethod", required = false) String transportationMethod,
 								  @RequestParam(value = "paymentType", required = false) String paymentType,
 								  // TODO(yuxunhui):주문플랫폼 不知道是什么意思 订购平台，没找到对应的概念
-								  @ApiIgnore MerchantStore merchantStore,
+								  @ApiIgnore MyStore myStore,
 								  @ApiIgnore Language language,
 								  HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -292,7 +293,7 @@ public class OrderApi {
 		orderCriteria.setLanguage(language.getCode());
 		orderCriteria.setOrderNo(orderNo);
 		try {
-			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, merchantStore);
+			ReadableOrderList orders = orderFacade.getReadableOrderList(orderCriteria, myStore.getStore());
 			return CommonResultDTO.ofSuccess(orders);
 		} catch (Exception e) {
 			LOGGER.error("admin query order list error", e);

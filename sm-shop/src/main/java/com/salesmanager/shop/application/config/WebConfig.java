@@ -10,7 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-	
+
+    @Autowired
+    private MyStoreArgumentResolver myStoreArgumentResolver;
 	
     @Autowired
     private MerchantStoreArgumentResolver merchantStoreArgumentResolver;
@@ -21,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(myStoreArgumentResolver);
         argumentResolvers.add(merchantStoreArgumentResolver);
         argumentResolvers.add(languageArgumentResolver);
     }
