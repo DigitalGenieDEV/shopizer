@@ -39,15 +39,15 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	private Integer discountedNum;
 
-
 	private Integer featureSort;
 
 	private ReadableImage image;
 
 	private String identifier;
 
-
 	private String auditStatus;
+
+	private String storeCode;
 
 	private String storeName;
 
@@ -65,13 +65,11 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	private List<com.salesmanager.shop.model.catalog.ProductMaterial> productMaterials = new ArrayList<>();
 
-
-	private ReadableProductAnnouncement  productAnnouncement = new ReadableProductAnnouncement();
+	private ReadableProductAnnouncement productAnnouncement = new ReadableProductAnnouncement();
 
 	private List<String> tags;
 
 	private boolean canBePurchased = false;
-
 
 	public ProductDescription getDescription() {
 		return description;
@@ -121,7 +119,6 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 		return image;
 	}
 
-
 	public void setManufacturer(ReadableManufacturer manufacturer) {
 		this.manufacturer = manufacturer;
 	}
@@ -137,7 +134,6 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 	public void setCanBePurchased(boolean canBePurchased) {
 		this.canBePurchased = canBePurchased;
 	}
-
 
 	public List<ReadableCategory> getCategories() {
 		return categories;
@@ -217,6 +213,14 @@ public class ReadableProduct extends ProductEntity implements Serializable {
 
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
+	}
+
+	public String getStoreCode() {
+		return storeCode;
+	}
+
+	public void setStoreCode(String storeCode) {
+		this.storeCode = storeCode;
 	}
 
 	public List<String> getTags() {

@@ -1,5 +1,20 @@
 package com.salesmanager.shop.mapper.catalog.product;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.salesmanager.core.business.exception.ServiceException;
 import com.salesmanager.core.business.services.catalog.pricing.PricingService;
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
@@ -8,10 +23,10 @@ import com.salesmanager.core.model.catalog.product.Product;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
+import com.salesmanager.core.model.catalog.product.attribute.ProductOption;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionDescription;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValue;
 import com.salesmanager.core.model.catalog.product.attribute.ProductOptionValueDescription;
-import com.salesmanager.core.model.catalog.product.attribute.*;
 import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
 import com.salesmanager.core.model.catalog.product.description.ProductDescription;
 import com.salesmanager.core.model.catalog.product.image.ProductImage;
@@ -31,26 +46,22 @@ import com.salesmanager.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.salesmanager.shop.model.catalog.product.ReadableImage;
 import com.salesmanager.shop.model.catalog.product.ReadableProduct;
 import com.salesmanager.shop.model.catalog.product.ReadableProductPrice;
-import com.salesmanager.shop.model.catalog.product.attribute.*;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAttribute;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductAttributeValue;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductOption;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductProperty;
+import com.salesmanager.shop.model.catalog.product.attribute.ReadableProductPropertyValue;
 import com.salesmanager.shop.model.catalog.product.attribute.api.ReadableProductOptionValue;
 import com.salesmanager.shop.model.catalog.product.product.ProductSpecification;
 import com.salesmanager.shop.model.catalog.product.product.variant.ReadableProductVariant;
 import com.salesmanager.shop.model.catalog.product.type.ReadableProductType;
 import com.salesmanager.shop.model.references.DimensionUnitOfMeasure;
 import com.salesmanager.shop.model.references.WeightUnitOfMeasure;
+import com.salesmanager.shop.model.store.ReadableMerchantStore;
 import com.salesmanager.shop.store.api.exception.ConversionRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import com.salesmanager.shop.utils.DateUtil;
 import com.salesmanager.shop.utils.ImageFilePath;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Works for product v2 model
@@ -112,13 +123,13 @@ public class ReadableProductByAdminMapper implements Mapper<Product, ReadablePro
 		destination.setQuoteType(source.getQuoteType());
 		destination.setOrderQuantityType(source.getOrderQuantityType());
 		
-
 		destination.setProductStatus(source.getProductStatus() == null? null : source.getProductStatus().name());
 		destination.setCertificateOfOrigin(source.getCertificateOfOrigin());
 		destination.setCertificationDocument(source.getCertificationDocument());
 		destination.setIntellectualPropertyDocuments(source.getIntellectualPropertyDocuments());
 		destination.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
 		destination.setStoreName(source.getMerchantStore().getStorename());
+		destination.setStoreCode(source.getMerchantStore().getCode());
 		destination.setMinOrderQuantity(source.getMinOrderQuantity());
 		destination.setSamplePrice(source.getSamplePrice());
 		destination.setSupportSample(source.getSupportSample());
