@@ -20,6 +20,7 @@ import com.salesmanager.shop.store.api.exception.ResourceNotFoundException;
 import com.salesmanager.shop.store.api.exception.ServiceRuntimeException;
 import com.salesmanager.shop.store.controller.product.facade.ProductTypeFacade;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,7 +54,7 @@ public class SellerTextInfoFacadeImpl implements SellerTextInfoFacade {
 	@Override
 	public SellerProductShippingTextInfo getSellerProductShippingTextById(Long id) {
 		SellerTextInfo sellerTextInfo = sellerTextInfoService.getById(id);
-		if (sellerTextInfo == null){
+		if (sellerTextInfo == null || StringUtils.isNotEmpty(sellerTextInfo.getText())){
 			return null;
 		}
 		return JSON.parseObject(sellerTextInfo.getText(), SellerProductShippingTextInfo.class);

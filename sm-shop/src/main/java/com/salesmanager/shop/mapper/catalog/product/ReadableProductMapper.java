@@ -427,7 +427,7 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 				break;
 			}
 		}
-		if (source.getSellerTextInfoId() != null){
+		if (source.getSellerTextInfoId() != null && source.getSellerTextInfoId() > 0){
 			SellerProductShippingTextInfo sellerProductShippingTextInfo = sellerTextInfoFacade.getSellerProductShippingTextById(source.getSellerTextInfoId());
 			destination.setSellerProductShippingTextInfo(sellerProductShippingTextInfo);
 		}

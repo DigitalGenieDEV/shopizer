@@ -187,7 +187,7 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 			
 			//PRODUCT TYPE
 			if(!StringUtils.isBlank(source.getType())) {
-				ProductType type = productTypeService.getByCode(source.getType(), store, language);
+				ProductType type = productTypeService.getProductType(source.getType());
 				if(type == null) {
 					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
 				}
