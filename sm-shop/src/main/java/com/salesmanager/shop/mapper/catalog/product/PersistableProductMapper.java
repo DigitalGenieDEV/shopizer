@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.salesmanager.core.business.repositories.catalog.product.ProductRepository;
 import com.salesmanager.core.business.services.catalog.product.erp.ErpService;
 import com.salesmanager.core.business.utils.ExchangeRateConfig;
@@ -192,6 +193,15 @@ public class PersistableProductMapper implements Mapper<PersistableProduct, Prod
 					throw new ConversionException("Product type [" + source.getType() + "] does not exist");
 				}
 				destination.setType(type);
+
+				if (type.getCode().equals(com.salesmanager.core.constants.ProductType.OEM.name()) && source.getOemConfig() != null) {
+                    try {
+						source.getOemConfig().check();
+                    } catch (Exception e) {
+                        throw new ConversionException(e);
+                    }
+                    destination.setOemConfig(JSONObject.toJSONString(source.getOemConfig()));
+				}
 			}
 
 			

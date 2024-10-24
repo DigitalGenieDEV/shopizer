@@ -290,6 +290,11 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Setter
 	private String samplePriceCurrency;
 
+	@Column(name = "OEM_CONFIG", length = 4096)
+	@Getter
+	@Setter
+	private String oemConfig;
+
 
 	private Integer featureSort;
 

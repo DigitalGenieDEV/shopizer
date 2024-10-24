@@ -4,12 +4,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.salesmanager.core.model.catalog.product.ProductStatus;
 import com.salesmanager.core.model.catalog.product.price.PriceRange;
 import com.salesmanager.shop.model.catalog.product.Product;
 import lombok.Data;
-
-import javax.persistence.Column;
 
 /**
  * A product entity is used by services API to populate or retrieve a Product
@@ -98,5 +95,6 @@ public class ProductEntity extends Product implements Serializable {
 	 */
 	private String samplePriceCurrency;
 
+	private OemConfig oemConfig;
 
 }

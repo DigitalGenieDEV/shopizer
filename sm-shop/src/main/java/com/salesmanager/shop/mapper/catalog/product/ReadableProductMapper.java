@@ -4,10 +4,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.salesmanager.core.business.services.catalog.product.erp.ProductMaterialService;
+import com.salesmanager.core.constants.ProductType;
 import com.salesmanager.core.model.catalog.product.ProductMaterial;
 import com.salesmanager.core.model.catalog.product.SellerProductShippingTextInfo;
 import com.salesmanager.core.model.catalog.product.variant.ProductVariantGroup;
 import com.salesmanager.core.model.catalog.product.variation.ProductVariation;
+import com.salesmanager.shop.listener.alibaba.tuna.fastjson.JSON;
+import com.salesmanager.shop.model.catalog.product.product.OemConfig;
 import com.salesmanager.shop.store.controller.product.facade.SellerTextInfoFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -160,6 +163,10 @@ public class ReadableProductMapper implements Mapper<Product, ReadableProduct> {
 		if (source.getType() != null) {
 			ReadableProductType readableType = readableProductTypeMapper.convert(source.getType(), store, language);
 			destination.setType(readableType);
+
+			if (readableType.getCode().equals(ProductType.OEM.name())) {
+				destination.setOemConfig(JSON.parseObject(source.getOemConfig(), OemConfig.class));
+			}
 		}
 
 		if (source.getDateAvailable() != null) {
